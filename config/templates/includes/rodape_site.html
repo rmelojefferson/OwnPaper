@@ -1,0 +1,47 @@
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/rodape-site.css' %}">
+
+{% if config_site.texto_rodape or config_site.email_contato or config_site.copyright_texto or config_site.pagina_sobre or config_site.pagina_privacidade or config_site.pagina_cookies %}
+    <footer class="rodape-site">
+        {% if config_site.texto_rodape %}
+            <span>{{ config_site.texto_rodape|linebreaksbr }}</span>
+        {% endif %}
+
+	{% if config_site.pagina_contato %}
+	    <span> | </span>
+	    <a href="{{ config_site.pagina_contato.url }}">Contato</a>
+	{% elif config_site.email_contato %}
+	    <span> | </span>
+	    <a href="mailto:{{ config_site.email_contato }}">{{ config_site.email_contato }}</a>
+	{% endif %}
+
+        {% if config_site.pagina_sobre %}
+            <span> | </span>
+            <a href="{{ config_site.pagina_sobre.url }}">Sobre</a>
+        {% endif %}
+
+        {% if config_site.pagina_privacidade %}
+            <span> | </span>
+            <a href="{{ config_site.pagina_privacidade.url }}">Privacidade e dados</a>
+        {% endif %}
+
+        {% if config_site.pagina_cookies %}
+            <span> | </span>
+            <a href="{{ config_site.pagina_cookies.url }}">Cookies</a>
+        {% endif %}
+
+        {% if config_site.pagina_newsletter %}
+            <span> | </span>
+            <a href="{{ config_site.pagina_newsletter.url }}">Newsletter</a>
+        {% endif %}
+
+	{% if config_site.pagina_indexador %}
+	    <span> | </span>
+	    <a href="{{ config_site.pagina_indexador.url }}">{{ config_site.rotulo_indexador|default:"Indexador" }}</a>
+	{% endif %}
+
+        {% if config_site.copyright_texto %}
+            <div class="rodape-site-copyright">{{ config_site.copyright_texto }}</div>
+        {% endif %}
+    </footer>
+{% endif %}

@@ -1,0 +1,95 @@
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% if TURNSTILE_ENABLED %}
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    {% endif %}
+
+    {% if config_site.favicon %}
+        {% image config_site.favicon fill-32x32 format-webp as favicon_32 %}
+        <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
+    {% endif %}
+    <link rel="stylesheet" href="{% static 'css/pages/contato-page.css' %}">
+    {% include "includes/rastreamento_head.html" %}
+
+</head>
+<body>
+    {% include "includes/rastreamento_body.html" %}
+
+    {% include "includes/menu_principal.html" %}
+
+    <article>
+        <h1>{{ page.title }}</h1>
+
+	{% if request.GET.enviado %}
+	    <div class="mensagem-sucesso" id="mensagem-sucesso-contato">
+	        {{ page.mensagem_sucesso }}
+	        {% if request.GET.email_falhou %}
+	            <br>
+	            O envio por e-mail não foi concluído, mas sua mensagem foi registrada.
+	        {% endif %}
+	    </div>
+	{% endif %}
+
+	{% if request.GET.limite %}
+	    <div class="mensagem-sucesso" id="mensagem-limite-contato">
+	        Muitas tentativas em pouco tempo. Aguarde alguns minutos antes de enviar novamente.
+	    </div>
+	{% endif %}
+
+	{% if request.GET.captcha %}
+	    <div class="mensagem-sucesso" id="mensagem-captcha-contato">
+	        Não foi possível validar a verificação anti-bot. Tente novamente.
+	    </div>
+	{% endif %}
+
+        {% if page.introducao %}
+            <div>
+                {{ page.introducao|richtext }}
+            </div>
+        {% endif %}
+
+        <form method="post" action="/contato/{{ page.slug }}/enviar/">
+            {% csrf_token %}
+
+	    {% if TURNSTILE_ENABLED %}
+		        <div class="cf-turnstile turnstile-widget" data-sitekey="{{ TURNSTILE_SITE_KEY }}"></div>
+	    {% endif %}
+
+		    <div class="campo-oculto">
+	        <label for="id_website">Website</label>
+    	        <input type="text" name="website" id="id_website" tabindex="-1" autocomplete="off">
+	    </div>
+
+            <label for="id_nome">Nome</label>
+            <input type="text" name="nome" id="id_nome" required>
+
+            <label for="id_email">E-mail</label>
+            <input type="email" name="email" id="id_email" required>
+
+            <label for="id_mensagem">Mensagem</label>
+            <textarea name="mensagem" id="id_mensagem" required></textarea>
+
+            <div class="checkbox-linha">
+                <input type="checkbox" name="aceitou_privacidade" id="id_aceitou_privacidade" required>
+                <label for="id_aceitou_privacidade">
+                    Ao enviar esta mensagem, você concorda com o uso dos dados informados para análise e resposta ao seu contato, conforme nossa Política de Privacidade.
+                </label>
+            </div>
+
+            <button type="submit">Enviar mensagem</button>
+        </form>
+    </article>
+
+    {% include "includes/rodape_site.html" %}
+
+<script src="{% static 'js/pages/contato-page.js' %}" defer></script>
+
+</body>
+</html>

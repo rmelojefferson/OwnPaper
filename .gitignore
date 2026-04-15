@@ -1,0 +1,23 @@
+# Local environment
+.env
+.env.*
+!.env.example
+
+# Python
+__pycache__/
+*.py[cod]
+*.sqlite3
+.venv/
+venv/
+env/
+
+# Django/Wagtail generated files
+/media/
+/static/
+
+# Editors and OS files
+.DS_Store
+.idea/
+.vscode/
+*.swp
+

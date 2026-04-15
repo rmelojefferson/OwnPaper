@@ -1,0 +1,144 @@
+{% load wagtailcore_tags wagtailimages_tags %}
+
+
+{% if page.mostrar_carrossel_home and itens_carrossel_home %}
+    <section class="home-secao">
+        {% if page.titulo_carrossel_home %}
+            <h2 class="home-visualmente-oculto">{{ page.titulo_carrossel_home }}</h2>
+        {% endif %}
+
+        <div
+            class="home-carrossel-janela"
+            id="home-carrossel"
+            data-tempo="{{ page.tempo_transicao_carrossel_home }}"
+        >
+            {% if itens_carrossel_home|length > 1 %}
+                <button type="button" id="home-carrossel-anterior" class="home-carrossel-seta home-carrossel-seta-anterior" aria-label="Slide anterior">
+                    ‹
+                </button>
+                <button type="button" id="home-carrossel-proximo" class="home-carrossel-seta home-carrossel-seta-proximo" aria-label="Próximo slide">
+                    ›
+                </button>
+            {% endif %}
+
+            {% for item in itens_carrossel_home %}
+                <div class="home-carrossel-slide{% if forloop.first %} ativo{% endif %}">
+                    <a class="home-carrossel-link" href="{{ item.publicacao.url }}">
+                        {% if item.imagem_exibicao %}
+                            <div class="home-carrossel-imagem">
+                                {% image item.imagem_exibicao fill-1200x420 %}
+                            </div>
+                        {% endif %}
+
+                        <div class="home-carrossel-titulo">
+                            <h3>{{ item.publicacao.title }}</h3>
+                        </div>
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    </section>
+{% endif %}
+
+{% if page.mostrar_destaques_home and destaques_publicacoes %}
+    <section class="home-secao">
+        {% if page.titulo_destaques_home %}
+            <h2>{{ page.titulo_destaques_home }}</h2>
+        {% endif %}
+
+        <div class="home-lista-publicacoes">
+            {% for publicacao in destaques_publicacoes %}
+                <article class="home-card-publicacao">
+                    <div class="home-card-topo">
+                        {% if publicacao.imagem_capa %}
+                            <a class="home-card-miniatura" href="{{ publicacao.url }}" aria-label="{{ publicacao.title }}">
+                                {% image publicacao.imagem_capa fill-360x204 %}
+                            </a>
+                        {% endif %}
+
+                        <div>
+                            <h3>
+                                <a href="{{ publicacao.url }}">{{ publicacao.title }}</a>
+                            </h3>
+
+                            <div class="home-meta-publicacao">
+                                {% if publicacao.data_publicacao %}
+                                    Publicado em {{ publicacao.data_publicacao|date:"d/m/Y" }}
+                                {% elif publicacao.first_published_at %}
+                                    Publicado em {{ publicacao.first_published_at|date:"d/m/Y" }}
+                                {% endif %}
+
+                                {% if publicacao.last_published_at and publicacao.first_published_at and publicacao.last_published_at != publicacao.first_published_at %}
+                                    {% if publicacao.data_publicacao or publicacao.first_published_at %} · {% endif %}
+                                    Atualizado em {{ publicacao.last_published_at|date:"d/m/Y" }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if publicacao.resumo %}
+                        <div class="home-resumo-publicacao">
+                            {{ publicacao.resumo|richtext }}
+                        </div>
+                    {% elif publicacao.search_description %}
+                        <p class="home-resumo-publicacao">{{ publicacao.search_description }}</p>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+{% endif %}
+
+{% if page.mostrar_ultimas_publicacoes_home and todas_ultimas_publicacoes_home %}
+    <section class="home-secao">
+        {% if page.titulo_ultimas_publicacoes_home %}
+            <h2>{{ page.titulo_ultimas_publicacoes_home }}</h2>
+        {% endif %}
+
+        <div class="home-lista-publicacoes" id="home-lista-ultimas-publicacoes"
+            data-quantidade-inicial="{{ quantidade_inicial_ultimas_home|default:5 }}">
+            {% for publicacao in todas_ultimas_publicacoes_home %}
+                <article
+                    class="home-card-publicacao"
+                    data-home-ultima-item
+                    {% if forloop.counter > quantidade_inicial_ultimas_home %}hidden{% endif %}
+                >
+                    <div class="home-card-topo">
+                        {% if publicacao.imagem_capa %}
+                            <a class="home-card-miniatura" href="{{ publicacao.url }}" aria-label="{{ publicacao.title }}">
+                                {% image publicacao.imagem_capa fill-360x204 %}
+                            </a>
+                        {% endif %}
+
+                        <div>
+                            <h3>
+                                <a href="{{ publicacao.url }}">{{ publicacao.title }}</a>
+                            </h3>
+
+                            <div class="home-meta-publicacao">
+                                {% if publicacao.data_publicacao %}
+                                    Publicado em {{ publicacao.data_publicacao|date:"d/m/Y" }}
+                                {% elif publicacao.first_published_at %}
+                                    Publicado em {{ publicacao.first_published_at|date:"d/m/Y" }}
+                                {% endif %}
+
+                                {% if publicacao.last_published_at and publicacao.first_published_at and publicacao.last_published_at != publicacao.first_published_at %}
+                                    {% if publicacao.data_publicacao or publicacao.first_published_at %} · {% endif %}
+                                    Atualizado em {{ publicacao.last_published_at|date:"d/m/Y" }}
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if publicacao.resumo %}
+                        <div class="home-resumo-publicacao">
+                            {{ publicacao.resumo|richtext }}
+                        </div>
+                    {% elif publicacao.search_description %}
+                        <p class="home-resumo-publicacao">{{ publicacao.search_description }}</p>
+                    {% endif %}
+                </article>
+            {% endfor %}
+        </div>
+    </section>
+{% endif %}

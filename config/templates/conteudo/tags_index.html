@@ -1,0 +1,41 @@
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>Tags</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% if config_site.favicon %}
+        {% image config_site.favicon fill-32x32 format-webp as favicon_32 %}
+        <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
+    {% endif %}
+    <link rel="stylesheet" href="{% static 'css/pages/tags-index.css' %}">
+    {% include "includes/rastreamento_head.html" %}
+
+</head>
+<body>
+    {% include "includes/rastreamento_body.html" %}
+
+    {% include "includes/menu_principal.html" %}
+
+    <h1>Tags</h1>
+
+    <div class="lista">
+        {% for tag in tags %}
+            <article class="card">
+                <h2>
+                    <a href="/tags/{{ tag.slug }}/">{{ tag.name }}</a>
+                </h2>
+                <div class="meta">
+                    {{ tag.total_publicacoes }} publicação(ões)
+                </div>
+            </article>
+        {% empty %}
+            <p>Nenhuma tag cadastrada ainda.</p>
+        {% endfor %}
+    </div>
+{% include "includes/rodape_site.html" %}
+</body>
+</html>

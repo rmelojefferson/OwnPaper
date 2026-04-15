@@ -1,0 +1,19 @@
+{% load wagtailimages_tags %}
+
+<div class="imagem-no-corpo">
+    <figure class="imagem-item">
+        {% image item.imagem max-700x394 %}
+
+        {% if item.titulo or item.legenda %}
+            <figcaption class="imagem-legenda">
+                {% if item.titulo %}
+                    <strong>{{ item.titulo }}</strong>
+                {% endif %}
+
+                {% if item.legenda %}
+                    <div>{{ item.legenda|linebreaks }}</div>
+                {% endif %}
+            </figcaption>
+        {% endif %}
+    </figure>
+</div>

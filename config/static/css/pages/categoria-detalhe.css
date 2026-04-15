@@ -1,0 +1,54 @@
+body {
+            font-family: "Times New Roman", serif;
+            font-size: 12pt;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+            color: #111;
+        }
+
+        h1 {
+            margin-bottom: 1rem;
+        }
+
+        .descricao {
+            margin-bottom: 2rem;
+            color: #333;
+        }
+
+        .lista {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .card {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 2rem;
+        }
+
+        .card h2 a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .card h2 a:hover {
+            text-decoration: underline;
+        }
+
+        .capa {
+            margin: 1rem 0;
+        }
+
+        .capa img {
+            width: 180px;
+            height: auto;
+            display: block;
+        }
+	
+	.rodape-site {
+	    margin-top: 3rem;
+	    padding-top: 1.5rem;
+	    border-top: 1px solid #ddd;
+	    color: #444;
+	}

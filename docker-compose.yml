@@ -1,0 +1,41 @@
+services:
+  web:
+    build: .
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DJANGO_SECRET_KEY: "${DJANGO_SECRET_KEY:-}"
+      DJANGO_SETTINGS_MODULE: "${DJANGO_SETTINGS_MODULE:-config.settings.production}"
+      DATABASE_NAME: "${DATABASE_NAME:-ownpaper}"
+      DATABASE_USER: "${DATABASE_USER:-ownpaper}"
+      DATABASE_PASSWORD: "${DATABASE_PASSWORD:-change-me}"
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+    ports:
+      - "${OWNPAPER_HTTP_PORT:-8000}:8000"
+    volumes:
+      - "${OWNPAPER_STATIC_VOLUME:-/var/www/ownpaper/static}:/app/static"
+      - "${OWNPAPER_MEDIA_VOLUME:-/var/www/ownpaper/media}:/app/media"
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: "${DATABASE_NAME:-ownpaper}"
+      POSTGRES_USER: "${DATABASE_USER:-ownpaper}"
+      POSTGRES_PASSWORD: "${DATABASE_PASSWORD:-change-me}"
+    volumes:
+      - ownpaper_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER:-ownpaper} -d ${DATABASE_NAME:-ownpaper}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  ownpaper_postgres:

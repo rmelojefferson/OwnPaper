@@ -1,0 +1,57 @@
+body {
+            font-family: "Times New Roman", serif;
+            font-size: 12pt;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+            color: #111;
+        }
+
+        form, .acoes-exportacao {
+            margin-bottom: 1.5rem;
+        }
+
+        input, select, button {
+            font: inherit;
+            padding: 10px;
+            margin-bottom: 0.8rem;
+            box-sizing: border-box;
+        }
+
+        input, select {
+            width: 100%;
+        }
+
+        .indexador-linha-dupla {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .indexador-linha-dupla .campo-periodo {
+            flex: 0 0 180px;
+        }
+
+        .indexador-linha-dupla .campo-periodo input {
+            width: 100%;
+        }
+
+        @media (max-width: 700px) {
+            .indexador-linha-dupla {
+                display: block;
+            }
+
+            .indexador-linha-dupla .campo-periodo {
+                flex: none;
+                width: 100%;
+            }
+        }
+        .resultado {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .paginacao a {
+            margin-right: 0.8rem;
+        }

@@ -1,0 +1,309 @@
+{% load static wagtailcore_tags wagtailimages_tags wagtailembeds_tags conteudo_tags %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}</title>
+
+    <meta name="description" content="{% if page.search_description %}{{ page.search_description }}{% elif page.resumo %}{{ page.resumo|striptags }}{% else %}{{ page.title }}{% endif %}">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}">
+    <meta property="og:description" content="{% if page.search_description %}{{ page.search_description }}{% elif page.resumo %}{{ page.resumo|striptags }}{% else %}{{ page.title }}{% endif %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:site_name" content="{% if config_site and config_site.nome_site %}{{ config_site.nome_site }}{% else %}OwnPaper{% endif %}">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}">
+    <meta name="twitter:description" content="{% if page.search_description %}{{ page.search_description }}{% elif page.resumo %}{{ page.resumo|striptags }}{% else %}{{ page.title }}{% endif %}">
+
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">{% if page.imagem_capa %}
+
+    {% if config_site.favicon %}
+        {% image config_site.favicon fill-32x32 format-webp as favicon_32 %}
+        <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
+    {% endif %}
+
+    {% image page.imagem_capa original as og_img %}
+    <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ og_img.url }}">
+    <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ og_img.url }}">
+{% endif %}
+    <link rel="stylesheet" href="{% static 'css/publicacao.css' %}?v=20260415-150">
+
+    {% include "includes/rastreamento_head.html" %}
+
+</head>
+<body>
+    {% include "includes/rastreamento_body.html" %}
+
+    {% include "includes/menu_principal.html" %}
+    <article class="publicacao-artigo" data-publicacao-artigo>
+        <h1>{{ page.title }}</h1>
+	{% if page.autores_ordenados %}
+	    <div class="autores-publicacao" aria-label="Autores">
+	        {% for autor in page.autores_ordenados %}
+                    <a class="autor-linha" href="/autores/{{ autor.username }}/">
+                        {% if autor.foto %}
+                            {% image autor.foto fill-48x48 class="autor-miniatura" %}
+                        {% else %}
+                            <span class="autor-miniatura-vazia" aria-hidden="true">{{ autor.nome_exibicao|default:autor.nome_completo|first }}</span>
+                        {% endif %}
+                        <span>{{ autor }}</span>
+                    </a>
+	        {% endfor %}
+	    </div>
+	{% endif %}
+        <div class="metadados-publicacao">
+            {% if page.data_publicacao %}
+                <div class="meta">
+                    <strong>Publicado em:</strong> {{ page.data_publicacao|date:"d/m/Y" }}
+                </div>
+            {% endif %}
+
+            {% if page.data_atualizacao %}
+                <div class="meta">
+                    <strong>Atualizado em:</strong> {{ page.data_atualizacao|date:"d/m/Y" }}
+                </div>
+            {% endif %}
+
+            {% if page.categoria_principal %}
+                <div class="meta">
+                    <strong>Categoria:</strong>
+                    <a href="/categorias/{{ page.categoria_principal.slug }}/">{{ page.categoria_principal.nome }}</a>
+                </div>
+            {% endif %}
+
+            {% if page.tags.all %}
+                <div class="meta">
+                    <strong>Tags:</strong>
+                    {% for tag in page.tags.all %}
+                        <a href="/tags/{{ tag.slug }}/">{{ tag.name }}</a>{% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                </div>
+            {% endif %}
+        </div>
+        <div class="publicacao-barra-acoes">
+            <section class="controles-leitura" aria-label="Controles de leitura">
+                <div class="controles-leitura-cabecalho">
+                    <span class="controles-leitura-rotulo">Tamanho do texto</span>
+                </div>
+                <div class="controles-leitura-botoes">
+                    <button type="button" class="controle-fonte" data-fonte-acao="diminuir" aria-label="Diminuir fonte">A-</button>
+                    <button type="button" class="controle-fonte" data-fonte-acao="padrao" aria-label="Fonte padrão">A</button>
+                    <button type="button" class="controle-fonte" data-fonte-acao="aumentar" aria-label="Aumentar fonte">A+</button>
+                </div>
+            </section>
+	    {% include "includes/publicacao_acoes.html" %}
+        </div>
+        {% if page.resumo %}
+            <div class="resumo">
+		{{ page.resumo|richtext|linkar_marcadores }}
+            </div>
+        {% endif %}
+
+        {% if page.imagem_capa %}
+            <div class="capa">
+                {% image page.imagem_capa fill-900x506 %}
+            </div>
+        {% endif %}
+	{% if page.palavras_chave %}
+	    <p><strong>Palavras-chave:</strong> {{ page.palavras_chave }}</p>
+	{% endif %}
+
+	<div class="corpo">
+	    {{ page.corpo|richtext|linkar_marcadores|inserir_videos_no_corpo:page|inserir_imagens_no_corpo:page }}
+	</div>
+
+	{% include "includes/publicacao_acoes.html" %}
+
+	{% if page.notas_rodape.all %}
+	    <section class="notas-rodape">
+	        <h2>Notas de rodapé</h2>
+	        <ol>
+	            {% for nota in page.notas_rodape.all %}
+	                {% with destino=nota.marcador|default:forloop.counter %}
+	                    <li id="nota-{{ destino|id_marcador }}">
+	                        {{ nota.conteudo|richtext }}
+	                        <a href="#nota-src-{{ destino|id_marcador }}">↩</a>
+	                    </li>
+	                {% endwith %}
+	            {% endfor %}
+	        </ol>
+	    </section>
+	{% endif %}
+	{% if page.referencias.all %}
+	    <section class="referencias">
+	        <h2>Referências</h2>
+	        <ol>
+	            {% for ref in page.referencias.all %}
+	                {% with destino=ref.marcador|default:forloop.counter %}
+	                    <li id="ref-{{ destino|id_marcador }}">
+				{% if ref.autores_formatados %}{{ ref.autores_formatados }}. {% endif %}
+	                        <strong>{{ ref.titulo_obra }}</strong>{% if ref.subtitulo %}: {{ ref.subtitulo }}{% endif %}.
+	                        {% if ref.tipo_midia %} {{ ref.tipo_midia }}.{% endif %}
+	                        {% if ref.local_publicacao %} {{ ref.local_publicacao }}:{% endif %}
+	                        {% if ref.editora %} {{ ref.editora }},{% endif %}
+	                        {% if ref.ano %} {{ ref.ano }}.{% endif %}
+	                        {% if ref.paginas %} {{ ref.paginas }}.{% endif %}
+	                        {% if ref.url %}
+	                            <a href="{{ ref.url }}" target="_blank" rel="noopener noreferrer">{{ ref.url|url_display }}</a>
+	                        {% endif %}
+	                        {% if ref.observacoes %}
+	                            <div>{{ ref.observacoes }}</div>
+	                        {% endif %}
+	                        <a href="#ref-src-{{ destino|id_marcador }}">↩</a>
+	                    </li>
+	                {% endwith %}
+	            {% endfor %}
+	        </ol>
+	    </section>
+	{% endif %}
+	{% if page.videos_com_credito %}
+	    <section class="creditos-videos">
+	        <h2>Créditos dos vídeos</h2>
+	        <ul>
+	            {% for item in page.videos_com_credito %}
+	                <li>
+	                    {% if item.titulo %}
+	                        <strong>{{ item.titulo }}</strong> —
+	                    {% endif %}
+                            {% with link_video=item.credito_url|default:item.fonte_url %}
+                                {% if link_video %}
+                                    <a href="{{ link_video }}" target="_blank" rel="noopener noreferrer">
+                                        {% video_credit_label item %}
+                                    </a>
+                                {% elif item.credito_texto %}
+                                    {{ item.credito_texto|credit_text_display }}
+                                {% endif %}
+                            {% endwith %}
+	                </li>
+	            {% endfor %}
+	        </ul>
+	    </section>
+	{% endif %}
+        {% if page.imagens_publicacao.all %}
+            <section class="creditos-imagens">
+                <h2>Créditos das imagens</h2>
+                <ul>
+                    {% for item in page.imagens_publicacao.all %}
+                        {% if item.credito_texto or item.fonte_url %}
+                            <li>
+                                {% if item.titulo %}
+                                    <strong>{{ item.titulo }}</strong> —
+                                {% endif %}
+
+                                {% if item.credito_texto %}
+                                    {% if item.credito_texto|is_url %}
+                                        <a class="credito-rede-link" href="{{ item.credito_texto }}" target="_blank" rel="noopener noreferrer">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                                <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5a4.25 4.25 0 0 0 4.25 4.25h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5a4.25 4.25 0 0 0-4.25-4.25h-8.5zm8.94 1.75a1.06 1.06 0 1 1 0 2.12 1.06 1.06 0 0 1 0-2.12zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.5a3.5 3.5 0 1 0 0 7.001A3.5 3.5 0 0 0 12 8.5z"></path>
+                                            </svg>
+                                            {{ item.credito_texto|instagram_handle }}
+                                        </a>
+                                    {% elif item.credito_url %}
+                                        <a class="credito-rede-link" href="{{ item.credito_url }}" target="_blank" rel="noopener noreferrer">
+                                            <svg viewBox="0 0 24 24" aria-hidden="true">
+                                                <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5a4.25 4.25 0 0 0 4.25 4.25h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5a4.25 4.25 0 0 0-4.25-4.25h-8.5zm8.94 1.75a1.06 1.06 0 1 1 0 2.12 1.06 1.06 0 0 1 0-2.12zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.5a3.5 3.5 0 1 0 0 7.001A3.5 3.5 0 0 0 12 8.5z"></path>
+                                            </svg>
+                                            {{ item.credito_url|instagram_handle }}
+                                        </a>
+                                    {% else %}
+                                        {{ item.credito_texto|credit_text_display }}
+                                    {% endif %}
+                                {% endif %}
+
+                                {% if item.fonte_url %}
+                                    {% if item.credito_texto %} — {% endif %}
+                                    <a href="{{ item.fonte_url }}" target="_blank" rel="noopener noreferrer">Fonte</a>
+                                {% endif %}
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </section>
+        {% endif %}
+        {% if page.autores_ordenados %}
+            <section class="autores-dados">
+                <h2>Sobre o autor</h2>
+                <div class="autores-dados-lista">
+                    {% for autor in page.autores_ordenados %}
+                        <article class="autor-card">
+                            <div class="autor-card-topo">
+                                <a href="/autores/{{ autor.username }}/" aria-label="Publicações de {{ autor }}">
+                                    {% if autor.foto %}
+                                        {% image autor.foto fill-72x72 class="autor-card-foto" %}
+                                    {% else %}
+                                        <span class="autor-card-foto-vazia" aria-hidden="true">{{ autor.nome_exibicao|default:autor.nome_completo|first }}</span>
+                                    {% endif %}
+                                </a>
+
+                                <div class="autor-card-info">
+                                    <h3><a href="/autores/{{ autor.username }}/">{{ autor }}</a></h3>
+
+                                    <p class="autor-dado"><strong>Nome completo:</strong> {{ autor.nome_completo }}</p>
+
+                                    {% if autor.orcid %}
+                                        <p class="autor-dado">
+                                            <strong>ORCID:</strong>
+                                            {% if autor.orcid_url %}
+                                                <a href="{{ autor.orcid_url }}" target="_blank" rel="noopener noreferrer">{{ autor.orcid }}</a>
+                                            {% else %}
+                                                {{ autor.orcid }}
+                                            {% endif %}
+                                        </p>
+                                    {% endif %}
+
+                                    {% if autor.lattes_url %}
+                                        <p class="autor-dado">
+                                            <strong>Lattes:</strong>
+                                            <a href="{{ autor.lattes_url }}" target="_blank" rel="noopener noreferrer">{{ autor.lattes_url }}</a>
+                                        </p>
+                                    {% endif %}
+
+                                    <a class="autor-publicacoes-link" href="/autores/{{ autor.username }}/">Outras publicações do autor</a>
+                                </div>
+                            </div>
+
+                            {% if autor.mini_bio %}
+                                <div class="autor-mini-bio">{{ autor.mini_bio|linebreaks }}</div>
+                            {% endif %}
+                        </article>
+                    {% endfor %}
+                </div>
+            </section>
+        {% endif %}
+    </article>
+    {% if page.publicacoes_relacionadas %}
+        <section class="publicacoes-relacionadas">
+            <h2>Publicações relacionadas</h2>
+
+            <div class="lista-relacionadas">
+                {% for item in page.publicacoes_relacionadas %}
+                    <article class="relacionada-item">
+                        <h3><a href="{% pageurl item %}">{{ item.title }}</a></h3>
+
+                        {% if item.data_publicacao %}
+                            <div class="meta">
+                                {{ item.data_publicacao|date:"d/m/Y" }}
+                            </div>
+                        {% endif %}
+
+                        {% if item.resumo %}
+                            <div>
+                                {{ item.resumo|richtext|safe }}
+                            </div>
+                        {% endif %}
+                    </article>
+                {% endfor %}
+            </div>
+        </section>
+    {% endif %}
+
+<script src="{% static 'js/publicacao.js' %}?v=20260415-150" defer></script>
+{% include "includes/botao_topo.html" %}
+{% include "includes/rodape_site.html" %}
+
+</body>
+</html>

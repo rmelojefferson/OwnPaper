@@ -1,0 +1,71 @@
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% if config_site.favicon %}
+        {% image config_site.favicon fill-32x32 format-webp as favicon_32 %}
+        <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
+    {% endif %}
+
+    <meta name="description" content="{% if page.search_description %}{{ page.search_description }}{% elif page.resumo %}{{ page.resumo|striptags }}{% elif config_site.descricao_padrao %}{{ config_site.descricao_padrao }}{% else %}{{ page.title }}{% endif %}">
+
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}">
+    <meta property="og:description" content="{% if page.search_description %}{{ page.search_description }}{% elif page.resumo %}{{ page.resumo|striptags }}{% elif config_site.descricao_padrao %}{{ config_site.descricao_padrao }}{% else %}{{ page.title }}{% endif %}">
+    <meta property="og:url" content="{{ request.build_absolute_uri }}">
+    <meta property="og:site_name" content="{% if config_site.nome_site %}{{ config_site.nome_site }}{% else %}{{ page.title }}{% endif %}">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}">
+    <meta name="twitter:description" content="{% if page.search_description %}{{ page.search_description }}{% elif page.resumo %}{{ page.resumo|striptags }}{% elif config_site.descricao_padrao %}{{ config_site.descricao_padrao }}{% else %}{{ page.title }}{% endif %}">
+
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+
+    {% if page.imagem_capa %}
+        {% image page.imagem_capa original as og_img %}
+        <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ og_img.url }}">
+        <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ og_img.url }}">
+    {% elif config_site.imagem_compartilhamento_padrao %}
+        {% image config_site.imagem_compartilhamento_padrao original as og_img %}
+        <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ og_img.url }}">
+        <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ og_img.url }}">
+    {% endif %}
+    <link rel="stylesheet" href="{% static 'css/pages/pagina-institucional-page.css' %}">
+    {% include "includes/rastreamento_head.html" %}
+
+</head>
+<body>
+    {% include "includes/rastreamento_body.html" %}
+
+    {% include "includes/menu_principal.html" %}
+
+    <article>
+        <h1>{{ page.title }}</h1>
+
+        {% if page.resumo %}
+            <div class="resumo">
+                {{ page.resumo|richtext }}
+            </div>
+        {% endif %}
+
+        {% if page.imagem_capa %}
+            <div class="capa">
+                {% image page.imagem_capa width-900 %}
+            </div>
+        {% endif %}
+
+        {% if page.corpo %}
+            <div class="corpo">
+                {{ page.corpo|richtext }}
+            </div>
+        {% endif %}
+    </article>
+
+    {% include "includes/rodape_site.html" %}
+</body>
+</html>

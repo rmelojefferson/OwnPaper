@@ -1,0 +1,23 @@
+{% if config_site.google_tag_manager_id %}
+    <noscript>
+        <iframe
+            src="https://www.googletagmanager.com/ns.html?id={{ config_site.google_tag_manager_id|urlencode }}"
+            height="0"
+            width="0"
+            style="display:none;visibility:hidden"
+        ></iframe>
+    </noscript>
+{% endif %}
+
+{% if config_site.meta_pixel_id %}
+    <noscript>
+        <img
+            height="1"
+            width="1"
+            style="display:none"
+            alt=""
+            src="https://www.facebook.com/tr?id={{ config_site.meta_pixel_id|urlencode }}&ev=PageView&noscript=1"
+        >
+    </noscript>
+{% endif %}
+

@@ -1,0 +1,114 @@
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% if config_site.favicon %}
+        {% image config_site.favicon fill-32x32 format-webp as favicon_32 %}
+        <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
+    {% endif %}
+    <link rel="stylesheet" href="{% static 'css/pages/indexador-page.css' %}">
+    {% include "includes/rastreamento_head.html" %}
+
+</head>
+<body>
+    {% include "includes/rastreamento_body.html" %}
+
+    {% include "includes/menu_principal.html" %}
+
+    <article>
+        <h1>{{ page.title }}</h1>
+
+        {% if page.introducao %}
+            <div>{{ page.introducao|richtext }}</div>
+        {% endif %}
+
+        <form method="get">
+            <label for="id_q">Buscar</label>
+            <input type="text" name="q" id="id_q" value="{{ termo_busca }}">
+
+	    <div class="indexador-linha-dupla">
+	        <div class="campo-periodo">
+	            <label for="id_ano_inicial">Período (Ano) - de</label>
+	            <input
+	                type="number"
+	                name="ano_inicial"
+	                id="id_ano_inicial"
+	                value="{{ ano_inicial }}"
+	                min="0"
+	                step="1"
+	                placeholder="Ex.: 2018"
+	            >
+	        </div>
+
+	        <div class="campo-periodo">
+	            <label for="id_ano_final">Período (Ano) - até</label>
+	            <input
+	                type="number"
+	                name="ano_final"
+	                id="id_ano_final"
+	                value="{{ ano_final }}"
+	                min="0"
+	                step="1"
+	                placeholder="Ex.: 2024"
+	            >
+	        </div>
+	    </div>
+
+            <label for="id_ordenar">Ordenar por</label>
+            <select name="ordenar" id="id_ordenar">
+                <option value="recentes" {% if ordenacao_atual == "recentes" %}selected{% endif %}>Mais recentes</option>
+                <option value="antigos" {% if ordenacao_atual == "antigos" %}selected{% endif %}>Mais antigos</option>
+                <option value="titulo_az" {% if ordenacao_atual == "titulo_az" %}selected{% endif %}>Título A-Z</option>
+                <option value="titulo_za" {% if ordenacao_atual == "titulo_za" %}selected{% endif %}>Título Z-A</option>
+            </select>
+
+            <button type="submit">Buscar</button>
+        </form>
+
+        <div class="acoes-exportacao">
+	    <a href="/indexador/{{ page.slug }}/exportar/?q={{ termo_busca|urlencode }}&ano_inicial={{ ano_inicial|urlencode }}&ano_final={{ ano_final|urlencode }}&ordenar={{ ordenacao_atual|urlencode }}">Exportar resultados em CSV</a>
+            <span> | </span>
+            <a href="/indexador/{{ page.slug }}/exportar/?escopo=todos">Exportar toda a base em CSV</a>
+        </div>
+
+        {% if registros %}
+            {% for registro in registros %}
+                <div class="resultado">
+                    <h2>
+                        <a href="/indexador/{{ page.slug }}/registro/{{ registro.slug }}/">
+                            {{ registro.titulo }}
+                        </a>
+                    </h2>
+
+                    {% if registro.ano_publicacao %}
+                        <p><strong>Ano:</strong> {{ registro.ano_publicacao }}</p>
+                    {% endif %}
+
+                    <p>{{ registro.resumo }}</p>
+                </div>
+            {% endfor %}
+
+            <div class="paginacao">
+                {% if pagina_obj.has_previous %}
+		    <a href="?q={{ termo_busca|urlencode }}&ano_inicial={{ ano_inicial|urlencode }}&ano_final={{ ano_final|urlencode }}&ordenar={{ ordenacao_atual|urlencode }}&pagina={{ pagina_obj.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                <span>Página {{ pagina_obj.number }} de {{ pagina_obj.paginator.num_pages }}</span>
+
+                {% if pagina_obj.has_next %}
+		    <a href="?q={{ termo_busca|urlencode }}&ano_inicial={{ ano_inicial|urlencode }}&ano_final={{ ano_final|urlencode }}&ordenar={{ ordenacao_atual|urlencode }}&pagina={{ pagina_obj.next_page_number }}">Próxima</a>
+                {% endif %}
+            </div>
+        {% else %}
+            <p>{{ page.mensagem_sem_resultados }}</p>
+        {% endif %}
+    </article>
+
+    {% include "includes/rodape_site.html" %}
+</body>
+</html>

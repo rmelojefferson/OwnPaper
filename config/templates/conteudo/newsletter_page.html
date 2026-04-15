@@ -1,0 +1,220 @@
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% if TURNSTILE_ENABLED %}
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+    {% endif %}
+
+    {% if config_site.favicon %}
+        {% image config_site.favicon fill-32x32 format-webp as favicon_32 %}
+        <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
+    {% endif %}
+    <link rel="stylesheet" href="{% static 'css/pages/newsletter-page.css' %}">
+    {% include "includes/rastreamento_head.html" %}
+
+</head>
+<body>
+    {% include "includes/rastreamento_body.html" %}
+
+    {% include "includes/menu_principal.html" %}
+
+    <article>
+        <h1>{{ page.title }}</h1>
+
+	{% if request.GET.sucesso %}
+	    <div class="mensagem-sucesso" id="msg-sucesso">
+	        {{ page.mensagem_sucesso }}
+	    </div>
+	{% endif %}
+
+
+        {% if request.GET.confirmado %}
+            <div class="mensagem-sucesso" id="msg-confirmado">
+                Inscrição confirmada com sucesso.
+            </div>
+        {% endif %}
+
+        {% if request.GET.descadastrado %}
+            <div class="mensagem-sucesso" id="msg-descadastrado">
+                Sua inscrição foi cancelada com sucesso.
+            </div>
+        {% endif %}
+
+	{% if request.GET.cancelamento_enviado %}
+	    <div class="mensagem-sucesso" id="msg-cancelamento-enviado">
+	        Se este e-mail estiver inscrito, enviamos um link para concluir o cancelamento.
+	    </div>
+	{% endif %}
+
+	{% if request.GET.cancelamento_email_falhou %}
+	    <div class="mensagem-sucesso" id="msg-cancelamento-email-falhou">
+	        Não foi possível enviar o e-mail de cancelamento agora. Tente novamente em alguns minutos.
+	    </div>
+	{% endif %}
+
+	{% if request.GET.privacidade %}
+	    <div class="mensagem-sucesso" id="msg-privacidade">
+	        Sua solicitação foi registrada. Em breve ela será analisada.
+	    </div>
+	{% endif %}
+
+	{% if request.GET.privacidade_email_falhou %}
+	    <div class="mensagem-sucesso" id="msg-privacidade-email-falhou">
+	        Sua solicitação foi registrada, mas não foi possível enviar a notificação por e-mail agora.
+	    </div>
+	{% endif %}
+
+        {% if request.GET.existente %}
+            <div class="mensagem-sucesso" id="msg-existente">
+                Este e-mail já está inscrito e confirmado.
+            </div>
+        {% endif %}
+
+        {% if request.GET.token_expirado %}
+            <div class="mensagem-sucesso" id="msg-token-expirado">
+                O link expirou. Faça uma nova inscrição para receber outro e-mail de confirmação.
+            </div>
+        {% endif %}
+
+        {% if request.GET.token_invalido %}
+            <div class="mensagem-sucesso" id="msg-token-invalido">
+                O link informado é inválido.
+            </div>
+        {% endif %}
+
+        {% if request.GET.limite %}
+            <div class="mensagem-sucesso" id="msg-limite">
+                Muitas tentativas em pouco tempo. Aguarde alguns minutos antes de tentar novamente.
+            </div>
+        {% endif %}
+
+        {% if request.GET.captcha %}
+            <div class="mensagem-sucesso" id="msg-captcha">
+                Não foi possível validar a verificação anti-bot. Tente novamente.
+            </div>
+        {% endif %}
+
+        {% if request.GET.email_falhou %}
+            <div class="mensagem-sucesso" id="msg-email-falhou">
+                Não foi possível enviar o e-mail de confirmação agora. Tente novamente em alguns minutos.
+            </div>
+        {% endif %}
+
+	{% if request.GET.privacidade_confirmacao_exclusao_enviada %}
+	    <div class="mensagem-sucesso" id="msg-privacidade-confirmacao-exclusao-enviada">
+	        Enviamos um link para confirmar a exclusao dos seus dados.
+	    </div>
+	{% endif %}
+
+	{% if request.GET.privacidade_confirmacao_exclusao_email_falhou %}
+	    <div class="mensagem-sucesso" id="msg-privacidade-confirmacao-exclusao-email-falhou">
+	        Sua solicitacao foi registrada, mas nao foi possivel enviar o e-mail de confirmacao da exclusao agora.
+	    </div>
+	{% endif %}
+
+	{% if request.GET.privacidade_exclusao_confirmada %}
+	    <div class="mensagem-sucesso" id="msg-privacidade-exclusao-confirmada">
+	        A exclusao dos seus dados foi confirmada e concluida com sucesso.
+	    </div>
+	{% endif %}
+
+	{% if request.GET.privacidade_exclusao_confirmada_email_falhou %}
+	    <div class="mensagem-sucesso" id="msg-privacidade-exclusao-confirmada-email-falhou">
+	        A exclusao foi concluida, mas nao foi possivel enviar o e-mail final de confirmacao.
+	    </div>
+	{% endif %}
+
+	{% if request.GET.privacidade_token_invalido %}
+	    <div class="mensagem-sucesso" id="msg-privacidade-token-invalido">
+	        O link de confirmacao da exclusao e invalido.
+	    </div>
+	{% endif %}
+
+	{% if request.GET.privacidade_token_expirado %}
+	    <div class="mensagem-sucesso" id="msg-privacidade-token-expirado">
+	        O link de confirmacao da exclusao expirou. Faça uma nova solicitacao.
+	    </div>
+	{% endif %}
+
+        {% if page.introducao %}
+            <div>
+                {{ page.introducao|richtext }}
+            </div>
+        {% endif %}
+
+        <form method="post" action="/newsletter/{{ page.slug }}/inscrever/">
+            {% csrf_token %}
+
+            <div class="campo-oculto">
+                <label for="id_website">Website</label>
+                <input type="text" name="website" id="id_website" tabindex="-1" autocomplete="off">
+            </div>
+
+            <label for="id_email">E-mail</label>
+            <input type="email" name="email" id="id_email" required>
+
+            <div class="checkbox-linha">
+                <input type="checkbox" name="consentimento" id="id_consentimento" required>
+                <label for="id_consentimento">
+                    Concordo em receber comunicações por e-mail e estou ciente de que posso cancelar a inscrição a qualquer momento, conforme a Política de Privacidade.
+                </label>
+            </div>
+
+            {% if TURNSTILE_ENABLED %}
+                <div class="cf-turnstile turnstile-widget" data-sitekey="{{ TURNSTILE_SITE_KEY }}"></div>
+            {% endif %}
+
+            <button type="submit">Inscrever-se</button>
+        </form>
+
+	<hr>
+	
+	<section>
+	    <h2>Cancelar inscrição</h2>
+	    <p>Já recebe a newsletter e quer sair da lista? Informe seu e-mail abaixo para receber um link seguro de cancelamento.</p>
+
+	    <form method="post" action="/newsletter/{{ page.slug }}/solicitar-cancelamento/">
+	        {% csrf_token %}
+
+	        <label for="id_email_cancelamento">E-mail</label>
+	        <input type="email" name="email_cancelamento" id="id_email_cancelamento" required>
+	
+	        <button type="submit">Enviar link de cancelamento</button>
+	    </form>
+	</section>
+	<hr>
+
+	<section>
+	    <h2>Privacidade e dados</h2>
+	    <p>Você pode solicitar uma cópia dos dados tratados pela newsletter ou pedir a exclusão dos seus dados, observadas as hipóteses legais aplicáveis.</p>
+
+	    <form method="post" action="/newsletter/{{ page.slug }}/solicitar-privacidade/">
+	        {% csrf_token %}
+
+	        <label for="id_email_privacidade">E-mail</label>
+	        <input type="email" name="email_privacidade" id="id_email_privacidade" required>
+
+	        <label for="id_tipo_privacidade">Solicitação</label>
+		        <select class="select-largo" name="tipo_privacidade" id="id_tipo_privacidade" required>
+	            <option value="">Selecione</option>
+	            <option value="acesso">Quero solicitar acesso aos meus dados</option>
+	            <option value="exclusao">Quero solicitar exclusão dos meus dados</option>
+	        </select>
+
+	        <button type="submit">Enviar solicitação</button>
+	    </form>
+	</section>
+    </article>
+
+    {% include "includes/rodape_site.html" %}
+
+<script src="{% static 'js/pages/newsletter-page.js' %}" defer></script>
+
+</body>
+</html>

@@ -1,0 +1,88 @@
+body {
+            font-family: "Times New Roman", serif;
+            font-size: 12pt;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+            color: #111;
+        }
+
+        .form-busca {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-busca input[type="text"] {
+            width: 300px;
+            max-width: 100%;
+            padding: 8px;
+        }
+
+        .form-busca select {
+            padding: 8px;
+            margin-left: 0.5rem;
+        }
+
+        .form-busca button {
+            padding: 8px 12px;
+            margin-left: 0.5rem;
+        }
+
+        .acoes-busca {
+            margin-bottom: 2rem;
+        }
+
+        .acoes-busca form {
+            display: inline-block;
+            margin-right: 0.5rem;
+        }
+
+        .lista {
+            display: grid;
+            gap: 2rem;
+        }
+
+        .card {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 2rem;
+        }
+
+        .card h2 a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .card h2 a:hover {
+            text-decoration: underline;
+        }
+
+        .meta {
+            margin-bottom: 1rem;
+            color: #555;
+        }
+
+        .capa {
+            margin: 1rem 0;
+        }
+
+        .capa img {
+            width: 180px;
+            height: auto;
+            display: block;
+        }
+
+        .paginacao {
+            margin-top: 2rem;
+        }
+
+        .paginacao a,
+        .paginacao span {
+            margin-right: 0.75rem;
+        }
+
+	.rodape-site {
+	    margin-top: 3rem;
+	    padding-top: 1.5rem;
+	    border-top: 1px solid #ddd;
+	    color: #444;
+	}

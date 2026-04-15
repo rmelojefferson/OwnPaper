@@ -1,0 +1,54 @@
+{% load static wagtailimages_tags %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>Autores</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% if config_site.favicon %}
+        {% image config_site.favicon fill-32x32 format-webp as favicon_32 %}
+        <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
+    {% endif %}
+    <link rel="stylesheet" href="{% static 'css/pages/autores-index.css' %}">
+    {% include "includes/rastreamento_head.html" %}
+
+</head>
+<body>
+    {% include "includes/rastreamento_body.html" %}
+
+    {% include "includes/menu_principal.html" %}
+
+    <h1>Autores</h1>
+
+    <div class="lista">
+        {% for autor in autores %}
+            <article class="card">
+                {% if autor.foto %}
+                    <div class="foto">
+                        {% image autor.foto fill-100x100 %}
+                    </div>
+                {% endif %}
+
+                <div class="conteudo">
+                    <h2>
+                        <a href="/autores/{{ autor.username }}/">{{ autor }}</a>
+                    </h2>
+
+                    {% if autor.orcid %}
+                        <div class="meta"><strong>ORCID:</strong> {{ autor.orcid }}</div>
+                    {% endif %}
+
+                    {% if autor.mini_bio %}
+                        <div>{{ autor.mini_bio|linebreaks }}</div>
+                    {% endif %}
+                </div>
+            </article>
+        {% empty %}
+            <p>Nenhum autor cadastrado ainda.</p>
+        {% endfor %}
+    </div>
+{% include "includes/rodape_site.html" %}
+</body>
+</html>

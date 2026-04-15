@@ -1,0 +1,19 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}Verificação em duas etapas{% endblock %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static 'css/pages/two-factor-base.css' %}">
+
+    {% block extra_media %}{% endblock %}
+</head>
+<body>
+    <div class="caixa">
+        {% block content_wrapper %}
+            {% block content %}{% endblock %}
+        {% endblock %}
+    </div>
+</body>
+</html>

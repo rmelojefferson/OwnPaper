@@ -1,0 +1,55 @@
+body {
+            font-family: "Times New Roman", serif;
+            font-size: 12pt;
+            line-height: 1.6;
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+            color: #111;
+        }
+
+        .lista {
+            display: grid;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 2rem;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+
+        .foto img {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+
+        .conteudo h2 {
+            margin: 0 0 0.5rem 0;
+        }
+
+        .conteudo h2 a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .conteudo h2 a:hover {
+            text-decoration: underline;
+        }
+
+        .meta {
+            margin-bottom: 0.5rem;
+            color: #444;
+        }
+	.rodape-site {
+	    margin-top: 3rem;
+	    padding-top: 1.5rem;
+	    border-top: 1px solid #ddd;
+	    color: #444;
+	}

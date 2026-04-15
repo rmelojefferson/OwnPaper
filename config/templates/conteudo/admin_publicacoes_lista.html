@@ -1,0 +1,161 @@
+{% extends "wagtailadmin/base.html" %}
+{% load static %}
+
+{% block titletag %}Publicações{% endblock %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/admin-publicacoes-lista.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div class="nice-padding admin-publicacoes">
+        <div class="admin-publicacoes-topo">
+            <h1>Publicações</h1>
+            {% if tem_pasta_publicacoes %}
+                <a class="button button-small button-primary" href="{{ url_nova_publicacao }}">Nova publicação</a>
+            {% endif %}
+        </div>
+
+        {% if not tem_pasta_publicacoes %}
+            <p class="admin-publicacoes-alerta">
+                A pasta de publicações não foi encontrada. Crie uma "Pasta de publicações" na árvore de páginas para habilitar o botão de nova publicação.
+            </p>
+        {% endif %}
+
+        <div class="admin-publicacoes-resumo">
+            <span>Total: <strong>{{ total_publicacoes }}</strong></span>
+            <span>Publicadas: <strong>{{ total_publicadas }}</strong></span>
+            <span>Rascunhos: <strong>{{ total_rascunhos }}</strong></span>
+            <span>Com alterações não publicadas: <strong>{{ total_com_alteracoes }}</strong></span>
+        </div>
+
+        <form method="get" class="admin-publicacoes-filtros">
+            <label>
+                Busca
+                <input type="text" name="q" value="{{ filtro_q }}" placeholder="Título, resumo, autor">
+            </label>
+
+            <label>
+                Categoria
+                <select name="categoria">
+                    <option value="">Todas</option>
+                    {% for categoria in categorias %}
+                        <option value="{{ categoria.id }}" {% if filtro_categoria == categoria.id|stringformat:"s" %}selected{% endif %}>
+                            {{ categoria.nome }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </label>
+
+            <label>
+                Autor
+                <select name="autor">
+                    <option value="">Todos</option>
+                    {% for autor in autores %}
+                        <option value="{{ autor.id }}" {% if filtro_autor == autor.id|stringformat:"s" %}selected{% endif %}>
+                            {{ autor }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </label>
+
+            <label>
+                Status
+                <select name="status">
+                    <option value="">Todos</option>
+                    <option value="publicada" {% if filtro_status == "publicada" %}selected{% endif %}>Publicada</option>
+                    <option value="rascunho" {% if filtro_status == "rascunho" %}selected{% endif %}>Rascunho</option>
+                    <option value="com_alteracoes" {% if filtro_status == "com_alteracoes" %}selected{% endif %}>Com alterações não publicadas</option>
+                </select>
+            </label>
+
+            <label>
+                Ano
+                <select name="ano">
+                    <option value="">Todos</option>
+                    {% for data in anos %}
+                        {% with ano_atual=data|date:"Y" %}
+                            <option value="{{ ano_atual }}" {% if filtro_ano == ano_atual %}selected{% endif %}>{{ ano_atual }}</option>
+                        {% endwith %}
+                    {% endfor %}
+                </select>
+            </label>
+
+            <div class="admin-publicacoes-acoes">
+                <button type="submit">Filtrar</button>
+                <a href="{% url 'admin_publicacoes_lista' %}">Limpar</a>
+            </div>
+        </form>
+
+        <div class="admin-publicacoes-tabela-wrap">
+            <table class="admin-publicacoes-tabela">
+                <thead>
+                    <tr>
+                        <th>Título</th>
+                        <th>Autor(es)</th>
+                        <th>Categoria</th>
+                        <th>Publicação</th>
+                        <th>Status</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for publicacao in publicacoes %}
+                        <tr>
+                            <td>{{ publicacao.title }}</td>
+                            <td>
+                                {% for autoria in publicacao.autores_publicacao.all %}
+                                    {{ autoria.autor }}{% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    -
+                                {% endfor %}
+                            </td>
+                            <td>{{ publicacao.categoria_principal|default:"-" }}</td>
+                            <td>
+                                {% if publicacao.data_publicacao %}
+                                    {{ publicacao.data_publicacao|date:"d/m/Y" }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if publicacao.live and publicacao.has_unpublished_changes %}
+                                    Publicada (com alterações)
+                                {% elif publicacao.live %}
+                                    Publicada
+                                {% else %}
+                                    Rascunho
+                                {% endif %}
+                            </td>
+                            <td class="admin-publicacoes-links">
+                                <a href="{% url 'wagtailadmin_pages:edit' publicacao.id %}">Editar</a>
+                                {% if publicacao.live and publicacao.url %}
+                                    <a href="{{ publicacao.url }}" target="_blank" rel="noopener noreferrer">Visualizar</a>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6">Nenhuma publicação encontrada com os filtros atuais.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if publicacoes.paginator.num_pages > 1 %}
+            <nav class="admin-publicacoes-paginacao" aria-label="Paginação">
+                {% if publicacoes.has_previous %}
+                    <a href="?{{ query_string_sem_pagina }}{% if query_string_sem_pagina %}&{% endif %}pagina={{ publicacoes.previous_page_number }}">Anterior</a>
+                {% endif %}
+
+                <span>Página {{ publicacoes.number }} de {{ publicacoes.paginator.num_pages }}</span>
+
+                {% if publicacoes.has_next %}
+                    <a href="?{{ query_string_sem_pagina }}{% if query_string_sem_pagina %}&{% endif %}pagina={{ publicacoes.next_page_number }}">Próxima</a>
+                {% endif %}
+            </nav>
+        {% endif %}
+    </div>
+{% endblock %}

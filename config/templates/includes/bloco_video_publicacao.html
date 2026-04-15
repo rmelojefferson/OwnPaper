@@ -1,0 +1,17 @@
+{% load wagtailembeds_tags %}
+
+<div class="midia-no-corpo">
+    {% if midia.titulo %}
+        <h3>{{ midia.titulo }}</h3>
+    {% endif %}
+
+    <div class="midia-player">
+        {% embed midia.url %}
+    </div>
+
+    {% if midia.legenda %}
+        <div class="midia-legenda">
+            {{ midia.legenda|linebreaks }}
+        </div>
+    {% endif %}
+</div>

@@ -1,0 +1,162 @@
+.home-secao {
+        margin: 2.5rem 0;
+        --home-card-thumb-width: 180px;
+        --home-card-thumb-ratio: 16 / 9;
+    }
+
+    .home-secao h2 {
+        margin-bottom: 1rem;
+    }
+
+    .home-lista-publicacoes {
+        display: grid;
+        gap: 1rem;
+    }
+
+    .home-card-publicacao {
+        border: 1px solid #ddd;
+        padding: 1rem;
+        background: #fff;
+    }
+
+    .home-card-topo {
+        display: grid;
+        grid-template-columns: var(--home-card-thumb-width) 1fr;
+        gap: 0.9rem;
+        align-items: start;
+        margin-bottom: 0.6rem;
+    }
+
+    .home-card-miniatura {
+        display: block;
+        width: var(--home-card-thumb-width);
+        aspect-ratio: var(--home-card-thumb-ratio);
+        overflow: hidden;
+    }
+
+    .home-card-miniatura img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+    .home-card-publicacao h3 {
+        margin-top: 0;
+        margin-bottom: 0.35rem;
+    }
+
+    .home-card-publicacao p {
+        margin-bottom: 0;
+    }
+
+    .home-meta-publicacao {
+        font-size: 0.95rem;
+        color: #555;
+        margin-bottom: 0;
+    }
+
+    .home-resumo-publicacao {
+        margin-top: 0.4rem;
+    }
+
+    .home-resumo-publicacao p {
+        margin: 0;
+    }
+
+    .home-carrossel-janela {
+        width: 100%;
+        margin: 0;
+        position: relative;
+        border: 1px solid #ddd;
+        background: #fff;
+        overflow: hidden;
+    }
+
+    .home-carrossel-slide {
+        display: none;
+        position: relative;
+        background: #000;
+    }
+
+    .home-carrossel-slide.ativo {
+        display: block;
+    }
+
+    .home-carrossel-link {
+        display: block;
+        position: relative;
+        color: #fff;
+        text-decoration: none;
+    }
+
+    .home-carrossel-imagem img {
+        width: 100%;
+        height: 420px;
+        object-fit: cover;
+        display: block;
+    }
+
+    .home-carrossel-titulo {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 1rem 1.25rem;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0));
+    }
+
+    .home-carrossel-titulo h3 {
+        margin: 0;
+        color: #fff;
+    }
+
+    .home-carrossel-seta {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 10;
+        border: 0;
+        background: rgba(0, 0, 0, 0.45);
+        color: #fff;
+        width: 48px;
+        height: 48px;
+        cursor: pointer;
+        font-size: 1.6rem;
+        line-height: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0;
+    }
+
+    .home-carrossel-seta-anterior {
+        left: 12px;
+    }
+
+    .home-carrossel-seta-proximo {
+        right: 12px;
+    }
+
+    .home-visualmente-oculto {
+        position: absolute !important;
+        width: 1px !important;
+        height: 1px !important;
+        padding: 0 !important;
+        margin: -1px !important;
+        overflow: hidden !important;
+        clip: rect(0, 0, 0, 0) !important;
+        white-space: nowrap !important;
+        border: 0 !important;
+    }
+
+    @media (max-width: 640px) {
+        .home-card-topo {
+            grid-template-columns: 1fr;
+        }
+
+        .home-card-miniatura {
+            width: 100%;
+            max-width: 220px;
+        }
+    }

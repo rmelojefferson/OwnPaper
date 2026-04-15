@@ -1,0 +1,23 @@
+{% extends "two_factor/_base.html" %}
+
+{% block title %}Segurança da conta{% endblock %}
+
+{% block content %}
+    <h1>Segurança da conta</h1>
+
+    <p>
+        Para acessar o painel administrativo, é necessário configurar a verificação em duas etapas.
+    </p>
+
+    <p>
+        Se você ainda não configurou um aplicativo autenticador, clique no botão abaixo para iniciar.
+    </p>
+
+    <p>
+        Recomendamos o uso de um aplicativo compatível com TOTP, como o Aegis.
+    </p>
+
+    <p>
+        <a href="{% url 'two_factor:setup' %}">Configurar verificação em duas etapas</a>
+    </p>
+{% endblock %}

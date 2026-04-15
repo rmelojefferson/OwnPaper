@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>{{ page.title }}</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2cm;
+        }
+
+        body {
+            font-family: Times-Roman, serif;
+            font-size: 12pt;
+            line-height: 1.5;
+            color: #111;
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        h1 {
+            font-size: 20pt;
+            margin-bottom: 12pt;
+        }
+
+        h2 {
+            font-size: 15pt;
+            margin-top: 18pt;
+            margin-bottom: 8pt;
+        }
+
+        h3 {
+            font-size: 12.5pt;
+            margin-top: 12pt;
+            margin-bottom: 6pt;
+        }
+
+        .meta-bloco {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 14pt;
+        }
+
+        .meta-bloco td {
+            vertical-align: top;
+        }
+
+        .meta {
+            font-size: 10pt;
+            color: #555;
+            margin-bottom: 6pt;
+        }
+
+        .qr-publicacao {
+            text-align: right;
+            width: 96pt;
+        }
+
+        .qr-publicacao img {
+            width: 88pt;
+            height: 88pt;
+        }
+
+        .qr-publicacao-legenda {
+            font-size: 8.5pt;
+            color: #555;
+        }
+
+        .secao {
+            margin-bottom: 14pt;
+        }
+
+        p, li {
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .rodape-info {
+            margin-top: 18pt;
+            padding-top: 10pt;
+            border-top: 1px solid #ccc;
+            font-size: 10pt;
+            color: #555;
+        }
+
+        a {
+            color: #111;
+            text-decoration: underline;
+        }
+
+        sup {
+            font-size: 9pt;
+        }
+
+        .pdf-imagem,
+        .pdf-video {
+            margin: 12pt 0;
+            text-align: center;
+        }
+
+        .pdf-imagem-bloco {
+            display: inline-block;
+            max-width: 100%;
+            text-align: left;
+        }
+
+        .pdf-imagem img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
+
+        .pdf-legenda {
+            margin-top: 6pt;
+            text-align: left;
+            font-size: 10pt;
+        }
+
+        .pdf-video img {
+            width: 92pt;
+            height: 92pt;
+        }
+
+        .pdf-video-titulo {
+            font-weight: bold;
+            margin-bottom: 4pt;
+            text-align: center;
+        }
+
+        .pdf-video-url {
+            font-size: 9pt;
+            margin-top: 4pt;
+            text-align: center;
+        }
+
+        .lista-final {
+            margin: 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .lista-final-item {
+            margin-bottom: 6pt;
+            text-align: justify;
+        }
+
+        .lista-final-item p {
+            display: inline;
+            margin: 0;
+        }
+
+        .voltar-indice {
+            font-size: 9pt;
+            margin-left: 4pt;
+        }
+    </style>
+</head>
+<body>
+    <h1>{{ page.title }}</h1>
+
+    <table class="meta-bloco">
+        <tr>
+            <td>
+                <div class="meta">
+                    {% if page.data_publicacao %}
+                        Publicado em {{ page.data_publicacao|date:"d/m/Y" }}
+                    {% elif page.first_published_at %}
+                        Publicado em {{ page.first_published_at|date:"d/m/Y" }}
+                    {% endif %}
+
+                    {% if page.last_published_at and page.first_published_at and page.last_published_at != page.first_published_at %}
+                        {% if page.data_publicacao or page.first_published_at %} | {% endif %}
+                        Atualizado em {{ page.last_published_at|date:"d/m/Y" }}
+                    {% endif %}
+                </div>
+
+                {% if page.palavras_chave %}
+                    <div class="meta">
+                        <strong>Palavras-chave:</strong> {{ page.palavras_chave }}
+                    </div>
+                {% endif %}
+            </td>
+            <td class="qr-publicacao">
+                {% if qr_publicacao_data_uri %}
+                    <img src="{{ qr_publicacao_data_uri }}" alt="QR da publicação">
+                    <div class="qr-publicacao-legenda">Acessar publicação original</div>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+
+    {% if resumo_html %}
+        <div class="secao">
+            {{ resumo_html }}
+        </div>
+    {% endif %}
+
+    {% if corpo_html %}
+        <div class="secao">
+            {{ corpo_html }}
+        </div>
+    {% endif %}
+
+    {% if imagens_adicionais %}
+        <div class="secao">
+            <h2>Imagens</h2>
+            {% for item in imagens_adicionais %}
+                <div class="pdf-imagem">
+                    <div class="pdf-imagem-bloco">
+                        {% if item.imagem %}
+                            <img src="file://{{ item.imagem.file.path }}" alt="{{ item.titulo|default:'' }}">
+                        {% endif %}
+                        {% if item.titulo or item.legenda %}
+                            <div class="pdf-legenda">
+                                {% if item.titulo %}<strong>{{ item.titulo }}</strong>{% endif %}
+                                {% if item.legenda %}<div>{{ item.legenda }}</div>{% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if videos_adicionais %}
+        <div class="secao">
+            <h2>Vídeos</h2>
+            {% for item in videos_adicionais %}
+                <div class="pdf-video">
+                    <div class="pdf-video-titulo">{{ item.titulo|default:"Vídeo" }}</div>
+                    {% if item.qr_data_uri %}
+                        <img src="{{ item.qr_data_uri }}" alt="QR do vídeo">
+                    {% endif %}
+                    <div class="pdf-video-url">{{ item.url }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if notas_rodape %}
+        <div class="secao">
+            <h2>Notas de rodapé</h2>
+            <div class="lista-final">
+                {% for nota in notas_rodape %}
+                    <div class="lista-final-item" id="{{ nota.anchor_id }}">
+                        <a name="{{ nota.anchor_id }}"></a>
+                        {% if nota.marcador_display %}{{ nota.marcador_display }}. {% endif %}{{ nota.conteudo_html }}
+                        <a class="voltar-indice" href="#{{ nota.anchor_src_id }}">[voltar]</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if referencias %}
+        <div class="secao">
+            <h2>Referências</h2>
+            <div class="lista-final">
+                {% for ref in referencias %}
+                    <div class="lista-final-item" id="{{ ref.anchor_id }}">
+                        <a name="{{ ref.anchor_id }}"></a>
+                        {% if ref.marcador_display %}{{ ref.marcador_display }}. {% endif %}{{ ref.texto }}
+                        {% if ref.url %} <a href="{{ ref.url }}">{{ ref.url }}</a>{% endif %}
+                        {% if ref.observacoes %}<div>{{ ref.observacoes }}</div>{% endif %}
+                        <a class="voltar-indice" href="#{{ ref.anchor_src_id }}">[voltar]</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+
+    {% if creditos_videos %}
+        <div class="secao">
+            <h2>Créditos dos vídeos</h2>
+            <ul class="lista-final">
+                {% for item in creditos_videos %}
+                    <li>
+                        {% if item.titulo %}<strong>{{ item.titulo }}</strong> — {% endif %}
+                        {% if item.credito_url %}
+                            <a href="{{ item.credito_url }}">{{ item.credito_url }}</a>
+                        {% elif item.credito_texto %}
+                            {{ item.credito_texto }}
+                        {% endif %}
+                        {% if item.fonte_url %}
+                            {% if item.credito_texto or item.credito_url %} — {% endif %}
+                            <a href="{{ item.fonte_url }}">{{ item.fonte_url }}</a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {% if creditos_imagens %}
+        <div class="secao">
+            <h2>Créditos das imagens</h2>
+            <ul class="lista-final">
+                {% for item in creditos_imagens %}
+                    <li>
+                        {% if item.titulo %}<strong>{{ item.titulo }}</strong> — {% endif %}
+                        {% if item.credito_url %}
+                            <a href="{{ item.credito_url }}">{{ item.credito_url }}</a>
+                        {% elif item.credito_texto %}
+                            {{ item.credito_texto }}
+                        {% endif %}
+                        {% if item.fonte_url %}
+                            {% if item.credito_texto or item.credito_url %} — {% endif %}
+                            <a href="{{ item.fonte_url }}">{{ item.fonte_url }}</a>
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    {% if autores %}
+        <div class="secao">
+            <h2>Autor da publicação</h2>
+                {% for autor in autores %}
+                <div>
+                    <strong>{{ autor.nome_completo|default:autor }}</strong>
+                    {% if autor.orcid %} — ORCID: {{ autor.orcid }}{% endif %}
+                </div>
+                {% if autor.mini_bio %}
+                    <div>{{ autor.mini_bio|linebreaks }}</div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="rodape-info">
+        Fonte original: {{ url_publica }}
+    </div>
+</body>
+</html>

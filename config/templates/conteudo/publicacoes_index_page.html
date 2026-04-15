@@ -1,0 +1,56 @@
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}</title>
+    <meta name="description" content="{% if page.search_description %}{{ page.search_description }}{% else %}{{ page.title }}{% endif %}">
+    <link rel="canonical" href="{{ request.build_absolute_uri }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% if config_site.favicon %}
+        {% image config_site.favicon fill-32x32 format-webp as favicon_32 %}
+        <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
+    {% endif %}
+    <link rel="stylesheet" href="{% static 'css/pages/publicacoes-index-page.css' %}">
+    {% include "includes/rastreamento_head.html" %}
+
+</head>
+<body>
+    {% include "includes/rastreamento_body.html" %}
+
+    {% include "includes/menu_principal.html" %}
+
+    <main>
+        <h1>{{ page.title }}</h1>
+
+        {% if page.introducao %}
+            <div class="introducao">
+                {{ page.introducao|richtext }}
+            </div>
+        {% endif %}
+
+        <div class="lista-publicacoes">
+            {% for publicacao in publicacoes %}
+                <article class="publicacao-item">
+                    <h2><a href="{% pageurl publicacao %}">{{ publicacao.title }}</a></h2>
+
+                    {% if publicacao.data_publicacao %}
+                        <div class="meta">{{ publicacao.data_publicacao|date:"d/m/Y" }}</div>
+                    {% endif %}
+
+                    {% if publicacao.resumo %}
+                        <div>{{ publicacao.resumo|richtext }}</div>
+                    {% endif %}
+                </article>
+            {% empty %}
+                <p>Nenhuma publicação cadastrada.</p>
+            {% endfor %}
+        </div>
+    </main>
+
+    {% include "includes/botao_topo.html" %}
+    {% include "includes/rodape_site.html" %}
+</body>
+</html>

@@ -1,0 +1,42 @@
+body {
+            font-family: "Times New Roman", serif;
+            font-size: 12pt;
+            line-height: 1.6;
+            max-width: 900px;
+            margin: 40px auto;
+            padding: 0 20px;
+            color: #111;
+        }
+
+        h1 {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+        }
+
+        .resumo {
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        .capa {
+            margin: 1.5rem 0;
+        }
+
+        .capa img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .corpo {
+            text-align: justify;
+            hyphens: auto;
+        }
+
+        .rodape-site {
+            margin-top: 3rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #ddd;
+            color: #444;
+        }

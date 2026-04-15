@@ -1,0 +1,67 @@
+{% load static wagtailimages_tags %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>{{ registro.titulo }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% if config_site.favicon %}
+        {% image config_site.favicon fill-32x32 format-webp as favicon_32 %}
+        <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
+    {% endif %}
+    <link rel="stylesheet" href="{% static 'css/pages/indexador-registro-detalhe.css' %}">
+    {% include "includes/rastreamento_head.html" %}
+
+</head>
+<body>
+    {% include "includes/rastreamento_body.html" %}
+
+    {% include "includes/menu_principal.html" %}
+
+    <article>
+        <p><a href="{{ page.url }}">← Voltar ao indexador</a></p>
+
+        <h1>{{ registro.titulo }}</h1>
+
+        {% if registro.ano_publicacao %}
+            <p><strong>Ano de publicação:</strong> {{ registro.ano_publicacao }}</p>
+        {% endif %}
+
+        {% if registro.autores_registro.all %}
+            <p><strong>Autores:</strong></p>
+            <ul>
+                {% for autor in registro.autores_registro.all %}
+                    <li>
+                        {{ autor.nome }}
+                        {% if autor.orcid %}
+                            — ORCID: {{ autor.orcid }}
+                        {% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+
+        {% if registro.dados_editoriais %}
+            <p><strong>Dados editoriais:</strong> {{ registro.dados_editoriais }}</p>
+        {% endif %}
+
+        <p><strong>Resumo:</strong> {{ registro.resumo }}</p>
+
+        {% if registro.palavras_chave %}
+            <p><strong>Palavras-chave:</strong> {{ registro.palavras_chave }}</p>
+        {% endif %}
+
+        {% if registro.doi %}
+            <p><strong>DOI:</strong> {{ registro.doi }}</p>
+        {% endif %}
+
+        {% if registro.url_acesso %}
+            <p><strong>Acesso:</strong> <a href="{{ registro.url_acesso }}" target="_blank" rel="noopener noreferrer">{{ registro.url_acesso }}</a></p>
+        {% endif %}
+    </article>
+
+    {% include "includes/rodape_site.html" %}
+</body>
+</html>

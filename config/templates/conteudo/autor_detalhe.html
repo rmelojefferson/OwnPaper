@@ -1,0 +1,87 @@
+{% load static wagtailcore_tags wagtailimages_tags %}
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="utf-8">
+    <title>{{ autor }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% if config_site.favicon %}
+        {% image config_site.favicon fill-32x32 format-webp as favicon_32 %}
+        <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
+    {% endif %}
+    <link rel="stylesheet" href="{% static 'css/pages/autor-detalhe.css' %}">
+    {% include "includes/rastreamento_head.html" %}
+
+</head>
+<body>
+    {% include "includes/rastreamento_body.html" %}
+
+    {% include "includes/menu_principal.html" %}
+    <p><a href="/">← Voltar para a página inicial</a></p>
+
+    <section class="autor-topo">
+        {% if autor.foto %}
+            <div class="autor-foto">
+                {% image autor.foto fill-140x140 %}
+            </div>
+        {% endif %}
+
+        <div class="autor-info">
+            <h1>{{ autor }}</h1>
+
+            {% if autor.orcid %}
+                <div class="meta"><strong>ORCID:</strong> {{ autor.orcid }}</div>
+            {% endif %}
+
+            {% if autor.email %}
+                <div class="meta"><strong>E-mail:</strong> {{ autor.email }}</div>
+            {% endif %}
+
+            {% if autor.instagram %}
+                <div class="meta"><strong>Instagram:</strong> {{ autor.instagram }}</div>
+            {% endif %}
+
+            {% if autor.lattes_url %}
+                <div class="meta">
+                    <strong>Lattes:</strong>
+                    <a href="{{ autor.lattes_url }}" target="_blank" rel="noopener noreferrer">{{ autor.lattes_url }}</a>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+    {% if autor.mini_bio %}
+        <section class="autor-bio">
+            {{ autor.mini_bio|linebreaks }}
+        </section>
+    {% endif %}
+
+    <section>
+        <h2>Publicações</h2>
+
+        <div class="lista">
+            {% for item in publicacoes %}
+                <article class="card">
+                    <h2><a href="{% pageurl item %}">{{ item.title }}</a></h2>
+
+                    {% if item.imagem_capa %}
+                        <div class="capa">
+                            {% image item.imagem_capa width-180 %}
+                        </div>
+                    {% endif %}
+
+                    {% if item.resumo %}
+                        <div>
+                            {{ item.resumo|richtext }}
+                        </div>
+                    {% endif %}
+                </article>
+            {% empty %}
+                <p>Este autor ainda não possui publicações visíveis.</p>
+            {% endfor %}
+        </div>
+    </section>
+{% include "includes/rodape_site.html" %}
+</body>
+</html>

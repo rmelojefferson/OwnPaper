@@ -1,0 +1,80 @@
+.admin-publicacoes-topo {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.admin-publicacoes-topo h1 {
+    margin: 0;
+}
+
+.admin-publicacoes-alerta {
+    margin: 0.8rem 0 1.2rem;
+    padding: 0.7rem 0.8rem;
+    border-left: 3px solid #d9a400;
+    background: #fff8e1;
+}
+
+.admin-publicacoes-resumo {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin: 0.75rem 0 1.25rem;
+}
+
+.admin-publicacoes-filtros {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.admin-publicacoes-filtros label {
+    display: grid;
+    gap: 0.35rem;
+    font-weight: 600;
+}
+
+.admin-publicacoes-filtros input,
+.admin-publicacoes-filtros select {
+    width: 100%;
+}
+
+.admin-publicacoes-acoes {
+    display: flex;
+    align-items: end;
+    gap: 0.75rem;
+}
+
+.admin-publicacoes-tabela-wrap {
+    overflow-x: auto;
+}
+
+.admin-publicacoes-tabela {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-publicacoes-tabela th,
+.admin-publicacoes-tabela td {
+    border-bottom: 1px solid #ddd;
+    padding: 0.6rem 0.5rem;
+    text-align: left;
+    vertical-align: top;
+}
+
+.admin-publicacoes-links {
+    white-space: nowrap;
+}
+
+.admin-publicacoes-links a + a {
+    margin-left: 0.75rem;
+}
+
+.admin-publicacoes-paginacao {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+}
