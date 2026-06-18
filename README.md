@@ -1,5 +1,7 @@
 # OwnPaper
 
+![Logo do OwnPaper](docs/assets/brand/ownpaper-logo-wordmark.svg)
+
 OwnPaper é um CMS editorial self-hosted desenvolvido sobre [Django](https://www.djangoproject.com/) e [Wagtail](https://wagtail.org/).
 
 O projeto foi criado para operar uma publicação independente com site público, painel administrativo baseado no Wagtail, fluxo editorial, revisão, perguntas reutilizáveis de quiz, quarentena de mídia, newsletter, comentários, inbox de contato, doações, controles de privacidade, estatísticas internas, backups, logs de auditoria e implantação via Docker.
@@ -160,6 +162,18 @@ docker compose exec -T web python manage.py verificar_integridade_logs
 ## Documentação
 
 A documentação do OwnPaper usa MkDocs e fica em `docs/`.
+
+Documentação publicada:
+
+```text
+https://rmelojefferson.github.io/OwnPaper/
+```
+
+Tour visual:
+
+```text
+https://rmelojefferson.github.io/OwnPaper/visual-tour/
+```
 
 Instale as dependências de documentação:
 

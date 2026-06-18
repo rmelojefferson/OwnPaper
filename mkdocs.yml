@@ -7,13 +7,32 @@ use_directory_urls: true
 theme:
   name: material
   language: pt-BR
+  logo: assets/brand/ownpaper-logo.svg
+  favicon: assets/brand/ownpaper-logo.svg
+  palette:
+    - scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: Alternar para tema escuro
+    - scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: Alternar para tema claro
   features:
     - navigation.sections
     - navigation.indexes
     - content.code.copy
 
+extra_css:
+  - assets/stylesheets/ownpaper.css
+
 nav:
   - Início: index.md
+  - Tour visual: visual-tour.md
   - Demo local: demo-local.md
   - Instalação e operação:
       - Instalação com Docker: deployment/installation.md

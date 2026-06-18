@@ -1,0 +1,68 @@
+:root {
+  --md-primary-fg-color: #1f3b5c;
+  --md-primary-fg-color--light: #3b82f6;
+  --md-primary-fg-color--dark: #16283f;
+  --md-accent-fg-color: #3b82f6;
+  --md-accent-fg-color--transparent: rgba(59, 130, 246, 0.12);
+}
+
+.md-header,
+.md-tabs {
+  background: #16283f;
+}
+
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+  height: 2rem;
+}
+
+.md-typeset a {
+  color: #2f6fd4;
+}
+
+.md-typeset a:hover {
+  color: #1f3b5c;
+}
+
+.md-typeset .ownpaper-hero-logo {
+  display: block;
+  max-width: 520px;
+  width: 100%;
+  margin: 0 0 1.5rem;
+}
+
+.md-typeset .ownpaper-screenshot-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+}
+
+.md-typeset .ownpaper-screenshot-card {
+  border: 1px solid #d7e2ee;
+  border-radius: 0.9rem;
+  overflow: hidden;
+  background: #f8fbff;
+  box-shadow: 0 14px 34px rgba(22, 40, 63, 0.08);
+}
+
+.md-typeset .ownpaper-screenshot-card img {
+  display: block;
+  width: 100%;
+  border-bottom: 1px solid #d7e2ee;
+}
+
+.md-typeset .ownpaper-screenshot-card figcaption {
+  margin: 0;
+  padding: 0.8rem 1rem 1rem;
+  color: #1b2d3f;
+  font-size: 0.85rem;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .ownpaper-screenshot-card {
+  border-color: #344c66;
+  background: #1b2f45;
+}
+
+[data-md-color-scheme="slate"] .md-typeset .ownpaper-screenshot-card figcaption {
+  color: #f5faff;
+}
