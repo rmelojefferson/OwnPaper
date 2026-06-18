@@ -1,123 +1,151 @@
 # OwnPaper
 
-OwnPaper is a self-hosted editorial CMS built on top of [Django](https://www.djangoproject.com/) and [Wagtail](https://wagtail.org/).
+OwnPaper é um CMS editorial self-hosted desenvolvido sobre [Django](https://www.djangoproject.com/) e [Wagtail](https://wagtail.org/).
 
-It was developed as a pragmatic editorial platform for an independent publishing workflow: public site, Wagtail-based admin panel, editorial review, reusable quiz questions, media quarantine, newsletter, comments, contact inbox, donations, privacy controls, internal statistics, backups, audit logs and Docker-based deployment.
+O projeto foi criado para operar uma publicação independente com site público, painel administrativo baseado no Wagtail, fluxo editorial, revisão, perguntas reutilizáveis de quiz, quarentena de mídia, newsletter, comentários, inbox de contato, doações, controles de privacidade, estatísticas internas, backups, logs de auditoria e implantação via Docker.
 
-This project was developed collaboratively with OpenAI Codex. The code should still be reviewed, tested and operated by the person or organization deploying it.
+Este projeto foi desenvolvido em conjunto com OpenAI Codex. O código deve ser revisado, testado e operado por quem for instalar ou manter a aplicação.
 
-## Maintenance Position
+## Posição de Manutenção
 
-OwnPaper is open source, but it is not currently planned as a continuously maintained general-purpose product.
+OwnPaper é open source, mas não está planejado como um produto genérico com manutenção contínua garantida.
 
-The original maintainer intends to keep focusing on features, fixes and operational changes needed by the OwnPaper installations they personally use. If another person, community or organization wants to evolve the project in a broader direction, the recommended path is to fork the repository and maintain that fork independently.
+O mantenedor original pretende focar em recursos, correções e ajustes operacionais necessários para as instalações do OwnPaper que ele próprio utilizar. Se outra pessoa, comunidade ou organização quiser evoluir o projeto em outra direção, o caminho recomendado é criar um fork e manter essa versão de forma independente.
 
-Contributions may be useful, but there is no guaranteed response time, release cadence or long-term support commitment.
+Contribuições podem ser úteis, mas não há garantia de prazo de resposta, calendário de releases ou suporte de longo prazo.
 
-## License
+## Licença
 
-OwnPaper is released under the MIT License. See [LICENSE](LICENSE).
+OwnPaper é distribuído sob a licença MIT. Consulte [LICENSE](LICENSE).
 
-MIT was chosen because it is permissive and allows use, modification, distribution, private deployments and forks with minimal restrictions.
+A licença MIT foi escolhida por ser permissiva e facilitar uso, modificação, distribuição, instalações privadas e forks.
 
-Third-party dependencies keep their own licenses. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+As dependências de terceiros mantêm suas próprias licenças. Consulte [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-## Main Stack
+## Stack Principal
 
 - Python 3.12
-- Django 5.2 LTS line
-- Wagtail 7.4 line
+- Django 5.2 LTS
+- Wagtail 7.4
 - PostgreSQL 16
 - Gunicorn
 - WhiteNoise
-- ClamAV for malware scanning of uploaded files
-- Docker Compose for the default deployment path
-- MkDocs Material for project documentation
+- ClamAV para varredura de arquivos enviados
+- Docker Compose como caminho padrão de instalação
+- MkDocs Material para documentação do projeto
 
-## Current Features
+## Funcionalidades Atuais
 
-- Wagtail-based admin panel customized for OwnPaper editorial workflows.
-- Public site with home, publications, authors, categories, tags, search, RSS and donation page.
-- Publications with authorship controls, update attribution, notes, references, credits, quiz blocks and PDF export.
-- Editorial flow with review assignments, approvals, rejections, comments and audit history.
-- Reusable quiz question catalog.
-- Media quarantine for images, PDFs and videos, with sanitization and approval flow.
-- Contact inbox with assignment, reply, forwarding, signatures and operator/admin visibility rules.
-- Newsletter subscription, templates, CSV importer and notification workflows.
-- Internal statistics with limited retention and recommendation for external analytics for deeper analysis.
-- Optional integrations with Plausible, Umami, Matomo and Shlink.
-- Privacy and consent flows for public users and admin users.
-- Hash-chained audit logs for tamper-evidence at application level.
-- Backend-managed backups with local and external storage support.
-- Two-factor authentication for admin access.
+- Painel administrativo baseado no Wagtail e adaptado ao fluxo editorial do OwnPaper.
+- Site público com home, publicações, autores, categorias, tags, busca, RSS e página de apoio/doações.
+- Publicações com controle de autoria, atribuição de atualização, notas, referências, créditos, blocos de quiz e exportação em PDF.
+- Fluxo editorial com atribuição de revisores, aprovações, rejeições, comentários e histórico de auditoria.
+- Catálogo de perguntas reutilizáveis de quiz.
+- Quarentena de mídia para imagens, PDFs e vídeos, com sanitização e aprovação.
+- Inbox de contato com atribuição, resposta, encaminhamento, assinaturas e regras de visibilidade por operador/admin.
+- Newsletter com inscrição, templates, importador CSV e notificações de publicações.
+- Estatísticas internas com retenção limitada e recomendação de analytics externos para análises profundas.
+- Integrações opcionais com Plausible, Umami, Matomo e Shlink.
+- Fluxos de privacidade e consentimento para usuários públicos e usuários do painel.
+- Logs de auditoria encadeados por hash para evidência de adulteração em nível de aplicação.
+- Backups gerenciados pelo backend, com suporte a armazenamento local e externo.
+- Autenticação em dois fatores para acesso ao painel administrativo.
 
-## Project Layout
+## Estrutura do Projeto
 
 ```text
-config/      Django project settings, URLs, middleware, templates and static files
-conteudo/    Main editorial/content application
-home/        Wagtail home page application
-docs/        MkDocs documentation
+config/      Configurações Django, URLs, middlewares, templates e arquivos estáticos
+conteudo/    Aplicação principal de conteúdo/editorial
+home/        Aplicação da página inicial Wagtail
+docs/        Documentação MkDocs
 ```
 
-## Quick Start With Docker
+## Início Rápido com Docker
 
-Copy the example environment file:
+Copie o arquivo de ambiente de exemplo:
 
 ```bash
 cp .env.example .env
 ```
 
-Build and start the services:
+Construa e suba os serviços:
 
 ```bash
 docker compose up -d --build
 ```
 
-Create the first admin user:
+Crie o primeiro usuário administrador:
 
 ```bash
 docker compose exec web python manage.py createsuperuser
 ```
 
-Bootstrap the initial Wagtail site and default settings:
+Prepare o site Wagtail inicial e as configurações padrão:
 
 ```bash
 docker compose exec web python manage.py bootstrap_ownpaper
 ```
 
-Open the application:
+Acesse a aplicação:
 
 ```text
 http://localhost:8000/
 ```
 
-## Production Baseline
+Painel administrativo:
 
-Use `.env.production.example` as the starting point for a production installation:
+```text
+http://localhost:8000/admin/
+```
+
+## Demo Local
+
+O GitHub Pages hospeda apenas documentação estática. Como o OwnPaper depende de Django, Wagtail, PostgreSQL, autenticação e serviços de backend, a demo real do site público e do painel administrativo deve ser executada localmente ou em um servidor próprio.
+
+Para uma demonstração local mínima:
+
+```bash
+cp .env.example .env
+docker compose up -d --build
+docker compose exec web python manage.py bootstrap_ownpaper
+docker compose exec web python manage.py createsuperuser
+```
+
+Depois acesse:
+
+```text
+Site público: http://localhost:8000/
+Painel admin: http://localhost:8000/admin/
+```
+
+A documentação publicada no GitHub Pages explica os fluxos principais e a instalação.
+
+## Base de Produção
+
+Use `.env.production.example` como ponto de partida para produção:
 
 ```bash
 cp .env.production.example .env
 ```
 
-Before production, configure at least:
+Antes de publicar em produção, configure pelo menos:
 
 - `DJANGO_SECRET_KEY`
 - `DJANGO_ALLOWED_HOSTS`
-- database credentials
-- public hostname and HTTPS/proxy settings
-- SMTP settings
-- Turnstile keys if public forms are enabled
-- ClamAV settings
-- backup settings
-- media/static volumes
-- first admin creation process
+- credenciais do banco de dados
+- domínio público e configurações de HTTPS/reverse proxy
+- SMTP
+- chaves Turnstile, se formulários públicos estiverem ativos
+- ClamAV
+- backups
+- volumes de mídia/estáticos
+- processo de criação do primeiro admin
 
-The container entrypoint can wait for PostgreSQL, run migrations, collect static files and run bootstrap routines. These startup actions are controlled by environment variables documented in `docs/deployment/configuration.md`.
+O entrypoint do container pode aguardar o PostgreSQL, rodar migrações, coletar arquivos estáticos e executar rotinas de bootstrap. Essas ações são controladas por variáveis de ambiente documentadas em `docs/deployment/configuration.md`.
 
-## Validation Commands
+## Comandos de Validação
 
-Run before publishing, deploying or packaging:
+Execute antes de publicar, empacotar ou alterar uma instalação:
 
 ```bash
 docker compose exec -T web python manage.py check
@@ -129,11 +157,11 @@ docker compose exec -T web python manage.py validar_producao_ownpaper --backup-l
 docker compose exec -T web python manage.py verificar_integridade_logs
 ```
 
-## Documentation
+## Documentação
 
-OwnPaper documentation is written with MkDocs and lives in `docs/`.
+A documentação do OwnPaper usa MkDocs e fica em `docs/`.
 
-Install documentation dependencies:
+Instale as dependências de documentação:
 
 ```bash
 python -m venv .venv-docs
@@ -141,43 +169,43 @@ python -m venv .venv-docs
 pip install -r docs/requirements.txt
 ```
 
-Run locally:
+Rode localmente:
 
 ```bash
 mkdocs serve
 ```
 
-Build static documentation:
+Gere o build estático:
 
 ```bash
 mkdocs build
 ```
 
-The generated `site/` directory is ignored by Git.
+O diretório gerado `site/` é ignorado pelo Git.
 
-## GitHub Publication
+## Publicação no GitHub
 
-The local repository is prepared to be published as a normal GitHub repository. When it is time to publish, authenticate with GitHub and add the remote repository:
+Este repositório está preparado para publicação normal no GitHub.
 
-```bash
-gh auth login
-```
-
-Then, after creating the empty GitHub repository:
+Para configurar um repositório remoto novo:
 
 ```bash
-git remote add origin git@github.com:YOUR_USER_OR_ORG/OwnPaper.git
+git remote add origin git@github.com:SEU_USUARIO_OU_ORG/OwnPaper.git
 git push -u origin main
 ```
 
-If you want me to execute the GitHub login or push steps from this environment, tell me the target repository URL or GitHub organization first.
+A documentação pode ser publicada com MkDocs em uma branch `gh-pages`:
 
-## Security Notice
+```bash
+mkdocs gh-deploy --clean
+```
 
-OwnPaper includes several safety controls, but it is a self-hosted application. The deployer remains responsible for server security, HTTPS, SMTP reputation, backup storage, credentials, OS/container updates and production monitoring.
+## Aviso de Segurança
 
-See [SECURITY.md](SECURITY.md) and `docs/deployment/homologacao-checklist.md` before production use.
+OwnPaper inclui vários controles de segurança, mas é uma aplicação self-hosted. Quem instala continua responsável por segurança do servidor, HTTPS, reputação SMTP, armazenamento de backups, credenciais, atualização de sistema/container e monitoramento de produção.
 
-## Legal And License Notice
+Consulte [SECURITY.md](SECURITY.md) e `docs/deployment/homologacao-checklist.md` antes de usar em produção.
 
-The dependency/license inventory in this repository is a technical compliance aid, not legal advice. Before redistributing container images or offering OwnPaper commercially, review third-party licenses, system packages and image licenses according to your distribution model.
+## Aviso Legal e Licenças
+
+O inventário de dependências/licenças neste repositório é um apoio técnico de compliance, não um parecer jurídico. Antes de redistribuir imagens de container ou oferecer o OwnPaper comercialmente, revise licenças de terceiros, pacotes de sistema e imagens usadas conforme seu modelo de distribuição.

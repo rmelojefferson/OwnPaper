@@ -1,7 +1,7 @@
 site_name: OwnPaper
 site_description: Documentacao tecnica e operacional do OwnPaper
-repo_name: OwnPaper
-repo_url: https://github.com/ownpaper/ownpaper
+repo_name: rmelojefferson/OwnPaper
+repo_url: https://github.com/rmelojefferson/OwnPaper
 use_directory_urls: true
 
 theme:
@@ -14,6 +14,7 @@ theme:
 
 nav:
   - Início: index.md
+  - Demo local: demo-local.md
   - Instalação e operação:
       - Instalação com Docker: deployment/installation.md
       - Configuração por ambiente: deployment/configuration.md
