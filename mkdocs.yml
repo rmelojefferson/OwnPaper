@@ -24,6 +24,7 @@ nav:
       - HTTPS e reverse proxy: deployment/https-reverse-proxy.md
       - Fluxo de implementação: deployment/implementation-flow.md
       - Backlog de features: deployment/feature-backlog.md
+      - Publicação no GitHub: deployment/github-publication.md
   - Funcionalidades:
       - Painel administrativo: features-admin.md
       - Site público: features-public-site.md
@@ -35,5 +36,9 @@ nav:
       - Empacotamento e GitHub: packaging-github.md
       - Smoke tests: smoke-tests.md
       - Política de upgrade LTS: upgrade-framework-lts.md
+  - Projeto:
+      - Governança e manutenção: governance-maintenance.md
+      - Licenças e terceiros: licensing-third-party.md
+      - Inventário de dependências Python: dependency-inventory.md
   - Skills:
       - Rollout OwnPaper: skills/ownpaper-standard-rollout.SKILL.md

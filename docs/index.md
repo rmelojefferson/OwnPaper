@@ -4,23 +4,19 @@ OwnPaper é um CMS editorial self-hosted baseado em Django e Wagtail, com foco e
 
 Esta documentação deve ser usada como fonte operacional do projeto. O `README.md` permanece como entrada curta do repositório; os detalhes de instalação, configuração, segurança, backup, homologação e uso ficam aqui.
 
-## Estado da documentação
+## Origem e manutenção
 
-A documentação está em estrutura inicial para MkDocs. Antes de publicar uma versão estável do projeto, complete as páginas de:
+O OwnPaper foi desenvolvido em conjunto com OpenAI Codex. A documentação e o código devem ser revisados por quem for operar a instalação.
 
-- instalação via Docker;
-- configuração de `.env`;
-- criação do primeiro admin;
-- configuração SMTP;
-- configuração de ClamAV;
-- backup local e externo;
-- restauração;
-- papéis e permissões;
-- fluxo editorial;
-- quarentena de mídia;
-- privacidade, cookies e consentimento;
-- analytics externos;
-- checklist de produção.
+O projeto é aberto, mas não possui compromisso de manutenção contínua como produto geral. O mantenedor original pretende priorizar recursos e correções necessários para suas próprias instalações. Para continuidade independente, a recomendação é criar um fork.
+
+Consulte:
+
+- `CONTRIBUTING.md`, na raiz do repositório;
+- `SECURITY.md`, na raiz do repositório;
+- `THIRD_PARTY_NOTICES.md`, na raiz do repositório;
+- [Governança e manutenção](governance-maintenance.md);
+- [Licenças e terceiros](licensing-third-party.md).
 
 ## Licença
 

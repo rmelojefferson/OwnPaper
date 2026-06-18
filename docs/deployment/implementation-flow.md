@@ -191,7 +191,7 @@ No OwnPaper, a validação final sempre é:
   5. ativar `shlink_ativo` no painel
 - O domínio curto e o HTTPS do Shlink continuam sendo responsabilidade do proxy reverso da instalação.
 - Referência operacional:
-  - [shlink.md](/root/OwnPaper/docs/deployment/shlink.md)
+  - [shlink.md](shlink.md)
 
 ## Backlog pausado (decisão de produto)
 - Revisão por pares (entidades/fluxo/selo público): **pausado** até definição final.

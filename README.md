@@ -1,174 +1,183 @@
 # OwnPaper
 
-OwnPaper is a self-hosted editorial CMS built with Django and Wagtail.
+OwnPaper is a self-hosted editorial CMS built on top of [Django](https://www.djangoproject.com/) and [Wagtail](https://wagtail.org/).
 
-The current codebase is being extracted from a project-specific prototype into
-a reusable application that can be installed on any server, configured through
-the admin, and packaged with Docker.
+It was developed as a pragmatic editorial platform for an independent publishing workflow: public site, Wagtail-based admin panel, editorial review, reusable quiz questions, media quarantine, newsletter, comments, contact inbox, donations, privacy controls, internal statistics, backups, audit logs and Docker-based deployment.
 
-## Current Status
+This project was developed collaboratively with OpenAI Codex. The code should still be reviewed, tested and operated by the person or organization deploying it.
 
-This repository currently contains the working prototype:
+## Maintenance Position
 
-- Wagtail CMS for editorial pages.
-- Publications with authors, categories, tags, images, videos, notes, and references.
-- Configurable home page with carousel, highlights, and latest publications.
-- Institutional pages.
-- Contact form.
-- Newsletter subscription, cancellation, and privacy workflows.
-- Research/indexer records with CSV import and export.
-- Public search, sitemap, robots.txt, and publication PDF export.
+OwnPaper is open source, but it is not currently planned as a continuously maintained general-purpose product.
+
+The original maintainer intends to keep focusing on features, fixes and operational changes needed by the OwnPaper installations they personally use. If another person, community or organization wants to evolve the project in a broader direction, the recommended path is to fork the repository and maintain that fork independently.
+
+Contributions may be useful, but there is no guaranteed response time, release cadence or long-term support commitment.
+
+## License
+
+OwnPaper is released under the MIT License. See [LICENSE](LICENSE).
+
+MIT was chosen because it is permissive and allows use, modification, distribution, private deployments and forks with minimal restrictions.
+
+Third-party dependencies keep their own licenses. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+
+## Main Stack
+
+- Python 3.12
+- Django 5.2 LTS line
+- Wagtail 7.4 line
+- PostgreSQL 16
+- Gunicorn
+- WhiteNoise
+- ClamAV for malware scanning of uploaded files
+- Docker Compose for the default deployment path
+- MkDocs Material for project documentation
+
+## Current Features
+
+- Wagtail-based admin panel customized for OwnPaper editorial workflows.
+- Public site with home, publications, authors, categories, tags, search, RSS and donation page.
+- Publications with authorship controls, update attribution, notes, references, credits, quiz blocks and PDF export.
+- Editorial flow with review assignments, approvals, rejections, comments and audit history.
+- Reusable quiz question catalog.
+- Media quarantine for images, PDFs and videos, with sanitization and approval flow.
+- Contact inbox with assignment, reply, forwarding, signatures and operator/admin visibility rules.
+- Newsletter subscription, templates, CSV importer and notification workflows.
+- Internal statistics with limited retention and recommendation for external analytics for deeper analysis.
+- Optional integrations with Plausible, Umami, Matomo and Shlink.
+- Privacy and consent flows for public users and admin users.
+- Hash-chained audit logs for tamper-evidence at application level.
+- Backend-managed backups with local and external storage support.
 - Two-factor authentication for admin access.
-- Maintenance mode for public pages.
 
 ## Project Layout
 
 ```text
-config/      Django project settings, URLs, middleware, templates, static files
-conteudo/    Main editorial/content app
-home/        Wagtail home page app
-docs/        Project and deployment notes
+config/      Django project settings, URLs, middleware, templates and static files
+conteudo/    Main editorial/content application
+home/        Wagtail home page application
+docs/        MkDocs documentation
 ```
 
-## Local Development
+## Quick Start With Docker
 
-The Docker image uses Python 3.12 and is the supported development baseline.
-If your local virtualenv uses an older Python version, recreate it before
-running Django outside Docker.
-
-The local entrypoint uses development settings:
-
-```bash
-.venv/bin/python manage.py check
-.venv/bin/python manage.py runserver
-```
-
-The same checks can be run through Docker:
-
-```bash
-docker compose run --rm --no-deps --entrypoint python web manage.py check
-docker compose run --rm --no-deps --entrypoint python web manage.py makemigrations --check --dry-run
-```
-
-Configuration is driven by environment variables. Use `.env.example` as the
-starting point for database, hosts, static paths, media paths, secrets, email,
-and HTTPS settings.
-
-For production over HTTPS, use `.env.production.example` as the baseline.
-
-## Docker Compose
-
-OwnPaper is PostgreSQL-first. The Compose setup runs the app and PostgreSQL:
+Copy the example environment file:
 
 ```bash
 cp .env.example .env
+```
+
+Build and start the services:
+
+```bash
 docker compose up -d --build
 ```
 
-Then create an admin user:
+Create the first admin user:
 
 ```bash
 docker compose exec web python manage.py createsuperuser
 ```
 
-The app will be available on:
-
-```text
-http://localhost:8000/
-```
-
-To use another host port, change `OWNPAPER_HTTP_PORT` in `.env`.
-
-Production preset:
-
-```bash
-cp .env.production.example .env
-```
-
-Then update domain, SMTP, Turnstile keys and secrets before deploy.
-
-The container entrypoint waits for PostgreSQL, runs migrations, collects static
-files, and starts Gunicorn. These startup actions can be disabled with:
-
-```text
-OWNPAPER_WAIT_FOR_DB=false
-OWNPAPER_RUN_MIGRATIONS=false
-OWNPAPER_BOOTSTRAP=false
-OWNPAPER_COLLECTSTATIC=false
-```
-
-## Initial Bootstrap
-
-For a fresh installation, OwnPaper can prepare the Wagtail site, default pages,
-site settings, and an optional admin user:
+Bootstrap the initial Wagtail site and default settings:
 
 ```bash
 docker compose exec web python manage.py bootstrap_ownpaper
 ```
 
-To run this automatically during container startup, set:
+Open the application:
 
 ```text
-OWNPAPER_BOOTSTRAP=true
-OWNPAPER_SITE_NAME=OwnPaper
-OWNPAPER_SITE_HOSTNAME=localhost
-OWNPAPER_SITE_PORT=80
+http://localhost:8000/
 ```
 
-To create the first admin user automatically, also set:
+## Production Baseline
 
-```text
-OWNPAPER_ADMIN_USERNAME=admin
-OWNPAPER_ADMIN_EMAIL=admin@example.com
-OWNPAPER_ADMIN_PASSWORD=change-this-password
+Use `.env.production.example` as the starting point for a production installation:
+
+```bash
+cp .env.production.example .env
 ```
 
-The command is idempotent. It creates missing records and keeps existing
-content by default. Use `OWNPAPER_BOOTSTRAP_FORCE=true` or `--force` only when
-you want bootstrap-managed settings and pages to be overwritten.
+Before production, configure at least:
 
-## Packaging Direction
+- `DJANGO_SECRET_KEY`
+- `DJANGO_ALLOWED_HOSTS`
+- database credentials
+- public hostname and HTTPS/proxy settings
+- SMTP settings
+- Turnstile keys if public forms are enabled
+- ClamAV settings
+- backup settings
+- media/static volumes
+- first admin creation process
 
-The OwnPaper packaging work should follow this order:
+The container entrypoint can wait for PostgreSQL, run migrations, collect static files and run bootstrap routines. These startup actions are controlled by environment variables documented in `docs/deployment/configuration.md`.
 
-1. Document the current app and deployment assumptions.
-2. Complete the Python dependency list.
-3. Add `.env.example` with all configurable values and no secrets.
-4. Move deployment-specific settings out of source code.
-5. Add Docker Compose with app, PostgreSQL, static/media volumes, and optional nginx notes.
-6. Move remaining public labels and install-time defaults into editable site settings.
-7. Add a controlled Wagtail upgrade path and smoke-test suite.
+## Validation Commands
 
-## Deployment Notes
+Run before publishing, deploying or packaging:
 
-See [HTTPS and reverse proxy](docs/deployment/https-reverse-proxy.md)
-for production HTTPS configuration.
-
-See [Email and forms hardening](docs/deployment/email-and-forms-hardening.md)
-for SPF/DKIM/DMARC, Turnstile, rate-limit, and retention recommendations.
-
-See [Backups and restore](docs/deployment/backup-and-restore.md)
-for backend-managed weekly backups, validation and restore procedures.
-
-Use `python manage.py validar_producao_ownpaper --strict` for a production
-readiness pass.
-
-See [Framework LTS upgrade policy](docs/upgrade-framework-lts.md) for the
-current Django/Wagtail baseline.
-
-See [Smoke tests](docs/smoke-tests.md) for the minimum validation flow before
-deployment changes.
+```bash
+docker compose exec -T web python manage.py check
+docker compose exec -T web python manage.py makemigrations --check --dry-run
+docker compose exec -T web python manage.py collectstatic --noinput --dry-run
+docker compose exec -T web python manage.py test --keepdb
+docker compose exec -T web python manage.py homologar_ownpaper
+docker compose exec -T web python manage.py validar_producao_ownpaper --backup-latest
+docker compose exec -T web python manage.py verificar_integridade_logs
+```
 
 ## Documentation
 
-The recommended documentation format for OwnPaper is MkDocs, stored in this
-repository under `docs/` and published separately from the application runtime
-for example through GitHub Pages.
+OwnPaper documentation is written with MkDocs and lives in `docs/`.
 
-The README should stay as the short entry point for installation and project
-orientation. Full usage, administration, backup, security and feature
-documentation should live in the MkDocs documentation tree.
+Install documentation dependencies:
 
-## License
+```bash
+python -m venv .venv-docs
+. .venv-docs/bin/activate
+pip install -r docs/requirements.txt
+```
 
-OwnPaper is released under the MIT License. See [LICENSE](LICENSE).
+Run locally:
+
+```bash
+mkdocs serve
+```
+
+Build static documentation:
+
+```bash
+mkdocs build
+```
+
+The generated `site/` directory is ignored by Git.
+
+## GitHub Publication
+
+The local repository is prepared to be published as a normal GitHub repository. When it is time to publish, authenticate with GitHub and add the remote repository:
+
+```bash
+gh auth login
+```
+
+Then, after creating the empty GitHub repository:
+
+```bash
+git remote add origin git@github.com:YOUR_USER_OR_ORG/OwnPaper.git
+git push -u origin main
+```
+
+If you want me to execute the GitHub login or push steps from this environment, tell me the target repository URL or GitHub organization first.
+
+## Security Notice
+
+OwnPaper includes several safety controls, but it is a self-hosted application. The deployer remains responsible for server security, HTTPS, SMTP reputation, backup storage, credentials, OS/container updates and production monitoring.
+
+See [SECURITY.md](SECURITY.md) and `docs/deployment/homologacao-checklist.md` before production use.
+
+## Legal And License Notice
+
+The dependency/license inventory in this repository is a technical compliance aid, not legal advice. Before redistributing container images or offering OwnPaper commercially, review third-party licenses, system packages and image licenses according to your distribution model.
