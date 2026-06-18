@@ -1,0 +1,159 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% block titletag %}Contato (Inbox){% endblock %}
+{% load static %}
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/admin-contato-inbox.css' %}?v=20260523-01">
+{% endblock %}
+{% block extra_js %}
+    {{ block.super }}
+    <script src="{% static 'js/pages/busca-datepicker.js' %}?v=20260516-01" defer></script>
+{% endblock %}
+{% block content %}
+<div class="nice-padding admin-shell">
+    <header class="admin-page-header">
+        <div>
+            <h1>Contato (Inbox)</h1>
+        </div>
+    </header>
+
+    <section class="w-panel">
+    <form method="get" class="admin-page-form-grid admin-contato-inbox-filtros">
+        <div class="admin-page-field admin-contato-inbox-filtros__busca">
+            <label for="id_q">Busca</label>
+            <input id="id_q" type="text" name="q" value="{{ filtro_q }}" placeholder="nome, e-mail, mensagem...">
+        </div>
+        <div class="admin-page-field">
+            <label for="id_status">Status</label>
+            <select id="id_status" name="status">
+                <option value="">Todos</option>
+                {% for valor, rotulo in status_choices %}
+                    <option value="{{ valor }}" {% if filtro_status == valor %}selected{% endif %}>{{ rotulo }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="admin-page-field">
+            <label for="id_responsavel">Responsável</label>
+            <select id="id_responsavel" name="responsavel" {% if not is_admin %}disabled{% endif %}>
+                <option value="">Todos</option>
+                {% for user in responsaveis %}
+                    <option value="{{ user.id }}" {% if filtro_responsavel == user.id|stringformat:"s" %}selected{% endif %}>{{ user.username }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="admin-page-field">
+            <label>Data de</label>
+            <div class="busca-datepicker" data-busca-datepicker data-date-role="from">
+                <input id="id_data_de" class="busca-datepicker-input" type="text" name="data_de" value="{{ filtro_data_de }}" placeholder="dd/mm/aaaa" inputmode="numeric" autocomplete="off" data-datepicker-input>
+                <button type="button" class="busca-datepicker-toggle" data-datepicker-toggle aria-label="Abrir calendário da data inicial" title="Abrir calendário">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a3 3 0 0 1 3 3v11a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V7a3 3 0 0 1 3-3h1V3a1 1 0 0 1 1-1Zm13 8H4v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8ZM6 6a1 1 0 0 0-1 1v1h15V7a1 1 0 0 0-1-1H6Z"></path></svg>
+                </button>
+                <div class="busca-datepicker-popover" data-datepicker-popover hidden>
+                    <div class="busca-datepicker-toolbar">
+                        <button type="button" class="busca-datepicker-nav" data-datepicker-prev aria-label="Mês anterior">‹</button>
+                        <div class="busca-datepicker-month" data-datepicker-month></div>
+                        <button type="button" class="busca-datepicker-nav" data-datepicker-next aria-label="Próximo mês">›</button>
+                    </div>
+                    <div class="busca-datepicker-weekdays" aria-hidden="true">
+                        <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
+                    </div>
+                    <div class="busca-datepicker-grid" data-datepicker-grid></div>
+                    <div class="busca-datepicker-actions">
+                        <button type="button" class="busca-datepicker-action" data-datepicker-today>Hoje</button>
+                        <button type="button" class="busca-datepicker-action" data-datepicker-clear>Limpar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="admin-page-field">
+            <label>Data até</label>
+            <div class="busca-datepicker" data-busca-datepicker data-date-role="to">
+                <input id="id_data_ate" class="busca-datepicker-input" type="text" name="data_ate" value="{{ filtro_data_ate }}" placeholder="dd/mm/aaaa" inputmode="numeric" autocomplete="off" data-datepicker-input>
+                <button type="button" class="busca-datepicker-toggle" data-datepicker-toggle aria-label="Abrir calendário da data final" title="Abrir calendário">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a3 3 0 0 1 3 3v11a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V7a3 3 0 0 1 3-3h1V3a1 1 0 0 1 1-1Zm13 8H4v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8ZM6 6a1 1 0 0 0-1 1v1h15V7a1 1 0 0 0-1-1H6Z"></path></svg>
+                </button>
+                <div class="busca-datepicker-popover" data-datepicker-popover hidden>
+                    <div class="busca-datepicker-toolbar">
+                        <button type="button" class="busca-datepicker-nav" data-datepicker-prev aria-label="Mês anterior">‹</button>
+                        <div class="busca-datepicker-month" data-datepicker-month></div>
+                        <button type="button" class="busca-datepicker-nav" data-datepicker-next aria-label="Próximo mês">›</button>
+                    </div>
+                    <div class="busca-datepicker-weekdays" aria-hidden="true">
+                        <span>D</span><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span>
+                    </div>
+                    <div class="busca-datepicker-grid" data-datepicker-grid></div>
+                    <div class="busca-datepicker-actions">
+                        <button type="button" class="busca-datepicker-action" data-datepicker-today>Hoje</button>
+                        <button type="button" class="busca-datepicker-action" data-datepicker-clear>Limpar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="admin-page-actions">
+            <button type="submit" class="button">Filtrar</button>
+            <a class="button button-secondary" href="{% url 'admin_contato_inbox' %}">Limpar</a>
+        </div>
+    </form>
+    </section>
+    {% if is_admin %}
+        <section class="w-panel">
+        <form method="get" class="admin-page-inline-form">
+            <input type="hidden" name="q" value="{{ filtro_q }}">
+            <input type="hidden" name="status" value="{{ filtro_status }}">
+            <input type="hidden" name="responsavel" value="{{ filtro_responsavel }}">
+            <input type="hidden" name="data_de" value="{{ filtro_data_de }}">
+            <input type="hidden" name="data_ate" value="{{ filtro_data_ate }}">
+            <label class="op-admin-checkbox-line">
+                <input type="checkbox" name="sem_responsavel" value="1" {% if filtro_sem_responsavel %}checked{% endif %} onchange="this.form.submit()">
+                Mostrar somente sem responsável
+            </label>
+        </form>
+        </section>
+    {% endif %}
+
+    <section class="w-panel">
+    <div class="admin-page-table-wrap">
+        <table class="listing">
+            <thead>
+                <tr>
+                    <th>Quando</th>
+                    <th>Nome</th>
+                    <th>E-mail</th>
+                    <th>Status</th>
+                    <th>Responsável</th>
+                    <th>Mensagem</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in mensagens %}
+                    <tr>
+                        <td>{{ item.criado_em|date:"d/m/Y H:i" }}</td>
+                        <td>{{ item.nome }}</td>
+                        <td>{{ item.email }}</td>
+                        <td>{{ item.get_status_display }}</td>
+                        <td>{{ item.atribuido_para.username|default:"-" }}</td>
+                        <td>{{ item.mensagem|truncatechars:120 }}</td>
+                        <td><a class="button button-small button-secondary" href="{% url 'admin_contato_mensagem' item.id %}">Abrir</a></td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="7">Nenhuma mensagem encontrada.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    </section>
+
+    {% if mensagens.has_other_pages %}
+        <div class="admin-page-pagination">
+            {% if mensagens.has_previous %}
+                <a class="button button-secondary" href="?{% if query_string_sem_pagina %}{{ query_string_sem_pagina }}&{% endif %}pagina={{ mensagens.previous_page_number }}">Anterior</a>
+            {% endif %}
+            <span>Página {{ mensagens.number }} de {{ mensagens.paginator.num_pages }}</span>
+            {% if mensagens.has_next %}
+                <a class="button button-secondary" href="?{% if query_string_sem_pagina %}{{ query_string_sem_pagina }}&{% endif %}pagina={{ mensagens.next_page_number }}">Próxima</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,78 @@
+{% load static %}
+
+<div class="comentario-oauth-acoes">
+    {% if comentario_oauth_providers.orcid %}
+        <a class="comentario-oauth-botao" href="{% url 'comentario_oauth_iniciar' page.id 'orcid' %}" data-oauth-popup>
+            <div class="comentario-oauth-conteudo">
+                <div class="comentario-oauth-icone comentario-oauth-icone--orcid" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                        <circle cx="12" cy="12" r="10.25" fill="none" stroke="currentColor" stroke-width="1.55"></circle>
+                        <text x="12" y="12.15" text-anchor="middle" dominant-baseline="middle" font-size="9.6" font-family="Arial, sans-serif" font-weight="700" letter-spacing="-0.12" fill="currentColor">iD</text>
+                    </svg>
+                </div>
+                <div class="comentario-oauth-label">
+                    {% if oauth_mode == "use" %}
+                        Usar ORCID
+                    {% else %}
+                        Entrar com ORCID
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+    {% endif %}
+    {% if comentario_oauth_providers.github %}
+        <a class="comentario-oauth-botao" href="{% url 'comentario_oauth_iniciar' page.id 'github' %}" data-oauth-popup>
+            <div class="comentario-oauth-conteudo">
+                <div class="comentario-oauth-icone comentario-oauth-icone--github" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                        <path fill="currentColor" d="M12 .8a11.2 11.2 0 0 0-3.54 21.83c.56.1.76-.24.76-.54v-1.9c-3.1.67-3.75-1.32-3.75-1.32-.5-1.25-1.22-1.58-1.22-1.58-1-.67.08-.66.08-.66 1.1.08 1.68 1.12 1.68 1.12.98 1.68 2.56 1.2 3.18.92.1-.7.38-1.19.7-1.46-2.48-.28-5.1-1.24-5.1-5.52 0-1.22.44-2.22 1.14-3-.11-.28-.49-1.4.1-2.92 0 0 .94-.3 3.08 1.14a10.7 10.7 0 0 1 5.6 0c2.13-1.44 3.08-1.14 3.08-1.14.6 1.52.22 2.64.11 2.92.71.78 1.14 1.78 1.14 3 0 4.3-2.63 5.23-5.13 5.5.4.35.76 1.02.76 2.07v3.06c0 .3.2.65.77.54A11.2 11.2 0 0 0 12 .8Z"/>
+                    </svg>
+                </div>
+                <div class="comentario-oauth-label">
+                    {% if oauth_mode == "use" %}
+                        Usar GitHub
+                    {% else %}
+                        Entrar com GitHub
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+    {% endif %}
+    {% if comentario_oauth_providers.google %}
+        <a class="comentario-oauth-botao" href="{% url 'comentario_oauth_iniciar' page.id 'google' %}" data-oauth-popup>
+            <div class="comentario-oauth-conteudo">
+                <div class="comentario-oauth-icone comentario-oauth-icone--google" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" role="img" aria-hidden="true">
+                        <path fill="currentColor" d="M21.6 12.23c0-.72-.06-1.25-.19-1.81H12v3.58h5.53c-.11.89-.72 2.23-2.08 3.13l-.02.12 3 2.32.2.02c1.82-1.68 2.97-4.15 2.97-7.36Z"/>
+                        <path fill="currentColor" d="M12 22c2.71 0 4.98-.9 6.64-2.42l-3.17-2.46c-.85.59-1.99 1-3.47 1-2.65 0-4.89-1.74-5.69-4.15l-.11.01-3.11 2.41-.04.1A10.03 10.03 0 0 0 12 22Z"/>
+                        <path fill="currentColor" d="M6.31 13.97A5.98 5.98 0 0 1 5.97 12c0-.69.12-1.35.33-1.97l-.01-.13-3.15-2.45-.1.05A10 10 0 0 0 2 12c0 1.61.39 3.13 1.08 4.47l3.23-2.5Z"/>
+                        <path fill="currentColor" d="M12 5.88c1.86 0 3.12.8 3.84 1.46l2.81-2.74C16.97 3.03 14.71 2 12 2a10.03 10.03 0 0 0-8.96 5.5L6.3 10c.8-2.41 3.04-4.12 5.7-4.12Z"/>
+                    </svg>
+                </div>
+                <div class="comentario-oauth-label">
+                    {% if oauth_mode == "use" %}
+                        Usar Google
+                    {% else %}
+                        Entrar com Google
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+    {% endif %}
+    {% if comentario_oauth_providers.codeberg %}
+        <a class="comentario-oauth-botao comentario-oauth-botao--codeberg" href="{% url 'comentario_oauth_iniciar' page.id 'codeberg' %}" data-oauth-popup>
+            <div class="comentario-oauth-conteudo comentario-oauth-conteudo--codeberg">
+                <div class="comentario-oauth-icone comentario-oauth-icone--codeberg" aria-hidden="true">
+                    <img src="{% static 'img/codeberg.png' %}" alt="">
+                </div>
+                <div class="comentario-oauth-label">
+                    {% if oauth_mode == "use" %}
+                        Usar Codeberg
+                    {% else %}
+                        Entrar com Codeberg
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+    {% endif %}
+</div>

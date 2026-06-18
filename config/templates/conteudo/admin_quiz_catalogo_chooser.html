@@ -1,0 +1,24 @@
+{% extends "wagtailadmin/generic/chooser/chooser.html" %}
+{% load wagtailadmin_tags %}
+
+{% block filter_form %}
+    {% if filter_form.fields %}
+        <form
+            data-chooser-modal-search
+            class="admin-quiz-catalogo-chooser__filters"
+            action="{{ results_url }}"
+            method="GET"
+            novalidate
+        >
+            {% for field in filter_form.hidden_fields %}{{ field }}{% endfor %}
+
+            {% if filter_form.visible_fields %}
+                <ul class="fields">
+                    {% for field in filter_form.visible_fields %}
+                        <li>{% formattedfield field %}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </form>
+    {% endif %}
+{% endblock %}

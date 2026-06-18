@@ -1,0 +1,36 @@
+{% extends "conteudo/admin_base_custom.html" %}
+
+{% block titletag %}Início - Atalhos{% endblock %}
+
+{% block content %}
+    <div class="nice-padding admin-shell">
+        <header class="admin-page-header">
+            <div>
+                <h1>Início</h1>
+            </div>
+            <div class="admin-page-actions admin-page-actions--header">
+                <a class="button button-secondary" href="{{ url_admin_inicio }}">Início do admin</a>
+                <button class="button button-secondary" type="button" onclick="window.history.length > 1 ? window.history.back() : window.location.href='{{ url_admin_inicio }}'">Voltar</button>
+            </div>
+        </header>
+
+        <section class="admin-page-card-grid" aria-label="Atalhos da administração">
+            <article class="w-panel admin-page-card">
+                <h2>Página inicial</h2>
+                <p>Gerencie a estrutura do início, revise os blocos e acesse a edição principal da home.</p>
+                <div class="admin-page-actions admin-page-actions--stack">
+                    <a class="button" href="{{ url_home_explorador }}">Páginas do início</a>
+                    <a class="button button-secondary" href="{{ url_home_editar }}">Editar início</a>
+                </div>
+            </article>
+
+            <article class="w-panel admin-page-card">
+                <h2>Publicações</h2>
+                <p>Abra a central editorial para revisar publicações, status e ações de conteúdo em andamento.</p>
+                <div class="admin-page-actions admin-page-actions--stack">
+                    <a class="button" href="{{ url_publicacoes }}">Publicações</a>
+                </div>
+            </article>
+        </section>
+    </div>
+{% endblock %}

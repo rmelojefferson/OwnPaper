@@ -1,0 +1,94 @@
+{% extends "conteudo/admin_base_custom.html" %}
+
+{% block titletag %}Saúde do sistema{% endblock %}
+
+{% block content %}
+<div class="nice-padding op-admin-panel op-admin-panel--wide">
+    <header class="op-admin-panel__header">
+        <div>
+            <p class="op-admin-panel__eyebrow">Administração</p>
+            <h1>Saúde do sistema</h1>
+            <p class="op-admin-panel__lead">Verificação operacional de backup, restore dry-run, logs, ClamAV, e-mail, disco e retenção.</p>
+            <p class="op-admin-panel__meta">
+                <strong>Status geral:</strong>
+                {% if resultado.status == "ok" %}
+                    OK
+                {% elif resultado.status == "warn" %}
+                    Atenção
+                {% else %}
+                    Erro
+                {% endif %}
+                · Gerado em {{ resultado.gerado_em|date:"d/m/Y H:i:s" }}
+                {% if site %} · Site: {{ site.hostname }}{% endif %}
+            </p>
+        </div>
+        <div class="op-admin-panel__actions">
+            <a class="button button-secondary" href="{% url 'admin_backups' %}">Backups</a>
+            <a class="button button-secondary" href="{% url 'admin_logs_atividade' %}">Logs</a>
+        </div>
+    </header>
+
+    <section class="op-admin-card">
+        <h2>Resumo</h2>
+        <ul class="op-admin-stat-list">
+            {% for item in resultado.itens %}
+                <li>
+                    <span>
+                        <strong>{{ item.nome }}</strong><br>
+                        {{ item.mensagem }}
+                    </span>
+                    <strong>
+                        {% if item.status == "ok" %}
+                            OK
+                        {% elif item.status == "warn" %}
+                            Atenção
+                        {% else %}
+                            Erro
+                        {% endif %}
+                    </strong>
+                </li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    <section class="op-admin-card">
+        <h2>Detalhes técnicos</h2>
+        <div class="op-admin-table-wrap">
+            <table class="listing op-admin-listing-table">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Status</th>
+                        <th>Detalhes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in resultado.itens %}
+                        <tr>
+                            <td>{{ item.nome }}</td>
+                            <td>
+                                {% if item.status == "ok" %}
+                                    OK
+                                {% elif item.status == "warn" %}
+                                    Atenção
+                                {% else %}
+                                    Erro
+                                {% endif %}
+                            </td>
+                            <td class="op-admin-breakall">
+                                {% if item.detalhes %}
+                                    <code>{{ item.detalhes }}</code>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="3">Nenhuma verificação executada.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}

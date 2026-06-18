@@ -1,0 +1,19 @@
+{% load i18n wagtailadmin_tags admin_explorer_tags %}
+
+<td class="{% if page.is_navigable %}children{% else %}no-children{% endif %}">
+    {% ownpaper_is_publicacoes_index page as is_publicacoes_index %}
+    {% if is_publicacoes_index %}
+    {% elif page.is_navigable %}
+        <a
+            href="{% url 'wagtailadmin_explore' page.id %}"
+            title="Explorar páginas filhas de '{{ page.get_admin_display_title }}'"
+            aria-label="Explorar páginas filhas de '{{ page.get_admin_display_title }}'"
+        >{% icon name="arrow-right" classname="default" %}</a>
+    {% elif page_perms.can_add_subpage %}
+        <a
+            href="{% url 'wagtailadmin_pages:add_subpage' page.id %}"
+            title="Adicionar página filha a '{{ page.get_admin_display_title }}'"
+            aria-label="Adicionar página filha a '{{ page.get_admin_display_title }}'"
+        >{% icon name="plus-inverse" classname="default" %}</a>
+    {% endif %}
+</td>

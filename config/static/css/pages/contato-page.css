@@ -1,55 +1,198 @@
-body {
-            font-family: "Times New Roman", serif;
-            font-size: 12pt;
-            line-height: 1.6;
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px;
-            color: #111;
-        }
+.contato-layout {
+    --contato-top-gap: 1.15rem;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
 
-        input, textarea, button {
-            font: inherit;
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 1rem;
-            box-sizing: border-box;
-        }
+.contato-layout .op-page-header {
+    margin-bottom: 0;
+}
 
-        textarea {
-            min-height: 180px;
-        }
+.contato-layout .op-page-header .title:not(:last-child) {
+    margin-bottom: 0;
+}
 
-        .checkbox-linha {
-            display: flex;
-            gap: 0.5rem;
-            align-items: flex-start;
-            margin-bottom: 1rem;
-        }
+.contato-layout > .turnstile-widget,
+.contato-layout > .op-message,
+.contato-layout > .contato-introducao,
+.contato-layout > .contato-form {
+    margin-top: var(--contato-top-gap);
+}
 
-        .checkbox-linha input {
-            width: auto;
-            margin: 0.2rem 0 0 0;
-        }
+.contato-introducao {
+    color: var(--op-text-muted, #526071);
+    margin: 0;
+    max-width: 760px;
+    font-size: 1rem;
+    line-height: 1.5;
+    display: grid;
+    gap: 0.28rem;
+}
 
-        .mensagem-sucesso {
-            padding: 0.8rem 1rem;
-            margin-bottom: 1rem;
-            border: 1px solid #bbb;
-            background: #f5f5f5;
-        }
+.contato-layout .contato-introducao.content:not(:last-child) {
+    margin-bottom: 0;
+}
 
-        .rodape-site {
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #ddd;
-            color: #444;
-        }
+.contato-introducao > * {
+    margin: 0;
+}
+
+.contato-introducao p,
+.contato-introducao ul,
+.contato-introducao ol,
+.contato-introducao li {
+    margin-top: 0;
+    margin-bottom: 0;
+}
+
+.contato-introducao p + p,
+.contato-introducao p + ul,
+.contato-introducao p + ol,
+.contato-introducao ul + p,
+.contato-introducao ol + p {
+    margin-top: 0.28rem;
+}
+
+.contato-form {
+    margin-top: 0;
+}
+
+.contato-form.op-box {
+    padding: 1.05rem 1.1rem;
+    display: grid;
+    gap: 0.85rem;
+}
+
+.contato-form .field {
+    margin: 0;
+}
+
+.contato-form .label {
+    display: inline-block;
+    margin-bottom: 0.28rem;
+    font-weight: 700;
+    color: var(--op-text, #0f172a);
+}
+
+.contato-form .input,
+.contato-form .textarea {
+    min-height: 44px;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 10px;
+    background: var(--op-surface, #fff) !important;
+    color: var(--op-text, #0f172a) !important;
+    box-shadow: none;
+    font: inherit;
+}
+
+.contato-form .textarea {
+    min-height: 180px;
+}
+
+.contato-form .input::placeholder,
+.contato-form .textarea::placeholder {
+    color: var(--op-text-muted, #526071);
+    opacity: 1;
+}
+
+.contato-form .button,
+.contato-form button {
+    min-height: 44px;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 10px;
+    padding-inline: 1rem;
+    background: var(--op-btn-bg, #fff) !important;
+    color: var(--op-btn-text, #111) !important;
+    box-shadow: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font: inherit;
+    font-weight: 700;
+}
+
+.contato-form .button:hover,
+.contato-form .button:focus-visible,
+.contato-form button:hover,
+.contato-form button:focus-visible {
+    background: var(--op-btn-hover-bg, #111) !important;
+    color: var(--op-btn-hover-text, #fff) !important;
+    border-color: var(--op-btn-hover-bg, #111) !important;
+}
+
+html[data-theme="escuro"] .contato-form .input,
+html[data-theme="escuro"] .contato-form .textarea {
+    background: var(--op-surface, #141a2b) !important;
+    color: var(--op-text, #ffffff) !important;
+    border-color: var(--op-border, #31374b) !important;
+}
+
+html[data-theme="escuro"] .contato-form .button,
+html[data-theme="escuro"] .contato-form button {
+    background: var(--op-btn-bg, #141a2b) !important;
+    color: var(--op-btn-text, #ffffff) !important;
+    border-color: var(--op-border, #31374b) !important;
+}
+
+.contato-acoes {
+    margin-bottom: 0;
+}
+
+.checkbox-linha {
+    display: flex;
+    gap: 0.5rem;
+    align-items: flex-start;
+    margin-bottom: 0;
+    color: var(--op-muted, #526071);
+    line-height: 1.45;
+}
+
+.checkbox-linha input {
+    margin: 0.2rem 0 0 0;
+    flex: 0 0 auto;
+}
+
+.mensagem-sucesso {
+    margin: 0 !important;
+}
+
+.contato-layout .op-message {
+    margin-bottom: 0;
+    padding: 0.8rem 0.95rem;
+}
 
 .turnstile-widget {
-    margin-bottom: 1rem;
+    margin: 0;
+    display: block;
+    line-height: 0;
+    inline-size: min(300px, 100%);
+    max-inline-size: 100%;
+    transform: scale(var(--turnstile-scale, 1));
+    transform-origin: top left;
+}
+
+.turnstile-widget > div {
+    display: block;
+    max-width: 100%;
 }
 
 .campo-oculto {
     display: none;
+}
+
+@media (max-width: 760px) {
+    .contato-layout {
+        --contato-top-gap: 1rem;
+    }
+
+    .contato-form.op-box {
+        padding: 0.95rem 1rem;
+    }
+
+    .checkbox-linha {
+        align-items: flex-start;
+    }
 }

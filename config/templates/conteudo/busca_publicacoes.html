@@ -1,7 +1,7 @@
-{% load static wagtailcore_tags wagtailimages_tags %}
+{% load static wagtailcore_tags wagtailimages_tags conteudo_tags %}
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="utf-8">
     <title>Busca</title>
@@ -11,125 +11,285 @@
         {% image config_site.favicon fill-32x32 format-webp as favicon_32 %}
         <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
     {% endif %}
-    <link rel="stylesheet" href="{% static 'css/pages/busca-publicacoes.css' %}">
+    {% include "includes/site_head_assets.html" %}
+    <link rel="stylesheet" href="{% static 'css/pages/busca-publicacoes.css' %}?v=20260428-02">
     {% include "includes/rastreamento_head.html" %}
 
 </head>
 <body>
     {% include "includes/rastreamento_body.html" %}
 
-    {% include "includes/menu_principal.html" %}
+    {% include "includes/menu_principal.html" with menu_assets_in_head=True %}
 
-    <h1>Busca</h1>
+    <main class="busca-layout container is-max-desktop op-page-shell">
+    <header class="busca-topo op-page-header">
+        <h1 class="title is-2">Busca</h1>
+        <p class="busca-intro op-muted-text">Busque publicações do site.</p>
+    </header>
 
-    <form method="get" action="/busca/" class="form-busca">
-        <input type="text" name="q" value="{{ q }}" placeholder="Buscar publicações...">
+    <form method="get" action="/busca/" class="form-busca op-box">
+        <div class="busca-campo busca-campo-amplo">
+            <label class="label" for="busca-q">Termo</label>
+            <div class="control">
+                <input class="input" id="busca-q" type="text" name="q" value="{{ q }}" placeholder="Buscar no site...">
+            </div>
+        </div>
 
-        <select name="categoria">
-            <option value="">Todas as categorias</option>
-            {% for categoria in categorias %}
-                 <option value="{{ categoria.slug }}"{% if categoria.slug == categoria_slug %} selected{% endif %}>
-                    {{ categoria.nome }}
-                </option>
-            {% endfor %}
-        </select>
+        <details class="busca-avancada"{% if busca_avancada_ativa %} open{% endif %}>
+            <summary>Busca avançada</summary>
+            <p class="busca-avancada-ajuda">Adicione até cinco termos e defina se os resultados devem conter todos eles ou pelo menos um.</p>
+            <div class="busca-avancada-grid">
+                {% for item in termos_avancados %}
+                    <div class="busca-avancada-linha">
+                        {% if not forloop.first %}
+                            <div class="busca-campo busca-campo-operador">
+                                <label class="label" for="busca-operador-{{ item.indice }}">Comportamento</label>
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        <select id="busca-operador-{{ item.indice }}" name="operador_{{ item.indice }}">
+                                            <option value="and"{% if item.operador == "and" %} selected{% endif %}>E</option>
+                                            <option value="or"{% if item.operador == "or" %} selected{% endif %}>OU</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                        <div class="busca-campo busca-campo-termo-avancado">
+                            <label class="label" for="busca-termo-{{ item.indice }}">
+                                Termo {{ item.indice }}
+                            </label>
+                            <div class="control">
+                                <input class="input" id="busca-termo-{{ item.indice }}" type="text" name="termo_{{ item.indice }}" value="{{ item.termo }}" placeholder="Informe um termo">
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </details>
 
-        <select name="autor">
-            <option value="">Todos os autores</option>
-            {% for autor in autores %}
-                <option value="{{ autor.username }}"{% if autor.username == autor_username %} selected{% endif %}>
-                    {{ autor }}
-                </option>
-            {% endfor %}
-        </select>
+        <div class="busca-campo busca-campo-filtro">
+            <label class="label" for="busca-categoria">Categoria</label>
+            <div class="control">
+                <div class="select is-fullwidth">
+                    <select id="busca-categoria" name="categoria">
+                <option value="">Todas as categorias</option>
+                {% for categoria in categorias %}
+                     <option value="{{ categoria.slug }}"{% if categoria.slug == categoria_slug %} selected{% endif %}>
+                        {{ categoria.nome }}
+                    </option>
+                {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
 
-        <select name="ordem">
-            <option value="recentes"{% if ordenacao == "recentes" %} selected{% endif %}>Mais recentes</option>
-            <option value="antigos"{% if ordenacao == "antigos" %} selected{% endif %}>Mais antigos</option>
-            <option value="titulo_az"{% if ordenacao == "titulo_az" %} selected{% endif %}>Título A-Z</option>
-            <option value="titulo_za"{% if ordenacao == "titulo_za" %} selected{% endif %}>Título Z-A</option>
-        </select>
+        <div class="busca-campo busca-campo-filtro">
+            <label class="label" for="busca-autor">Autor</label>
+            <div class="control">
+                <div class="select is-fullwidth">
+                    <select id="busca-autor" name="autor">
+                <option value="">Todos os autores</option>
+                {% for autor in autores %}
+                    <option value="{{ autor.username }}"{% if autor.username == autor_username %} selected{% endif %}>
+                        {{ autor }}
+                    </option>
+                {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
 
-        <button type="submit">Buscar</button>
+        <div class="busca-campo busca-campo-filtro">
+            <label class="label" for="busca-tag">Tag</label>
+            <div class="control">
+                <div class="select is-fullwidth">
+                    <select id="busca-tag" name="tag">
+                <option value="">Todas as tags</option>
+                {% for tag in tags %}
+                    <option value="{{ tag.slug }}"{% if tag.slug == tag_slug %} selected{% endif %}>{{ tag.name }}</option>
+                {% endfor %}
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="busca-campo busca-campo-data">
+            <label class="label" for="busca-data-de">Data de:</label>
+            <div class="control">
+                <div class="busca-datepicker" data-busca-datepicker data-date-role="from">
+                    <input
+                        class="input busca-datepicker-input"
+                        id="busca-data-de"
+                        type="text"
+                        name="data_de"
+                        value="{{ data_de }}"
+                        placeholder="dd/mm/aaaa"
+                        inputmode="numeric"
+                        autocomplete="off"
+                        title="Data inicial"
+                        data-datepicker-input>
+                    <button type="button" class="busca-datepicker-toggle" data-datepicker-toggle aria-label="Abrir calendário da data inicial" title="Abrir calendário">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h1V3a1 1 0 0 1 1-1Zm12 7H5v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9ZM6 6a1 1 0 0 0-1 1v1h14V7a1 1 0 0 0-1-1H6Zm1.75 4.75h2.5v2.5h-2.5v-2.5Zm4 0h2.5v2.5h-2.5v-2.5Zm4 0h2.5v2.5h-2.5v-2.5Zm-8 4h2.5v2.5h-2.5v-2.5Zm4 0h2.5v2.5h-2.5v-2.5Z"></path></svg>
+                    </button>
+                    <div class="busca-datepicker-popover" data-datepicker-popover hidden>
+                        <div class="busca-datepicker-toolbar">
+                            <button type="button" class="busca-datepicker-nav" data-datepicker-prev aria-label="Mês anterior">‹</button>
+                            <div class="busca-datepicker-month" data-datepicker-month></div>
+                            <button type="button" class="busca-datepicker-nav" data-datepicker-next aria-label="Próximo mês">›</button>
+                        </div>
+                        <div class="busca-datepicker-weekdays" aria-hidden="true">
+                            <span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span><span>Dom</span>
+                        </div>
+                        <div class="busca-datepicker-grid" data-datepicker-grid></div>
+                        <div class="busca-datepicker-actions">
+                            <button type="button" class="busca-datepicker-action" data-datepicker-today>Hoje</button>
+                            <button type="button" class="busca-datepicker-action" data-datepicker-clear>Limpar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="busca-campo busca-campo-data">
+            <label class="label" for="busca-data-ate">Data até:</label>
+            <div class="control">
+                <div class="busca-datepicker" data-busca-datepicker data-date-role="to">
+                    <input
+                        class="input busca-datepicker-input"
+                        id="busca-data-ate"
+                        type="text"
+                        name="data_ate"
+                        value="{{ data_ate }}"
+                        placeholder="dd/mm/aaaa"
+                        inputmode="numeric"
+                        autocomplete="off"
+                        title="Data final"
+                        data-datepicker-input>
+                    <button type="button" class="busca-datepicker-toggle" data-datepicker-toggle aria-label="Abrir calendário da data final" title="Abrir calendário">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h1V3a1 1 0 0 1 1-1Zm12 7H5v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9ZM6 6a1 1 0 0 0-1 1v1h14V7a1 1 0 0 0-1-1H6Zm1.75 4.75h2.5v2.5h-2.5v-2.5Zm4 0h2.5v2.5h-2.5v-2.5Zm4 0h2.5v2.5h-2.5v-2.5Zm-8 4h2.5v2.5h-2.5v-2.5Zm4 0h2.5v2.5h-2.5v-2.5Z"></path></svg>
+                    </button>
+                    <div class="busca-datepicker-popover" data-datepicker-popover hidden>
+                        <div class="busca-datepicker-toolbar">
+                            <button type="button" class="busca-datepicker-nav" data-datepicker-prev aria-label="Mês anterior">‹</button>
+                            <div class="busca-datepicker-month" data-datepicker-month></div>
+                            <button type="button" class="busca-datepicker-nav" data-datepicker-next aria-label="Próximo mês">›</button>
+                        </div>
+                        <div class="busca-datepicker-weekdays" aria-hidden="true">
+                            <span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span><span>Dom</span>
+                        </div>
+                        <div class="busca-datepicker-grid" data-datepicker-grid></div>
+                        <div class="busca-datepicker-actions">
+                            <button type="button" class="busca-datepicker-action" data-datepicker-today>Hoje</button>
+                            <button type="button" class="busca-datepicker-action" data-datepicker-clear>Limpar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="busca-campo busca-campo-ordenacao">
+            <label class="label" for="busca-ordem">Ordenar por</label>
+            <div class="control">
+                <div class="select is-fullwidth">
+                    <select id="busca-ordem" name="ordem">
+                <option value="recentes"{% if ordenacao == "recentes" %} selected{% endif %}>Mais recentes</option>
+                <option value="antigos"{% if ordenacao == "antigos" %} selected{% endif %}>Mais antigos</option>
+                <option value="titulo_az"{% if ordenacao == "titulo_az" %} selected{% endif %}>Título A-Z</option>
+                <option value="titulo_za"{% if ordenacao == "titulo_za" %} selected{% endif %}>Título Z-A</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="busca-acoes-principais">
+            <button class="button is-link is-light op-button" type="submit">Buscar</button>
+        </div>
     </form>
+
+    <p class="busca-aviso-exato">
+        A busca usa o termo exato informado. Para resultados mais corretos, pesquise usando o termo no idioma do conteúdo que você deseja encontrar.
+    </p>
+
+    <p class="busca-aviso-exato">
+        Procurando artigos científicos? Use o <a href="/indexador/" target="_blank" rel="noopener noreferrer" onclick="window.open('/indexador/', '_blank', 'noopener'); return false;">Buscador de artigos científicos</a>.
+    </p>
 
     <div class="acoes-busca">
         <form method="get" action="/busca/">
-            <input type="hidden" name="q" value="{{ q }}">
-            <input type="hidden" name="categoria" value="{{ categoria_slug }}">
-            <input type="hidden" name="autor" value="{{ autor_username }}">
-	    <input type="hidden" name="ordem" value="{{ ordenacao }}">
+            {% for chave, valor in filtros_persistidos %}
+                <input type="hidden" name="{{ chave }}" value="{{ valor }}">
+            {% endfor %}
             <input type="hidden" name="export" value="csv">
-            <button type="submit">Baixar CSV</button>
+            <button class="button is-link is-light op-button" type="submit">Baixar CSV</button>
         </form>
 
         <form method="get" action="/busca/">
-	    <input type="hidden" name="ordem" value="{{ ordenacao }}">
+            {% for chave, valor in filtros_persistidos %}
+                <input type="hidden" name="{{ chave }}" value="{{ valor }}">
+            {% endfor %}
             <input type="hidden" name="export" value="csv_all">
-            <button type="submit">Exportar tudo</button>
+            <button class="button is-link is-light op-button" type="submit">Exportar tudo</button>
         </form>
     </div>
+    <p class="busca-aviso-csv">
+        As exportações em CSV incluem os resultados desta busca de publicações.
+    </p>
 
-    {% if ha_filtros %}
-        <p>
-            <strong>Filtros atuais:</strong>
-            {% if q %} Texto: {{ q }} {% endif %}
-            {% if categoria_slug %} | Categoria selecionada {% endif %}
-            {% if autor_username %} | Autor selecionado {% endif %}
-        </p>
-    {% else %}
-        <p><strong>Sem filtros.</strong> Exibindo as 20 publicações mais recentes.</p>
+    {% if resultados_busca %}
+        <section class="busca-secao-resultados">
+            <h2>Resultados</h2>
+            <div class="lista">
+            {% for item in resultados_busca %}
+                {% if item.tipo == "publicacao" %}
+                    {% with publicacao=item.objeto %}
+                        <article class="op-card card busca-card">
+                            <h2><a href="{% pageurl publicacao %}" target="_blank" rel="noopener noreferrer">{{ publicacao.title }}</a></h2>
+
+                            <div class="meta">
+                                {{ publicacao.data_publicacao|date:"d/m/Y" }}
+                            </div>
+
+                            {% if publicacao.categoria_principal %}
+                                <div class="meta">
+                                    <strong>Categoria:</strong>
+                                    <a href="/categorias/{{ publicacao.categoria_principal.slug }}/">{{ publicacao.categoria_principal.nome }}</a>
+                                </div>
+                            {% endif %}
+
+                            {% if publicacao.resumo %}
+                                <div>
+                                    {{ publicacao.resumo|richtext|safe }}
+                                </div>
+                            {% endif %}
+                        </article>
+                    {% endwith %}
+                {% endif %}
+            {% endfor %}
+            </div>
+        </section>
     {% endif %}
 
-    <div class="lista">
-        {% for item in resultados %}
-            <article class="card">
-                <h2><a href="{% pageurl item %}">{{ item.title }}</a></h2>
-
-                <div class="meta">
-                    {{ item.data_publicacao|date:"d/m/Y" }}
-                </div>
-
-                {% if item.categoria_principal %}
-                    <div class="meta">
-                        <strong>Categoria:</strong>
-                        <a href="/categorias/{{ item.categoria_principal.slug }}/">{{ item.categoria_principal.nome }}</a>
-                    </div>
-                {% endif %}
-
-                {% if item.imagem_capa %}
-                    <div class="capa">
-                        {% image item.imagem_capa width-180 %}
-                    </div>
-                {% endif %}
-
-                {% if item.resumo %}
-                    <div>
-                        {{ item.resumo|richtext|safe }}
-                    </div>
-                {% endif %}
-            </article>
-        {% empty %}
-            <p>Nenhum resultado encontrado.</p>
-        {% endfor %}
-    </div>
+    {% if not resultados_busca %}
+        <p>Nenhum resultado encontrado em publicações.</p>
+    {% endif %}
 
     {% if page_obj.paginator.num_pages > 1 %}
-        <div class="paginacao">
+        <nav class="paginacao home-paginacao-ultimas" aria-label="Paginação da busca">
             {% if page_obj.has_previous %}
-
-		<a href="?q={{ q|urlencode }}&categoria={{ categoria_slug|urlencode }}&autor={{ autor_username|urlencode }}&ordem={{ ordenacao|urlencode }}&page=1">Primeira</a>
-		<a href="?q={{ q|urlencode }}&categoria={{ categoria_slug|urlencode }}&autor={{ autor_username|urlencode }}&ordem={{ ordenacao|urlencode }}&page={{ page_obj.previous_page_number }}">Anterior</a>
+                <a href="?{% if filtros_paginacao_querystring %}{{ filtros_paginacao_querystring }}&{% endif %}page=1">Primeira</a>
+                <a href="?{% if filtros_paginacao_querystring %}{{ filtros_paginacao_querystring }}&{% endif %}page={{ page_obj.previous_page_number }}">Anterior</a>
             {% endif %}
 
             <span>Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
 
             {% if page_obj.has_next %}
-		<a href="?q={{ q|urlencode }}&categoria={{ categoria_slug|urlencode }}&autor={{ autor_username|urlencode }}&ordem={{ ordenacao|urlencode }}&page={{ page_obj.next_page_number }}">Próxima</a>
-		<a href="?q={{ q|urlencode }}&categoria={{ categoria_slug|urlencode }}&autor={{ autor_username|urlencode }}&ordem={{ ordenacao|urlencode }}&page={{ page_obj.paginator.num_pages }}">Última</a>
+                <a href="?{% if filtros_paginacao_querystring %}{{ filtros_paginacao_querystring }}&{% endif %}page={{ page_obj.next_page_number }}">Próxima</a>
+                <a href="?{% if filtros_paginacao_querystring %}{{ filtros_paginacao_querystring }}&{% endif %}page={{ page_obj.paginator.num_pages }}">Última</a>
             {% endif %}
-        </div>
+        </nav>
     {% endif %}
-{% include "includes/rodape_site.html" %}
+    </main>
+    {% include "includes/rodape_site.html" with rodape_assets_in_head=True %}
+    <script src="{% static 'js/pages/busca-datepicker.js' %}?v=20260516-01" defer></script>
 </body>
 </html>

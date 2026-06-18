@@ -1,0 +1,190 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% load static %}
+
+{% block titletag %}Busca do painel{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script src="{% static 'js/pages/busca-datepicker.js' %}?v=20260516-01" defer></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            var typeSelect = document.querySelector("[data-admin-search-type]");
+            var statusSelect = document.querySelector("[data-admin-search-status]");
+            if (!typeSelect || !statusSelect) {
+                return;
+            }
+
+            function syncStatusOptions() {
+                var selectedType = typeSelect.value;
+                var hasAvailableStatus = false;
+                Array.prototype.forEach.call(statusSelect.options, function (option) {
+                    var types = (option.getAttribute("data-types") || "").split(/\s+/).filter(Boolean);
+                    var compatible = !option.value || !selectedType || types.indexOf(selectedType) !== -1;
+                    option.hidden = !compatible;
+                    option.disabled = !compatible;
+                    if (option.value && compatible) {
+                        hasAvailableStatus = true;
+                    }
+                });
+                if (statusSelect.selectedOptions.length && statusSelect.selectedOptions[0].disabled) {
+                    statusSelect.value = "";
+                }
+                statusSelect.disabled = !!selectedType && !hasAvailableStatus;
+            }
+
+            typeSelect.addEventListener("change", syncStatusOptions);
+            syncStatusOptions();
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+<div class="nice-padding op-admin-panel op-admin-panel--wide">
+    <header class="op-admin-panel__header">
+        <div>
+            <h1>Busca do painel</h1>
+            <p class="op-admin-panel__lead">Pesquise conteúdo administrativo, respeitando as permissões do seu usuário.</p>
+        </div>
+        <div class="op-admin-panel__actions">
+            <a class="button button-secondary" href="{% url 'wagtailadmin_home' %}">Voltar ao painel</a>
+        </div>
+    </header>
+
+    <section class="w-panel">
+        <form method="get" class="op-admin-form-grid op-admin-form-grid--global-search">
+            <label class="op-admin-field op-admin-field--wide">
+                Busca
+                <input type="search" name="q" value="{{ filtro_q }}" placeholder="Digite título, ID, autor, pergunta, e-mail ou termo..." autocomplete="off">
+            </label>
+            <label class="op-admin-field">
+                Tipo
+                <select name="tipo" data-admin-search-type>
+                    {% for valor, rotulo in tipos %}
+                        <option value="{{ valor }}" {% if filtro_tipo == valor %}selected{% endif %}>{{ rotulo }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label class="op-admin-field">
+                Status
+                <select name="status" data-admin-search-status>
+                    {% for opcao in status_opcoes %}
+                        <option value="{{ opcao.valor }}" data-types="{{ opcao.tipos }}" {% if filtro_status == opcao.valor %}selected{% endif %}>{{ opcao.rotulo }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label class="op-admin-field">
+                Data de
+                <div class="busca-datepicker" data-busca-datepicker data-date-role="from">
+                    <input class="busca-datepicker-input" type="text" name="data_de" value="{{ filtro_data_de }}" placeholder="dd/mm/aaaa" inputmode="numeric" autocomplete="off" data-datepicker-input>
+                    <button type="button" class="busca-datepicker-toggle" data-datepicker-toggle aria-label="Abrir calendário da data inicial" title="Abrir calendário">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h1V3a1 1 0 0 1 1-1Zm12 7H5v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9ZM6 6a1 1 0 0 0-1 1v1h14V7a1 1 0 0 0-1-1H6Z"></path></svg>
+                    </button>
+                    <div class="busca-datepicker-popover" data-datepicker-popover hidden>
+                        <div class="busca-datepicker-toolbar">
+                            <button type="button" class="busca-datepicker-nav" data-datepicker-prev aria-label="Mês anterior">‹</button>
+                            <div class="busca-datepicker-month" data-datepicker-month></div>
+                            <button type="button" class="busca-datepicker-nav" data-datepicker-next aria-label="Próximo mês">›</button>
+                        </div>
+                        <div class="busca-datepicker-weekdays" aria-hidden="true"><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span><span>Dom</span></div>
+                        <div class="busca-datepicker-grid" data-datepicker-grid></div>
+                        <div class="busca-datepicker-actions"><button type="button" class="busca-datepicker-action" data-datepicker-today>Hoje</button><button type="button" class="busca-datepicker-action" data-datepicker-clear>Limpar</button></div>
+                    </div>
+                </div>
+            </label>
+            <label class="op-admin-field">
+                Data até
+                <div class="busca-datepicker" data-busca-datepicker data-date-role="to">
+                    <input class="busca-datepicker-input" type="text" name="data_ate" value="{{ filtro_data_ate }}" placeholder="dd/mm/aaaa" inputmode="numeric" autocomplete="off" data-datepicker-input>
+                    <button type="button" class="busca-datepicker-toggle" data-datepicker-toggle aria-label="Abrir calendário da data final" title="Abrir calendário">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h1V3a1 1 0 0 1 1-1Zm12 7H5v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9ZM6 6a1 1 0 0 0-1 1v1h14V7a1 1 0 0 0-1-1H6Z"></path></svg>
+                    </button>
+                    <div class="busca-datepicker-popover" data-datepicker-popover hidden>
+                        <div class="busca-datepicker-toolbar">
+                            <button type="button" class="busca-datepicker-nav" data-datepicker-prev aria-label="Mês anterior">‹</button>
+                            <div class="busca-datepicker-month" data-datepicker-month></div>
+                            <button type="button" class="busca-datepicker-nav" data-datepicker-next aria-label="Próximo mês">›</button>
+                        </div>
+                        <div class="busca-datepicker-weekdays" aria-hidden="true"><span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span><span>Dom</span></div>
+                        <div class="busca-datepicker-grid" data-datepicker-grid></div>
+                        <div class="busca-datepicker-actions"><button type="button" class="busca-datepicker-action" data-datepicker-today>Hoje</button><button type="button" class="busca-datepicker-action" data-datepicker-clear>Limpar</button></div>
+                    </div>
+                </div>
+            </label>
+            <label class="op-admin-field">
+                Ordenar
+                <select name="ordenar">
+                    {% for valor, rotulo in ordenacoes %}
+                        <option value="{{ valor }}" {% if filtro_ordenar == valor %}selected{% endif %}>{{ rotulo }}</option>
+                    {% endfor %}
+                </select>
+            </label>
+            <label class="op-admin-checkbox-wrap op-admin-search-checkbox">
+                <input type="checkbox" name="meus" value="1" {% if filtro_meus %}checked{% endif %}>
+                Vinculados ao meu usuário
+            </label>
+            <div class="op-admin-form-actions">
+                <button class="button op-admin-filter-button" type="submit" style="height:44px;min-height:44px;padding:0 18px;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;line-height:1;margin:0;">Filtrar</button>
+                <a class="button button-secondary op-admin-filter-button" href="{% url 'admin_busca_global' %}" style="height:44px;min-height:44px;padding:0 18px;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;line-height:1;margin:0;">Limpar</a>
+            </div>
+        </form>
+    </section>
+
+    <section class="w-panel op-admin-card">
+        <div class="op-admin-panel__header">
+            <div>
+                <h2>Resultados</h2>
+                {% if busca_executada %}
+                    <p class="op-admin-panel__meta">{{ total_resultados }} resultado{{ total_resultados|pluralize }} encontrado{{ total_resultados|pluralize }}.</p>
+                {% else %}
+                    <p class="op-admin-panel__meta">Digite um termo ou aplique filtros para iniciar a busca.</p>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if resultados %}
+            <div class="op-admin-table-wrap">
+                <table class="listing op-admin-listing-table op-admin-listing-table--global-search">
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Título</th>
+                            <th>Status</th>
+                            <th>Data</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in resultados %}
+                            <tr>
+                                <td>{{ item.tipo }}</td>
+                                <td>
+                                    <a href="{{ item.url }}"><strong>{{ item.titulo }}</strong></a>
+                                    {% if item.contexto %}<div class="op-admin-panel__meta">{{ item.contexto }}</div>{% endif %}
+                                    {% if item.descricao %}<div class="op-admin-panel__meta">{{ item.descricao }}</div>{% endif %}
+                                </td>
+                                <td>{{ item.status|default:"-" }}</td>
+                                <td>{{ item.data|default:"-" }}</td>
+                                <td><a class="button button-small button-secondary" href="{{ item.url }}">Abrir</a></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if resultados.paginator.num_pages > 1 %}
+                <nav class="op-admin-pagination" aria-label="Paginação">
+                    {% if resultados.has_previous %}
+                        <a class="button button-secondary" href="?{{ query_string_sem_pagina }}&pagina={{ resultados.previous_page_number }}">Anterior</a>
+                    {% endif %}
+                    <span>Página {{ resultados.number }} de {{ resultados.paginator.num_pages }}</span>
+                    {% if resultados.has_next %}
+                        <a class="button button-secondary" href="?{{ query_string_sem_pagina }}&pagina={{ resultados.next_page_number }}">Próxima</a>
+                    {% endif %}
+                </nav>
+            {% endif %}
+        {% elif busca_executada %}
+            <p>Nenhum resultado encontrado para os filtros selecionados.</p>
+        {% endif %}
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,146 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% block titletag %}Mensagem de contato{% endblock %}
+
+{% load static %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/admin-contato-inbox.css' %}?v=20260525-01">
+    {{ resposta_form.media.css }}
+    {{ encaminhamento_form.media.css }}
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    {{ resposta_form.media.js }}
+    {{ encaminhamento_form.media.js }}
+{% endblock %}
+
+{% block content %}
+<div class="nice-padding admin-shell">
+    <header class="admin-page-header">
+        <div>
+            <h1>Mensagem de contato</h1>
+        </div>
+        <div class="admin-page-actions admin-page-actions--header">
+            <a class="button button-secondary" href="{% url 'admin_contato_inbox' %}">Voltar para inbox</a>
+        </div>
+    </header>
+
+    <div class="admin-page-two-column admin-contato-mensagem__top">
+        <section class="w-panel admin-contato-mensagem__detalhes">
+            <h2>Detalhes</h2>
+            <p><strong>Nome:</strong> {{ mensagem.nome }}</p>
+            <p><strong>E-mail:</strong> {{ mensagem.email }}</p>
+            <p><strong>Status:</strong> {{ mensagem.get_status_display }}</p>
+            <p><strong>Responsável:</strong> {{ mensagem.atribuido_para.username|default:"-" }}</p>
+            <p><strong>Página:</strong> {{ mensagem.pagina.title }}</p>
+            <p><strong>Recebida em:</strong> {{ mensagem.criado_em|date:"d/m/Y H:i:s" }}</p>
+            <hr class="op-admin-divider">
+            <p class="op-admin-prewrap">{{ mensagem.mensagem }}</p>
+        </section>
+
+        <section class="admin-page-stack">
+            {% if is_admin %}
+                <form method="post" class="w-panel admin-page-form-stack">
+                    {% csrf_token %}
+                    <input type="hidden" name="acao" value="atribuir">
+                    <h3>Atribuir responsável</h3>
+                    <select name="responsavel_id">
+                        <option value="">Sem responsável</option>
+                        {% for user in responsaveis %}
+                            <option value="{{ user.id }}" {% if mensagem.atribuido_para_id == user.id %}selected{% endif %}>{{ user.username }} ({{ user.email }})</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="button">Salvar responsável</button>
+                </form>
+            {% endif %}
+
+            <form method="post" class="w-panel admin-page-form-stack">
+                {% csrf_token %}
+                <input type="hidden" name="acao" value="status">
+                <h3>Alterar status</h3>
+                <select name="novo_status">
+                    {% for valor, rotulo in status_choices %}
+                        <option value="{{ valor }}" {% if mensagem.status == valor %}selected{% endif %}>{{ rotulo }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit" class="button">Atualizar status</button>
+            </form>
+        </section>
+    </div>
+
+    <section class="w-panel admin-contato-mensagem__full">
+        <form method="post" class="admin-page-form-stack">
+            {% csrf_token %}
+            <input type="hidden" name="acao" value="responder">
+            <h2>Responder por e-mail</h2>
+            {% for field in resposta_form %}
+                <div class="admin-page-field{% if field.field.widget.input_type == 'checkbox' %} admin-page-field--checkbox{% endif %}">
+                    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="button">Enviar resposta</button>
+        </form>
+    </section>
+
+    {% if is_admin %}
+        <section class="w-panel admin-contato-mensagem__full">
+            <form method="post" class="admin-page-form-stack">
+                {% csrf_token %}
+                <input type="hidden" name="acao" value="encaminhar">
+                <h2>Encaminhar</h2>
+                {% for field in encaminhamento_form %}
+                    {% if field.name == "incluir_ultima_resposta" %}
+                        <div class="admin-page-field admin-page-field--checkbox">
+                            <label class="op-admin-checkbox-line" for="{{ field.id_for_label }}">{{ field }} <span>{{ field.label }}</span></label>
+                            {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                        </div>
+                    {% else %}
+                        <div class="admin-page-field">
+                            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                            {{ field }}
+                            {% if field.name == "email_encaminhar" %}
+                                <datalist id="admin-contato-panel-emails">
+                                    {% for email in panel_email_suggestions %}
+                                        <option value="{{ email }}"></option>
+                                    {% endfor %}
+                                </datalist>
+                            {% endif %}
+                            {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                            {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                {% if ultima_resposta %}
+                    <p class="op-admin-muted">A última resposta enviada pode ser anexada ao encaminhamento para dar contexto ao destinatário.</p>
+                {% endif %}
+                <button type="submit" class="button">Encaminhar</button>
+            </form>
+        </section>
+    {% endif %}
+
+    <section class="w-panel">
+        <h2>Histórico de interações</h2>
+        <div class="admin-page-history-list">
+            {% for item in interacoes %}
+                <div class="admin-page-history-item">
+                    <strong>{{ item.get_tipo_display }}</strong>
+                    <span class="op-admin-muted"> • {{ item.criado_em|date:"d/m/Y H:i:s" }}</span>
+                    <div>Por: {{ item.criado_por.username|default:"sistema" }}</div>
+                    {% if item.destinatario_email %}<div>Destino: {{ item.destinatario_email }}</div>{% endif %}
+                    {% if item.assunto %}<div>Assunto: {{ item.assunto }}</div>{% endif %}
+                    {% if item.corpo %}<div class="op-admin-prewrap op-admin-history-item__body">{{ item.corpo|truncatechars:300 }}</div>{% endif %}
+                    <div>Sucesso: {% if item.sucesso_envio %}sim{% else %}não{% endif %}</div>
+                    {% if item.erro_envio %}<div class="op-admin-error">Erro: {{ item.erro_envio|truncatechars:240 }}</div>{% endif %}
+                </div>
+            {% empty %}
+                <p>Nenhuma interação registrada ainda.</p>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,53 +1,14 @@
-body {
-            font-family: "Times New Roman", serif;
-            font-size: 12pt;
-            line-height: 1.6;
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 0 20px;
-            color: #111;
-        }
+.publicacoes-index-layout {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    --home-card-thumb-width: 150px;
+}
 
-        h1 {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
+.introducao {
+    margin-bottom: 2rem;
+}
 
-        .introducao {
-            margin-bottom: 2rem;
-        }
-
-        .lista-publicacoes {
-            display: grid;
-            gap: 1.5rem;
-        }
-
-        .publicacao-item {
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 1.5rem;
-        }
-
-        .publicacao-item h2 {
-            margin-bottom: 0.4rem;
-        }
-
-        .publicacao-item a {
-            color: inherit;
-            text-decoration: none;
-        }
-
-        .publicacao-item a:hover {
-            text-decoration: underline;
-        }
-
-        .meta {
-            color: #444;
-            margin-bottom: 0.6rem;
-        }
-
-        .rodape-site {
-            margin-top: 3rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #ddd;
-            color: #444;
-        }
+.lista-publicacoes {
+    margin-top: 0;
+}

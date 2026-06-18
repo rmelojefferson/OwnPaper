@@ -1,0 +1,42 @@
+{% load i18n l10n wagtailadmin_tags admin_explorer_tags %}
+
+<div class="title-wrapper">
+    {% if page.is_site_root %}
+        {% if perms.wagtailcore.add_site or perms.wagtailcore.change_site or perms.wagtailcore.delete_site %}
+            <a href="{% url 'wagtailsites:index' %}" title="Menu de sites">{% icon name="site" classname="initial" %}</a>
+        {% endif %}
+    {% endif %}
+
+    {% fragment as page_title %}
+        <span id="page_{{ page.pk|unlocalize|admin_urlquote }}_title">
+            {% ownpaper_is_publicacoes_index page as is_publicacoes_index %}
+            {% if not is_publicacoes_index and not page.is_site_root and not page.is_leaf %}{% icon name="folder" classname="initial" %}{% endif %}
+            {% if is_publicacoes_index %}Publicações e Nova Publicação{% else %}{{ page.get_admin_display_title }}{% endif %}
+        </span>
+    {% endfragment %}
+
+    {% if page_perms.can_edit %}
+        {% if is_publicacoes_index %}
+            <a href="{% url 'admin_publicacoes_lista' %}" title="Abrir publicações e nova publicação">
+                {{ page_title }}
+            </a>
+        {% else %}
+            <a href="{% url 'wagtailadmin_pages:edit' page.id %}" title="Editar esta página">
+                {{ page_title }}
+            </a>
+        {% endif %}
+    {% else %}
+        {{ page_title }}
+    {% endif %}
+
+    {% if show_locale_labels %}
+        {% status page.locale.get_display_name classname="w-status--label" %}
+    {% endif %}
+
+    {% include "wagtailadmin/pages/listing/_privacy_indicator.html" with page=page %}
+    {% include "wagtailadmin/pages/listing/_locked_indicator.html" with page=page %}
+</div>
+
+<ul class="actions">
+    {% page_listing_buttons page request.user next_url=actions_next_url %}
+</ul>

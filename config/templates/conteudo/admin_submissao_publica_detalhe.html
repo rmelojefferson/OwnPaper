@@ -1,0 +1,56 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% block titletag %}Submissão pública{% endblock %}
+{% block content %}
+<div class="nice-padding op-admin-panel op-admin-panel--wide">
+    <header class="op-admin-panel__header">
+        <div>
+            <h1>{{ submissao.titulo }}</h1>
+            <p class="op-admin-panel__lead">Status: <strong>{{ submissao.get_status_display }}</strong></p>
+            <p class="op-admin-panel__meta">Usuário público: {{ submissao.usuario.username }} · {{ submissao.usuario.email }}{% if submissao.usuario.orcid %} · ORCID {{ submissao.usuario.orcid }}{% endif %}</p>
+        </div>
+        <div class="op-admin-panel__actions">
+            <a class="button button-secondary" href="{% url 'admin_submissoes_publicas' %}">Voltar</a>
+            <a class="button" href="{% url 'admin_submissao_publica_pdf' submissao.id %}" target="_blank" rel="noopener noreferrer">Abrir PDF</a>
+        </div>
+    </header>
+
+    <section class="op-admin-two-column">
+        <article class="w-panel op-admin-card">
+            <h2>Resumo</h2>
+            <p>{{ submissao.resumo|linebreaksbr }}</p>
+            {% if submissao.mensagem %}<h3>Mensagem</h3><p>{{ submissao.mensagem|linebreaksbr }}</p>{% endif %}
+            <p><strong>SHA-256:</strong> <code>{{ submissao.arquivo_sha256 }}</code></p>
+            <p><strong>Arquivo original:</strong> {{ submissao.arquivo_nome_original }}</p>
+        </article>
+        <article class="w-panel op-admin-card">
+            <h2>Ficha e texto final</h2>
+            {% if submissao.texto_final %}
+                <p><strong>Nome:</strong> {{ submissao.ficha_nome_completo }}</p>
+                <p><strong>Exibição:</strong> {{ submissao.ficha_nome_exibicao }}</p>
+                <p><strong>Mini bio:</strong><br>{{ submissao.ficha_mini_bio|linebreaksbr }}</p>
+                <p><strong>Texto final:</strong> recebido.</p>
+            {% else %}
+                <p>A ficha e o texto final ainda não foram enviados pelo autor.</p>
+            {% endif %}
+            {% if submissao.autor_vinculado %}<p><strong>Autor vinculado:</strong> {{ submissao.autor_vinculado }}</p>{% endif %}
+            {% if submissao.publicacao_criada %}<p><strong>Publicação:</strong> <a href="{% url 'wagtailadmin_pages:edit' submissao.publicacao_criada.id %}">{{ submissao.publicacao_criada.title }}</a></p>{% endif %}
+        </article>
+    </section>
+
+    <section class="w-panel op-admin-card">
+        <h2>Decisão editorial</h2>
+        <form method="post" class="op-admin-form-grid">
+            {% csrf_token %}
+            <label class="op-admin-field op-admin-field--full">Observação administrativa
+                <textarea name="observacao_admin" rows="4">{{ submissao.observacao_admin }}</textarea>
+            </label>
+            <div class="op-admin-form-actions">
+                <button class="button" type="submit" name="acao" value="aceitar">Aceitar</button>
+                <button class="button button-secondary" type="submit" name="acao" value="rejeitar">Rejeitar</button>
+                <button class="button" type="submit" name="acao" value="converter">Converter em publicação</button>
+            </div>
+        </form>
+        <p class="op-admin-muted">Ao aceitar, o sistema envia ao autor um link para complementar a ficha e enviar o texto final. A conversão cria uma publicação em rascunho, com autoria confirmada.</p>
+    </section>
+</div>
+{% endblock %}

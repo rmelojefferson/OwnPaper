@@ -1,0 +1,35 @@
+{% load conteudo_tags %}
+<article class="comentario-item{% if comentario.comentario_pai_id %} comentario-item-resposta{% endif %}" id="comentario-{{ comentario.id }}">
+    <header>
+        <strong>{{ comentario.usuario.username }}</strong>
+        {% if comentario.usuario.selo_verificacao_legivel %}
+            <small class="comentario-selo-verificado">{{ comentario.usuario.selo_verificacao_legivel }}</small>
+        {% endif %}
+        <small>{{ comentario.criado_em|date:"d/m/Y H:i" }}</small>
+        {% if comentario.editado_pela_moderacao %}
+            <small class="comentario-editado-mod">editado pela moderação</small>
+        {% endif %}
+    </header>
+    {% translate_text_content comentario.texto "pt-br" as comentario_texto_traduzido %}
+    <p>{{ comentario_texto_traduzido|linebreaksbr }}</p>
+    <div class="comentario-item-acoes">
+        <button
+            type="button"
+            class="acao-publicacao comentario-reply-botao"
+            data-comentario-reply="{{ comentario.id }}"
+            data-comentario-author="{{ comentario.usuario.username }}"
+            data-label-reply="Responder"
+            data-label-cancel="Cancelar resposta"
+        >
+            Responder
+        </button>
+    </div>
+    <div class="comentario-resposta-inline" data-comentario-inline-slot></div>
+    {% if comentario.thread_children %}
+        <div class="comentario-respostas">
+            {% for comentario in comentario.thread_children %}
+                {% include "includes/publicacao_comentario_item.html" with comentario=comentario %}
+            {% endfor %}
+        </div>
+    {% endif %}
+</article>

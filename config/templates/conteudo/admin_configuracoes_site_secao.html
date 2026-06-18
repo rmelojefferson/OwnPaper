@@ -1,0 +1,1187 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% load static wagtailimages_tags %}
+
+{% block titletag %}{{ secao.titulo }}{% endblock %}
+
+{% block extra_css %}
+    {{ block.super }}
+    {{ form.media.css }}
+    <link rel="stylesheet" href="{% static 'css/admin/palette.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    {{ form.media.js }}
+    <script src="{% static 'js/admin/core.js' %}" defer></script>
+    <script src="{% static 'js/admin/theme-fields.js' %}" defer></script>
+    <script src="{% static 'js/admin/palette.js' %}" defer></script>
+    <script src="{% static 'js/admin/logo-home.js' %}" defer></script>
+    {% if secao.slug == "identidade-seo" or secao.slug == "menu-navegacao" %}
+        <script src="{% static 'js/admin/identity-seo-preview.js' %}" defer></script>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="nice-padding op-admin-panel op-admin-panel--wide">
+    <header class="op-admin-panel__header">
+        <div>
+            <p class="op-admin-panel__eyebrow">{{ secao.eyebrow }}</p>
+            <h1>{{ secao.titulo }}</h1>
+            <p class="op-admin-panel__lead">{{ secao.descricao }}</p>
+            <p class="op-admin-panel__meta"><strong>Site:</strong> {{ site.hostname }}{% if site.port %}:{{ site.port }}{% endif %}</p>
+        </div>
+        <div class="op-admin-panel__actions">
+            <a class="button button-secondary" href="{% url 'admin_configuracoes_site' %}">Voltar para configurações</a>
+        </div>
+    </header>
+
+    <section class="w-panel op-admin-card">
+        <h2>Outras seções</h2>
+        <div class="op-admin-settings-tabs" aria-label="Seções de configuração">
+            {% for item in secoes %}
+                <a class="button button-secondary op-admin-settings-tab{% if item.ativa %} is-active{% endif %}" href="{{ item.url }}">{{ item.titulo }}</a>
+            {% endfor %}
+        </div>
+    </section>
+
+    {% if secao.slug == "identidade-seo" %}
+        <section class="op-admin-settings-identity">
+            <article class="w-panel op-admin-card">
+                <h2>Identidade pública</h2>
+                <p class="op-admin-panel__meta">Informações usadas como nome público, SEO padrão e contato principal do projeto.</p>
+                <form method="post" enctype="multipart/form-data" class="op-admin-form-card op-admin-config-identity">
+                    {% csrf_token %}
+
+                    <div class="op-admin-form-grid op-admin-form-grid--identity-primary">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "nome_site" or field.name == "seo_title_padrao" or field.name == "email_contato" %}
+                                <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+
+                    {% for field in form.visible_fields %}
+                        {% if field.name == "descricao_padrao" %}
+                            <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                <span>{{ field.label }}</span>
+                                {{ field }}
+                                {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                            </label>
+                        {% endif %}
+                    {% endfor %}
+
+                    <section class="op-admin-inline-card op-admin-settings-media-card" data-ownpaper-image-preview-card data-preview-spec="fill-320x180" data-preview-url-template="{% url 'admin_configuracoes_site_imagem_preview' 0 %}">
+                        <div>
+                            <h3>Imagem de compartilhamento</h3>
+                            <p class="op-admin-panel__meta">Usada como imagem padrão em redes sociais e cards quando a página não tiver imagem própria.</p>
+                        </div>
+                        <div class="op-admin-settings-media-card__content">
+                            <div class="op-admin-settings-image-preview op-admin-settings-image-preview--wide" data-ownpaper-image-preview-target data-empty-text="Nenhuma imagem selecionada.">
+                                {% if config_site.imagem_compartilhamento_padrao %}
+                                    {% image config_site.imagem_compartilhamento_padrao fill-320x180 as compartilhamento_preview %}
+                                    <img src="{{ compartilhamento_preview.url }}" alt="{{ config_site.imagem_compartilhamento_padrao.title }}">
+                                {% else %}
+                                    <span>Nenhuma imagem selecionada.</span>
+                                {% endif %}
+                            </div>
+                            {% for field in form.visible_fields %}
+                                {% if field.name == "imagem_compartilhamento_padrao" %}
+                                    <label class="op-admin-field" for="{{ field.id_for_label }}" data-ownpaper-image-preview-field>
+                                        <span>{{ field.label }}</span>
+                                        {{ field }}
+                                        {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                        {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                    </label>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </section>
+
+                    <section class="op-admin-inline-card op-admin-settings-media-card" data-ownpaper-image-preview-card data-preview-spec="fill-96x96" data-preview-url-template="{% url 'admin_configuracoes_site_imagem_preview' 0 %}">
+                        <div>
+                            <h3>Favicon</h3>
+                            <p class="op-admin-panel__meta">Ícone pequeno usado na aba do navegador e como fallback visual em áreas de autenticação.</p>
+                        </div>
+                        <div class="op-admin-settings-media-card__content">
+                            <div class="op-admin-settings-image-preview op-admin-settings-image-preview--icon" data-ownpaper-image-preview-target data-empty-text="Nenhum favicon selecionado.">
+                                {% if config_site.favicon %}
+                                    {% image config_site.favicon fill-96x96 as favicon_preview %}
+                                    <img src="{{ favicon_preview.url }}" alt="{{ config_site.favicon.title }}">
+                                {% else %}
+                                    <span>Nenhum favicon selecionado.</span>
+                                {% endif %}
+                            </div>
+                            {% for field in form.visible_fields %}
+                                {% if field.name == "favicon" %}
+                                    <label class="op-admin-field" for="{{ field.id_for_label }}" data-ownpaper-image-preview-field>
+                                        <span>{{ field.label }}</span>
+                                        {{ field }}
+                                        {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                        {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                    </label>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </section>
+
+                    <section class="op-admin-inline-card">
+                        <h3>Rodapé institucional</h3>
+                        <p class="op-admin-panel__meta">Textos exibidos no rodapé público do site.</p>
+                        <div class="op-admin-form-grid op-admin-form-grid--identity-footer">
+                            {% for field in form.visible_fields %}
+                                {% if field.name == "copyright_texto" or field.name == "texto_rodape_link" %}
+                                    <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                        <span>{{ field.label }}</span>
+                                        {{ field }}
+                                        {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                        {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                    </label>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "texto_rodape" %}
+                                <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </section>
+
+                    <div class="op-admin-panel__actions">
+                        <button type="submit" class="button">Salvar seção</button>
+                    </div>
+                </form>
+            </article>
+        </section>
+    {% elif secao.slug == "paginas-institucionais" %}
+        <section class="op-admin-two-column op-admin-settings-layout op-admin-settings-layout--institutional">
+            <article class="w-panel op-admin-card">
+                <form method="post" enctype="multipart/form-data" class="op-admin-form-card op-admin-config-identity op-admin-config-institutional">
+                    {% csrf_token %}
+
+                    <section class="op-admin-inline-card">
+                        <h3>Páginas base</h3>
+                        <p class="op-admin-panel__meta">Vincule as páginas institucionais usadas em atalhos públicos, rodapé e fluxos de privacidade.</p>
+                        <div class="op-admin-form-grid op-admin-form-grid--institutional-pages">
+                            {% for field in form.visible_fields %}
+                                {% if field.name == "pagina_sobre" or field.name == "pagina_privacidade" or field.name == "pagina_cookies" or field.name == "pagina_contato" or field.name == "pagina_newsletter" %}
+                                    <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                        <span>{{ field.label }}</span>
+                                        {{ field }}
+                                        {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                        {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                    </label>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </section>
+
+                    <section class="op-admin-inline-card">
+                        <h3>Ferramentas públicas</h3>
+                        <p class="op-admin-panel__meta">Defina as páginas e rótulos usados para indexador e área pública de quiz.</p>
+                        <div class="op-admin-form-grid op-admin-form-grid--institutional-tools">
+                            {% for field in form.visible_fields %}
+                                {% if field.name == "pagina_indexador" or field.name == "rotulo_indexador" or field.name == "pagina_quiz_estudo" or field.name == "rotulo_quiz_estudo" %}
+                                    <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                        <span>{{ field.label }}</span>
+                                        {{ field }}
+                                        {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                        {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                    </label>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </section>
+
+                    <div class="op-admin-panel__actions">
+                        <button type="submit" class="button">Salvar seção</button>
+                    </div>
+                </form>
+            </article>
+
+            <aside class="op-admin-stack">
+                {% if secao.topicos %}
+                    <section class="w-panel op-admin-card">
+                        <h2>O que esta seção controla</h2>
+                        <ul class="op-admin-settings-card__topics">
+                            {% for item in secao.topicos %}
+                                <li>{{ item }}</li>
+                            {% endfor %}
+                        </ul>
+                    </section>
+                {% endif %}
+
+                <section class="w-panel op-admin-card">
+                    <h2>Observação operacional</h2>
+                    <div class="op-admin-history-list">
+                        <div class="op-admin-history-item">As páginas devem existir na árvore pública antes de serem vinculadas aqui.</div>
+                        <div class="op-admin-history-item">Esta instalação continua em modo de site único; esta área não gerencia múltiplos sites.</div>
+                    </div>
+                </section>
+            </aside>
+        </section>
+    {% elif secao.slug == "menu-navegacao" %}
+        <section class="op-admin-settings-identity op-admin-settings-menu">
+            <article class="w-panel op-admin-card">
+                <h2>Menu e navegação</h2>
+                <p class="op-admin-panel__meta">Controle como o menu público se comporta, quais logos aparecem no botão Início e quais dimensões devem ser usadas no cabeçalho.</p>
+                <form method="post" enctype="multipart/form-data" class="op-admin-form-card op-admin-config-identity op-admin-config-menu">
+                    {% csrf_token %}
+
+                    <div class="op-admin-menu-top-grid">
+                        <section class="op-admin-inline-card">
+                            <h3>Comportamento do menu</h3>
+                            <p class="op-admin-panel__meta">Define se o site usa a navegação customizada do OwnPaper e se o item Início aparece/fica fixo.</p>
+                            <div class="op-admin-form-grid op-admin-form-grid--menu-toggles">
+                                {% for field in form.visible_fields %}
+                                    {% if field.name == "usar_menu_customizado" or field.name == "menu_home_exibir" or field.name == "menu_home_primeiro_fixo" %}
+                                        <div class="op-admin-field op-admin-field--checkbox">
+                                            <label class="op-admin-checkbox-line op-admin-menu-checkbox-line" for="{{ field.id_for_label }}">
+                                                {{ field }}
+                                                <span class="op-admin-menu-checkbox" aria-hidden="true"></span>
+                                                <span>{{ field.label }}</span>
+                                            </label>
+                                            {% if field.help_text %}<span class="op-admin-muted op-admin-menu-checkbox-help">{{ field.help_text }}</span>{% endif %}
+                                            {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </section>
+
+                        <section class="op-admin-inline-card">
+                            <h3>Item Início</h3>
+                            <p class="op-admin-panel__meta">Rótulo usado quando o botão Início aparece como texto ou como fallback sem imagem.</p>
+                            <div class="op-admin-form-grid op-admin-form-grid--menu-primary">
+                                {% for field in form.visible_fields %}
+                                    {% if field.name == "menu_home_rotulo" %}
+                                        <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                            <span>{{ field.label }}</span>
+                                            {{ field }}
+                                            {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                            {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                        </label>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </section>
+                    </div>
+
+                    <section class="op-admin-inline-card op-admin-settings-media-card" data-ownpaper-image-preview-card data-preview-spec="max-320x140" data-preview-url-template="{% url 'admin_configuracoes_site_imagem_preview' 0 %}">
+                        <div>
+                            <h3>Logo padrão do Início</h3>
+                            <p class="op-admin-panel__meta">Imagem fallback usada quando não houver logo específico para o tema claro ou escuro.</p>
+                        </div>
+                        <div class="op-admin-settings-media-card__content">
+                            <div class="op-admin-settings-image-preview op-admin-settings-image-preview--logo" data-ownpaper-image-preview-target data-empty-text="Nenhum logo padrão selecionado.">
+                                {% if config_site.menu_home_imagem %}
+                                    {% image config_site.menu_home_imagem max-320x140 as logo_home_preview %}
+                                    <img src="{{ logo_home_preview.url }}" alt="{{ config_site.menu_home_imagem.title }}">
+                                {% else %}
+                                    <span>Nenhum logo padrão selecionado.</span>
+                                {% endif %}
+                            </div>
+                            {% for field in form.visible_fields %}
+                                {% if field.name == "menu_home_imagem" %}
+                                    <label class="op-admin-field" for="{{ field.id_for_label }}" data-ownpaper-image-preview-field>
+                                        <span>{{ field.label }}</span>
+                                        {{ field }}
+                                        {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                        {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                    </label>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </section>
+
+                    <section class="op-admin-inline-card">
+                        <h3>Logos por tema</h3>
+                        <p class="op-admin-panel__meta">Imagens usadas no cabeçalho desktop conforme o tema claro ou escuro.</p>
+                        <div class="op-admin-form-grid op-admin-form-grid--menu-logos">
+                            <div class="op-admin-settings-media-card" data-ownpaper-image-preview-card data-preview-spec="max-320x140" data-preview-url-template="{% url 'admin_configuracoes_site_imagem_preview' 0 %}">
+                                <div class="op-admin-settings-image-preview op-admin-settings-image-preview--logo" data-ownpaper-image-preview-target data-empty-text="Nenhum logo claro selecionado.">
+                                    {% if config_site.menu_home_imagem_claro %}
+                                        {% image config_site.menu_home_imagem_claro max-320x140 as logo_claro_preview %}
+                                        <img src="{{ logo_claro_preview.url }}" alt="{{ config_site.menu_home_imagem_claro.title }}">
+                                    {% else %}
+                                        <span>Nenhum logo claro selecionado.</span>
+                                    {% endif %}
+                                </div>
+                                {% for field in form.visible_fields %}
+                                    {% if field.name == "menu_home_imagem_claro" %}
+                                        <label class="op-admin-field" for="{{ field.id_for_label }}" data-ownpaper-image-preview-field>
+                                            <span>{{ field.label }}</span>
+                                            {{ field }}
+                                            {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                            {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                        </label>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="op-admin-settings-media-card" data-ownpaper-image-preview-card data-preview-spec="max-320x140" data-preview-url-template="{% url 'admin_configuracoes_site_imagem_preview' 0 %}">
+                                <div class="op-admin-settings-image-preview op-admin-settings-image-preview--logo" data-ownpaper-image-preview-target data-empty-text="Nenhum logo escuro selecionado.">
+                                    {% if config_site.menu_home_imagem_escuro %}
+                                        {% image config_site.menu_home_imagem_escuro max-320x140 as logo_escuro_preview %}
+                                        <img src="{{ logo_escuro_preview.url }}" alt="{{ config_site.menu_home_imagem_escuro.title }}">
+                                    {% else %}
+                                        <span>Nenhum logo escuro selecionado.</span>
+                                    {% endif %}
+                                </div>
+                                {% for field in form.visible_fields %}
+                                    {% if field.name == "menu_home_imagem_escuro" %}
+                                        <label class="op-admin-field" for="{{ field.id_for_label }}" data-ownpaper-image-preview-field>
+                                            <span>{{ field.label }}</span>
+                                            {{ field }}
+                                            {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                            {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                        </label>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="op-admin-inline-card">
+                        <h3>Logos mobile</h3>
+                        <p class="op-admin-panel__meta">Imagens específicas para celular. Se ficarem vazias, o site usa automaticamente os logos desktop.</p>
+                        <div class="op-admin-form-grid op-admin-form-grid--menu-logos">
+                            <div class="op-admin-settings-media-card" data-ownpaper-image-preview-card data-preview-spec="max-320x140" data-preview-url-template="{% url 'admin_configuracoes_site_imagem_preview' 0 %}">
+                                <div class="op-admin-settings-image-preview op-admin-settings-image-preview--logo" data-ownpaper-image-preview-target data-empty-text="Nenhum logo mobile claro selecionado.">
+                                    {% if config_site.menu_home_imagem_mobile_claro %}
+                                        {% image config_site.menu_home_imagem_mobile_claro max-320x140 as logo_mobile_claro_preview %}
+                                        <img src="{{ logo_mobile_claro_preview.url }}" alt="{{ config_site.menu_home_imagem_mobile_claro.title }}">
+                                    {% else %}
+                                        <span>Nenhum logo mobile claro selecionado.</span>
+                                    {% endif %}
+                                </div>
+                                {% for field in form.visible_fields %}
+                                    {% if field.name == "menu_home_imagem_mobile_claro" %}
+                                        <label class="op-admin-field" for="{{ field.id_for_label }}" data-ownpaper-image-preview-field>
+                                            <span>{{ field.label }}</span>
+                                            {{ field }}
+                                            {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                            {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                        </label>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <div class="op-admin-settings-media-card" data-ownpaper-image-preview-card data-preview-spec="max-320x140" data-preview-url-template="{% url 'admin_configuracoes_site_imagem_preview' 0 %}">
+                                <div class="op-admin-settings-image-preview op-admin-settings-image-preview--logo" data-ownpaper-image-preview-target data-empty-text="Nenhum logo mobile escuro selecionado.">
+                                    {% if config_site.menu_home_imagem_mobile_escuro %}
+                                        {% image config_site.menu_home_imagem_mobile_escuro max-320x140 as logo_mobile_escuro_preview %}
+                                        <img src="{{ logo_mobile_escuro_preview.url }}" alt="{{ config_site.menu_home_imagem_mobile_escuro.title }}">
+                                    {% else %}
+                                        <span>Nenhum logo mobile escuro selecionado.</span>
+                                    {% endif %}
+                                </div>
+                                {% for field in form.visible_fields %}
+                                    {% if field.name == "menu_home_imagem_mobile_escuro" %}
+                                        <label class="op-admin-field" for="{{ field.id_for_label }}" data-ownpaper-image-preview-field>
+                                            <span>{{ field.label }}</span>
+                                            {{ field }}
+                                            {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                            {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                        </label>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="op-admin-inline-card">
+                        <h3>Dimensões e ajuste</h3>
+                        <p class="op-admin-panel__meta">Defina a proporção e as alturas máximas usadas para renderizar o botão/logo do Início.</p>
+                        <div class="op-admin-form-grid op-admin-form-grid--menu-dimensions">
+                            {% for field in form.visible_fields %}
+                                {% if field.name == "menu_home_logo_proporcao" or field.name == "menu_home_logo_ajuste" or field.name == "menu_home_logo_altura_desktop_px" or field.name == "menu_home_logo_altura_mobile_px" %}
+                                    <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                        <span>{{ field.label }}</span>
+                                        {{ field }}
+                                        {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                        {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                    </label>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </section>
+
+                    <div class="op-admin-panel__actions">
+                        <button type="submit" class="button">Salvar seção</button>
+                        {% for item in links_extras %}
+                            <a class="button button-secondary" href="{{ item.url }}">{{ item.label }}</a>
+                        {% endfor %}
+                    </div>
+                </form>
+            </article>
+        </section>
+    {% elif secao.slug == "tema-aparencia" %}
+    <section class="op-admin-two-column op-admin-settings-layout op-admin-settings-layout--theme">
+        <article class="w-panel op-admin-card">
+            <h2>Editar tema e aparência</h2>
+            <p class="op-admin-panel__meta">Defina o idioma base, o tema padrão, as cores centrais e os links sociais exibidos publicamente.</p>
+            <form method="post" enctype="multipart/form-data" class="op-admin-form-card op-admin-config-identity op-admin-config-theme">
+                {% csrf_token %}
+
+                <section class="op-admin-inline-card">
+                    <h3>Base do site</h3>
+                    <p class="op-admin-panel__meta">Idioma público e tema inicial usado quando o visitante ainda não escolheu preferência própria.</p>
+                    <div class="op-admin-form-grid op-admin-form-grid--theme-base op-admin-form-grid--settings">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "idioma_site" or field.name == "tema_padrao_site" %}
+                                <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="op-admin-inline-card">
+                    <h3>Paleta padrão</h3>
+                    <p class="op-admin-panel__meta">Estas duas cores alimentam o tema público e servem como base para os contrastes claro/escuro.</p>
+                    <div class="op-admin-form-grid op-admin-form-grid--theme-palette">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "paleta_cor_1" or field.name == "paleta_cor_2" %}
+                                <label class="op-admin-field op-admin-field--theme-color" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="op-admin-inline-card">
+                    <h3>Redes sociais</h3>
+                    <p class="op-admin-panel__meta">Preencha apenas os canais que devem aparecer no site público.</p>
+                    <div class="op-admin-form-grid op-admin-form-grid--theme-social">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "social_facebook_url" or field.name == "social_instagram_url" or field.name == "social_linkedin_url" or field.name == "social_x_url" or field.name == "social_youtube_url" %}
+                                <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <div class="op-admin-panel__actions">
+                    <button type="submit" class="button">Salvar seção</button>
+                </div>
+            </form>
+        </article>
+
+        <aside class="op-admin-stack">
+            {% if secao.topicos %}
+                <section class="w-panel op-admin-card">
+                    <h2>O que esta seção controla</h2>
+                    <ul class="op-admin-settings-card__topics">
+                        {% for item in secao.topicos %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            {% endif %}
+
+            <section class="w-panel op-admin-card">
+                <h2>Recomendação</h2>
+                <div class="op-admin-history-list">
+                    <div class="op-admin-history-item">Use cores com contraste suficiente para leitura nos temas claro e escuro.</div>
+                    <div class="op-admin-history-item">Deixe vazias as redes sociais que não devem aparecer no site público.</div>
+                </div>
+            </section>
+        </aside>
+    </section>
+    {% elif secao.slug == "comunicacao-comentarios" %}
+    <section class="op-admin-two-column op-admin-settings-layout op-admin-settings-layout--communication">
+        <article class="w-panel op-admin-card">
+            <form method="post" enctype="multipart/form-data" class="op-admin-form-card op-admin-config-identity op-admin-config-communication">
+                {% csrf_token %}
+
+                <section class="op-admin-inline-card">
+                    <h3>Comentários públicos</h3>
+                    <p class="op-admin-panel__meta">Controle a abertura de comentários no site público e a sincronização com newsletter.</p>
+                    <div class="op-admin-form-grid op-admin-form-grid--communication-comments">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "comentarios_ativos" or field.name == "comentarios_auto_newsletter" %}
+                                <div class="op-admin-field op-admin-field--checkbox op-admin-communication-checkbox">
+                                    <label class="op-admin-checkbox-line op-admin-menu-checkbox-line" for="{{ field.id_for_label }}">
+                                        {{ field }}
+                                        <span class="op-admin-menu-checkbox" aria-hidden="true"></span>
+                                        <span>{{ field.label }}</span>
+                                    </label>
+                                    {% if field.help_text %}<span class="op-admin-muted op-admin-menu-checkbox-help">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="op-admin-inline-card">
+                    <h3>Notificações de publicações</h3>
+                    <p class="op-admin-panel__meta">Defina se os assinantes recebem avisos imediatos ou consolidados por período.</p>
+                    <div class="op-admin-form-grid op-admin-form-grid--communication-notifications">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "notificacao_publicacoes_modo" or field.name == "notificacao_publicacoes_periodo_horas" %}
+                                <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% if campos_readonly %}
+                        <div class="op-admin-readonly-grid op-admin-readonly-grid--communication">
+                            {% for item in campos_readonly %}
+                                <div class="op-admin-readonly-item">
+                                    <span>{{ item.label }}</span>
+                                    <strong>{{ item.valor }}</strong>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </section>
+
+                <section class="op-admin-inline-card">
+                    <h3>Submissões públicas</h3>
+                    <p class="op-admin-panel__meta">Controle o envio público de textos em PDF para avaliação editorial.</p>
+                    <div class="op-admin-form-grid op-admin-form-grid--communication-submissions">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "submissoes_publicas_ativas" or field.name == "submissoes_exigir_orcid" %}
+                                <div class="op-admin-field op-admin-field--checkbox op-admin-communication-checkbox">
+                                    <label class="op-admin-checkbox-line op-admin-menu-checkbox-line" for="{{ field.id_for_label }}">
+                                        {{ field }}
+                                        <span class="op-admin-menu-checkbox" aria-hidden="true"></span>
+                                        <span>{{ field.label }}</span>
+                                    </label>
+                                    {% if field.help_text %}<span class="op-admin-muted op-admin-menu-checkbox-help">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </div>
+                            {% elif field.name == "submissoes_limite_pdf_mb" %}
+                                <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <div class="op-admin-panel__actions">
+                    <button type="submit" class="button">Salvar seção</button>
+                </div>
+            </form>
+        </article>
+
+        <aside class="op-admin-stack">
+            {% if secao.topicos %}
+                <section class="w-panel op-admin-card">
+                    <h2>O que esta seção controla</h2>
+                    <ul class="op-admin-settings-card__topics">
+                        {% for item in secao.topicos %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            {% endif %}
+
+            {% if links_extras %}
+                <section class="w-panel op-admin-card">
+                    <h2>Acesso relacionado</h2>
+                    <div class="op-admin-panel__actions op-admin-panel__actions--stacked">
+                        {% for item in links_extras %}
+                            <a class="button button-secondary" href="{{ item.url }}">{{ item.label }}</a>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+
+            {% if secao.observacoes %}
+                <section class="w-panel op-admin-card">
+                    <h2>Observações</h2>
+                    <div class="op-admin-history-list">
+                        {% for item in secao.observacoes %}
+                            <div class="op-admin-history-item">{{ item }}</div>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+        </aside>
+    </section>
+    {% elif secao.slug == "apoios-doacoes" %}
+    <section class="op-admin-two-column op-admin-settings-layout op-admin-settings-layout--donations">
+        <article class="w-panel op-admin-card">
+            <form method="post" enctype="multipart/form-data" class="op-admin-form-card op-admin-config-identity op-admin-config-donations">
+                {% csrf_token %}
+
+                <section class="op-admin-inline-card">
+                    <h3>Exibição</h3>
+                    <p class="op-admin-panel__meta">Controle se a página de apoio existe e onde os botões aparecem no site público.</p>
+                    <div class="op-admin-form-grid op-admin-form-grid--donations-display">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "doacoes_ativas" or field.name == "doacoes_exibir_no_cabecalho" or field.name == "doacoes_exibir_no_rodape" or field.name == "doacoes_exibir_em_publicacoes" %}
+                                <div class="op-admin-field op-admin-field--checkbox op-admin-donations-checkbox">
+                                    <label class="op-admin-checkbox-line op-admin-menu-checkbox-line" for="{{ field.id_for_label }}">
+                                        {{ field }}
+                                        <span class="op-admin-menu-checkbox" aria-hidden="true"></span>
+                                        <span>{{ field.label }}</span>
+                                    </label>
+                                    {% if field.help_text %}<span class="op-admin-muted op-admin-menu-checkbox-help">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </div>
+                            {% elif field.name == "doacoes_rotulo" or field.name == "doacoes_titulo" %}
+                                <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="op-admin-inline-card">
+                    <h3>Conteúdo da página</h3>
+                    <p class="op-admin-panel__meta">Textos introdutórios e instruções complementares exibidos na página pública de apoio.</p>
+                    {% for field in form.visible_fields %}
+                        {% if field.name == "doacoes_descricao" or field.name == "doacoes_detalhes" %}
+                            <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                <span>{{ field.label }}</span>
+                                {{ field }}
+                                {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                            </label>
+                        {% endif %}
+                    {% endfor %}
+                </section>
+
+                <section class="op-admin-inline-card op-admin-donation-method-card">
+                    <h3>Pix</h3>
+                    <p class="op-admin-panel__meta">Aceita chave Pix, QR Code em imagem e payload copia e cola.</p>
+                    <div class="op-admin-form-grid op-admin-form-grid--donations-pix">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "doacoes_pix_ativo" %}
+                                <div class="op-admin-field op-admin-field--checkbox op-admin-donations-checkbox">
+                                    <label class="op-admin-checkbox-line op-admin-menu-checkbox-line" for="{{ field.id_for_label }}">
+                                        {{ field }}
+                                        <span class="op-admin-menu-checkbox" aria-hidden="true"></span>
+                                        <span>{{ field.label }}</span>
+                                    </label>
+                                    {% if field.help_text %}<span class="op-admin-muted op-admin-menu-checkbox-help">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </div>
+                            {% elif field.name == "doacoes_pix_chave" or field.name == "doacoes_pix_copia_cola" %}
+                                <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <div class="op-admin-settings-media-card__content op-admin-donation-qr-row">
+                        <div class="op-admin-settings-image-preview op-admin-settings-image-preview--icon">
+                            {% if config_site.doacoes_pix_qr_code %}
+                                {% image config_site.doacoes_pix_qr_code fill-160x160 as pix_qr_preview %}
+                                <img src="{{ pix_qr_preview.url }}" alt="{{ config_site.doacoes_pix_qr_code.title }}">
+                            {% else %}
+                                <span>Nenhum QR Code selecionado.</span>
+                            {% endif %}
+                        </div>
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "doacoes_pix_qr_code" %}
+                                <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="op-admin-inline-card">
+                    <h3>Plataformas</h3>
+                    <p class="op-admin-panel__meta">Use URLs ou identificadores públicos. Nenhum token/API é salvo neste formulário.</p>
+                    <div class="op-admin-form-grid op-admin-form-grid--donations-platforms">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "doacoes_apoiase_ativo" or field.name == "doacoes_buymeacoffee_ativo" or field.name == "doacoes_paypal_ativo" or field.name == "doacoes_mercadopago_ativo" or field.name == "doacoes_github_sponsors_ativo" %}
+                                <div class="op-admin-field op-admin-field--checkbox op-admin-donations-checkbox">
+                                    <label class="op-admin-checkbox-line op-admin-menu-checkbox-line" for="{{ field.id_for_label }}">
+                                        {{ field }}
+                                        <span class="op-admin-menu-checkbox" aria-hidden="true"></span>
+                                        <span>{{ field.label }}</span>
+                                    </label>
+                                    {% if field.help_text %}<span class="op-admin-muted op-admin-menu-checkbox-help">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </div>
+                            {% elif field.name == "doacoes_apoiase_url" or field.name == "doacoes_buymeacoffee_usuario" or field.name == "doacoes_paypal_hosted_button_id" or field.name == "doacoes_paypal_business" or field.name == "doacoes_paypal_url" or field.name == "doacoes_mercadopago_url" or field.name == "doacoes_github_sponsors_usuario" %}
+                                <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="op-admin-inline-card">
+                    <h3>Criptoativos</h3>
+                    <p class="op-admin-panel__meta">Exibe endereços de carteira para apoio direto. Confirme os endereços com cuidado antes de publicar.</p>
+                    <div class="op-admin-form-grid op-admin-form-grid--donations-crypto">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "doacoes_bitcoin_ativo" or field.name == "doacoes_ethereum_ativo" %}
+                                <div class="op-admin-field op-admin-field--checkbox op-admin-donations-checkbox">
+                                    <label class="op-admin-checkbox-line op-admin-menu-checkbox-line" for="{{ field.id_for_label }}">
+                                        {{ field }}
+                                        <span class="op-admin-menu-checkbox" aria-hidden="true"></span>
+                                        <span>{{ field.label }}</span>
+                                    </label>
+                                    {% if field.help_text %}<span class="op-admin-muted op-admin-menu-checkbox-help">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </div>
+                            {% elif field.name == "doacoes_bitcoin_endereco" or field.name == "doacoes_ethereum_endereco" %}
+                                <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="op-admin-inline-card">
+                    <h3>Complementares</h3>
+                    <p class="op-admin-panel__meta">Use apenas para um link institucional extra ou instruções que não se encaixem nos métodos acima.</p>
+                    {% for field in form.visible_fields %}
+                        {% if field.name == "doacoes_link_externo" %}
+                            <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                <span>{{ field.label }}</span>
+                                {{ field }}
+                                {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                            </label>
+                        {% endif %}
+                    {% endfor %}
+                </section>
+
+                <div class="op-admin-panel__actions">
+                    <button type="submit" class="button">Salvar seção</button>
+                </div>
+            </form>
+        </article>
+
+        <aside class="op-admin-stack">
+            {% if secao.topicos %}
+                <section class="w-panel op-admin-card">
+                    <h2>O que esta seção controla</h2>
+                    <ul class="op-admin-settings-card__topics">
+                        {% for item in secao.topicos %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            {% endif %}
+
+            {% if secao.observacoes %}
+                <section class="w-panel op-admin-card">
+                    <h2>Observações</h2>
+                    <div class="op-admin-history-list">
+                        {% for item in secao.observacoes %}
+                            <div class="op-admin-history-item">{{ item }}</div>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+        </aside>
+    </section>
+    {% elif secao.slug == "operacao-site" %}
+    <section class="op-admin-two-column op-admin-settings-layout op-admin-settings-layout--operation">
+        <article class="w-panel op-admin-card">
+            <form method="post" enctype="multipart/form-data" class="op-admin-form-card op-admin-config-identity op-admin-config-operation">
+                {% csrf_token %}
+
+                <section class="op-admin-inline-card">
+                    <h3>Manutenção pública</h3>
+                    <p class="op-admin-panel__meta">Controle a indisponibilidade temporária do site público e a mensagem exibida aos visitantes.</p>
+                    <div class="op-admin-form-grid op-admin-form-grid--operation-maintenance">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "modo_manutencao_ativo" %}
+                                <div class="op-admin-field op-admin-field--checkbox op-admin-operation-checkbox">
+                                    <label class="op-admin-checkbox-line op-admin-menu-checkbox-line" for="{{ field.id_for_label }}">
+                                        {{ field }}
+                                        <span class="op-admin-menu-checkbox" aria-hidden="true"></span>
+                                        <span>{{ field.label }}</span>
+                                    </label>
+                                    {% if field.help_text %}<span class="op-admin-muted op-admin-menu-checkbox-help">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </div>
+                            {% elif field.name == "modo_manutencao_titulo" %}
+                                <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% elif field.name == "modo_manutencao_mensagem" %}
+                                <label class="op-admin-field op-admin-field--span-2" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="op-admin-inline-card">
+                    <h3>Proteção editorial</h3>
+                    <p class="op-admin-panel__meta">Regras operacionais que reduzem risco de alteração indevida de autoria e vínculo editorial.</p>
+                    <div class="op-admin-form-grid op-admin-form-grid--operation-editorial">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "travar_publicacao_por_orcid" %}
+                                <div class="op-admin-field op-admin-field--checkbox op-admin-operation-checkbox">
+                                    <label class="op-admin-checkbox-line op-admin-menu-checkbox-line" for="{{ field.id_for_label }}">
+                                        {{ field }}
+                                        <span class="op-admin-menu-checkbox" aria-hidden="true"></span>
+                                        <span>{{ field.label }}</span>
+                                    </label>
+                                    {% if field.help_text %}<span class="op-admin-muted op-admin-menu-checkbox-help">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="op-admin-inline-card">
+                    <h3>Relatório de backup</h3>
+                    <p class="op-admin-panel__meta">Envie por e-mail apenas o relatório administrativo da execução. Os arquivos de backup seguem a política operacional do servidor.</p>
+                    <div class="op-admin-form-grid op-admin-form-grid--operation-backup">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "backup_enviar_relatorio" %}
+                                <div class="op-admin-field op-admin-field--checkbox op-admin-operation-checkbox">
+                                    <label class="op-admin-checkbox-line op-admin-menu-checkbox-line" for="{{ field.id_for_label }}">
+                                        {{ field }}
+                                        <span class="op-admin-menu-checkbox" aria-hidden="true"></span>
+                                        <span>{{ field.label }}</span>
+                                    </label>
+                                    {% if field.help_text %}<span class="op-admin-muted op-admin-menu-checkbox-help">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </div>
+                            {% elif field.name == "backup_email_destino" %}
+                                <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    {% if campos_readonly %}
+                        <div class="op-admin-readonly-grid op-admin-readonly-grid--operation">
+                            {% for item in campos_readonly %}
+                                <div class="op-admin-readonly-item">
+                                    <span>{{ item.label }}</span>
+                                    <strong>{{ item.valor }}</strong>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                </section>
+
+                <div class="op-admin-panel__actions">
+                    <button type="submit" class="button">Salvar seção</button>
+                </div>
+            </form>
+        </article>
+
+        <aside class="op-admin-stack">
+            {% if secao.topicos %}
+                <section class="w-panel op-admin-card">
+                    <h2>O que esta seção controla</h2>
+                    <ul class="op-admin-settings-card__topics">
+                        {% for item in secao.topicos %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            {% endif %}
+
+            {% if links_extras %}
+                <section class="w-panel op-admin-card">
+                    <h2>Acesso relacionado</h2>
+                    <div class="op-admin-panel__actions op-admin-panel__actions--stacked">
+                        {% for item in links_extras %}
+                            <a class="button button-secondary" href="{{ item.url }}">{{ item.label }}</a>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+
+            {% if secao.observacoes %}
+                <section class="w-panel op-admin-card">
+                    <h2>Observações</h2>
+                    <div class="op-admin-history-list">
+                        {% for item in secao.observacoes %}
+                            <div class="op-admin-history-item">{{ item }}</div>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+        </aside>
+    </section>
+    {% elif secao.slug == "integracoes-rastreamento" %}
+    <section class="op-admin-two-column op-admin-settings-layout op-admin-settings-layout--integrations">
+        <article class="w-panel op-admin-card">
+            <form method="post" enctype="multipart/form-data" class="op-admin-form-card op-admin-config-identity op-admin-config-integrations">
+                {% csrf_token %}
+
+                <section class="op-admin-inline-card">
+                    <h3>Verificações de domínio</h3>
+                    <p class="op-admin-panel__meta">Informe somente os valores de verificação, não a tag HTML completa.</p>
+                    <div class="op-admin-form-grid op-admin-form-grid--integrations-verification">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "google_search_console_verification" or field.name == "meta_domain_verification" %}
+                                <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="op-admin-inline-card">
+                    <h3>Google e Meta</h3>
+                    <p class="op-admin-panel__meta">Essas integrações só são carregadas no site público após consentimento de cookies opcionais.</p>
+                    <div class="op-admin-form-grid op-admin-form-grid--integrations-provider">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "google_analytics_id" or field.name == "google_tag_manager_id" or field.name == "meta_pixel_id" %}
+                                <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="op-admin-inline-card">
+                    <h3>Analytics externos</h3>
+                    <p class="op-admin-panel__meta">Use apenas URLs das ferramentas configuradas. Não há campo de script livre nesta instalação.</p>
+                    <div class="op-admin-form-grid op-admin-form-grid--integrations-analytics">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "plausible_domain" or field.name == "plausible_script_url" or field.name == "umami_website_id" or field.name == "umami_script_url" or field.name == "matomo_site_id" or field.name == "matomo_url" %}
+                                <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="op-admin-inline-card">
+                    <h3>Estatísticas internas</h3>
+                    <p class="op-admin-panel__meta">Controle a coleta interna simplificada e o período de retenção dos dados.</p>
+                    <div class="op-admin-form-grid op-admin-form-grid--integrations-stats">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "estatisticas_internas_ativas" %}
+                                <div class="op-admin-field op-admin-field--checkbox op-admin-integrations-checkbox">
+                                    <label class="op-admin-checkbox-line op-admin-menu-checkbox-line" for="{{ field.id_for_label }}">
+                                        {{ field }}
+                                        <span class="op-admin-menu-checkbox" aria-hidden="true"></span>
+                                        <span>{{ field.label }}</span>
+                                    </label>
+                                    {% if field.help_text %}<span class="op-admin-muted op-admin-menu-checkbox-help">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </div>
+                            {% elif field.name == "estatisticas_reter_agregados_dias" or field.name == "estatisticas_reter_eventos_brutos_dias" %}
+                                <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <section class="op-admin-inline-card">
+                    <h3>Links curtos</h3>
+                    <p class="op-admin-panel__meta">Apenas parâmetros públicos ficam no painel; credenciais sensíveis permanecem no ambiente do servidor.</p>
+                    <div class="op-admin-form-grid op-admin-form-grid--integrations-shlink">
+                        {% for field in form.visible_fields %}
+                            {% if field.name == "shlink_ativo" %}
+                                <div class="op-admin-field op-admin-field--checkbox op-admin-integrations-checkbox">
+                                    <label class="op-admin-checkbox-line op-admin-menu-checkbox-line" for="{{ field.id_for_label }}">
+                                        {{ field }}
+                                        <span class="op-admin-menu-checkbox" aria-hidden="true"></span>
+                                        <span>{{ field.label }}</span>
+                                    </label>
+                                    {% if field.help_text %}<span class="op-admin-muted op-admin-menu-checkbox-help">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </div>
+                            {% elif field.name == "shlink_default_domain" %}
+                                <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                    <span>{{ field.label }}</span>
+                                    {{ field }}
+                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </label>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </section>
+
+                <div class="op-admin-panel__actions">
+                    <button type="submit" class="button">Salvar seção</button>
+                </div>
+            </form>
+        </article>
+
+        <aside class="op-admin-stack">
+            {% if secao.topicos %}
+                <section class="w-panel op-admin-card">
+                    <h2>O que esta seção controla</h2>
+                    <ul class="op-admin-settings-card__topics">
+                        {% for item in secao.topicos %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            {% endif %}
+
+            {% if secao.observacoes %}
+                <section class="w-panel op-admin-card">
+                    <h2>Observações</h2>
+                    <div class="op-admin-history-list">
+                        {% for item in secao.observacoes %}
+                            <div class="op-admin-history-item">{{ item }}</div>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+        </aside>
+    </section>
+    {% else %}
+    <section class="op-admin-two-column op-admin-settings-layout">
+        <article class="w-panel op-admin-card">
+            <h2>Editar {{ secao.titulo|lower }}</h2>
+            <form method="post" enctype="multipart/form-data" class="op-admin-form-card">
+                {% csrf_token %}
+                <div class="op-admin-form-grid op-admin-form-grid--settings">
+                    {% for field in form.visible_fields %}
+                        {% if field.field.widget.input_type == "checkbox" %}
+                            <div class="op-admin-field op-admin-field--checkbox">
+                                <label class="op-admin-checkbox-line" for="{{ field.id_for_label }}">{{ field }} <span>{{ field.label }}</span></label>
+                                {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                            </div>
+                        {% else %}
+                            <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                <span>{{ field.label }}</span>
+                                {{ field }}
+                                {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                            </label>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+                <div class="op-admin-panel__actions">
+                    <button type="submit" class="button">Salvar seção</button>
+                </div>
+            </form>
+        </article>
+
+        <aside class="op-admin-stack">
+            {% if secao.topicos %}
+                <section class="w-panel op-admin-card">
+                    <h2>O que esta seção controla</h2>
+                    <ul class="op-admin-settings-card__topics">
+                        {% for item in secao.topicos %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            {% endif %}
+
+            {% if links_extras %}
+                <section class="w-panel op-admin-card">
+                    <h2>Acessos relacionados</h2>
+                    <div class="op-admin-panel__actions">
+                        {% for item in links_extras %}
+                            <a class="button button-secondary" href="{{ item.url }}">{{ item.label }}</a>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+
+            {% if secao.observacoes %}
+                <section class="w-panel op-admin-card">
+                    <h2>Observações</h2>
+                    <div class="op-admin-history-list">
+                        {% for item in secao.observacoes %}
+                            <div class="op-admin-history-item">{{ item }}</div>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+
+            {% if campos_readonly %}
+                <section class="w-panel op-admin-card">
+                    <h2>Informações de acompanhamento</h2>
+                    <div class="op-admin-history-list">
+                        {% for item in campos_readonly %}
+                            <div class="op-admin-history-item">
+                                <strong>{{ item.label|capfirst }}:</strong> {{ item.valor }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </section>
+            {% endif %}
+        </aside>
+    </section>
+    {% endif %}
+</div>
+{% endblock %}

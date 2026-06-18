@@ -1,10 +1,11 @@
-{% load wagtailcore_tags wagtailimages_tags %}
+{% load wagtailcore_tags wagtailimages_tags conteudo_tags %}
 
 
 {% if page.mostrar_carrossel_home and itens_carrossel_home %}
     <section class="home-secao">
         {% if page.titulo_carrossel_home %}
-            <h2 class="home-visualmente-oculto">{{ page.titulo_carrossel_home }}</h2>
+            {% translate_label page.titulo_carrossel_home "pt-br" as titulo_carrossel_traduzido %}
+            <h2 class="home-visualmente-oculto">{{ titulo_carrossel_traduzido }}</h2>
         {% endif %}
 
         <div
@@ -22,16 +23,17 @@
             {% endif %}
 
             {% for item in itens_carrossel_home %}
-                <div class="home-carrossel-slide{% if forloop.first %} ativo{% endif %}">
-                    <a class="home-carrossel-link" href="{{ item.publicacao.url }}">
+                <div class="home-carrossel-slide{% if forloop.first %} ativo{% endif %}" data-slide-url="{{ item.publicacao.url }}">
+                    <a class="home-carrossel-link" href="{{ item.publicacao.url }}" draggable="false">
                         {% if item.imagem_exibicao %}
                             <div class="home-carrossel-imagem">
-                                {% image item.imagem_exibicao fill-1200x420 %}
+                                {% image item.imagem_exibicao fill-1200x420 class="home-carrossel-imagem-tag" %}
                             </div>
                         {% endif %}
 
                         <div class="home-carrossel-titulo">
-                            <h3>{{ item.publicacao.title }}</h3>
+                            {% translated item.publicacao "title" "pt-br" as translated_carrossel_title %}
+                            <h3>{{ translated_carrossel_title }}</h3>
                         </div>
                     </a>
                 </div>
@@ -43,23 +45,39 @@
 {% if page.mostrar_destaques_home and destaques_publicacoes %}
     <section class="home-secao">
         {% if page.titulo_destaques_home %}
-            <h2>{{ page.titulo_destaques_home }}</h2>
+            {% if page.titulo_destaques_home == "Destaques" %}
+                <h2>Destaques</h2>
+            {% else %}
+                {% translate_label page.titulo_destaques_home "pt-br" as titulo_destaques_traduzido %}
+                <h2>{{ titulo_destaques_traduzido }}</h2>
+            {% endif %}
         {% endif %}
 
         <div class="home-lista-publicacoes">
             {% for publicacao in destaques_publicacoes %}
-                <article class="home-card-publicacao">
-                    <div class="home-card-topo">
+                <article class="home-card-publicacao card">
+                    {% translated publicacao "title" "pt-br" as translated_publicacao_title %}
+                    <div class="home-card-topo{% if not publicacao.imagem_capa %} sem-miniatura{% endif %}">
                         {% if publicacao.imagem_capa %}
-                            <a class="home-card-miniatura" href="{{ publicacao.url }}" aria-label="{{ publicacao.title }}">
+                            <a class="home-card-miniatura" href="{{ publicacao.url }}" aria-label="{{ translated_publicacao_title }}">
                                 {% image publicacao.imagem_capa fill-360x204 %}
                             </a>
                         {% endif %}
 
-                        <div>
-                            <h3>
-                                <a href="{{ publicacao.url }}">{{ publicacao.title }}</a>
-                            </h3>
+                        <div class="home-card-conteudo">
+                            <div class="home-card-titulo-linha">
+                                <h3>
+                                    <a href="{{ publicacao.url }}">{{ translated_publicacao_title }}</a>
+                                </h3>
+                                {% if publicacao.total_visualizacoes > 0 %}
+                                    <span class="home-card-views-inline" title="Visualizações">
+                                        <span class="home-card-views-inline-icone" aria-hidden="true">
+                                            <svg viewBox="0 0 24 24"><path d="M12 5c5.23 0 9.27 3.37 10.84 6.34a1.24 1.24 0 0 1 0 1.32C21.27 15.63 17.23 19 12 19S2.73 15.63 1.16 12.66a1.24 1.24 0 0 1 0-1.32C2.73 8.37 6.77 5 12 5Zm0 2C7.78 7 4.42 9.63 3.2 12 4.42 14.37 7.78 17 12 17s7.58-2.63 8.8-5C19.58 9.63 16.22 7 12 7Zm0 1.8A3.2 3.2 0 1 1 8.8 12 3.2 3.2 0 0 1 12 8.8Zm0 2A1.2 1.2 0 1 0 13.2 12 1.2 1.2 0 0 0 12 10.8Z"></path></svg>
+                                        </span>
+                                        <span>{{ publicacao.total_visualizacoes }}</span>
+                                    </span>
+                                {% endif %}
+                            </div>
 
                             <div class="home-meta-publicacao">
                                 {% if publicacao.data_publicacao %}
@@ -72,17 +90,37 @@
                                     {% if publicacao.data_publicacao or publicacao.first_published_at %} · {% endif %}
                                     Atualizado em {{ publicacao.last_published_at|date:"d/m/Y" }}
                                 {% endif %}
+
+                                {% with autor=publicacao.autores_ordenados|first %}
+                                    {% if autor %}
+                                        <br>Por <a class="home-autor-link" href="/autores/{{ autor.username }}/" style="color: var(--op-link) !important; font-weight: 400;">{{ autor }}</a>
+                                    {% elif publicacao.autoria_publica_fallback_nome %}
+                                        <br>Por <span class="home-autor-link" style="color: var(--op-link) !important; font-weight: 400;">{{ publicacao.autoria_publica_fallback_nome }}</span>
+                                    {% endif %}
+                                {% endwith %}
+                                {% if publicacao.comentarios_aprovados_count > 1 or publicacao.total_visualizacoes > 1 %}
+                                    <div class="home-publicacao-estatisticas">
+                                        {% if publicacao.comentarios_aprovados_count > 1 %}
+                                            <span class="home-publicacao-balao" title="Comentários">
+                                                <span class="home-publicacao-balao-icone" aria-hidden="true">
+                                                    <svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2h9A3.5 3.5 0 0 1 20 5.5v6A3.5 3.5 0 0 1 16.5 15H9l-4.2 3.5c-.32.27-.8.04-.8-.38V15.1A3.49 3.49 0 0 1 4 11.5v-6Z"></path></svg>
+                                                </span>
+                                                <span>{{ publicacao.comentarios_aprovados_count }}</span>
+                                            </span>
+                                        {% endif %}
+                                        {% if publicacao.total_visualizacoes > 1 %}
+                                            <span class="home-publicacao-balao" title="Visualizações">
+                                                <span class="home-publicacao-balao-icone" aria-hidden="true">
+                                                    <svg viewBox="0 0 24 24"><path d="M12 5c5.23 0 9.27 3.37 10.84 6.34a1.24 1.24 0 0 1 0 1.32C21.27 15.63 17.23 19 12 19S2.73 15.63 1.16 12.66a1.24 1.24 0 0 1 0-1.32C2.73 8.37 6.77 5 12 5Zm0 2C7.78 7 4.42 9.63 3.2 12 4.42 14.37 7.78 17 12 17s7.58-2.63 8.8-5C19.58 9.63 16.22 7 12 7Zm0 1.8A3.2 3.2 0 1 1 8.8 12 3.2 3.2 0 0 1 12 8.8Zm0 2A1.2 1.2 0 1 0 13.2 12 1.2 1.2 0 0 0 12 10.8Z"></path></svg>
+                                                </span>
+                                                <span>{{ publicacao.total_visualizacoes }}</span>
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-
-                    {% if publicacao.resumo %}
-                        <div class="home-resumo-publicacao">
-                            {{ publicacao.resumo|richtext }}
-                        </div>
-                    {% elif publicacao.search_description %}
-                        <p class="home-resumo-publicacao">{{ publicacao.search_description }}</p>
-                    {% endif %}
                 </article>
             {% endfor %}
         </div>
@@ -92,28 +130,39 @@
 {% if page.mostrar_ultimas_publicacoes_home and todas_ultimas_publicacoes_home %}
     <section class="home-secao">
         {% if page.titulo_ultimas_publicacoes_home %}
-            <h2>{{ page.titulo_ultimas_publicacoes_home }}</h2>
+            {% if page.titulo_ultimas_publicacoes_home == "Últimas publicações" %}
+                <h2>Últimas publicações</h2>
+            {% else %}
+                {% translate_label page.titulo_ultimas_publicacoes_home "pt-br" as titulo_ultimas_traduzido %}
+                <h2>{{ titulo_ultimas_traduzido }}</h2>
+            {% endif %}
         {% endif %}
 
-        <div class="home-lista-publicacoes" id="home-lista-ultimas-publicacoes"
-            data-quantidade-inicial="{{ quantidade_inicial_ultimas_home|default:5 }}">
+        <div class="home-lista-publicacoes" id="home-lista-ultimas-publicacoes">
             {% for publicacao in todas_ultimas_publicacoes_home %}
-                <article
-                    class="home-card-publicacao"
-                    data-home-ultima-item
-                    {% if forloop.counter > quantidade_inicial_ultimas_home %}hidden{% endif %}
-                >
-                    <div class="home-card-topo">
+                <article class="home-card-publicacao card">
+                    {% translated publicacao "title" "pt-br" as translated_publicacao_title %}
+                    <div class="home-card-topo{% if not publicacao.imagem_capa %} sem-miniatura{% endif %}">
                         {% if publicacao.imagem_capa %}
-                            <a class="home-card-miniatura" href="{{ publicacao.url }}" aria-label="{{ publicacao.title }}">
+                            <a class="home-card-miniatura" href="{{ publicacao.url }}" aria-label="{{ translated_publicacao_title }}">
                                 {% image publicacao.imagem_capa fill-360x204 %}
                             </a>
                         {% endif %}
 
-                        <div>
-                            <h3>
-                                <a href="{{ publicacao.url }}">{{ publicacao.title }}</a>
-                            </h3>
+                        <div class="home-card-conteudo">
+                            <div class="home-card-titulo-linha">
+                                <h3>
+                                    <a href="{{ publicacao.url }}">{{ translated_publicacao_title }}</a>
+                                </h3>
+                                {% if publicacao.total_visualizacoes > 0 %}
+                                    <span class="home-card-views-inline" title="Visualizações">
+                                        <span class="home-card-views-inline-icone" aria-hidden="true">
+                                            <svg viewBox="0 0 24 24"><path d="M12 5c5.23 0 9.27 3.37 10.84 6.34a1.24 1.24 0 0 1 0 1.32C21.27 15.63 17.23 19 12 19S2.73 15.63 1.16 12.66a1.24 1.24 0 0 1 0-1.32C2.73 8.37 6.77 5 12 5Zm0 2C7.78 7 4.42 9.63 3.2 12 4.42 14.37 7.78 17 12 17s7.58-2.63 8.8-5C19.58 9.63 16.22 7 12 7Zm0 1.8A3.2 3.2 0 1 1 8.8 12 3.2 3.2 0 0 1 12 8.8Zm0 2A1.2 1.2 0 1 0 13.2 12 1.2 1.2 0 0 0 12 10.8Z"></path></svg>
+                                        </span>
+                                        <span>{{ publicacao.total_visualizacoes }}</span>
+                                    </span>
+                                {% endif %}
+                            </div>
 
                             <div class="home-meta-publicacao">
                                 {% if publicacao.data_publicacao %}
@@ -126,19 +175,55 @@
                                     {% if publicacao.data_publicacao or publicacao.first_published_at %} · {% endif %}
                                     Atualizado em {{ publicacao.last_published_at|date:"d/m/Y" }}
                                 {% endif %}
+
+                                {% with autor=publicacao.autores_ordenados|first %}
+                                    {% if autor %}
+                                        <br>Por <a class="home-autor-link" href="/autores/{{ autor.username }}/" style="color: var(--op-link) !important; font-weight: 400;">{{ autor }}</a>
+                                    {% elif publicacao.autoria_publica_fallback_nome %}
+                                        <br>Por <span class="home-autor-link" style="color: var(--op-link) !important; font-weight: 400;">{{ publicacao.autoria_publica_fallback_nome }}</span>
+                                    {% endif %}
+                                {% endwith %}
+                                {% if publicacao.comentarios_aprovados_count > 1 or publicacao.total_visualizacoes > 1 %}
+                                    <div class="home-publicacao-estatisticas">
+                                        {% if publicacao.comentarios_aprovados_count > 1 %}
+                                            <span class="home-publicacao-balao" title="Comentários">
+                                                <span class="home-publicacao-balao-icone" aria-hidden="true">
+                                                    <svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2h9A3.5 3.5 0 0 1 20 5.5v6A3.5 3.5 0 0 1 16.5 15H9l-4.2 3.5c-.32.27-.8.04-.8-.38V15.1A3.49 3.49 0 0 1 4 11.5v-6Z"></path></svg>
+                                                </span>
+                                                <span>{{ publicacao.comentarios_aprovados_count }}</span>
+                                            </span>
+                                        {% endif %}
+                                        {% if publicacao.total_visualizacoes > 1 %}
+                                            <span class="home-publicacao-balao" title="Visualizações">
+                                                <span class="home-publicacao-balao-icone" aria-hidden="true">
+                                                    <svg viewBox="0 0 24 24"><path d="M12 5c5.23 0 9.27 3.37 10.84 6.34a1.24 1.24 0 0 1 0 1.32C21.27 15.63 17.23 19 12 19S2.73 15.63 1.16 12.66a1.24 1.24 0 0 1 0-1.32C2.73 8.37 6.77 5 12 5Zm0 2C7.78 7 4.42 9.63 3.2 12 4.42 14.37 7.78 17 12 17s7.58-2.63 8.8-5C19.58 9.63 16.22 7 12 7Zm0 1.8A3.2 3.2 0 1 1 8.8 12 3.2 3.2 0 0 1 12 8.8Zm0 2A1.2 1.2 0 1 0 13.2 12 1.2 1.2 0 0 0 12 10.8Z"></path></svg>
+                                                </span>
+                                                <span>{{ publicacao.total_visualizacoes }}</span>
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
-
-                    {% if publicacao.resumo %}
-                        <div class="home-resumo-publicacao">
-                            {{ publicacao.resumo|richtext }}
-                        </div>
-                    {% elif publicacao.search_description %}
-                        <p class="home-resumo-publicacao">{{ publicacao.search_description }}</p>
-                    {% endif %}
                 </article>
             {% endfor %}
         </div>
+
+        {% if ultimas_home_paginacao and ultimas_home_paginacao.paginator.num_pages > 1 %}
+            <nav class="home-paginacao-ultimas" aria-label="Paginação de últimas publicações">
+                {% if ultimas_home_paginacao.has_previous %}
+                    <a href="/?pagina_ultimas=1#ultimas-publicacoes">Primeira</a>
+                    <a href="/?pagina_ultimas={{ ultimas_home_paginacao.previous_page_number }}#ultimas-publicacoes">Anterior</a>
+                {% endif %}
+
+                <span>Página {{ ultimas_home_paginacao.number }} de {{ ultimas_home_paginacao.paginator.num_pages }}</span>
+
+                {% if ultimas_home_paginacao.has_next %}
+                    <a href="/?pagina_ultimas={{ ultimas_home_paginacao.next_page_number }}#ultimas-publicacoes">Próxima</a>
+                    <a href="/?pagina_ultimas={{ ultimas_home_paginacao.paginator.num_pages }}#ultimas-publicacoes">Última</a>
+                {% endif %}
+            </nav>
+        {% endif %}
     </section>
 {% endif %}

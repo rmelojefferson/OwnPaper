@@ -1,0 +1,91 @@
+{% load static wagtailcore_tags wagtailimages_tags conteudo_tags %}
+{% translated page "title" "pt-br" as translated_page_title %}
+{% if taxonomia_tipo == "categoria" %}
+    {% translated taxonomia_obj "nome" "pt-br" as translated_taxonomia_nome %}
+    {% translated taxonomia_obj "descricao" "pt-br" as translated_taxonomia_descricao %}
+{% else %}
+    {% translated taxonomia_obj "name" "pt-br" as translated_taxonomia_nome %}
+{% endif %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <title>{{ translated_taxonomia_nome }} · {{ translated_page_title }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% include "includes/site_head_assets.html" %}
+    <link rel="stylesheet" href="{% static 'css/home-blocos-publicacoes.css' %}?v=20260428-02">
+    <link rel="stylesheet" href="{% static 'css/publicacao.css' %}?v=20260429-05">
+    <link rel="stylesheet" href="{% static 'css/pages/quiz-estudo-page.css' %}?v=20260430-01">
+    {% include "includes/rastreamento_head.html" %}
+</head>
+<body class="pagina-quiz-estudo">
+    {% include "includes/rastreamento_body.html" %}
+    {% include "includes/menu_principal.html" with menu_assets_in_head=True %}
+    <main class="quiz-estudo-layout container is-max-desktop op-page-shell">
+        <article class="publicacao-artigo quiz-estudo-artigo">
+            <header class="op-page-header quiz-estudo-topo">
+                <h1 class="title is-2">{{ translated_taxonomia_nome }}</h1>
+                {% if taxonomia_tipo == "categoria" and translated_taxonomia_descricao %}
+                    <div class="quiz-estudo-introducao">{{ translated_taxonomia_descricao|richtext }}</div>
+                {% endif %}
+            </header>
+            <p class="quiz-estudo-taxonomia-retorno">
+                <a href="{{ page.url }}">
+                    ← Voltar para o quiz de estudos
+                </a>
+            </p>
+            <section class="publicacoes-relacionadas quiz-taxonomia-publicacoes">
+                <h2>Publicações relacionadas</h2>
+                {% if publicacoes %}
+                    <div class="home-lista-publicacoes lista-relacionadas">
+                        {% for origem in publicacoes %}
+                            {% translated origem "title" "pt-br" as translated_origem_title %}
+                            {% translated origem "resumo" "pt-br" as translated_origem_resumo %}
+                            <article class="home-card-publicacao relacionada-item" data-publication-id="{{ origem.id }}">
+                                <div class="home-card-topo{% if not origem.imagem_capa %} sem-miniatura{% endif %}">
+                                    {% if origem.imagem_capa %}
+                                        <a class="home-card-miniatura relacionada-capa-link" href="{{ origem.url }}" aria-label="{{ translated_origem_title }}">
+                                            {% image origem.imagem_capa fill-360x204 %}
+                                        </a>
+                                    {% endif %}
+                                    <div class="home-card-conteudo">
+                                        <div class="home-card-titulo-linha">
+                                            <h3><a href="{{ origem.url }}">{{ translated_origem_title }}</a></h3>
+                                            {% if origem.total_visualizacoes > 0 %}
+                                                <span class="home-card-views-inline" title="Visualizações">
+                                                    <span class="home-card-views-inline-icone" aria-hidden="true">
+                                                        <svg viewBox="0 0 24 24"><path d="M12 5c5.23 0 9.27 3.37 10.84 6.34a1.24 1.24 0 0 1 0 1.32C21.27 15.63 17.23 19 12 19S2.73 15.63 1.16 12.66a1.24 1.24 0 0 1 0-1.32C2.73 8.37 6.77 5 12 5Zm0 2C7.78 7 4.42 9.63 3.2 12 4.42 14.37 7.78 17 12 17s7.58-2.63 8.8-5C19.58 9.63 16.22 7 12 7Zm0 1.8A3.2 3.2 0 1 1 8.8 12 3.2 3.2 0 0 1 12 8.8Zm0 2A1.2 1.2 0 1 0 13.2 12 1.2 1.2 0 0 0 12 10.8Z"></path></svg>
+                                                    </span>
+                                                    <span>{{ origem.total_visualizacoes }}</span>
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="home-meta-publicacao">
+                                            {% if origem.data_publicacao %}Publicado em {{ origem.data_publicacao|date:"d/m/Y" }}{% endif %}
+                                            {% with autor=origem.autores_ordenados|first %}
+                                                {% if autor %}
+                                                    <br>Por <a href="/autores/{{ autor.username }}/">{{ autor }}</a>
+                                                {% endif %}
+                                            {% endwith %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if translated_origem_resumo %}
+                                    <div class="home-resumo-publicacao">
+                                        {{ translated_origem_resumo|richtext|safe }}
+                                    </div>
+                                {% endif %}
+                            </article>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="quiz-estudo-vazio">
+                        Ainda não há publicações vinculadas a este item.
+                    </p>
+                {% endif %}
+            </section>
+        </article>
+    </main>
+    {% include "includes/rodape_site.html" with rodape_assets_in_head=True %}
+</body>
+</html>

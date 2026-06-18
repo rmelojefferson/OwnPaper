@@ -1,0 +1,300 @@
+{% if config_site %}
+<style>
+{% with p=config_site.paleta_derivada %}
+:root {
+    --op-palette-1: {{ p.base_1 }};
+    --op-palette-2: {{ p.base_2 }};
+    --op-palette-3: {{ p.accent }};
+    --op-palette-4: {{ p.surface_tint }};
+
+    --op-bg: {{ p.light_bg }};
+    --op-surface: {{ p.light_surface }};
+    --op-text: {{ p.light_text }};
+    --op-muted: {{ p.light_muted }};
+    --op-border: {{ p.light_border }};
+    --op-link: {{ p.light_link }};
+    --op-accent: {{ p.light_accent }};
+    --op-btn-bg: {{ p.light_button_bg }};
+    --op-btn-text: {{ p.light_button_text }};
+    --op-btn-hover-bg: {{ p.light_button_hover_bg }};
+    --op-btn-hover-text: {{ p.light_button_hover_text }};
+    --op-btn-disabled-bg: {{ p.light_button_disabled_bg }};
+    --op-btn-disabled-text: {{ p.light_button_disabled_text }};
+}
+
+html[data-theme='escuro'] {
+    --op-bg: {{ p.dark_bg }};
+    --op-surface: {{ p.dark_surface }};
+    --op-text: {{ p.dark_text }};
+    --op-muted: {{ p.dark_muted }};
+    --op-border: {{ p.dark_border }};
+    --op-link: {{ p.dark_link }};
+    --op-accent: {{ p.dark_accent }};
+    --op-btn-bg: {{ p.dark_button_bg }};
+    --op-btn-text: {{ p.dark_button_text }};
+    --op-btn-hover-bg: {{ p.dark_button_hover_bg }};
+    --op-btn-hover-text: {{ p.dark_button_hover_text }};
+    --op-btn-disabled-bg: {{ p.dark_button_disabled_bg }};
+    --op-btn-disabled-text: {{ p.dark_button_disabled_text }};
+}
+
+body {
+    background: var(--op-bg);
+    color: var(--op-text);
+}
+
+a { color: var(--op-link); }
+a:hover { color: var(--op-accent); }
+
+.menu-principal,
+.rodape-site,
+.home-card-publicacao,
+.box,
+.card,
+.op-box,
+.op-card,
+.publicacao-artigo,
+.conteudo-institucional,
+.lista-publicacoes article,
+.form-busca,
+.publicacao-barra-acoes,
+.publicacao-relacionadas,
+.publicacoes-relacionadas,
+.menu-busca-rapida input,
+.menu-busca-rapida button,
+.menu-rss-link {
+    border-color: var(--op-border) !important;
+}
+
+.home-card-publicacao,
+.publicacao-artigo,
+.box,
+.card,
+.op-box,
+.op-card,
+.menu-principal-submenu,
+.form-busca,
+.menu-busca-rapida input,
+.menu-busca-rapida button,
+.menu-rss-link {
+    background: var(--op-surface);
+    color: var(--op-text);
+}
+
+.meta,
+.home-meta-publicacao,
+.rodape-site-copyright,
+small {
+    color: var(--op-muted);
+}
+
+html[data-theme='escuro'] .home-meta-publicacao,
+html[data-theme='escuro'] .home-meta-publicacao a {
+    color: var(--op-text) !important;
+}
+
+html[data-theme='escuro'] .home-meta-publicacao .home-autor-link {
+    color: var(--op-link) !important;
+    font-weight: 700;
+}
+
+button,
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+.menu-rss-link {
+    border-color: var(--op-border) !important;
+    background: var(--op-btn-bg);
+    color: var(--op-btn-text);
+    transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease, opacity 0.16s ease;
+}
+
+button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover,
+input[type="reset"]:hover,
+.menu-rss-link:hover {
+    background: var(--op-btn-hover-bg);
+    color: var(--op-btn-hover-text);
+    border-color: var(--op-btn-hover-bg) !important;
+}
+
+button:focus-visible,
+input[type="submit"]:focus-visible,
+input[type="button"]:focus-visible,
+input[type="reset"]:focus-visible,
+.menu-rss-link:focus-visible {
+    outline: 2px solid var(--op-accent);
+    outline-offset: 2px;
+}
+
+button:active,
+input[type="submit"]:active,
+input[type="button"]:active,
+input[type="reset"]:active,
+.menu-rss-link:active {
+    transform: translateY(1px);
+}
+
+button:disabled,
+button[disabled],
+input[type="submit"]:disabled,
+input[type="button"]:disabled,
+input[type="reset"]:disabled,
+[aria-disabled="true"] {
+    background: var(--op-btn-disabled-bg) !important;
+    color: var(--op-btn-disabled-text) !important;
+    border-color: var(--op-border) !important;
+    opacity: 0.72;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.menu-tema-controle {
+    display: inline-flex;
+    align-items: center;
+}
+
+.tema-toggle-btn {
+    border: 1px solid var(--op-border);
+    border-radius: 999px;
+    background: var(--op-surface);
+    color: var(--op-text);
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.08);
+}
+
+.tema-toggle-btn:hover {
+    background: color-mix(in srgb, var(--op-surface) 84%, var(--op-palette-2));
+}
+
+.tema-toggle-btn .tema-icone {
+    width: 24px;
+    height: 24px;
+    display: none;
+    stroke: currentColor;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    fill: none;
+}
+
+.tema-toggle-btn .tema-icone-lua path {
+    stroke: currentColor;
+}
+
+html[data-theme='escuro'] .tema-toggle-btn {
+    background: #1a2536;
+    color: #cbd5e1;
+    border-color: #334155;
+}
+
+html[data-theme='escuro'] .tema-toggle-btn .tema-icone-lua {
+    stroke: #94a3b8;
+    transition: stroke 0.15s ease, transform 0.15s ease;
+}
+
+html[data-theme='escuro'] .tema-toggle-btn:hover {
+    color: #0f172a !important;
+    background: #ffffff !important;
+    border-color: #ffffff !important;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+}
+
+html[data-theme='escuro'] .tema-toggle-btn:hover .tema-icone-lua {
+    stroke: #0f172a !important;
+    transform: scale(1.08);
+}
+
+html[data-theme='escuro'] .tema-toggle-btn:hover .tema-icone-lua path {
+    stroke: #0f172a !important;
+    stroke-width: 2.4;
+}
+
+html[data-theme='claro'] .tema-toggle-btn .tema-icone-sol,
+html[data-theme='escuro'] .tema-toggle-btn .tema-icone-lua {
+    display: block;
+}
+
+.tema-toggle-btn .tema-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+}
+
+html[data-theme='escuro'] .publicacao-artigo {
+    background: var(--op-bg) !important;
+}
+{% endwith %}
+</style>
+<script>
+(function () {
+    var temaPadrao = "{{ config_site.tema_padrao_site|default:'claro'|escapejs }}";
+    var chave = "ownpaper_theme_mode";
+    var mediaDark = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+
+    function temaSistema() {
+        return mediaDark && mediaDark.matches ? "escuro" : "claro";
+    }
+
+    function temaResolvido(modo) {
+        if (modo === "claro" || modo === "light") return "claro";
+        if (modo === "escuro" || modo === "dark") return "escuro";
+        if (modo === "sistema" || modo === "system") return temaSistema();
+        return temaSistema();
+    }
+
+    function aplicar(modo) {
+        var resolvido = temaResolvido(modo);
+        document.documentElement.setAttribute("data-theme-mode", resolvido);
+        document.documentElement.setAttribute("data-theme", resolvido);
+        var prox = resolvido === "claro" ? "escuro" : "claro";
+        document.querySelectorAll(".tema-toggle-btn").forEach(function (botao) {
+            botao.setAttribute("aria-label", "Alternar para tema " + prox);
+            botao.title = "Alternar para tema " + prox;
+        });
+    }
+
+    var salvo = localStorage.getItem(chave);
+    var modo = salvo || temaPadrao || "claro";
+    aplicar(modo);
+
+    window.__ownpaperAlternarTema = function () {
+        var atual = document.documentElement.getAttribute("data-theme") || temaResolvido(modo);
+        var proximo = atual === "claro" ? "escuro" : "claro";
+        localStorage.setItem(chave, proximo);
+        modo = proximo;
+        aplicar(proximo);
+    };
+
+    window.addEventListener("storage", function (event) {
+        if (event.key !== chave) return;
+        modo = event.newValue || temaPadrao || "claro";
+        aplicar(modo);
+    });
+
+    if (mediaDark && typeof mediaDark.addEventListener === "function") {
+        mediaDark.addEventListener("change", function () {
+            var salvoAtual = localStorage.getItem(chave) || temaPadrao || "claro";
+            if (salvoAtual === "sistema" || salvoAtual === "system") {
+                modo = salvoAtual;
+                aplicar(modo);
+            }
+        });
+    }
+
+})();
+</script>
+{% endif %}

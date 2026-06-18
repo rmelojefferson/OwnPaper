@@ -1,0 +1,249 @@
+{% if config_site %}
+<div class="op-cookie-banner" id="op-cookie-banner" hidden style="display:none;">
+    <div class="op-cookie-banner__texto">
+        Utilizamos cookies e tecnologias semelhantes para funcionamento do site e, com sua permissão, para métricas.
+        {% if config_site.pagina_cookies %}
+            <a href="{{ config_site.pagina_cookies.url }}">Saiba mais em Cookies</a>.
+        {% endif %}
+    </div>
+    <div class="op-cookie-banner__acoes">
+        <button type="button" class="op-cookie-btn op-cookie-btn--sec" data-cookie-consent="essential">Recusar opcionais</button>
+        <button type="button" class="op-cookie-btn" data-cookie-consent="all">Aceitar tudo</button>
+    </div>
+</div>
+
+<style>
+.op-cookie-banner {
+    position: fixed;
+    left: 50%;
+    transform: translateX(-50%);
+    width: min(700px, calc(100vw - 96px));
+    bottom: 12px;
+    z-index: 120;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 12px;
+    background: color-mix(in srgb, var(--op-surface, #fff) 86%, transparent);
+    color: var(--op-text, #0f172a);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    padding: 0.75rem 0.85rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    align-items: center;
+    opacity: 1;
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.op-cookie-banner.is-hidden {
+    display: none !important;
+}
+
+.op-cookie-banner.is-closing {
+    opacity: 0;
+    transform: translateX(-50%) translateY(6px);
+}
+
+.op-cookie-banner__texto {
+    font-size: 1.03rem;
+    line-height: 1.45;
+    text-align: left;
+}
+
+.op-cookie-banner__acoes {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    align-items: flex-end;
+}
+
+.op-cookie-btn {
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 8px;
+    height: 36px;
+    min-width: 172px;
+    padding: 0 0.85rem;
+    background: var(--op-btn-bg, #fff);
+    color: var(--op-btn-text, #0f172a);
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    justify-content: center;
+    display: inline-flex;
+    align-items: center;
+}
+
+.op-cookie-btn--sec {
+    background: var(--op-surface, #fff);
+}
+
+.op-cookie-btn:hover {
+    background: var(--op-btn-hover-bg, #1d4ed8);
+    color: var(--op-btn-hover-text, #fff);
+    border-color: var(--op-btn-hover-bg, #1d4ed8);
+}
+
+@media (min-width: 761px) {
+    .op-cookie-banner {
+        width: min(700px, calc(100vw - 120px));
+        bottom: 16px;
+    }
+}
+
+@media (max-width: 520px) {
+    .op-cookie-banner {
+        width: calc(100vw - 28px);
+        grid-template-columns: 1fr;
+    }
+
+    .op-cookie-banner__acoes {
+        align-items: stretch;
+    }
+}
+</style>
+
+<script>
+(function () {
+    var CHAVE = "ownpaper_cookie_consent";
+    var CHAVE_SESSAO = "ownpaper_cookie_consent_session";
+    var banner = document.getElementById("op-cookie-banner");
+
+    if (!banner) {
+        return;
+    }
+
+    function garantirBannerFechado() {
+        banner.hidden = true;
+        banner.style.display = "none";
+        banner.classList.add("is-hidden");
+        try {
+            banner.classList.remove("is-closing");
+        } catch (erro) {}
+    }
+
+    function lerCookie(nome) {
+        var prefixo = nome + "=";
+        var partes = document.cookie ? document.cookie.split(";") : [];
+        for (var i = 0; i < partes.length; i += 1) {
+            var p = partes[i].trim();
+            if (p.indexOf(prefixo) === 0) {
+                return decodeURIComponent(p.slice(prefixo.length));
+            }
+        }
+        return "";
+    }
+
+    function salvarCookie(nome, valor, dias) {
+        var data = new Date();
+        var secure = window.location && window.location.protocol === "https:" ? "; Secure" : "";
+        data.setTime(data.getTime() + (dias * 24 * 60 * 60 * 1000));
+        document.cookie = nome + "=" + encodeURIComponent(valor) + "; expires=" + data.toUTCString() + "; max-age=" + (dias * 24 * 60 * 60) + "; path=/; SameSite=Lax" + secure;
+    }
+
+    function apagarCookie(nome) {
+        var secure = window.location && window.location.protocol === "https:" ? "; Secure" : "";
+        document.cookie = nome + "=; expires=Thu, 01 Jan 1970 00:00:00 GMT; max-age=0; path=/; SameSite=Lax" + secure;
+    }
+
+    function salvarEscolha(valor) {
+        salvarCookie(CHAVE, valor, 180);
+        try {
+            window.localStorage.setItem(CHAVE, valor);
+        } catch (erro) {}
+        try {
+            window.sessionStorage.setItem(CHAVE_SESSAO, valor);
+        } catch (erro) {}
+    }
+
+    function lerEscolha() {
+        var cookie = lerCookie(CHAVE);
+        if (cookie) {
+            return cookie;
+        }
+        try {
+            var local = window.localStorage.getItem(CHAVE) || "";
+            if (local) {
+                return local;
+            }
+        } catch (erro) {}
+        try {
+            return window.sessionStorage.getItem(CHAVE_SESSAO) || "";
+        } catch (erro) {
+            return "";
+        }
+    }
+
+    function escolhaValida(valor) {
+        return valor === "all" || valor === "essential";
+    }
+
+    function abrirBannerCookies() {
+        banner.setAttribute("data-cookie-manage-mode", "1");
+        banner.classList.remove("is-hidden");
+        banner.classList.remove("is-closing");
+        banner.style.display = "grid";
+        banner.hidden = false;
+        try {
+            var primeiroBotao = banner.querySelector("[data-cookie-consent]");
+            if (primeiroBotao) {
+                primeiroBotao.focus();
+            }
+        } catch (erro) {}
+    }
+
+    function limparEscolhaCookies() {
+        apagarCookie(CHAVE);
+        try {
+            window.localStorage.removeItem(CHAVE);
+        } catch (erro) {}
+        try {
+            window.sessionStorage.removeItem(CHAVE_SESSAO);
+        } catch (erro) {}
+    }
+
+    window.__ownpaperAbrirGerenciarCookies = abrirBannerCookies;
+    window.__ownpaperLimparEGerenciarCookies = function () {
+        limparEscolhaCookies();
+        abrirBannerCookies();
+    };
+    document.addEventListener("op-cookie-open", abrirBannerCookies);
+
+    function fecharBannerComAnimacao() {
+        garantirBannerFechado();
+    }
+
+    function aplicarConsentimento(escolha) {
+        if (!escolhaValida(escolha)) {
+            return;
+        }
+        var veioDoGerenciar = banner.getAttribute("data-cookie-manage-mode") === "1";
+        salvarEscolha(escolha);
+        banner.removeAttribute("data-cookie-manage-mode");
+        fecharBannerComAnimacao();
+        if (veioDoGerenciar) {
+            window.location.reload();
+        }
+    }
+
+    window.__ownpaperAplicarConsentimentoCookie = aplicarConsentimento;
+
+    banner.addEventListener("click", function (evento) {
+        var botao = evento.target && evento.target.closest ? evento.target.closest("[data-cookie-consent]") : null;
+        if (!botao) {
+            return;
+        }
+        evento.preventDefault();
+        evento.stopPropagation();
+        aplicarConsentimento(botao.getAttribute("data-cookie-consent"));
+    });
+
+    if (escolhaValida(lerEscolha())) {
+        banner.removeAttribute("data-cookie-manage-mode");
+        garantirBannerFechado();
+    } else {
+        abrirBannerCookies();
+    }
+})();
+</script>
+{% endif %}

@@ -1,0 +1,64 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% block titletag %}Download de backup{% endblock %}
+{% block content %}
+<div class="nice-padding op-admin-panel op-admin-panel--wide">
+    <header class="op-admin-panel__header">
+        <div>
+            <p class="op-admin-panel__eyebrow">Administração</p>
+            <h1>Download de backup</h1>
+            <p class="op-admin-panel__lead">Confirme sua identidade antes de baixar o arquivo de backup.</p>
+        </div>
+        <div class="op-admin-actions">
+            <a class="button button-secondary" href="{% url 'admin_backups' %}">Voltar para Backups</a>
+        </div>
+    </header>
+
+    <section class="op-admin-card">
+        <h2>Arquivo solicitado</h2>
+        <div class="admin-stats-grid op-admin-backup-policy-grid">
+            <article class="op-admin-metric-card">
+                <span>Status</span>
+                <strong>{{ backup.get_status_display }}</strong>
+            </article>
+            <article class="op-admin-metric-card">
+                <span>Tamanho</span>
+                <strong>{{ backup.arquivo_tamanho_bytes }}</strong>
+                <small>bytes</small>
+            </article>
+            <article class="op-admin-metric-card">
+                <span>Expira em</span>
+                <strong>{{ expira_em|date:"d/m/Y H:i" }}</strong>
+            </article>
+        </div>
+        <p class="op-admin-panel__meta op-admin-breakall"><strong>Arquivo:</strong> {{ backup.arquivo_caminho }}</p>
+        <p class="op-admin-panel__meta op-admin-breakall"><strong>Checksum:</strong> {{ backup.checksum_sha256|default:"-" }}</p>
+    </section>
+
+    <section class="op-admin-card">
+        <form method="post" autocomplete="off">
+            {% csrf_token %}
+            <div class="op-admin-section-header">
+                <div>
+                    <h2>Confirmação reforçada</h2>
+                    <p class="op-admin-panel__meta">O link expira, é invalidado após o download e o uso será registrado em auditoria.</p>
+                </div>
+                <button type="submit" class="button">Baixar backup</button>
+            </div>
+            <div class="op-admin-form-grid op-admin-form-grid--backup-confirmation">
+                <div class="op-admin-field">
+                    <label for="id_download_senha">Senha atual</label>
+                    <input id="id_download_senha" name="senha_atual" type="password" autocomplete="current-password" required>
+                </div>
+                <div class="op-admin-field">
+                    <label for="id_download_2fa">Código 2FA</label>
+                    <input id="id_download_2fa" name="token_2fa" type="text" inputmode="numeric" autocomplete="one-time-code" required>
+                </div>
+            </div>
+            <div class="op-admin-checkbox-wrap op-admin-checkbox-wrap--backup-confirm">
+                <input id="id_confirmar_download" name="confirmar_download" type="checkbox" required>
+                <label for="id_confirmar_download">Confirmo que este arquivo pode conter banco de dados, mídias, usuários, logs e dados sensíveis do sistema.</label>
+            </div>
+        </form>
+    </section>
+</div>
+{% endblock %}

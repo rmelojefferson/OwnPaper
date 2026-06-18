@@ -1,12 +1,18 @@
 .admin-publicacoes-topo {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     gap: 1rem;
+    padding-top: 0;
+    margin-bottom: 1rem;
 }
 
 .admin-publicacoes-topo h1 {
     margin: 0;
+}
+
+.admin-publicacoes-topo .button {
+    vertical-align: baseline;
 }
 
 .admin-publicacoes-alerta {
@@ -20,14 +26,18 @@
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
-    margin: 0.75rem 0 1.25rem;
+    margin: 0;
 }
 
 .admin-publicacoes-filtros {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
     gap: 0.75rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0;
+}
+
+.admin-publicacoes-filtros__busca {
+    grid-column: 1 / -1;
 }
 
 .admin-publicacoes-filtros label {
@@ -39,12 +49,36 @@
 .admin-publicacoes-filtros input,
 .admin-publicacoes-filtros select {
     width: 100%;
+    height: 44px;
+    min-height: 44px;
+    box-sizing: border-box;
+}
+
+.admin-publicacoes-filtros select {
+    line-height: 1.25;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.admin-publicacoes-filtros label {
+    align-content: start;
 }
 
 .admin-publicacoes-acoes {
     display: flex;
     align-items: end;
     gap: 0.75rem;
+    grid-column: 1 / -1;
+}
+
+.admin-publicacoes-acoes .button,
+.admin-publicacoes-acoes button {
+    min-height: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
 }
 
 .admin-publicacoes-tabela-wrap {
@@ -58,8 +92,7 @@
 
 .admin-publicacoes-tabela th,
 .admin-publicacoes-tabela td {
-    border-bottom: 1px solid #ddd;
-    padding: 0.6rem 0.5rem;
+    padding: 0.75rem 0.875rem;
     text-align: left;
     vertical-align: top;
 }
@@ -73,8 +106,251 @@
 }
 
 .admin-publicacoes-paginacao {
-    margin-top: 1rem;
+    margin-top: 0.75rem;
     display: flex;
     align-items: center;
     gap: 0.9rem;
+}
+
+.busca-datepicker {
+    position: relative;
+    width: 100%;
+}
+
+.busca-datepicker-input {
+    width: 100%;
+    height: 44px;
+    min-height: 44px;
+    box-sizing: border-box;
+    line-height: 1.4;
+    padding-right: 3.4rem;
+}
+
+.busca-datepicker-input::placeholder {
+    opacity: 1;
+}
+
+.busca-datepicker-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0.1rem;
+    transform: translateY(-50%);
+    width: 3rem;
+    height: 3rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--op-text-muted, #5f7280);
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease;
+}
+
+.busca-datepicker-toggle:hover,
+.busca-datepicker-toggle:focus-visible {
+    background: transparent;
+    color: var(--op-accent, #3b82f6);
+    outline: none;
+}
+
+.busca-datepicker-toggle svg {
+    width: 1.6rem;
+    height: 1.6rem;
+    fill: currentColor;
+}
+
+.busca-datepicker-popover {
+    position: absolute;
+    top: calc(100% + 0.45rem);
+    left: 0;
+    z-index: 30;
+    width: min(100%, 292px);
+    min-width: 280px;
+    padding: 0.9rem;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 16px;
+    background: var(--op-surface, #fff);
+    box-shadow: 0 18px 34px rgba(15, 23, 42, 0.16);
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+}
+
+.busca-datepicker.is-open-up .busca-datepicker-popover {
+    top: auto;
+    bottom: calc(100% + 0.45rem);
+}
+
+.busca-datepicker.is-open .busca-datepicker-popover {
+    display: block;
+}
+
+.busca-datepicker-toolbar,
+.busca-datepicker-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.busca-datepicker-toolbar {
+    margin-bottom: 0.75rem;
+}
+
+.busca-datepicker-month {
+    flex: 1 1 auto;
+    text-align: center;
+    font-weight: 700;
+    color: var(--op-text, #1c2d39);
+}
+
+.busca-datepicker-nav,
+.busca-datepicker-action {
+    min-height: 36px;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 10px;
+    background: var(--op-surface, #fff);
+    color: var(--op-text, #1c2d39);
+    font: 700 0.92rem var(--op-font-ui, inherit);
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.busca-datepicker-nav {
+    width: 2.2rem;
+}
+
+.busca-datepicker-action {
+    padding: 0 0.8rem;
+}
+
+.busca-datepicker-nav:hover,
+.busca-datepicker-nav:focus-visible,
+.busca-datepicker-action:hover,
+.busca-datepicker-action:focus-visible {
+    background: var(--op-btn-hover-bg, #1f3b5c);
+    color: var(--op-btn-hover-text, #fff);
+    border-color: var(--op-btn-hover-bg, #1f3b5c);
+    outline: none;
+}
+
+.busca-datepicker-weekdays,
+.busca-datepicker-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.25rem;
+}
+
+.busca-datepicker-weekdays {
+    margin-bottom: 0.35rem;
+}
+
+.busca-datepicker-weekdays span {
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--op-text-muted, #5f7280);
+    text-transform: uppercase;
+}
+
+.busca-datepicker-day {
+    min-height: 2.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--op-text, #1c2d39);
+    font: 600 0.9rem var(--op-font-ui, inherit);
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.busca-datepicker-day:hover,
+.busca-datepicker-day:focus-visible {
+    background: color-mix(in srgb, var(--op-accent, #3b82f6) 10%, transparent);
+    border-color: color-mix(in srgb, var(--op-accent, #3b82f6) 30%, transparent);
+    outline: none;
+}
+
+.busca-datepicker-day.is-selected {
+    background: var(--op-accent, #3b82f6);
+    color: #fff;
+    border-color: var(--op-accent, #3b82f6);
+}
+
+.busca-datepicker-day.is-today:not(.is-selected) {
+    border-color: color-mix(in srgb, var(--op-accent, #3b82f6) 45%, transparent);
+    font-weight: 700;
+}
+
+.busca-datepicker-day.is-outside {
+    color: color-mix(in srgb, var(--op-text-muted, #5f7280) 72%, transparent);
+}
+
+.busca-datepicker-day:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.busca-datepicker-actions {
+    margin-top: 0.75rem;
+}
+
+.busca-datepicker-input.is-invalid {
+    border-color: #dc2626 !important;
+    box-shadow: 0 0 0 1px color-mix(in srgb, #dc2626 25%, transparent);
+}
+
+html[data-theme="escuro"] .busca-datepicker-input::placeholder {
+    color: color-mix(in srgb, var(--op-text, #f5faff) 68%, transparent);
+}
+
+html[data-theme="escuro"] .busca-datepicker-popover {
+    border-color: color-mix(in srgb, var(--op-border, #31485f) 88%, transparent);
+    background: var(--op-surface-dark, #1b2f45);
+    box-shadow: 0 18px 34px rgba(0, 0, 0, 0.34);
+}
+
+html[data-theme="escuro"] .busca-datepicker-month {
+    color: var(--op-text-dark, #f5faff);
+}
+
+html[data-theme="escuro"] .busca-datepicker-nav,
+html[data-theme="escuro"] .busca-datepicker-action {
+    border-color: color-mix(in srgb, var(--op-border, #31485f) 88%, transparent);
+    background: color-mix(in srgb, var(--op-surface-dark, #1b2f45) 82%, black 18%);
+    color: var(--op-text-dark, #f5faff);
+}
+
+html[data-theme="escuro"] .busca-datepicker-weekdays span {
+    color: color-mix(in srgb, var(--op-text-dark, #f5faff) 68%, transparent);
+}
+
+html[data-theme="escuro"] .busca-datepicker-day {
+    color: var(--op-text-dark, #f5faff);
+}
+
+html[data-theme="escuro"] .busca-datepicker-day:hover,
+html[data-theme="escuro"] .busca-datepicker-day:focus-visible {
+    background: color-mix(in srgb, var(--op-accent, #3b82f6) 22%, transparent);
+    border-color: color-mix(in srgb, var(--op-accent, #3b82f6) 44%, transparent);
+}
+
+html[data-theme="escuro"] .busca-datepicker-day.is-selected {
+    background: var(--op-accent, #3b82f6);
+    color: #fff;
+    border-color: var(--op-accent, #3b82f6);
+}
+
+html[data-theme="escuro"] .busca-datepicker-day.is-today:not(.is-selected) {
+    border-color: color-mix(in srgb, var(--op-accent, #3b82f6) 58%, transparent);
+}
+
+html[data-theme="escuro"] .busca-datepicker-day.is-outside {
+    color: color-mix(in srgb, var(--op-text-dark, #f5faff) 38%, transparent);
 }

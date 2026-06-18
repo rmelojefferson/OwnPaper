@@ -1,0 +1,131 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% load admin_access %}
+
+{% block titletag %}Usuários{% endblock %}
+
+{% block content %}
+    <div class="nice-padding admin-shell">
+        <header class="admin-page-header">
+            <div>
+                <h1>Usuários</h1>
+            </div>
+        </header>
+
+        <section class="w-panel">
+            <form method="get" class="admin-page-form-grid admin-page-form-grid--logs">
+                <label class="admin-page-field">
+                    Busca
+                    <input type="text" name="q" value="{{ filtro_q }}" placeholder="Usuário, nome ou e-mail">
+                </label>
+                <label class="admin-page-field">
+                    Papel
+                    <select name="papel">
+                        <option value="">Todos</option>
+                        <option value="admin" {% if filtro_papel == "admin" %}selected{% endif %}>Admin</option>
+                        <option value="autor" {% if filtro_papel == "autor" %}selected{% endif %}>Autor</option>
+                        <option value="revisor" {% if filtro_papel == "revisor" %}selected{% endif %}>Revisor</option>
+                        <option value="operacao" {% if filtro_papel == "operacao" %}selected{% endif %}>Operação</option>
+                    </select>
+                </label>
+                <label class="admin-page-field">
+                    Status
+                    <select name="status">
+                        <option value="">Todos</option>
+                        <option value="ativos" {% if filtro_status == "ativos" %}selected{% endif %}>Ativos</option>
+                        <option value="inativos" {% if filtro_status == "inativos" %}selected{% endif %}>Inativos</option>
+                    </select>
+                </label>
+                <div class="admin-page-actions">
+                    <button type="submit" class="button">Filtrar</button>
+                    <a class="button button-secondary" href="{% url 'admin_usuarios_lista' %}">Limpar</a>
+                </div>
+            </form>
+        </section>
+
+        {% if mudancas_pendentes %}
+            <section class="w-panel">
+                <h2>Confirmações pendentes de admins</h2>
+                <div class="admin-page-table-wrap">
+                    <table class="listing">
+                        <thead>
+                            <tr>
+                                <th>Usuário alvo</th>
+                                <th>Tipo</th>
+                                <th>Solicitado por</th>
+                                <th>Quando</th>
+                                <th>Ação</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in mudancas_pendentes %}
+                                <tr>
+                                    <td>{{ item.usuario_alvo.username }}</td>
+                                    <td>{{ item.get_tipo_display }}</td>
+                                    <td>{{ item.solicitado_por.username }}</td>
+                                    <td>{{ item.criado_em|date:"d/m/Y H:i" }}</td>
+                                    <td>
+                                        <a href="{% url 'admin_usuario_confirmar_mudanca_admin' item.id %}">Revisar confirmação</a>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        {% endif %}
+
+        <section class="w-panel">
+            <div class="admin-page-table-wrap">
+                <table class="listing">
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>Papéis</th>
+                            <th>Publicação direta</th>
+                            <th>Monitoramento</th>
+                            <th>Status</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for usuario in usuarios %}
+                            <tr>
+                                <td>
+                                    <strong>{{ usuario.username }}</strong><br>
+                                    <span class="op-admin-muted">{{ usuario.first_name|default:"-" }}</span><br>
+                                    <span class="op-admin-muted">{{ usuario.email|default:"-" }}</span>
+                                </td>
+                                <td>
+                                    {% if usuario.is_superuser %}Admin<br>{% endif %}
+                                    {% if usuario|user_in_group:"Autores / Escritores" %}Autor<br>{% endif %}
+                                    {% if usuario|user_in_group:"Revisores" %}Revisor<br>{% endif %}
+                                    {% if usuario|user_in_group:"Operadores / Atendimento" %}Operação{% endif %}
+                                </td>
+                                <td>
+                                    {% if usuario.painel_perfil and usuario.painel_perfil.pode_publicar_direto %}Sim{% else %}Não{% endif %}
+                                </td>
+                                <td>
+                                    {% if usuario.painel_perfil and usuario.painel_perfil.email_monitoramento_respostas %}
+                                        {{ usuario.painel_perfil.email_monitoramento_respostas }}
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if usuario.is_active %}Ativo{% else %}Inativo{% endif %}
+                                </td>
+                                <td>
+                                    <a href="{% url 'admin_usuario_editar' usuario.id %}">Editar</a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="6">Nenhum usuário encontrado.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+{% endblock %}

@@ -1,57 +1,264 @@
-body {
-            font-family: "Times New Roman", serif;
-            font-size: 12pt;
-            line-height: 1.6;
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 0 20px;
-            color: #111;
-        }
+.indexador-layout {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
 
-        form, .acoes-exportacao {
-            margin-bottom: 1.5rem;
-        }
+.indexador-topo {
+    margin: 0 0 1.5rem;
+    max-width: 760px;
+    text-align: left;
+}
 
-        input, select, button {
-            font: inherit;
-            padding: 10px;
-            margin-bottom: 0.8rem;
-            box-sizing: border-box;
-        }
+.indexador-topo h1 {
+    margin-bottom: 0.45rem;
+}
 
-        input, select {
-            width: 100%;
-        }
+.indexador-introducao {
+    color: var(--op-text-muted, #526071);
+    margin-bottom: 1rem;
+}
 
-        .indexador-linha-dupla {
-            display: flex;
-            gap: 1rem;
-        }
+.indexador-form {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
 
-        .indexador-linha-dupla .campo-periodo {
-            flex: 0 0 180px;
-        }
+.indexador-form .input,
+.indexador-form .select select,
+.indexador-form select {
+    min-height: 42px;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 10px;
+    background: var(--op-surface, #fff) !important;
+    color: var(--op-text, #0f172a);
+    box-shadow: none;
+}
 
-        .indexador-linha-dupla .campo-periodo input {
-            width: 100%;
-        }
+.indexador-avancado {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 1rem 1.05rem;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 16px;
+    background: var(--op-surface, #fff);
+    box-shadow: 0 12px 22px rgba(15, 23, 42, 0.07);
+}
 
-        @media (max-width: 700px) {
-            .indexador-linha-dupla {
-                display: block;
-            }
+.indexador-avancado summary {
+    cursor: pointer;
+    list-style: none;
+    font-weight: 700;
+    color: var(--op-text, #0f172a);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
 
-            .indexador-linha-dupla .campo-periodo {
-                flex: none;
-                width: 100%;
-            }
-        }
-        .resultado {
-            margin-bottom: 2rem;
-            padding-bottom: 1rem;
-            border-bottom: 1px solid #ddd;
-        }
+.indexador-avancado summary::-webkit-details-marker {
+    display: none;
+}
 
-        .paginacao a {
-            margin-right: 0.8rem;
-        }
+.indexador-avancado summary::after {
+    content: "▾";
+    font-size: 0.78rem;
+    opacity: 0.76;
+    flex: 0 0 auto;
+}
+
+.indexador-avancado[open] summary {
+    margin-bottom: 0.9rem;
+}
+
+.indexador-avancado-ajuda {
+    margin: 0 0 0.9rem;
+    color: var(--op-text-muted, #526071);
+}
+
+.indexador-avancado-grid {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.indexador-avancado-linha {
+    display: grid;
+    grid-template-columns: minmax(150px, 220px) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: end;
+}
+
+.indexador-campo {
+    grid-column: span 4;
+    display: grid;
+    gap: 0.4rem;
+}
+
+.indexador-campo-amplo {
+    grid-column: 1 / -1;
+}
+
+.indexador-campo label,
+.campo-periodo label {
+    font-weight: 700;
+    color: var(--op-text, #0f172a);
+}
+
+.indexador-campo .label,
+.campo-periodo .label {
+    margin-bottom: 0.35rem;
+}
+
+.indexador-linha-dupla {
+    grid-column: span 5;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.indexador-campo-operador {
+    grid-column: span 1;
+}
+
+.indexador-campo-termo-avancado {
+    grid-column: span 1;
+}
+
+.campo-periodo {
+    display: grid;
+    gap: 0.4rem;
+}
+
+.indexador-acoes {
+    grid-column: span 3;
+    display: flex;
+    justify-content: flex-end;
+    align-items: end;
+}
+
+.indexador-acoes .button,
+.acoes-exportacao .button {
+    min-height: 42px;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 10px;
+    padding-inline: 1rem;
+    background: var(--op-btn-bg, #fff);
+    color: var(--op-btn-text, #111);
+    box-shadow: none;
+}
+
+.indexador-form button,
+.acoes-exportacao a,
+.paginacao a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.9rem;
+    text-decoration: none;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.indexador-acoes .button:hover,
+.acoes-exportacao .button:hover,
+.indexador-acoes .button:focus-visible,
+.acoes-exportacao .button:focus-visible {
+    background: var(--op-btn-hover-bg, #111);
+    color: var(--op-btn-hover-text, #fff);
+    border-color: var(--op-btn-hover-bg, #111);
+}
+
+.acoes-exportacao {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    align-items: center;
+}
+
+html[data-theme="escuro"] .indexador-form .input::placeholder {
+    color: color-mix(in srgb, var(--op-text, #f8fafc) 68%, transparent);
+    opacity: 1;
+}
+
+.indexador-aviso-exato {
+    margin: -0.25rem 0 1.25rem;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: var(--op-text-muted, #526071);
+}
+
+.resultado {
+    margin-bottom: 1.2rem;
+    padding: 1rem;
+}
+
+.indexador-resultado-topo {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.9rem;
+    align-items: start;
+    margin-bottom: 0.6rem;
+}
+
+.indexador-resultado-titulo {
+    margin: 0 0 0.35rem;
+    font-family: var(--op-font-ui);
+    letter-spacing: 0;
+    line-height: 1.25;
+    text-rendering: auto;
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+}
+
+.indexador-resultado-titulo a {
+    color: var(--op-link, #1d4ed8);
+    text-decoration: none;
+}
+
+.indexador-resultado-titulo a:hover {
+    text-decoration: underline;
+}
+
+.indexador-resultado-meta {
+    font-size: 0.95rem;
+    line-height: 1.35;
+    color: var(--op-muted, #526071);
+    margin-bottom: 0;
+}
+
+.indexador-resultado-resumo {
+    margin-top: 0.4rem;
+    color: var(--op-muted, #526071);
+}
+
+.indexador-resultado-resumo p {
+    margin: 0;
+    line-height: 1.6;
+}
+
+@media (max-width: 920px) {
+    .indexador-campo,
+    .indexador-campo-amplo,
+    .indexador-linha-dupla,
+    .indexador-acoes {
+        grid-column: 1 / -1;
+    }
+
+    .indexador-acoes {
+        justify-content: flex-start;
+    }
+
+    .indexador-avancado-linha {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+}
+
+@media (max-width: 700px) {
+    .indexador-linha-dupla {
+        grid-template-columns: 1fr;
+    }
+}

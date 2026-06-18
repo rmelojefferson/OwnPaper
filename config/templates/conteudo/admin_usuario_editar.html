@@ -1,0 +1,58 @@
+{% extends "conteudo/admin_base_custom.html" %}
+
+{% block titletag %}Editar usuário{% endblock %}
+
+{% block content %}
+    <div class="nice-padding op-admin-panel op-admin-panel--wide">
+        <header class="op-admin-panel__header">
+            <div>
+                <p class="op-admin-panel__eyebrow">Administração</p>
+                <h1>Editar usuário</h1>
+                <p class="op-admin-panel__lead">Configure papéis acumuláveis, publicação direta e monitoramento de respostas.</p>
+            </div>
+            <div class="op-admin-panel__actions">
+                <a class="button button-secondary" href="{% url 'admin_usuarios_lista' %}">Voltar para usuários</a>
+            </div>
+        </header>
+
+        <form method="post" class="op-admin-card op-admin-card--narrow">
+            {% csrf_token %}
+            <div class="op-admin-form-grid">
+                <label class="op-admin-field">
+                    Nome completo
+                    <input type="text" name="nome" value="{{ usuario_obj.first_name|default:'' }}">
+                </label>
+                <label class="op-admin-field">
+                    E-mail
+                    <input type="email" name="email" value="{{ usuario_obj.email|default:'' }}">
+                </label>
+                <label class="op-admin-field">
+                    Nome de usuário
+                    <input type="text" name="username" value="{{ usuario_obj.username }}" required>
+                </label>
+            </div>
+
+            <div class="op-admin-card op-admin-card--compact">
+                <h2>Papéis e permissões</h2>
+                <div class="op-admin-form-grid">
+                    <label class="op-admin-checkbox-line"><input type="checkbox" name="papel_admin" value="1" {% if papel_admin %}checked{% endif %}> Admin</label>
+                    <label class="op-admin-checkbox-line"><input type="checkbox" name="papel_autor" value="1" {% if papel_autor %}checked{% endif %}> Autor</label>
+                    <label class="op-admin-checkbox-line"><input type="checkbox" name="papel_revisor" value="1" {% if papel_revisor %}checked{% endif %}> Revisor</label>
+                    <label class="op-admin-checkbox-line"><input type="checkbox" name="papel_operacao" value="1" {% if papel_operacao %}checked{% endif %}> Operação</label>
+                    <label class="op-admin-checkbox-line"><input type="checkbox" name="pode_publicar_direto" value="1" {% if perfil and perfil.pode_publicar_direto %}checked{% endif %}> Pode publicar direto</label>
+                    <label class="op-admin-checkbox-line"><input type="checkbox" name="is_active" value="1" {% if usuario_obj.is_active %}checked{% endif %}> Usuário ativo</label>
+                </div>
+            </div>
+
+            <label class="op-admin-field">
+                E-mail para monitorar respostas enviadas por este usuário
+                <input type="email" name="email_monitoramento_respostas" value="{{ perfil.email_monitoramento_respostas|default:'' }}">
+            </label>
+            <p class="help">A assinatura operacional é gerada automaticamente com a foto pública do usuário ou o logo do site, além do nome completo e do nome do projeto.</p>
+
+            <div class="op-admin-form-actions">
+                <button type="submit" class="button">Salvar usuário</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

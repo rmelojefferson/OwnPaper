@@ -1,11 +1,11 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ site_lang|default:"pt-br" }}">
 <head>
     <meta charset="utf-8">
     <title>{{ config_site.modo_manutencao_titulo }}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{% static 'css/pages/manutencao-site.css' %}">
+    <link rel="stylesheet" href="{% static 'css/pages/manutencao-site.css' %}?v=20260428-02">
     {% include "includes/rastreamento_head.html" %}
 
 </head>

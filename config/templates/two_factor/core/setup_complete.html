@@ -1,0 +1,13 @@
+{% extends "two_factor/_base_focus.html" %}
+
+{% block content %}
+  <h1>Verificação em duas etapas ativada</h1>
+
+  <p>Cadastro concluído com sucesso.</p>
+  <p>Você já pode entrar no painel com sua senha e o código do autenticador.</p>
+
+  <p class="auth-actions">
+    <a href="{% url 'two_factor:login' %}" class="btn btn-primary">Ir para o login</a>
+    <a href="/admin/" class="btn btn-secondary">Ir para o painel admin</a>
+  </p>
+{% endblock %}

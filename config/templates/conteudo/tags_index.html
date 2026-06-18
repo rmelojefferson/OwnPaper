@@ -1,7 +1,7 @@
-{% load static wagtailcore_tags wagtailimages_tags %}
+{% load static wagtailcore_tags wagtailimages_tags conteudo_tags %}
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="utf-8">
     <title>Tags</title>
@@ -11,31 +11,38 @@
         {% image config_site.favicon fill-32x32 format-webp as favicon_32 %}
         <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
     {% endif %}
-    <link rel="stylesheet" href="{% static 'css/pages/tags-index.css' %}">
+    {% include "includes/site_head_assets.html" %}
+    <link rel="stylesheet" href="{% static 'css/pages/tags-index.css' %}?v=20260428-02">
+    <script src="{% static 'js/pages/taxonomy-filter.js' %}?v=20260507-02" defer></script>
     {% include "includes/rastreamento_head.html" %}
 
 </head>
 <body>
     {% include "includes/rastreamento_body.html" %}
 
-    {% include "includes/menu_principal.html" %}
+    {% include "includes/menu_principal.html" with menu_assets_in_head=True %}
 
-    <h1>Tags</h1>
-
-    <div class="lista">
+    <main class="tags-layout container is-max-desktop op-page-shell">
+    <header class="op-page-header">
+        <h1 class="title is-2">Tags</h1>
+    </header>
+    <div class="tags-filtro op-box" data-taxonomy-filter-root>
+        <label class="label" for="tags-busca">Buscar tag</label>
+        <div class="control">
+            <input class="input" id="tags-busca" type="text" placeholder="Digite para filtrar tags" data-taxonomy-filter-input>
+        </div>
+    </div>
+    <div class="tags-lista" role="list" data-taxonomy-filter-list>
         {% for tag in tags %}
-            <article class="card">
-                <h2>
-                    <a href="/tags/{{ tag.slug }}/">{{ tag.name }}</a>
-                </h2>
-                <div class="meta">
-                    {{ tag.total_publicacoes }} publicação(ões)
-                </div>
-            </article>
+            <a class="tags-chip" href="/tags/{{ tag.slug }}/" role="listitem" data-taxonomy-filter-item data-taxonomy-filter-value="{{ tag.name }}">
+                <span class="tags-chip-titulo">{{ tag.name }}</span>
+                <span class="tags-chip-meta">{{ tag.total_publicacoes }} publicação(ões)</span>
+            </a>
         {% empty %}
             <p>Nenhuma tag cadastrada ainda.</p>
         {% endfor %}
     </div>
-{% include "includes/rodape_site.html" %}
+    </main>
+{% include "includes/rodape_site.html" with rodape_assets_in_head=True %}
 </body>
 </html>

@@ -1,0 +1,52 @@
+{% extends "conteudo/admin_base_custom.html" %}
+
+{% block titletag %}Termos do painel{% endblock %}
+
+{% block content %}
+<div class="nice-padding op-admin-panel">
+    <header class="op-admin-panel__header">
+        <div>
+            <p class="op-admin-panel__eyebrow">Segurança e privacidade</p>
+            <h1>Termos de uso do painel</h1>
+            <p class="op-admin-panel__lead">
+                Antes de acessar o painel, confirme ciência das responsabilidades administrativas,
+                editoriais, de privacidade e segurança de dados.
+            </p>
+        </div>
+    </header>
+
+    <section class="op-admin-card">
+        <h2>Responsabilidades do usuário do painel</h2>
+        <p>
+            O painel OwnPaper pode permitir acesso a dados administrativos, publicações, autoria,
+            mensagens de contato, comentários, estatísticas, arquivos enviados e registros de auditoria.
+        </p>
+        <p>Ao continuar, você declara que:</p>
+        <ul>
+            <li>usará o painel apenas para finalidades autorizadas pelo projeto;</li>
+            <li>não compartilhará credenciais, códigos de 2FA ou sessões autenticadas;</li>
+            <li>não acessará, exportará ou divulgará dados sem necessidade operacional legítima;</li>
+            <li>respeitará os fluxos editoriais, de revisão, autoria e aprovação configurados;</li>
+            <li>entende que ações administrativas são registradas em logs de auditoria encadeados por hash;</li>
+            <li>comunicará suspeitas de acesso indevido, falha de segurança ou vazamento de dados.</li>
+        </ul>
+        <p class="op-admin-muted">
+            Versão dos termos: {{ versao_termos }}. Quando a versão dos termos for alterada,
+            um novo aceite será solicitado no próximo acesso ao painel.
+        </p>
+    </section>
+
+    <form method="post" class="op-admin-card op-admin-form-card">
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next_url }}">
+        <label class="op-admin-checkbox-line">
+            <input type="checkbox" name="aceitou_termos_painel" value="1" required>
+            <span>Li e aceito os termos de uso, privacidade e responsabilidade do painel administrativo.</span>
+        </label>
+        <div class="op-admin-form-actions">
+            <button type="submit" class="button">Aceitar e acessar o painel</button>
+            <a class="button button-secondary" href="/admin/logout/">Sair</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

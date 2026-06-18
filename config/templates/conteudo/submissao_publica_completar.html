@@ -1,0 +1,47 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Completar submissão</title>
+    {% include "includes/site_head_assets.html" %}
+    {% include "includes/rastreamento_head.html" %}
+</head>
+<body>
+    {% include "includes/rastreamento_body.html" %}
+    {% include "includes/menu_principal.html" with menu_assets_in_head=True %}
+
+    <main class="container is-max-desktop op-page-shell">
+        <section class="op-card op-content" style="padding: clamp(1.25rem, 3vw, 2rem); margin: 2rem 0;">
+            <p class="op-eyebrow">Submissão aceita</p>
+            <h1>{{ submissao.titulo }}</h1>
+            {% if bloqueada %}
+                <p>Este link não está disponível para edição neste momento.</p>
+            {% elif sucesso %}
+                <p><strong>Ficha enviada.</strong> A equipe editorial já pode converter a submissão em publicação e seguir a revisão.</p>
+            {% else %}
+                <p>Complete sua ficha pública de autoria e cole o texto final que será revisado pela equipe.</p>
+                {% if erros %}
+                    <div class="op-alert op-alert--error">
+                        {% for erro in erros %}<p>{{ erro }}</p>{% endfor %}
+                    </div>
+                {% endif %}
+                <form method="post" class="op-form-stack">
+                    {% csrf_token %}
+                    <label>Nome completo<input type="text" name="nome_completo" maxlength="255" required value="{{ valores.nome_completo|default:'' }}"></label>
+                    <label>Nome de exibição<input type="text" name="nome_exibicao" maxlength="255" value="{{ valores.nome_exibicao|default:'' }}"></label>
+                    <label>Mini bio<textarea name="mini_bio" rows="5" required>{{ valores.mini_bio|default:'' }}</textarea></label>
+                    <label>Instagram<input type="text" name="instagram" maxlength="255" value="{{ valores.instagram|default:'' }}"></label>
+                    <label>Mastodon<input type="url" name="mastodon" maxlength="255" value="{{ valores.mastodon|default:'' }}"></label>
+                    <label>Link do Lattes<input type="url" name="lattes_url" maxlength="255" value="{{ valores.lattes_url|default:'' }}"></label>
+                    <label>Texto final<textarea name="texto_final" rows="16" required>{{ valores.texto_final|default:'' }}</textarea></label>
+                    <button class="op-button" type="submit">Enviar ficha e texto</button>
+                </form>
+            {% endif %}
+        </section>
+    </main>
+
+    {% include "includes/rodape_site.html" with rodape_assets_in_head=True %}
+</body>
+</html>

@@ -1,0 +1,562 @@
+.quiz-estudo-layout {
+    width: 100%;
+}
+
+.quiz-estudo-artigo {
+    width: 100%;
+}
+
+.quiz-estudo-topo,
+.quiz-estudo-identidade,
+.quiz-estudo-filtros,
+.quiz-estudo-publicacao {
+    margin-bottom: 1.25rem;
+}
+
+.quiz-estudo-identidade,
+.quiz-estudo-publicacao {
+    padding: 1.15rem;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 18px;
+    background: var(--op-surface, #f8fafc);
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.06);
+}
+
+.quiz-estudo-topo,
+.quiz-estudo-filtros {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+.quiz-estudo-topo h1 {
+    margin: 0;
+    color: var(--op-text, #0f172a);
+}
+
+.quiz-estudo-introducao {
+    color: var(--op-text-muted, #526071);
+}
+
+.quiz-estudo-introducao > :first-child {
+    margin-top: 0;
+}
+
+.quiz-estudo-introducao > :last-child {
+    margin-bottom: 0;
+}
+
+.quiz-estudo-identidade {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.quiz-estudo-identidade-barra {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.85rem;
+}
+
+.quiz-estudo-identidade-texto,
+.quiz-estudo-historico-vazio,
+.quiz-estudo-revisao-vazio,
+.quiz-estudo-vazio,
+.quiz-estudo-taxonomia-retorno,
+.quiz-estudo-revisao-publicacoes-vazio {
+    margin: 0;
+}
+
+.quiz-estudo-identidade-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+}
+
+.quiz-estudo-historico {
+    margin: 0;
+    padding: 1rem 1.05rem;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 16px;
+    background: var(--op-surface, #fff);
+    box-shadow: 0 12px 22px rgba(15, 23, 42, 0.07);
+}
+
+.quiz-estudo-historico summary {
+    cursor: pointer;
+    list-style: none;
+    font-weight: 700;
+    color: var(--op-text, #0f172a);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    text-align: center;
+}
+
+.quiz-estudo-historico summary::-webkit-details-marker {
+    display: none;
+}
+
+.quiz-estudo-historico summary::after {
+    content: "▾";
+    font-size: 0.78rem;
+    opacity: 0.76;
+    flex: 0 0 auto;
+}
+
+.quiz-estudo-historico[open] summary {
+    margin-bottom: 0.9rem;
+}
+
+.quiz-estudo-historico-corpo {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.quiz-estudo-historico-resumo {
+    display: grid;
+    justify-items: stretch;
+    gap: 0.85rem;
+    padding-bottom: 0.15rem;
+    border-bottom: 1px solid var(--op-border, #dbe3ef);
+    width: fit-content;
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.quiz-estudo-historico-score-wheel {
+    width: 164px;
+    height: 164px;
+    margin: 0;
+}
+
+.quiz-estudo-historico-resumo-principal {
+    display: grid;
+    grid-template-columns: 164px auto;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.quiz-estudo-historico-resumo .quiz-score-wheel-centro {
+    width: 102px;
+    height: 102px;
+    border-radius: 50%;
+    background: var(--op-surface, #fff);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0.16rem;
+    text-align: center;
+    padding: 0.55rem;
+}
+
+.quiz-estudo-historico-resumo .quiz-score-wheel-centro strong {
+    display: block;
+    font-size: 1.7rem;
+    line-height: 1;
+}
+
+.quiz-estudo-historico-resumo .quiz-score-wheel-centro span {
+    font-size: 0.96rem;
+    font-weight: 700;
+    line-height: 1.05;
+}
+
+.quiz-estudo-historico-resumo h2 {
+    margin: 0;
+    text-align: center;
+}
+
+.quiz-estudo-historico-resumo-meta {
+    margin: 0;
+    color: var(--op-text-muted, #526071);
+    line-height: 1.5;
+    max-width: 34rem;
+    text-align: center;
+}
+
+.quiz-estudo-historico-legenda {
+    width: auto;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.45rem;
+    justify-items: start;
+}
+
+.quiz-estudo-historico-legenda li {
+    font-size: 0.98rem;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.55rem;
+    margin: 0;
+}
+
+.quiz-estudo-historico-subtitulo {
+    margin: 0;
+    text-align: left;
+}
+
+.quiz-estudo-historico h2,
+.quiz-estudo-publicacao h2,
+.quiz-estudo-publicacoes-atual h2,
+.quiz-estudo-revisao h2 {
+    margin: 0 0 0.75rem;
+    text-align: left;
+}
+
+.quiz-estudo-historico-lista {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.quiz-estudo-historico-item {
+    display: grid;
+    gap: 0.45rem;
+}
+
+.quiz-estudo-historico-item p {
+    margin: 0;
+}
+
+.quiz-estudo-historico-topo {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.quiz-estudo-historico-barra {
+    width: 100%;
+    height: 8px;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--op-surface, #f8fafc) 55%, var(--op-border, #dbe3ef) 45%);
+    overflow: hidden;
+}
+
+.quiz-estudo-historico-barra span {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--op-btn-hover-bg, var(--op-accent, #1d4ed8));
+}
+
+.quiz-estudo-filtros {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.75rem;
+}
+
+.quiz-estudo-filtros-campos {
+    display: grid;
+    grid-template-columns: minmax(180px, 220px) minmax(180px, 220px);
+    gap: 0.75rem;
+    align-items: end;
+}
+
+.quiz-estudo-filtro-campo {
+    display: grid;
+    gap: 0.3rem;
+}
+
+.quiz-estudo-filtro-campo label {
+    font-weight: 700;
+}
+
+.quiz-estudo-filtro-campo select {
+    width: 100%;
+    min-height: 44px;
+    padding: 0.75rem 0.9rem;
+    box-sizing: border-box;
+    border-radius: 12px;
+    border: 1px solid var(--op-border, #dbe3ef);
+    background: var(--op-bg, #fff);
+    color: var(--op-text, #0f172a);
+    font: inherit;
+}
+
+.quiz-estudo-filtros button,
+.quiz-estudo-filtros .acao-publicacao-secundaria {
+    margin-bottom: 0;
+}
+
+.quiz-estudo-filtros-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    align-self: flex-end;
+    padding-top: 1.65rem;
+}
+
+.quiz-estudo-filtros-acoes .acao-publicacao,
+.quiz-estudo-filtros-acoes .acao-publicacao-secundaria {
+    width: auto;
+    min-height: 44px;
+    padding: 0.75rem 1rem;
+    box-sizing: border-box;
+}
+
+.quiz-estudo-publicacao {
+    display: grid;
+    gap: 1rem;
+}
+
+.quiz-estudo-artigo .quiz-publicacao-intro {
+    margin: -0.1rem 0 0;
+    color: var(--op-text-muted, #526071);
+    font-size: 1rem;
+}
+
+.quiz-estudo-artigo .quiz-publicacao-perguntas {
+    display: grid;
+}
+
+.quiz-estudo-artigo .quiz-pergunta {
+    display: block;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 14px;
+    padding: 1rem 1.05rem;
+    background: var(--op-bg, #fff);
+}
+
+.quiz-estudo-artigo .quiz-pergunta[hidden] {
+    display: none !important;
+}
+
+.quiz-estudo-artigo .quiz-pergunta h3 {
+    margin: 0 0 0.55rem;
+    text-align: left;
+}
+
+.quiz-estudo-artigo .quiz-pergunta-texto {
+    margin: 0 0 0.85rem;
+    font-weight: 700;
+    text-align: left;
+}
+
+.quiz-estudo-artigo .quiz-opcoes {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.quiz-estudo-artigo .quiz-opcao {
+    width: 100%;
+    min-height: 44px;
+    padding: 0.85rem 1rem;
+    box-sizing: border-box;
+    border-radius: 12px;
+    border: 1px solid var(--op-border, #dbe3ef);
+    background: var(--op-bg, #fff);
+    color: var(--op-text, #0f172a);
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.65rem;
+    text-align: left;
+    white-space: normal;
+    cursor: pointer;
+    font: inherit;
+}
+
+.quiz-estudo-artigo .quiz-opcao::before {
+    content: "";
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid currentColor;
+    border-radius: 999px;
+    flex: 0 0 14px;
+}
+
+.quiz-estudo-artigo .quiz-opcao:hover {
+    border-color: var(--op-btn-hover-bg, var(--op-accent, #1d4ed8));
+    background: color-mix(in srgb, var(--op-btn-hover-bg, var(--op-accent, #1d4ed8)) 10%, var(--op-bg, #fff) 90%);
+}
+
+.quiz-estudo-artigo .quiz-opcao.is-selected {
+    border-color: var(--op-btn-hover-bg, var(--op-accent, #1d4ed8));
+    color: var(--op-btn-hover-bg, var(--op-accent, #1d4ed8));
+    background: color-mix(in srgb, var(--op-btn-hover-bg, var(--op-accent, #1d4ed8)) 10%, var(--op-bg, #fff) 90%);
+}
+
+.quiz-estudo-artigo .quiz-opcao.is-selected::before {
+    background: currentColor;
+    box-shadow: inset 0 0 0 2px var(--op-btn-hover-text, #fff);
+}
+
+.quiz-estudo-artigo .quiz-ajuda {
+    margin-top: 1rem;
+}
+
+.quiz-estudo-artigo .quiz-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.quiz-estudo-artigo .quiz-acoes .quiz-btn,
+.quiz-estudo-artigo .quiz-ajuda .quiz-btn,
+.quiz-estudo-login-cta .acao-publicacao {
+    width: auto;
+    margin-bottom: 0;
+}
+
+.quiz-estudo-login-cta {
+    display: grid;
+    justify-items: start;
+    gap: 0.45rem;
+}
+
+.quiz-estudo-artigo .quiz-feedback,
+.quiz-estudo-artigo .quiz-explicacao {
+    margin: 0.85rem 0 0;
+}
+
+.quiz-estudo-publicacoes-atual,
+.quiz-estudo-revisao {
+    --home-card-thumb-width: 150px;
+    --home-card-thumb-ratio: 16 / 9;
+    width: 100%;
+    max-width: none;
+    margin-bottom: 1.25rem;
+}
+
+.quiz-estudo-publicacoes-atual[hidden],
+.quiz-estudo-revisao[hidden],
+.quiz-estudo-revisao-temas[hidden],
+.quiz-estudo-revisao-tags[hidden],
+.quiz-estudo-revisao-publicacoes[hidden] {
+    display: none !important;
+}
+
+.quiz-estudo-revisao h3 {
+    margin: 0 0 0.65rem;
+    text-align: left;
+}
+
+.quiz-estudo-revisao-temas + .quiz-estudo-revisao-tags,
+.quiz-estudo-revisao-tags + .quiz-estudo-revisao-publicacoes,
+.quiz-estudo-revisao-temas + .quiz-estudo-revisao-publicacoes {
+    margin-top: 1.2rem;
+}
+
+.quiz-estudo-revisao-temas-lista,
+.quiz-estudo-revisao-tags-lista {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.85rem;
+    align-items: flex-start;
+}
+
+.quiz-estudo-revisao-chip-item {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.quiz-estudo-revisao-chip {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 160px;
+    max-width: min(100%, 240px);
+    padding: 0.85rem 0.95rem;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 14px;
+    background: var(--op-surface, #fff);
+    color: inherit;
+    text-decoration: none;
+    box-shadow: 0 12px 22px rgba(15, 23, 42, 0.07);
+    transition: background 0.18s ease, border-color 0.18s ease, transform 0.18s ease;
+    font-weight: 700;
+    line-height: 1.35;
+    text-align: center;
+}
+
+.quiz-estudo-revisao-chip:hover,
+.quiz-estudo-revisao-chip:focus-visible {
+    border-color: var(--op-accent, #1d4ed8);
+    transform: translateY(-1px);
+}
+
+.quiz-estudo-revisao-chip--categoria {
+    min-width: 180px;
+    max-width: min(100%, 280px);
+}
+
+.quiz-estudo-revisao-publicacoes-lista {
+    display: grid;
+    gap: 1rem;
+}
+
+.quiz-estudo-publicacoes-atual .lista-relacionadas,
+.quiz-estudo-revisao-publicacoes .lista-relacionadas {
+    margin-top: 0.2rem;
+}
+
+.quiz-estudo-revisao-bloco {
+    display: grid;
+    gap: 0.65rem;
+}
+
+.quiz-estudo-revisao-pergunta {
+    margin: 0;
+    font-weight: 700;
+}
+
+.quiz-estudo-revisao-temas-lista a,
+.quiz-estudo-revisao-tags-lista a {
+    color: inherit;
+}
+
+.quiz-estudo-mapa {
+    display: none !important;
+}
+
+@media (max-width: 760px) {
+    .quiz-estudo-historico-resumo {
+        width: 100%;
+    }
+
+    .quiz-estudo-historico-resumo-principal {
+        grid-template-columns: 1fr;
+        justify-items: center;
+    }
+
+    .quiz-estudo-historico-legenda {
+        justify-items: center;
+    }
+
+    .quiz-estudo-historico-legenda li {
+        justify-content: center;
+    }
+
+    .quiz-estudo-filtros-acoes {
+        align-self: auto;
+        padding-top: 0;
+    }
+
+    .quiz-estudo-filtros {
+        display: grid;
+    }
+
+    .quiz-estudo-filtros-campos {
+        grid-template-columns: 1fr;
+    }
+
+    .quiz-estudo-identidade-barra {
+        align-items: stretch;
+    }
+}

@@ -1,54 +1,49 @@
-{% extends "wagtailadmin/base.html" %}
-{% load i18n static %}
+{% extends "conteudo/admin_base_custom.html" %}
+{% load i18n %}
 
 {% block titletag %}Importar CSV do indexador{% endblock %}
 
-{% block extra_css %}
-    {{ block.super }}
-    <link rel="stylesheet" href="{% static 'css/admin-indexador-importar-csv.css' %}">
-{% endblock %}
-
 {% block content %}
-    <div class="nice-padding">
-        <h1>Importar CSV do indexador</h1>
+    <div class="nice-padding op-admin-panel">
+        <header class="op-admin-panel__header">
+            <div>
+                <p class="op-admin-panel__eyebrow">Operação</p>
+                <h1>Importar CSV do indexador</h1>
+                <p class="op-admin-panel__lead">Carregue lotes de registros bibliográficos usando o modelo oficial do projeto e preserve a normalização mínima exigida pelo catálogo.</p>
+            </div>
+            <div class="op-admin-panel__actions">
+                <a class="button button-secondary" href="{% url 'admin_indexador_modelo_csv' %}">Baixar modelo CSV</a>
+            </div>
+        </header>
 
-	<p>
-	    Campo obrigatório por linha: <strong>titulo</strong>.
-	</p>
-	
-	<p>
-	    Os campos <strong>resumo</strong> e <strong>autores</strong> são opcionais. Quando estiverem ausentes, o sistema importará a linha com aviso.
-	</p>
-
-	<p>
-	    O cabeçalho do CSV é obrigatório e a linha de exemplo do modelo é ignorada automaticamente pelo sistema.
-	</p>
-
-	<p>
-	    O arquivo pode estar em UTF-8, ANSI / Windows-1252 ou Latin-1.
-	</p>
-
-        <p>
-            <a href="{% url 'admin_indexador_modelo_csv' %}">Baixar modelo CSV</a>
-        </p>
+        <section class="op-admin-card">
+            <div class="op-admin-stack">
+                <p>Campo obrigatório por linha: <strong>titulo</strong>.</p>
+                <p>Os campos <strong>resumo</strong> e <strong>autores</strong> são opcionais. Quando estiverem ausentes, o sistema importará a linha com aviso.</p>
+                <p>O cabeçalho do CSV é obrigatório e a linha de exemplo do modelo é ignorada automaticamente pelo sistema.</p>
+                <p>O arquivo pode estar em UTF-8, ANSI / Windows-1252 ou Latin-1.</p>
+            </div>
+        </section>
 
         {% if messages %}
             {% for message in messages %}
-                <div class="admin-indexador-mensagem">
+                <div class="op-admin-card op-admin-card--compact">
                     {{ message }}
                 </div>
             {% endfor %}
         {% endif %}
 
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-
-            <div class="admin-indexador-campo">
-                <label for="id_arquivo_csv"><strong>Arquivo CSV</strong></label><br>
-                <input type="file" name="arquivo_csv" id="id_arquivo_csv" accept=".csv" required>
-            </div>
-
-            <button type="submit">Importar arquivo</button>
-        </form>
+        <section class="op-admin-card op-admin-card--narrow">
+            <form method="post" enctype="multipart/form-data" class="op-admin-form-card">
+                {% csrf_token %}
+                <label class="op-admin-field" for="id_arquivo_csv">
+                    <span>Arquivo CSV</span>
+                    <input type="file" name="arquivo_csv" id="id_arquivo_csv" accept=".csv" required>
+                </label>
+                <div class="op-admin-form-actions">
+                    <button type="submit" class="button">Importar arquivo</button>
+                </div>
+            </form>
+        </section>
     </div>
 {% endblock %}

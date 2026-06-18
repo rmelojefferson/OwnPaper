@@ -1,0 +1,21 @@
+:root {
+    --op-layout-width: 1040px;
+    --op-layout-padding-inline: 20px;
+}
+
+html {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+body {
+    accent-color: #1d4ed8;
+}
+
+a {
+    transition: color 0.16s ease, background-color 0.16s ease, border-color 0.16s ease;
+}
+
+::selection {
+    background: color-mix(in srgb, #1d4ed8 22%, transparent);
+}

@@ -1,47 +1,86 @@
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/rodape-site.css' %}">
+{% load static conteudo_tags %}
+{% if not rodape_assets_in_head %}
+<link rel="stylesheet" href="{% static 'css/rodape-site.css' %}?v=20260501-01">
+{% endif %}
+{% include "includes/botao_topo.html" %}
 
-{% if config_site.texto_rodape or config_site.email_contato or config_site.copyright_texto or config_site.pagina_sobre or config_site.pagina_privacidade or config_site.pagina_cookies %}
+{% with idioma_rodape=site_lang|default:"pt-br" %}
+{% menu_shortcut_label "contato" idioma_rodape "Contato" as contato_label_rodape %}
+{% menu_shortcut_label "newsletter" idioma_rodape "Newsletter" as newsletter_label_rodape %}
+{% translate_label "Sobre" idioma_rodape as sobre_label_rodape %}
+{% translate_label "Privacidade e dados" idioma_rodape as privacidade_label_rodape %}
+{% translate_label "Cookies" idioma_rodape as cookies_label_rodape %}
+{% if config_site %}
     <footer class="rodape-site">
+        <div class="rodape-site-inner container is-max-desktop">
         {% if config_site.texto_rodape %}
-            <span>{{ config_site.texto_rodape|linebreaksbr }}</span>
+            {% if config_site.texto_rodape_link %}
+                <a href="{{ config_site.texto_rodape_link }}">{{ config_site.texto_rodape|linebreaksbr }}</a>
+            {% else %}
+                <span>{{ config_site.texto_rodape|linebreaksbr }}</span>
+            {% endif %}
         {% endif %}
 
-	{% if config_site.pagina_contato %}
-	    <span> | </span>
-	    <a href="{{ config_site.pagina_contato.url }}">Contato</a>
-	{% elif config_site.email_contato %}
-	    <span> | </span>
-	    <a href="mailto:{{ config_site.email_contato }}">{{ config_site.email_contato }}</a>
-	{% endif %}
+        {% if config_site.rodape_links_ativos %}
+            {% for link in config_site.rodape_links_ativos %}
+                {% if config_site.texto_rodape or not forloop.first %}
+                    <span> | </span>
+                {% endif %}
+                {% translate_label link.titulo idioma_rodape as rodape_link_titulo %}
+                <a href="{{ link.url_resolvida }}"{% if link.abrir_nova_aba %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ rodape_link_titulo }}</a>
+            {% endfor %}
+        {% else %}
+            {% if config_site.pagina_contato %}
+                <span> | </span>
+                <a href="{{ config_site.pagina_contato.url }}">{{ contato_label_rodape }}</a>
+            {% elif config_site.email_contato %}
+                <span> | </span>
+                <a href="mailto:{{ config_site.email_contato }}">{{ config_site.email_contato }}</a>
+            {% endif %}
 
-        {% if config_site.pagina_sobre %}
+            {% if config_site.pagina_sobre %}
+                <span> | </span>
+                <a href="{{ config_site.pagina_sobre.url }}">{{ sobre_label_rodape }}</a>
+            {% endif %}
+
+            {% if config_site.pagina_privacidade %}
+                <span> | </span>
+                <a href="{{ config_site.pagina_privacidade.url }}">{{ privacidade_label_rodape }}</a>
+            {% endif %}
+
+            {% if config_site.pagina_cookies %}
+                <span> | </span>
+                <a href="{{ config_site.pagina_cookies.url }}">{{ cookies_label_rodape }}</a>
+            {% endif %}
+
+            {% if config_site.pagina_newsletter %}
+                <span> | </span>
+                <a href="{{ config_site.pagina_newsletter.url }}">{{ newsletter_label_rodape }}</a>
+            {% endif %}
+
+            {% if config_site.pagina_indexador %}
+                <span> | </span>
+                {% menu_shortcut_label "indexador" idioma_rodape config_site.rotulo_indexador|default:"Indexador" as rotulo_indexador_rodape %}
+                <a href="{{ config_site.pagina_indexador.url }}">{{ rotulo_indexador_rodape }}</a>
+            {% endif %}
+
+            {% if config_site.pagina_quiz_estudo %}
+                <span> | </span>
+                {% menu_shortcut_label "quiz" idioma_rodape config_site.rotulo_quiz_estudo|default:"Quiz" as rotulo_quiz_rodape %}
+                <a href="{{ config_site.pagina_quiz_estudo.url }}">{{ rotulo_quiz_rodape }}</a>
+            {% endif %}
+        {% endif %}
+
+        {% if config_site.doacoes_ativas and config_site.doacoes_exibir_no_rodape %}
             <span> | </span>
-            <a href="{{ config_site.pagina_sobre.url }}">Sobre</a>
+            <a href="{% url 'pagina_apoio' %}">{{ config_site.doacoes_rotulo|default:"Apoiar" }}</a>
         {% endif %}
-
-        {% if config_site.pagina_privacidade %}
-            <span> | </span>
-            <a href="{{ config_site.pagina_privacidade.url }}">Privacidade e dados</a>
-        {% endif %}
-
-        {% if config_site.pagina_cookies %}
-            <span> | </span>
-            <a href="{{ config_site.pagina_cookies.url }}">Cookies</a>
-        {% endif %}
-
-        {% if config_site.pagina_newsletter %}
-            <span> | </span>
-            <a href="{{ config_site.pagina_newsletter.url }}">Newsletter</a>
-        {% endif %}
-
-	{% if config_site.pagina_indexador %}
-	    <span> | </span>
-	    <a href="{{ config_site.pagina_indexador.url }}">{{ config_site.rotulo_indexador|default:"Indexador" }}</a>
-	{% endif %}
 
         {% if config_site.copyright_texto %}
-            <div class="rodape-site-copyright">{{ config_site.copyright_texto }}</div>
+            {% translate_copyright config_site.copyright_texto idioma_rodape as copyright_traduzido %}
+            <div class="rodape-site-copyright">{{ copyright_traduzido }}</div>
         {% endif %}
+        </div>
     </footer>
 {% endif %}
+{% endwith %}

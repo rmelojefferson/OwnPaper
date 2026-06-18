@@ -1,95 +1,218 @@
-{% load static wagtailcore_tags wagtailimages_tags %}
+{% load static wagtailcore_tags wagtailimages_tags conteudo_tags %}
+{% translated page "title" "pt-br" as translated_page_title %}
+{% translated page "seo_title" "pt-br" as translated_page_seo_title %}
+{% translated page "introducao" "pt-br" as translated_page_introducao %}
+{% translated page "mensagem_sucesso" "pt-br" as translated_page_mensagem_sucesso %}
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="utf-8">
-    <title>{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}</title>
+    <title>{% if translated_page_seo_title %}{{ translated_page_seo_title }}{% else %}{{ translated_page_title }}{% endif %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {% if TURNSTILE_ENABLED %}
-        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
     {% endif %}
 
     {% if config_site.favicon %}
         {% image config_site.favicon fill-32x32 format-webp as favicon_32 %}
         <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
     {% endif %}
-    <link rel="stylesheet" href="{% static 'css/pages/contato-page.css' %}">
+    {% include "includes/site_head_assets.html" %}
+    <link rel="stylesheet" href="{% static 'css/pages/contato-page.css' %}?v=20260507-03">
     {% include "includes/rastreamento_head.html" %}
 
 </head>
 <body>
     {% include "includes/rastreamento_body.html" %}
 
-    {% include "includes/menu_principal.html" %}
+    {% include "includes/menu_principal.html" with menu_assets_in_head=True %}
 
-    <article>
-        <h1>{{ page.title }}</h1>
+    <article class="contato-layout container is-max-desktop op-page-shell">
+        <header class="op-page-header contato-topo">
+            <h1 class="title is-2">{{ translated_page_title }}</h1>
+        </header>
 
-	{% if request.GET.enviado %}
-	    <div class="mensagem-sucesso" id="mensagem-sucesso-contato">
-	        {{ page.mensagem_sucesso }}
-	        {% if request.GET.email_falhou %}
-	            <br>
-	            O envio por e-mail não foi concluído, mas sua mensagem foi registrada.
-	        {% endif %}
-	    </div>
-	{% endif %}
+        {% if TURNSTILE_ENABLED %}
+            <div
+                class="turnstile-widget"
+                data-turnstile-contato
+                data-sitekey="{{ TURNSTILE_SITE_KEY }}"
+            ></div>
+        {% endif %}
 
-	{% if request.GET.limite %}
-	    <div class="mensagem-sucesso" id="mensagem-limite-contato">
-	        Muitas tentativas em pouco tempo. Aguarde alguns minutos antes de enviar novamente.
-	    </div>
-	{% endif %}
+	        {% if request.GET.enviado %}
+		    <div class="notification op-message mensagem-sucesso" id="mensagem-sucesso-contato">
+		        {{ translated_page_mensagem_sucesso }}
+		        {% if request.GET.email_falhou %}
+		            <br>
+		            
+		                O envio por e-mail não foi concluído, mas sua mensagem foi registrada.
+		            
+		        {% endif %}
+		    </div>
+		{% endif %}
 
-	{% if request.GET.captcha %}
-	    <div class="mensagem-sucesso" id="mensagem-captcha-contato">
-	        Não foi possível validar a verificação anti-bot. Tente novamente.
-	    </div>
-	{% endif %}
+		{% if request.GET.limite %}
+		    <div class="notification op-message mensagem-sucesso" id="mensagem-limite-contato">
+		        
+		            Muitas tentativas em pouco tempo. Aguarde alguns minutos antes de enviar novamente.
+		        
+		    </div>
+		{% endif %}
 
-        {% if page.introducao %}
-            <div>
-                {{ page.introducao|richtext }}
+		{% if request.GET.captcha %}
+		    <div class="notification op-message mensagem-sucesso" id="mensagem-captcha-contato">
+		        
+		            Não foi possível validar a verificação anti-bot. Tente novamente.
+		        
+		    </div>
+		{% endif %}
+
+        {% if translated_page_introducao %}
+            <div class="contato-introducao content op-content">
+                {{ translated_page_introducao|richtext }}
             </div>
         {% endif %}
 
-        <form method="post" action="/contato/{{ page.slug }}/enviar/">
+        <form method="post" action="/contato/{{ page.slug }}/enviar/" class="contato-form op-box">
             {% csrf_token %}
+            <input type="hidden" name="cf-turnstile-response" data-turnstile-shared-input>
+			    <div class="campo-oculto field">
+		        <label class="label" for="id_website">Website</label>
+                    <div class="control">
+	    	            <input class="input" type="text" name="website" id="id_website" tabindex="-1" autocomplete="off" style="background:var(--op-surface); color:var(--op-text); border-color:var(--op-border); box-shadow:none;">
+                    </div>
+		    </div>
 
-	    {% if TURNSTILE_ENABLED %}
-		        <div class="cf-turnstile turnstile-widget" data-sitekey="{{ TURNSTILE_SITE_KEY }}"></div>
-	    {% endif %}
+                <div class="field">
+	                <label class="label" for="id_nome">Nome</label>
+                    <div class="control">
+	                    <input class="input" type="text" name="nome" id="id_nome" required style="background:var(--op-surface); color:var(--op-text); border-color:var(--op-border); box-shadow:none;">
+                    </div>
+                </div>
 
-		    <div class="campo-oculto">
-	        <label for="id_website">Website</label>
-    	        <input type="text" name="website" id="id_website" tabindex="-1" autocomplete="off">
-	    </div>
+                <div class="field">
+	                <label class="label" for="id_email">E-mail</label>
+                    <div class="control">
+	                    <input class="input" type="email" name="email" id="id_email" required style="background:var(--op-surface); color:var(--op-text); border-color:var(--op-border); box-shadow:none;">
+                    </div>
+                </div>
 
-            <label for="id_nome">Nome</label>
-            <input type="text" name="nome" id="id_nome" required>
+                <div class="field">
+	                <label class="label" for="id_mensagem">Mensagem</label>
+                    <div class="control">
+	                    <textarea class="textarea" name="mensagem" id="id_mensagem" required style="background:var(--op-surface); color:var(--op-text); border-color:var(--op-border); box-shadow:none;"></textarea>
+                    </div>
+                </div>
 
-            <label for="id_email">E-mail</label>
-            <input type="email" name="email" id="id_email" required>
+            <div class="field">
+                <div class="control">
+                    <label class="checkbox checkbox-linha" for="id_aceitou_privacidade">
+	                    <input type="checkbox" name="aceitou_privacidade" id="id_aceitou_privacidade" required>
+	                    
+	                        Ao enviar esta mensagem, você concorda com o uso dos dados informados para análise e resposta ao seu contato, conforme nossa Política de Privacidade.
+	                    
+	                </label>
+                </div>
+	            </div>
 
-            <label for="id_mensagem">Mensagem</label>
-            <textarea name="mensagem" id="id_mensagem" required></textarea>
+                <div class="field contato-acoes">
+                    <div class="control">
+	                    <button class="button op-button" type="submit" style="background:var(--op-btn-bg); color:var(--op-btn-text); border-color:var(--op-border); box-shadow:none;">Enviar mensagem</button>
+                    </div>
+                </div>
+	        </form>
+	    </article>
 
-            <div class="checkbox-linha">
-                <input type="checkbox" name="aceitou_privacidade" id="id_aceitou_privacidade" required>
-                <label for="id_aceitou_privacidade">
-                    Ao enviar esta mensagem, você concorda com o uso dos dados informados para análise e resposta ao seu contato, conforme nossa Política de Privacidade.
-                </label>
-            </div>
+    {% include "includes/rodape_site.html" with rodape_assets_in_head=True %}
 
-            <button type="submit">Enviar mensagem</button>
-        </form>
-    </article>
+<script>
+window.ownpaperTurnstileContatoSuccess = function (token) {
+    document.querySelectorAll("[data-turnstile-shared-input]").forEach(function (input) {
+        input.value = token || "";
+    });
+};
+window.ownpaperTurnstileContatoExpired = function () {
+    document.querySelectorAll("[data-turnstile-shared-input]").forEach(function (input) {
+        input.value = "";
+    });
+};
+(function () {
+    var container = document.querySelector("[data-turnstile-contato]");
+    if (!container) {
+        return;
+    }
 
-    {% include "includes/rodape_site.html" %}
+    var widgetId = null;
+    var larguraBase = 300;
 
-<script src="{% static 'js/pages/contato-page.js' %}" defer></script>
+    function temaTurnstileAtual() {
+        var tema = document.documentElement.getAttribute("data-theme") || "claro";
+        return tema === "escuro" ? "dark" : "light";
+    }
+
+    function renderizarTurnstile() {
+        if (!window.turnstile || !container) {
+            return false;
+        }
+
+        if (widgetId !== null) {
+            try {
+                window.turnstile.remove(widgetId);
+            } catch (erro) {
+                // Widget antigo pode já ter sido descartado pelo Turnstile.
+            }
+            widgetId = null;
+        }
+
+        while (container.firstChild) {
+            container.removeChild(container.firstChild);
+        }
+        widgetId = window.turnstile.render(container, {
+            sitekey: container.getAttribute("data-sitekey"),
+            appearance: "always",
+            theme: temaTurnstileAtual(),
+            callback: window.ownpaperTurnstileContatoSuccess,
+            "expired-callback": window.ownpaperTurnstileContatoExpired,
+            "error-callback": window.ownpaperTurnstileContatoExpired
+        });
+        ajustarEscalaTurnstile();
+        return true;
+    }
+
+    function ajustarEscalaTurnstile() {
+        var larguraDisponivel = container.clientWidth || larguraBase;
+        var escala = larguraDisponivel < larguraBase ? (larguraDisponivel / larguraBase) : 1;
+        container.style.setProperty("--turnstile-scale", String(escala));
+        container.style.height = escala < 1 ? ((65 * escala) + "px") : "auto";
+    }
+
+    function aguardarTurnstile() {
+        if (renderizarTurnstile()) {
+            new MutationObserver(function (mutacoes) {
+                for (var i = 0; i < mutacoes.length; i += 1) {
+                    if (mutacoes[i].attributeName === "data-theme") {
+                        renderizarTurnstile();
+                        break;
+                    }
+                }
+            }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+            window.addEventListener("resize", ajustarEscalaTurnstile);
+            return;
+        }
+        window.setTimeout(aguardarTurnstile, 120);
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", aguardarTurnstile, { once: true });
+        return;
+    }
+    aguardarTurnstile();
+}());
+</script>
+<script src="{% static 'js/pages/contato-page.js' %}?v=20260428-02" defer></script>
 
 </body>
 </html>

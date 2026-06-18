@@ -1,0 +1,100 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% block titletag %}Templates de campanha{% endblock %}
+{% block content %}
+<div class="nice-padding op-admin-panel op-admin-panel--wide">
+    <header class="op-admin-panel__header">
+        <div>
+            <p class="op-admin-panel__eyebrow">Operação</p>
+            <h1>Templates de campanha</h1>
+            <p class="op-admin-panel__lead">Cadastre modelos reutilizáveis para disparos em massa e gerencie rapidamente versões ativas da comunicação.</p>
+        </div>
+    </header>
+
+    <section class="op-admin-card">
+        <h2>{% if template_edit %}Editar template{% else %}Novo template{% endif %}</h2>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="acao" value="salvar">
+            {% if template_edit %}
+                <input type="hidden" name="template_id" value="{{ template_edit.id }}">
+            {% endif %}
+            <div class="op-admin-form-grid op-admin-form-grid--email-template">
+                <div class="op-admin-field">
+                    <label for="id_nome">Nome</label>
+                    <input id="id_nome" name="nome" value="{{ template_edit.nome|default:'' }}" maxlength="120" required>
+                </div>
+                <div class="op-admin-field">
+                    <label for="id_assunto">Assunto padrão</label>
+                    <input id="id_assunto" name="assunto" value="{{ template_edit.assunto_padrao|default:'' }}" maxlength="255" required>
+                </div>
+            </div>
+            <div class="op-admin-field">
+                <label for="id_corpo_html">Corpo padrão</label>
+                <p class="op-admin-panel__meta">Escreva o modelo no editor visual. O HTML é gerado e sanitizado automaticamente antes de ser salvo.</p>
+                <textarea id="id_corpo_html" name="corpo_html" rows="10" required data-email-richtext>{{ template_edit.corpo_html_padrao|default:'' }}</textarea>
+            </div>
+            <div class="op-admin-form-actions">
+                <label class="op-admin-checkbox-line">
+                    <input type="checkbox" name="ativo" {% if template_edit %}{% if template_edit.ativo %}checked{% endif %}{% else %}checked{% endif %}>
+                    Ativo
+                </label>
+                <button type="submit" class="button">{% if template_edit %}Atualizar{% else %}Criar template{% endif %}</button>
+                {% if template_edit %}
+                    <a href="{% url 'admin_email_templates' %}" class="button button-secondary">Cancelar edição</a>
+                {% endif %}
+            </div>
+        </form>
+    </section>
+
+    <section class="op-admin-card">
+        <h2>Templates cadastrados</h2>
+        <div class="op-admin-table-wrap">
+            <table class="listing op-admin-listing-table op-admin-listing-table--email-templates">
+                <thead>
+                    <tr>
+                        <th>Nome</th>
+                        <th>Assunto padrão</th>
+                        <th>Ativo</th>
+                        <th>Prévia</th>
+                        <th>Criado por</th>
+                        <th>Atualizado em</th>
+                        <th class="op-admin-th-actions">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in templates_salvos %}
+                        <tr>
+                            <td>{{ item.nome }}</td>
+                            <td>{{ item.assunto_padrao }}</td>
+                            <td>{% if item.ativo %}Sim{% else %}Não{% endif %}</td>
+                            <td>{{ item.corpo_html_padrao|striptags|truncatechars:80 }}</td>
+                            <td>{{ item.criado_por.get_full_name|default:item.criado_por.username|default:'-' }}</td>
+                            <td>{{ item.atualizado_em|date:"d/m/Y H:i" }}</td>
+                            <td class="op-admin-form-actions">
+                                <a class="button button-small" href="{% url 'admin_email_disparos' %}?tpl=saved:{{ item.id }}">Usar no disparo</a>
+                                <a class="button button-small button-secondary" href="?editar={{ item.id }}">Editar</a>
+                                <form method="post" class="op-admin-inline-form" onsubmit="return confirm('Excluir este template?');">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="acao" value="excluir">
+                                    <input type="hidden" name="template_id" value="{{ item.id }}">
+                                    <button type="submit" class="button button-small button-no">Excluir</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="7">Nenhum template salvo.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    {% load static %}
+    <script src="{% static 'js/admin/email-richtext.js' %}" defer></script>
+{% endblock %}

@@ -1,114 +1,229 @@
-{% load static wagtailcore_tags wagtailimages_tags %}
+{% load static wagtailcore_tags wagtailimages_tags conteudo_tags %}
+{% translated page "title" "pt-br" as translated_page_title %}
+{% translated page "seo_title" "pt-br" as translated_page_seo_title %}
+{% translated page "introducao" "pt-br" as translated_page_introducao %}
+{% translated page "mensagem_sem_resultados" "pt-br" as translated_page_sem_resultados %}
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="utf-8">
-    <title>{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}</title>
+    <title>{% if translated_page_seo_title %}{{ translated_page_seo_title }}{% else %}{{ translated_page_title }}{% endif %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {% if config_site.favicon %}
         {% image config_site.favicon fill-32x32 format-webp as favicon_32 %}
         <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
     {% endif %}
-    <link rel="stylesheet" href="{% static 'css/pages/indexador-page.css' %}">
+    {% include "includes/site_head_assets.html" %}
+    <link rel="stylesheet" href="{% static 'css/pages/indexador-page.css' %}?v=20260428-02">
     {% include "includes/rastreamento_head.html" %}
 
 </head>
 <body>
     {% include "includes/rastreamento_body.html" %}
 
-    {% include "includes/menu_principal.html" %}
+    {% include "includes/menu_principal.html" with menu_assets_in_head=True %}
 
-    <article>
-        <h1>{{ page.title }}</h1>
+    <article class="indexador-layout container is-max-desktop op-page-shell">
+        <header class="indexador-topo op-page-header">
+            <h1 class="title is-2">{{ translated_page_title }}</h1>
+            {% if translated_page_introducao %}
+                <div class="indexador-introducao content op-content">{{ translated_page_introducao|richtext }}</div>
+            {% endif %}
+        </header>
 
-        {% if page.introducao %}
-            <div>{{ page.introducao|richtext }}</div>
-        {% endif %}
+        <form method="get" class="indexador-form op-box">
+            <div class="indexador-campo indexador-campo-amplo">
+                <label class="label" for="id_q">Buscar</label>
+                <div class="control">
+                    <input class="input" type="text" name="q" id="id_q" value="{{ termo_busca }}">
+                </div>
+            </div>
 
-        <form method="get">
-            <label for="id_q">Buscar</label>
-            <input type="text" name="q" id="id_q" value="{{ termo_busca }}">
+            <details class="indexador-avancado"{% if busca_avancada_ativa %} open{% endif %}>
+                <summary>Busca avançada</summary>
+                <p class="indexador-avancado-ajuda">Adicione até cinco termos e defina se os resultados devem conter todos eles ou pelo menos um.</p>
+                <div class="indexador-avancado-grid">
+                    {% for item in termos_avancados %}
+                        <div class="indexador-avancado-linha">
+                            {% if not forloop.first %}
+                                <div class="indexador-campo indexador-campo-operador">
+                                    <label class="label" for="indexador-operador-{{ item.indice }}">Comportamento</label>
+                                    <div class="control">
+                                        <div class="select is-fullwidth">
+                                            <select id="indexador-operador-{{ item.indice }}" name="operador_{{ item.indice }}">
+                                                <option value="and"{% if item.operador == "and" %} selected{% endif %}>E</option>
+                                                <option value="or"{% if item.operador == "or" %} selected{% endif %}>OU</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
+                            <div class="indexador-campo indexador-campo-termo-avancado">
+                                <label class="label" for="indexador-termo-{{ item.indice }}">
+                                    Termo {{ item.indice }}
+                                </label>
+                                <div class="control">
+                                    <input class="input" id="indexador-termo-{{ item.indice }}" type="text" name="termo_{{ item.indice }}" value="{{ item.termo }}" placeholder="Informe um termo">
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </details>
 
 	    <div class="indexador-linha-dupla">
 	        <div class="campo-periodo">
-	            <label for="id_ano_inicial">Período (Ano) - de</label>
-	            <input
-	                type="number"
-	                name="ano_inicial"
-	                id="id_ano_inicial"
-	                value="{{ ano_inicial }}"
-	                min="0"
-	                step="1"
-	                placeholder="Ex.: 2018"
-	            >
+		            <label class="label" for="id_ano_inicial">Período (ano) de:</label>
+                    <div class="control">
+                        <div class="select is-fullwidth">
+                            <select name="ano_inicial" id="id_ano_inicial" data-indexador-ano-inicial>
+                        <option value="">Qualquer ano</option>
+                        {% for ano in anos_sugeridos %}
+                            <option value="{{ ano }}"{% if ano_inicial == ano %} selected{% endif %}>{{ ano }}</option>
+                        {% endfor %}
+                            </select>
+                        </div>
+                    </div>
 	        </div>
 
 	        <div class="campo-periodo">
-	            <label for="id_ano_final">Período (Ano) - até</label>
-	            <input
-	                type="number"
-	                name="ano_final"
-	                id="id_ano_final"
-	                value="{{ ano_final }}"
-	                min="0"
-	                step="1"
-	                placeholder="Ex.: 2024"
-	            >
+		            <label class="label" for="id_ano_final">Período (ano) até:</label>
+                    <div class="control">
+                        <div class="select is-fullwidth">
+                            <select name="ano_final" id="id_ano_final" data-indexador-ano-final>
+                        <option value="">Qualquer ano</option>
+                        {% for ano in anos_sugeridos %}
+                            <option value="{{ ano }}"{% if ano_final == ano %} selected{% endif %}>{{ ano }}</option>
+                        {% endfor %}
+                            </select>
+                        </div>
+                    </div>
 	        </div>
 	    </div>
 
-            <label for="id_ordenar">Ordenar por</label>
-            <select name="ordenar" id="id_ordenar">
-                <option value="recentes" {% if ordenacao_atual == "recentes" %}selected{% endif %}>Mais recentes</option>
-                <option value="antigos" {% if ordenacao_atual == "antigos" %}selected{% endif %}>Mais antigos</option>
-                <option value="titulo_az" {% if ordenacao_atual == "titulo_az" %}selected{% endif %}>Título A-Z</option>
-                <option value="titulo_za" {% if ordenacao_atual == "titulo_za" %}selected{% endif %}>Título Z-A</option>
-            </select>
+            <div class="indexador-campo">
+                <label class="label" for="id_ordenar">Ordenar por</label>
+                <div class="control">
+                    <div class="select is-fullwidth">
+                        <select name="ordenar" id="id_ordenar">
+                    <option value="recentes" {% if ordenacao_atual == "recentes" %}selected{% endif %}>Mais recentes</option>
+                    <option value="antigos" {% if ordenacao_atual == "antigos" %}selected{% endif %}>Mais antigos</option>
+                    <option value="titulo_az" {% if ordenacao_atual == "titulo_az" %}selected{% endif %}>Título A-Z</option>
+                    <option value="titulo_za" {% if ordenacao_atual == "titulo_za" %}selected{% endif %}>Título Z-A</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
 
-            <button type="submit">Buscar</button>
+            <div class="indexador-acoes">
+                <button class="button is-link is-light op-button" type="submit">Buscar</button>
+            </div>
         </form>
 
+        <p class="indexador-aviso-exato">
+            A busca usa o termo exato informado para localizar conteúdos relacionados.
+        </p>
+
         <div class="acoes-exportacao">
-	    <a href="/indexador/{{ page.slug }}/exportar/?q={{ termo_busca|urlencode }}&ano_inicial={{ ano_inicial|urlencode }}&ano_final={{ ano_final|urlencode }}&ordenar={{ ordenacao_atual|urlencode }}">Exportar resultados em CSV</a>
-            <span> | </span>
-            <a href="/indexador/{{ page.slug }}/exportar/?escopo=todos">Exportar toda a base em CSV</a>
+		    <a class="button is-link is-light op-button" href="/indexador/{{ page.slug }}/exportar/?{% if filtros_exportacao_querystring %}{{ filtros_exportacao_querystring }}&{% endif %}escopo=resultados">Exportar resultados em CSV</a>
+            <a class="button is-link is-light op-button" href="/indexador/{{ page.slug }}/exportar/?escopo=todos">Exportar toda a base em CSV</a>
         </div>
 
         {% if registros %}
             {% for registro in registros %}
-                <div class="resultado">
-                    <h2>
-                        <a href="/indexador/{{ page.slug }}/registro/{{ registro.slug }}/">
-                            {{ registro.titulo }}
-                        </a>
-                    </h2>
+                <div class="resultado op-card">
+                    <div class="indexador-resultado-topo sem-miniatura">
+                        <div class="indexador-resultado-conteudo">
+                            <h3 class="indexador-resultado-titulo">
+                                <a href="/indexador/{{ page.slug }}/registro/{{ registro.slug }}/" target="_blank" rel="noopener noreferrer">
+                                    {{ registro.titulo }}
+                                </a>
+                            </h3>
 
-                    {% if registro.ano_publicacao %}
-                        <p><strong>Ano:</strong> {{ registro.ano_publicacao }}</p>
+                            {% if registro.ano_publicacao %}
+                                <div class="indexador-resultado-meta">
+                                    Ano: {{ registro.ano_publicacao }}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    {% if registro.resumo %}
+                        <div class="indexador-resultado-resumo">
+                            <p>{{ registro.resumo }}</p>
+                        </div>
                     {% endif %}
-
-                    <p>{{ registro.resumo }}</p>
                 </div>
             {% endfor %}
 
-            <div class="paginacao">
-                {% if pagina_obj.has_previous %}
-		    <a href="?q={{ termo_busca|urlencode }}&ano_inicial={{ ano_inicial|urlencode }}&ano_final={{ ano_final|urlencode }}&ordenar={{ ordenacao_atual|urlencode }}&pagina={{ pagina_obj.previous_page_number }}">Anterior</a>
-                {% endif %}
+            {% if pagina_obj.paginator.num_pages > 1 %}
+                <nav class="paginacao home-paginacao-ultimas" aria-label="Paginação do indexador">
+                    {% if pagina_obj.has_previous %}
+			            <a href="?{% if filtros_paginacao_querystring %}{{ filtros_paginacao_querystring }}&{% endif %}pagina=1">Primeira</a>
+			            <a href="?{% if filtros_paginacao_querystring %}{{ filtros_paginacao_querystring }}&{% endif %}pagina={{ pagina_obj.previous_page_number }}">Anterior</a>
+                    {% endif %}
 
-                <span>Página {{ pagina_obj.number }} de {{ pagina_obj.paginator.num_pages }}</span>
+                    <span>Página {{ pagina_obj.number }} de {{ pagina_obj.paginator.num_pages }}</span>
 
-                {% if pagina_obj.has_next %}
-		    <a href="?q={{ termo_busca|urlencode }}&ano_inicial={{ ano_inicial|urlencode }}&ano_final={{ ano_final|urlencode }}&ordenar={{ ordenacao_atual|urlencode }}&pagina={{ pagina_obj.next_page_number }}">Próxima</a>
-                {% endif %}
-            </div>
+                    {% if pagina_obj.has_next %}
+			            <a href="?{% if filtros_paginacao_querystring %}{{ filtros_paginacao_querystring }}&{% endif %}pagina={{ pagina_obj.next_page_number }}">Próxima</a>
+			            <a href="?{% if filtros_paginacao_querystring %}{{ filtros_paginacao_querystring }}&{% endif %}pagina={{ pagina_obj.paginator.num_pages }}">Última</a>
+                    {% endif %}
+                </nav>
+            {% endif %}
         {% else %}
-            <p>{{ page.mensagem_sem_resultados }}</p>
+            <p>{{ translated_page_sem_resultados }}</p>
         {% endif %}
     </article>
 
-    {% include "includes/rodape_site.html" %}
+    {% include "includes/rodape_site.html" with rodape_assets_in_head=True %}
+    <script>
+        (function () {
+            const anoInicial = document.querySelector('[data-indexador-ano-inicial]');
+            const anoFinal = document.querySelector('[data-indexador-ano-final]');
+            if (!anoInicial || !anoFinal) {
+                return;
+            }
+
+            const atualizarOpcoes = () => {
+                const valorInicial = parseInt(anoInicial.value || '', 10);
+                const valorFinal = parseInt(anoFinal.value || '', 10);
+
+                for (const option of anoInicial.options) {
+                    if (!option.value) {
+                        option.hidden = false;
+                        option.disabled = false;
+                        continue;
+                    }
+                    const ano = parseInt(option.value, 10);
+                    const permitido = !valorFinal || ano <= valorFinal;
+                    option.hidden = !permitido;
+                    option.disabled = !permitido;
+                }
+
+                for (const option of anoFinal.options) {
+                    if (!option.value) {
+                        option.hidden = false;
+                        option.disabled = false;
+                        continue;
+                    }
+                    const ano = parseInt(option.value, 10);
+                    const permitido = !valorInicial || ano >= valorInicial;
+                    option.hidden = !permitido;
+                    option.disabled = !permitido;
+                }
+
+                if (valorInicial && valorFinal && valorInicial > valorFinal) {
+                    anoFinal.value = anoInicial.value;
+                }
+            };
+
+            anoInicial.addEventListener('change', atualizarOpcoes);
+            anoFinal.addEventListener('change', atualizarOpcoes);
+            atualizarOpcoes();
+        }());
+    </script>
 </body>
 </html>

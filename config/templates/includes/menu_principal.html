@@ -1,89 +1,500 @@
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/menu-principal.css' %}">
+{% load static conteudo_tags %}
+{% if not menu_assets_in_head %}
+<link rel="stylesheet" href="{% static 'css/menu-principal.css' %}?v=20260428-03">
+{% include "includes/tema_site.html" %}
+{% endif %}
+{% with idioma_menu=site_lang|default:"pt-br" %}
+{% menu_shortcut_label "home" idioma_menu "Início" as home_label %}
+{% menu_shortcut_label "categorias" idioma_menu "Categorias" as categorias_label %}
+{% menu_shortcut_label "autores" idioma_menu "Autores" as autores_label %}
+{% menu_shortcut_label "tags" idioma_menu "Tags" as tags_label %}
+{% menu_shortcut_label "busca" idioma_menu "Busca" as busca_label %}
+{% menu_shortcut_label "destaques" idioma_menu "Destaques" as destaques_label %}
+{% menu_shortcut_label "ultimas" idioma_menu "Últimas publicações" as ultimas_label %}
+{% menu_shortcut_label "contato" idioma_menu "Contato" as contato_label %}
+{% menu_shortcut_label "newsletter" idioma_menu "Newsletter" as newsletter_label %}
+{% translate_label "Página principal" idioma_menu as pagina_principal_label %}
+{% translate_label "Todas as categorias" idioma_menu as todas_categorias_label %}
+{% translate_label "Nenhuma categoria cadastrada." idioma_menu as nenhuma_categoria_label %}
+{% if config_site and config_site.menu_home_rotulo %}
+    {% translate_label config_site.menu_home_rotulo idioma_menu as menu_home_rotulo %}
+{% endif %}
 
 <nav class="menu-principal">
-    {% if config_site and config_site.usar_menu_customizado and config_site.menu_grupos.all %}
-        {% if config_site.menu_home_exibir and config_site.menu_home_primeiro_fixo %}
-            <a href="/" class="menu-home-link" aria-label="{{ config_site.menu_home_rotulo|default:'Início' }}">
-                {% if config_site.menu_home_imagem %}
+    <div class="menu-principal-inner container is-max-desktop">
+    <div class="menu-home-bloco">
+        <a href="/" class="menu-home-link{% if config_site %}{% if config_site.menu_home_imagem_claro or config_site.menu_home_imagem_escuro %} has-theme-images{% endif %}{% endif %}" aria-label="{% if menu_home_rotulo %}{{ menu_home_rotulo }}{% else %}{{ home_label }}{% endif %}"{% if config_site %} style="--op-menu-home-logo-height: {{ config_site.menu_home_logo_altura_desktop_px|default:72 }}px; --op-menu-home-logo-fit: {{ config_site.menu_home_logo_css_fit|default:'contain' }};{% if config_site.menu_home_logo_width_desktop_px %} --op-menu-home-logo-width: {{ config_site.menu_home_logo_width_desktop_px }}px;{% endif %}{% if config_site.menu_home_logo_css_ratio %} --op-menu-home-logo-ratio: {{ config_site.menu_home_logo_css_ratio }};{% endif %}"{% endif %}>
+            {% if config_site %}
+            {% if config_site.menu_home_imagem_claro or config_site.menu_home_imagem_escuro or config_site.menu_home_imagem %}
+                {% if config_site and config_site.menu_home_imagem_claro %}
                     <img
-                        src="{{ config_site.menu_home_imagem.file.url }}"
-                        alt="{{ config_site.menu_home_rotulo|default:'Início' }}"
-                        style="--menu-home-scale: {{ config_site.menu_home_imagem_escala|default:1 }};"
+                        class="menu-home-image menu-home-image--claro"
+                        src="{{ config_site.menu_home_imagem_claro.file.url }}"
+                        alt="{% if menu_home_rotulo %}{{ menu_home_rotulo }}{% else %}{{ home_label }}{% endif %}"
                     >
+                {% endif %}
+                {% if config_site and config_site.menu_home_imagem_escuro %}
+                    <img
+                        class="menu-home-image menu-home-image--escuro"
+                        src="{{ config_site.menu_home_imagem_escuro.file.url }}"
+                        alt="{% if menu_home_rotulo %}{{ menu_home_rotulo }}{% else %}{{ home_label }}{% endif %}"
+                    >
+                {% endif %}
+                {% if config_site and config_site.menu_home_imagem %}
+                    <img
+                        class="menu-home-image menu-home-image--padrao{% if config_site.menu_home_imagem_claro or config_site.menu_home_imagem_escuro %} menu-home-image--fallback{% endif %}"
+                        src="{{ config_site.menu_home_imagem.file.url }}"
+                        alt="{% if menu_home_rotulo %}{{ menu_home_rotulo }}{% else %}{{ home_label }}{% endif %}"
+                    >
+                {% endif %}
+            {% else %}
+                {% if menu_home_rotulo %}{{ menu_home_rotulo }}{% else %}{{ home_label }}{% endif %}
+            {% endif %}
+            {% else %}
+                {% if menu_home_rotulo %}{{ menu_home_rotulo }}{% else %}{{ home_label }}{% endif %}
+            {% endif %}
+        </a>
+    </div>
+    <div class="menu-conteudo-bloco">
+        <div class="menu-principal-topo">
+            <button
+                type="button"
+                class="menu-mobile-toggle"
+                data-menu-mobile-toggle
+                aria-expanded="false"
+                aria-controls="menu-principal-itens"
+                aria-label="Abrir menu"
+                title="Abrir menu"
+            >
+                <span></span><span></span><span></span>
+            </button>
+            <a class="menu-mobile-brand{% if config_site %}{% if config_site.menu_home_imagem_mobile_claro or config_site.menu_home_imagem_mobile_escuro or config_site.menu_home_imagem_claro or config_site.menu_home_imagem_escuro %} has-theme-images{% endif %}{% endif %}" href="/" aria-label="Ir para a página inicial" title="{{ home_label }}"{% if config_site %} style="--op-menu-home-logo-height: {{ config_site.menu_home_logo_altura_mobile_px|default:50 }}px; --op-menu-home-logo-fit: {{ config_site.menu_home_logo_css_fit|default:'contain' }};{% if config_site.menu_home_logo_width_mobile_px %} --op-menu-home-logo-width: {{ config_site.menu_home_logo_width_mobile_px }}px;{% endif %}{% if config_site.menu_home_logo_css_ratio %} --op-menu-home-logo-ratio: {{ config_site.menu_home_logo_css_ratio }};{% endif %}"{% endif %}>
+                {% if config_site %}
+                {% if config_site.menu_home_imagem_mobile_claro or config_site.menu_home_imagem_mobile_escuro or config_site.menu_home_imagem_claro or config_site.menu_home_imagem_escuro or config_site.menu_home_imagem %}
+                    {% if config_site.menu_home_imagem_mobile_claro %}
+                        <img
+                            class="menu-mobile-brand-imagem menu-mobile-brand-imagem--claro"
+                            src="{{ config_site.menu_home_imagem_mobile_claro.file.url }}"
+                            alt="{% if menu_home_rotulo %}{{ menu_home_rotulo }}{% else %}{{ home_label }}{% endif %}"
+                        >
+                    {% elif config_site.menu_home_imagem_claro %}
+                        <img
+                            class="menu-mobile-brand-imagem menu-mobile-brand-imagem--claro"
+                            src="{{ config_site.menu_home_imagem_claro.file.url }}"
+                            alt="{% if menu_home_rotulo %}{{ menu_home_rotulo }}{% else %}{{ home_label }}{% endif %}"
+                        >
+                    {% endif %}
+                    {% if config_site.menu_home_imagem_mobile_escuro %}
+                        <img
+                            class="menu-mobile-brand-imagem menu-mobile-brand-imagem--escuro"
+                            src="{{ config_site.menu_home_imagem_mobile_escuro.file.url }}"
+                            alt="{% if menu_home_rotulo %}{{ menu_home_rotulo }}{% else %}{{ home_label }}{% endif %}"
+                        >
+                    {% elif config_site.menu_home_imagem_escuro %}
+                        <img
+                            class="menu-mobile-brand-imagem menu-mobile-brand-imagem--escuro"
+                            src="{{ config_site.menu_home_imagem_escuro.file.url }}"
+                            alt="{% if menu_home_rotulo %}{{ menu_home_rotulo }}{% else %}{{ home_label }}{% endif %}"
+                        >
+                    {% endif %}
+                    {% if config_site and config_site.menu_home_imagem %}
+                        <img
+                            class="menu-mobile-brand-imagem menu-mobile-brand-imagem--padrao{% if config_site.menu_home_imagem_claro or config_site.menu_home_imagem_escuro %} menu-mobile-brand-imagem--fallback{% endif %}"
+                            src="{{ config_site.menu_home_imagem.file.url }}"
+                            alt="{% if menu_home_rotulo %}{{ menu_home_rotulo }}{% else %}{{ home_label }}{% endif %}"
+                        >
+                    {% endif %}
                 {% else %}
-                    {{ config_site.menu_home_rotulo|default:"Início" }}
+                    <svg class="menu-mobile-brand-icone" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 11.5 12 4l9 7.5"></path>
+                        <path d="M6.5 10.5V20h11V10.5"></path>
+                    </svg>
+                {% endif %}
+                {% else %}
+                    <svg class="menu-mobile-brand-icone" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M3 11.5 12 4l9 7.5"></path>
+                        <path d="M6.5 10.5V20h11V10.5"></path>
+                    </svg>
                 {% endif %}
             </a>
-        {% endif %}
-        {% for grupo in config_site.menu_grupos.all %}
-            {% if not config_site.menu_home_primeiro_fixo or grupo.atalho != "home" or grupo.tipo != "atalho" %}
-            {% if grupo.subitens.all %}
-                <details>
-                    <summary>{{ grupo.titulo }}</summary>
-                    <div class="menu-principal-submenu">
-                        {% if grupo.tem_link %}
-                            <div class="menu-principal-submenu-item">
-                                <a href="{{ grupo.url_resolvida }}"{% if grupo.abrir_nova_aba %} target="_blank" rel="noopener noreferrer"{% endif %}>
-                                    Página principal
-                                </a>
+            <button
+                type="button"
+                class="menu-mobile-search-toggle"
+                data-menu-mobile-search-toggle
+                aria-expanded="false"
+                aria-controls="menu-busca-rapida"
+                aria-label="Abrir busca"
+                title="Abrir busca"
+            >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                    <circle cx="11" cy="11" r="7"></circle>
+                    <path d="M20 20l-3.5-3.5"></path>
+                </svg>
+            </button>
+            <form id="menu-busca-rapida" class="menu-busca-rapida" method="get" action="/busca/" role="search" aria-label="Busca no site">
+                <input type="hidden" name="escopo" value="site_todo">
+                <input
+                    id="menu-busca-rapida-q"
+                    name="q"
+                    type="search"
+                    value="{{ request.GET.q|default:'' }}"
+                    aria-label="Buscar no site"
+                    placeholder="Pesquisar no site"
+                >
+                <button type="submit">Buscar</button>
+                <div class="menu-tema-controle menu-top-acao">
+                    <button id="tema-toggle-btn" class="tema-toggle-btn" type="button" onclick="window.__ownpaperAlternarTema && window.__ownpaperAlternarTema();" aria-label="Alternar tema" title="Alternar tema">
+                        <svg class="tema-icone tema-icone-sol" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+                            <circle cx="12" cy="12" r="4"></circle>
+                            <path d="M12 2v2"></path>
+                            <path d="M12 20v2"></path>
+                            <path d="M4.93 4.93l1.41 1.41"></path>
+                            <path d="M17.66 17.66l1.41 1.41"></path>
+                            <path d="M2 12h2"></path>
+                            <path d="M20 12h2"></path>
+                            <path d="M4.93 19.07l1.41-1.41"></path>
+                            <path d="M17.66 6.34l1.41-1.41"></path>
+                        </svg>
+                        <svg class="tema-icone tema-icone-lua" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                        <span class="tema-visually-hidden">Alternar tema</span>
+                    </button>
+                </div>
+                {% if config_site.social_facebook_url %}
+                    <a class="menu-social-link menu-top-acao" href="{{ config_site.social_facebook_url }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3 0-5 2-5 5v3H6v4h3v4h4v-4h3l1-4h-4V9c0-.7.3-1 1-1z"></path></svg>
+                    </a>
+                {% endif %}
+                {% if config_site.social_instagram_url %}
+                    <a class="menu-social-link menu-top-acao" href="{{ config_site.social_instagram_url }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.75 2h8.5A5.76 5.76 0 0 1 22 7.75v8.5A5.76 5.76 0 0 1 16.25 22h-8.5A5.76 5.76 0 0 1 2 16.25v-8.5A5.76 5.76 0 0 1 7.75 2Zm0 2A3.76 3.76 0 0 0 4 7.75v8.5A3.76 3.76 0 0 0 7.75 20h8.5A3.76 3.76 0 0 0 20 16.25v-8.5A3.76 3.76 0 0 0 16.25 4h-8.5ZM12 7.2a4.8 4.8 0 1 1 0 9.6 4.8 4.8 0 0 1 0-9.6Zm0 2a2.8 2.8 0 1 0 0 5.6 2.8 2.8 0 0 0 0-5.6Zm5.35-2.55a1.15 1.15 0 1 1-2.3 0 1.15 1.15 0 0 1 2.3 0Z"></path></svg>
+                    </a>
+                {% endif %}
+                {% if config_site.social_linkedin_url %}
+                    <a class="menu-social-link menu-top-acao" href="{{ config_site.social_linkedin_url }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.64-1.85 3.37-1.85 3.61 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"></path></svg>
+                    </a>
+                {% endif %}
+                {% if config_site.social_x_url %}
+                    <a class="menu-social-link menu-top-acao" href="{{ config_site.social_x_url }}" target="_blank" rel="noopener noreferrer" aria-label="X" title="X">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.9 2h3.32l-7.25 8.28L23.5 22h-6.68l-5.23-6.84L5.6 22H2.28l7.75-8.86L1.85 2h6.85l4.73 6.25L18.9 2zm-1.17 17.94h1.84L7.7 3.96H5.72l12.01 15.98z"></path></svg>
+                    </a>
+                {% endif %}
+                {% if config_site.social_youtube_url %}
+                    <a class="menu-social-link menu-top-acao" href="{{ config_site.social_youtube_url }}" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.58 7.19a2.74 2.74 0 0 0-1.93-1.94C17.94 4.8 12 4.8 12 4.8s-5.94 0-7.65.45a2.74 2.74 0 0 0-1.93 1.94C1.96 8.9 1.96 12 1.96 12s0 3.1.46 4.81a2.74 2.74 0 0 0 1.93 1.94c1.71.45 7.65.45 7.65.45s5.94 0 7.65-.45a2.74 2.74 0 0 0 1.93-1.94c.46-1.71.46-4.81.46-4.81s0-3.1-.46-4.81zM10 15.2V8.8l5.5 3.2L10 15.2z"></path></svg>
+                    </a>
+                {% endif %}
+                {% if config_site.doacoes_ativas and config_site.doacoes_exibir_no_cabecalho %}
+                    <a class="menu-rss-link menu-apoio-link menu-top-acao" href="{% url 'pagina_apoio' %}" aria-label="{{ config_site.doacoes_rotulo|default:'Apoie o projeto' }}" title="{{ config_site.doacoes_rotulo|default:'Apoie o projeto' }}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.25c-.28 0-.55-.1-.76-.28C8.1 17.24 4.9 14.35 3.1 11.7 1.35 9.14 1.74 5.9 4.02 4.22c2.05-1.5 4.86-.98 6.48 1.05.38.48.72 1.03 1 1.62.28-.59.62-1.14 1-1.62 1.62-2.03 4.43-2.55 6.48-1.05 2.28 1.68 2.67 4.92.92 7.48-1.8 2.65-5 5.54-8.14 8.27-.21.18-.48.28-.76.28Z"></path></svg>
+                        <span>{{ config_site.doacoes_rotulo|default:"Apoie" }}</span>
+                    </a>
+                {% endif %}
+                <a class="menu-rss-link menu-top-acao" href="/rss.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS do site" title="RSS do site">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="6" cy="18" r="2"></circle>
+                        <path d="M4 10a10 10 0 0 1 10 10"></path>
+                        <path d="M4 4a16 16 0 0 1 16 16"></path>
+                    </svg>
+                    <span>RSS</span>
+                </a>
+            </form>
+        </div>
+        <div class="menu-principal-itens" id="menu-principal-itens">
+            <button
+                type="button"
+                class="menu-mobile-close"
+                data-menu-mobile-close
+                aria-label="Voltar"
+                title="Voltar"
+            >
+                <span aria-hidden="true">←</span>
+                <span>Voltar</span>
+            </button>
+            <a class="menu-mobile-home" href="/">{{ home_label }}</a>
+            {% if config_site and config_site.usar_menu_customizado and config_site.menu_grupos.all %}
+                {% for grupo in config_site.menu_grupos.all %}
+                    {% menu_item_label grupo idioma_menu as grupo_label %}
+                    {% if grupo.atalho != "home" or grupo.tipo != "atalho" %}
+                    {% if grupo.subitens.all %}
+                        <details>
+                            <summary>{{ grupo_label }}</summary>
+                            <div class="menu-principal-submenu">
+                                {% if grupo.tem_link %}
+                                    <div class="menu-principal-submenu-item">
+                                        <a href="{{ grupo.url_resolvida }}"{% if grupo.abrir_nova_aba %} target="_blank" rel="noopener noreferrer"{% endif %}>
+                                            {{ pagina_principal_label }}
+                                        </a>
+                                    </div>
+                                {% endif %}
+                                {% for subitem in grupo.subitens.all %}
+                                    {% menu_item_label subitem idioma_menu as subitem_label %}
+                                    {% if subitem.tem_link %}
+                                        <div class="menu-principal-submenu-item">
+                                            <a href="{{ subitem.url_resolvida }}"{% if subitem.abrir_nova_aba %} target="_blank" rel="noopener noreferrer"{% endif %}>
+                                                {{ subitem_label }}
+                                            </a>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
                             </div>
+                        </details>
+                    {% else %}
+                        {% if grupo.tem_link %}
+                            <a href="{{ grupo.url_resolvida }}"{% if grupo.abrir_nova_aba %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ grupo_label }}</a>
+                        {% else %}
+                            <span class="menu-principal-item-texto">{{ grupo_label }}</span>
                         {% endif %}
-                        {% for subitem in grupo.subitens.all %}
-                            {% if subitem.tem_link %}
-                                <div class="menu-principal-submenu-item">
-                                    <a href="{{ subitem.url_resolvida }}"{% if subitem.abrir_nova_aba %} target="_blank" rel="noopener noreferrer"{% endif %}>
-                                        {{ subitem.titulo }}
-                                    </a>
-                                </div>
-                            {% endif %}
+                    {% endif %}
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                <details>
+                    <summary>{{ categorias_label }}</summary>
+                    <div class="menu-principal-submenu">
+                        <div class="menu-principal-submenu-item">
+                            <a href="/categorias/">{{ todas_categorias_label }}</a>
+                        </div>
+
+                        {% for categoria in categorias_menu %}
+                            <div class="menu-principal-submenu-item">
+                                <a href="/categorias/{{ categoria.slug }}/">{{ categoria.nome }}</a>
+                            </div>
+                        {% empty %}
+                            <div>{{ nenhuma_categoria_label }}</div>
                         {% endfor %}
                     </div>
                 </details>
-            {% else %}
-                {% if grupo.tem_link %}
-                    <a href="{{ grupo.url_resolvida }}"{% if grupo.abrir_nova_aba %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ grupo.titulo }}</a>
-                {% else %}
-                    <span class="menu-principal-item-texto">{{ grupo.titulo }}</span>
+
+                <a href="/autores/">{{ autores_label }}</a>
+                <a href="/tags/">{{ tags_label }}</a>
+                <a href="/busca/">{{ busca_label }}</a>
+                <a href="/#destaques">{{ destaques_label }}</a>
+                <a href="/#ultimas-publicacoes">{{ ultimas_label }}</a>
+
+                {% if config_site.pagina_contato %}
+                    <a href="{{ config_site.pagina_contato.url }}">{{ contato_label }}</a>
+                {% endif %}
+                {% if config_site.pagina_newsletter %}
+                    <a href="{{ config_site.pagina_newsletter.url }}">{{ newsletter_label }}</a>
+                {% endif %}
+
+                {% if config_site.pagina_indexador %}
+                    {% menu_shortcut_label "indexador" idioma_menu config_site.rotulo_indexador|default:"Indexador" as rotulo_indexador_menu %}
+                    <a href="{{ config_site.pagina_indexador.url }}">{{ rotulo_indexador_menu }}</a>
+                {% endif %}
+                {% if config_site.pagina_quiz_estudo %}
+                    {% menu_shortcut_label "quiz" idioma_menu config_site.rotulo_quiz_estudo|default:"Quiz" as rotulo_quiz_menu %}
+                    <a href="{{ config_site.pagina_quiz_estudo.url }}">{{ rotulo_quiz_menu }}</a>
                 {% endif %}
             {% endif %}
-            {% endif %}
-        {% endfor %}
-    {% else %}
-        <a href="/">Início</a>
 
-        <details>
-            <summary>Categorias</summary>
-            <div class="menu-principal-submenu">
-                <div class="menu-principal-submenu-item">
-                    <a href="/categorias/">Todas as categorias</a>
-                </div>
-
-                {% for categoria in categorias_menu %}
-                    <div class="menu-principal-submenu-item">
-                        <a href="/categorias/{{ categoria.slug }}/">{{ categoria.nome }}</a>
-                    </div>
-                {% empty %}
-                    <div>Nenhuma categoria cadastrada.</div>
-                {% endfor %}
+            <div class="menu-mobile-acoes">
+                <button class="tema-toggle-btn tema-toggle-btn-mobile" type="button" onclick="window.__ownpaperAlternarTema && window.__ownpaperAlternarTema();" aria-label="Alternar tema" title="Alternar tema">
+                    <svg class="tema-icone tema-icone-sol" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+                        <circle cx="12" cy="12" r="4"></circle>
+                        <path d="M12 2v2"></path>
+                        <path d="M12 20v2"></path>
+                        <path d="M4.93 4.93l1.41 1.41"></path>
+                        <path d="M17.66 17.66l1.41 1.41"></path>
+                        <path d="M2 12h2"></path>
+                        <path d="M20 12h2"></path>
+                        <path d="M4.93 19.07l1.41-1.41"></path>
+                        <path d="M17.66 6.34l1.41-1.41"></path>
+                    </svg>
+                    <svg class="tema-icone tema-icone-lua" viewBox="0 0 24 24" aria-hidden="true" fill="none">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <span class="tema-visually-hidden">Alternar tema</span>
+                </button>
+                {% if config_site.social_facebook_url %}
+                    <a class="menu-social-link" href="{{ config_site.social_facebook_url }}" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 8h3V4h-3c-3 0-5 2-5 5v3H6v4h3v4h4v-4h3l1-4h-4V9c0-.7.3-1 1-1z"></path></svg>
+                    </a>
+                {% endif %}
+                {% if config_site.social_instagram_url %}
+                    <a class="menu-social-link" href="{{ config_site.social_instagram_url }}" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill-rule="evenodd" clip-rule="evenodd" d="M7.75 2h8.5A5.76 5.76 0 0 1 22 7.75v8.5A5.76 5.76 0 0 1 16.25 22h-8.5A5.76 5.76 0 0 1 2 16.25v-8.5A5.76 5.76 0 0 1 7.75 2Zm0 2A3.76 3.76 0 0 0 4 7.75v8.5A3.76 3.76 0 0 0 7.75 20h8.5A3.76 3.76 0 0 0 20 16.25v-8.5A3.76 3.76 0 0 0 16.25 4h-8.5ZM12 7.2a4.8 4.8 0 1 1 0 9.6 4.8 4.8 0 0 1 0-9.6Zm0 2a2.8 2.8 0 1 0 0 5.6 2.8 2.8 0 0 0 0-5.6Zm5.35-2.55a1.15 1.15 0 1 1-2.3 0 1.15 1.15 0 0 1 2.3 0Z"></path></svg>
+                    </a>
+                {% endif %}
+                {% if config_site.social_linkedin_url %}
+                    <a class="menu-social-link" href="{{ config_site.social_linkedin_url }}" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" title="LinkedIn">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.47-.9 1.64-1.85 3.37-1.85 3.61 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"></path></svg>
+                    </a>
+                {% endif %}
+                {% if config_site.social_x_url %}
+                    <a class="menu-social-link" href="{{ config_site.social_x_url }}" target="_blank" rel="noopener noreferrer" aria-label="X" title="X">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.9 2h3.32l-7.25 8.28L23.5 22h-6.68l-5.23-6.84L5.6 22H2.28l7.75-8.86L1.85 2h6.85l4.73 6.25L18.9 2zm-1.17 17.94h1.84L7.7 3.96H5.72l12.01 15.98z"></path></svg>
+                    </a>
+                {% endif %}
+                {% if config_site.social_youtube_url %}
+                    <a class="menu-social-link" href="{{ config_site.social_youtube_url }}" target="_blank" rel="noopener noreferrer" aria-label="YouTube" title="YouTube">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.58 7.19a2.74 2.74 0 0 0-1.93-1.94C17.94 4.8 12 4.8 12 4.8s-5.94 0-7.65.45a2.74 2.74 0 0 0-1.93 1.94C1.96 8.9 1.96 12 1.96 12s0 3.1.46 4.81a2.74 2.74 0 0 0 1.93 1.94c1.71.45 7.65.45 7.65.45s5.94 0 7.65-.45a2.74 2.74 0 0 0 1.93-1.94c.46-1.71.46-4.81.46-4.81s0-3.1-.46-4.81zM10 15.2V8.8l5.5 3.2L10 15.2z"></path></svg>
+                    </a>
+                {% endif %}
+                {% if config_site.doacoes_ativas and config_site.doacoes_exibir_no_cabecalho %}
+                    <a class="menu-rss-link menu-apoio-link" href="{% url 'pagina_apoio' %}" aria-label="{{ config_site.doacoes_rotulo|default:'Apoie o projeto' }}" title="{{ config_site.doacoes_rotulo|default:'Apoie o projeto' }}">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.25c-.28 0-.55-.1-.76-.28C8.1 17.24 4.9 14.35 3.1 11.7 1.35 9.14 1.74 5.9 4.02 4.22c2.05-1.5 4.86-.98 6.48 1.05.38.48.72 1.03 1 1.62.28-.59.62-1.14 1-1.62 1.62-2.03 4.43-2.55 6.48-1.05 2.28 1.68 2.67 4.92.92 7.48-1.8 2.65-5 5.54-8.14 8.27-.21.18-.48.28-.76.28Z"></path></svg>
+                        <span>{{ config_site.doacoes_rotulo|default:"Apoie" }}</span>
+                    </a>
+                {% endif %}
+                <a class="menu-rss-link" href="/rss.xml" target="_blank" rel="noopener noreferrer" aria-label="RSS do site" title="RSS do site">
+                    <svg viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="6" cy="18" r="2"></circle>
+                        <path d="M4 10a10 10 0 0 1 10 10"></path>
+                        <path d="M4 4a16 16 0 0 1 16 16"></path>
+                    </svg>
+                    <span>RSS</span>
+                </a>
             </div>
-        </details>
-
-        <a href="/autores/">Autores</a>
-        <a href="/tags/">Tags</a>
-        <a href="/busca/">Busca</a>
-        <a href="/#destaques">Destaques</a>
-        <a href="/#ultimas-publicacoes">Últimas publicações</a>
-
-        {% if config_site.pagina_contato %}
-            <a href="{{ config_site.pagina_contato.url }}">Contato</a>
-        {% endif %}
-        {% if config_site.pagina_newsletter %}
-            <a href="{{ config_site.pagina_newsletter.url }}">Newsletter</a>
-        {% endif %}
-
-        {% if config_site.pagina_indexador %}
-            <a href="{{ config_site.pagina_indexador.url }}">{{ config_site.rotulo_indexador|default:"Indexador" }}</a>
-        {% endif %}
-    {% endif %}
+        </div>
+    </div>
+    </div>
 </nav>
+<div class="menu-mobile-overlay" data-menu-mobile-overlay hidden></div>
+<script>
+(function () {
+    var i18n = {
+        openMenu: "Abrir menu",
+        closeMenu: "Fechar menu",
+        openSearch: "Abrir busca",
+        closeSearch: "Fechar busca"
+    };
+    var botao = document.querySelector("[data-menu-mobile-toggle]");
+    var botaoBusca = document.querySelector("[data-menu-mobile-search-toggle]");
+    var botaoFechar = document.querySelector("[data-menu-mobile-close]");
+    var busca = document.getElementById("menu-busca-rapida");
+    var menu = document.getElementById("menu-principal-itens");
+    var overlay = document.querySelector("[data-menu-mobile-overlay]");
+
+    if (!botao || !menu || !overlay || !botaoBusca || !busca) {
+        return;
+    }
+
+    var submenus = Array.prototype.slice.call(menu.querySelectorAll("details"));
+
+    function fecharSubmenus(exceto) {
+        submenus.forEach(function (submenu) {
+            if (submenu === exceto) {
+                return;
+            }
+            submenu.open = false;
+            var resumo = submenu.querySelector("summary");
+            if (resumo) {
+                resumo.setAttribute("aria-expanded", "false");
+            }
+        });
+    }
+
+    submenus.forEach(function (submenu) {
+        var resumo = submenu.querySelector("summary");
+        if (resumo) {
+            resumo.setAttribute("aria-expanded", submenu.open ? "true" : "false");
+        }
+        submenu.addEventListener("toggle", function () {
+            var aberto = submenu.open;
+            if (resumo) {
+                resumo.setAttribute("aria-expanded", aberto ? "true" : "false");
+            }
+            if (aberto) {
+                fecharSubmenus(submenu);
+            }
+        });
+    });
+
+    function fecharMenu() {
+        document.body.classList.remove("menu-mobile-open");
+        botao.setAttribute("aria-expanded", "false");
+        botao.setAttribute("aria-label", i18n.openMenu);
+        botao.title = i18n.openMenu;
+        overlay.hidden = true;
+    }
+
+    function abrirMenu() {
+        document.body.classList.add("menu-mobile-open");
+        document.body.classList.remove("menu-mobile-search-open");
+        botao.setAttribute("aria-expanded", "true");
+        botao.setAttribute("aria-label", i18n.closeMenu);
+        botao.title = i18n.closeMenu;
+        overlay.hidden = false;
+        botaoBusca.setAttribute("aria-expanded", "false");
+    }
+
+    botao.addEventListener("click", function () {
+        if (document.body.classList.contains("menu-mobile-open")) {
+            fecharMenu();
+        } else {
+            abrirMenu();
+        }
+    });
+
+    if (botaoFechar) {
+        botaoFechar.addEventListener("click", fecharMenu);
+    }
+
+    overlay.addEventListener("click", function () {
+        fecharSubmenus();
+        fecharMenu();
+    });
+    document.addEventListener("click", function (evento) {
+        if (!evento.target.closest("#menu-principal-itens details")) {
+            fecharSubmenus();
+        }
+    });
+    document.addEventListener("keydown", function (evento) {
+        if (evento.key === "Escape") {
+            fecharSubmenus();
+            fecharMenu();
+        }
+    });
+
+    menu.querySelectorAll("a").forEach(function (link) {
+        link.addEventListener("click", function () {
+            fecharSubmenus();
+            fecharMenu();
+        });
+    });
+
+    function fecharBusca() {
+        document.body.classList.remove("menu-mobile-search-open");
+        botaoBusca.setAttribute("aria-expanded", "false");
+        botaoBusca.setAttribute("aria-label", i18n.openSearch);
+        botaoBusca.title = i18n.openSearch;
+    }
+
+    function abrirBusca() {
+        document.body.classList.add("menu-mobile-search-open");
+        document.body.classList.remove("menu-mobile-open");
+        overlay.hidden = true;
+        botao.setAttribute("aria-expanded", "false");
+        botaoBusca.setAttribute("aria-expanded", "true");
+        botaoBusca.setAttribute("aria-label", i18n.closeSearch);
+        botaoBusca.title = i18n.closeSearch;
+        var inputBusca = busca.querySelector("input[type='search']");
+        if (inputBusca) {
+            setTimeout(function () { inputBusca.focus(); }, 50);
+        }
+    }
+
+    botaoBusca.addEventListener("click", function () {
+        if (document.body.classList.contains("menu-mobile-search-open")) {
+            fecharBusca();
+        } else {
+            abrirBusca();
+        }
+    });
+
+    window.addEventListener("resize", function () {
+        if (window.innerWidth > 760 && document.body.classList.contains("menu-mobile-open")) {
+            fecharMenu();
+        }
+        if (window.innerWidth > 760 && document.body.classList.contains("menu-mobile-search-open")) {
+            fecharBusca();
+        }
+    });
+})();
+</script>
+{% endwith %}
+{% include "includes/cookie_consent.html" %}

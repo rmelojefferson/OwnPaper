@@ -1,0 +1,571 @@
+.op-publication-shell .controle-fonte,
+.op-publication-shell .publicacao-idioma-botao,
+.op-publication-shell .acao-publicacao,
+.op-publication-shell .link-icone,
+.op-publication-shell .quiz-acoes .quiz-btn,
+.op-publication-shell .quiz-ajuda .quiz-btn,
+.op-publication-shell .comentario-reply-botao,
+.op-publication-shell .comentario-reply-cancel-botao,
+.quiz-estudo-artigo .acao-publicacao,
+.quiz-estudo-artigo .quiz-btn {
+    min-width: var(--publicacao-acao-tamanho, 42px);
+    min-height: var(--publicacao-acao-tamanho, 42px);
+    padding: 0 0.82rem;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 10px;
+    background: var(--op-btn-bg, #fff);
+    color: var(--op-btn-text, #111827);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    text-decoration: none;
+    font: 700 0.9rem var(--op-font-ui);
+    line-height: 1;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.op-publication-shell .controle-fonte,
+.controles-leitura-flutuante .controle-fonte,
+.op-publication-shell .acoes-publicacao .acao-publicacao,
+.op-publication-shell .acoes-publicacao .acao-pdf {
+    width: var(--publicacao-acao-tamanho, 42px);
+    min-width: var(--publicacao-acao-tamanho, 42px);
+    padding: 0;
+}
+
+.op-publication-shell .acoes-publicacao {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0;
+}
+
+.op-publication-shell .publicacao-barra-acoes {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+    margin-bottom: 1.25rem;
+}
+
+.op-publication-shell .controles-leitura {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-wrap: wrap;
+}
+
+.op-publication-shell .controles-leitura-botoes,
+.op-publication-shell .publicacao-idiomas-manual {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+}
+
+.op-publication-shell .publicacao-idiomas-manual {
+    justify-content: flex-start;
+}
+
+.op-publication-shell .controle-fonte:hover:not(:disabled),
+.controles-leitura-flutuante .controle-fonte:hover:not(:disabled),
+.op-publication-shell .publicacao-idioma-botao:hover,
+.op-publication-shell .publicacao-idioma-botao:focus-visible,
+.op-publication-shell .publicacao-idioma-botao.ativo,
+.op-publication-shell .acao-publicacao:hover,
+.op-publication-shell .acao-publicacao:focus-visible,
+.op-publication-shell .link-icone:hover,
+.op-publication-shell .link-icone:focus-visible,
+.op-publication-shell .quiz-acoes .quiz-btn:hover,
+.op-publication-shell .quiz-acoes .quiz-btn:focus-visible,
+.op-publication-shell .quiz-ajuda .quiz-btn:hover,
+.op-publication-shell .quiz-ajuda .quiz-btn:focus-visible,
+.op-publication-shell .comentario-reply-botao:hover,
+.op-publication-shell .comentario-reply-cancel-botao:hover,
+.quiz-estudo-artigo .acao-publicacao:hover,
+.quiz-estudo-artigo .acao-publicacao:focus-visible,
+.quiz-estudo-artigo .quiz-btn:hover,
+.quiz-estudo-artigo .quiz-btn:focus-visible {
+    background: var(--op-btn-hover-bg, #111827);
+    color: var(--op-btn-hover-text, #fff);
+    border-color: var(--op-btn-hover-bg, #111827);
+}
+
+.op-publication-shell .controle-fonte:disabled,
+.controles-leitura-flutuante .controle-fonte:disabled,
+.op-publication-shell .quiz-acoes .quiz-btn:disabled,
+.quiz-estudo-artigo .quiz-btn:disabled {
+    opacity: 0.68;
+    cursor: not-allowed;
+    background: var(--op-btn-disabled-bg, #ddd);
+    color: var(--op-btn-disabled-text, #666);
+}
+
+.controles-leitura-flutuante {
+    position: fixed;
+    top: 12px;
+    left: 20px;
+    z-index: 35;
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.45rem;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(10px);
+    transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.controles-leitura-flutuante.visivel {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.controles-leitura-flutuante .controles-leitura-botoes {
+    display: inline-flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.controles-leitura-flutuante .controle-fonte {
+    min-width: var(--publicacao-acao-tamanho, 42px);
+    width: var(--publicacao-acao-tamanho, 42px);
+    min-height: var(--publicacao-acao-tamanho, 42px);
+    padding: 0;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 10px;
+    background: var(--op-btn-bg, #fff);
+    color: var(--op-btn-text, #111827);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font: 700 0.9rem var(--op-font-ui);
+    line-height: 1;
+    box-sizing: border-box;
+    box-shadow: none;
+}
+
+.op-publication-shell .acao-publicacao svg,
+.op-publication-shell .link-icone svg,
+.op-publication-shell .autor-redes-inline a svg,
+.op-publication-shell .credito-rede-link svg {
+    width: 18px !important;
+    height: 18px !important;
+    max-width: 18px;
+    max-height: 18px;
+    display: block;
+    fill: currentColor;
+    flex: 0 0 auto;
+}
+
+.op-publication-shell .acao-mastodon svg,
+.op-publication-shell .acao-bluesky svg {
+    width: 20px !important;
+    height: 20px !important;
+    max-width: 20px;
+    max-height: 20px;
+}
+
+.op-publication-shell .avaliacao-publicacao {
+    display: grid;
+    justify-items: center;
+    gap: 0.65rem;
+    text-align: center;
+}
+
+.op-publication-shell .avaliacao-publicacao h2 {
+    margin-bottom: 0;
+    text-align: center;
+}
+
+.op-publication-shell .avaliacao-publicacao-resumo,
+.op-publication-shell .avaliacao-publicacao-form,
+.op-publication-shell .avaliacao-publicacao-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem 0.6rem;
+}
+
+.op-publication-shell .avaliacao-publicacao-resumo {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.2rem;
+}
+
+.op-publication-shell .avaliacao-publicacao-meta-separador {
+    display: none;
+}
+
+.op-publication-shell .avaliacao-publicacao-form {
+    display: grid;
+    justify-items: center;
+    gap: 0.6rem;
+}
+
+.op-publication-shell .avaliacao-estrelas {
+    display: inline-flex;
+    gap: 0.2rem;
+}
+
+.op-publication-shell .avaliacao-estrela {
+    position: relative;
+    width: 34px;
+    height: 34px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+}
+
+.op-publication-shell .avaliacao-estrela-base,
+.op-publication-shell .avaliacao-estrela-preenchida {
+    position: absolute;
+    inset: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.7rem;
+}
+
+.op-publication-shell .avaliacao-estrela-base {
+    color: color-mix(in srgb, var(--op-text, #111827) 20%, transparent);
+}
+
+.op-publication-shell .avaliacao-estrela-preenchida {
+    color: var(--op-btn-hover-bg, #111827);
+    clip-path: inset(0 100% 0 0);
+}
+
+.op-publication-shell .avaliacao-publicacao-enviar {
+    width: auto;
+    min-width: 104px;
+    padding: 0 1rem;
+}
+
+.op-publication-shell .avaliacao-publicacao-acoes {
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.45rem;
+}
+
+.op-publication-shell .quiz-publicacao {
+    display: grid;
+    gap: 0.55rem;
+}
+
+.op-publication-shell .quiz-publicacao-perguntas {
+    display: grid;
+}
+
+.op-publication-shell .quiz-publicacao-intro,
+.quiz-estudo-artigo .quiz-publicacao-intro {
+    margin: -0.08rem 0 0.15rem;
+    color: var(--op-muted, #475569);
+    font-size: 1rem;
+}
+
+.op-publication-shell .quiz-pergunta {
+    display: block;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 14px;
+    padding: 1rem 1.05rem;
+    background: var(--op-bg, #fff);
+}
+
+.op-publication-shell .quiz-pergunta[hidden] {
+    display: none !important;
+}
+
+.op-publication-shell .quiz-status-anterior,
+.quiz-estudo-artigo .quiz-status-anterior {
+    margin: 0 0 0.45rem;
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+.op-publication-shell .quiz-status-anterior.is-correct,
+.quiz-estudo-artigo .quiz-status-anterior.is-correct {
+    color: #166534;
+}
+
+.op-publication-shell .quiz-status-anterior.is-wrong,
+.quiz-estudo-artigo .quiz-status-anterior.is-wrong {
+    color: #b91c1c;
+}
+
+.op-publication-shell .quiz-pergunta h3,
+.quiz-estudo-artigo .quiz-pergunta h3 {
+    margin: 0 0 0.55rem;
+    font: 700 1rem var(--op-font-ui);
+    text-align: left;
+}
+
+.op-publication-shell .quiz-pergunta-texto,
+.quiz-estudo-artigo .quiz-pergunta-texto {
+    margin: 0 0 0.85rem;
+    font-weight: 700;
+    font-size: 1rem;
+    text-align: left;
+}
+
+.op-publication-shell .quiz-opcoes,
+.quiz-estudo-artigo .quiz-opcoes {
+    display: grid;
+    gap: 0.6rem;
+}
+
+.op-publication-shell .quiz-opcao {
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    padding: 0.18rem 0;
+    border: 0;
+    background: transparent;
+    color: var(--op-text, #111827);
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0.55rem;
+    white-space: normal;
+    text-align: left;
+    box-sizing: border-box;
+    font: 700 0.98rem var(--op-font-ui);
+    line-height: 1.35;
+    cursor: pointer;
+}
+
+.op-publication-shell .quiz-opcao::before {
+    content: "";
+    width: 14px;
+    height: 14px;
+    border: 1.5px solid currentColor;
+    border-radius: 999px;
+    flex: 0 0 14px;
+}
+
+.op-publication-shell .quiz-opcao.is-selected::before {
+    background: currentColor;
+    box-shadow: inset 0 0 0 2px var(--op-btn-hover-text, #fff);
+}
+
+.op-publication-shell .quiz-opcao:hover,
+.op-publication-shell .quiz-opcao.is-selected {
+    color: var(--op-btn-hover-bg, var(--op-accent, #1d4ed8));
+}
+
+.op-publication-shell .quiz-acoes,
+.op-publication-shell .quiz-ajuda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+}
+
+.op-publication-shell .quiz-ajuda {
+    margin-top: 0.9rem;
+    align-items: center;
+}
+
+.op-publication-shell .quiz-ajuda-painel {
+    width: 100%;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--op-border, #dbe3ef);
+}
+
+.op-publication-shell .quiz-ajuda-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+}
+
+.op-publication-shell .quiz-btn-ajuda.is-active {
+    background: var(--op-btn-hover-bg, #111827);
+    color: var(--op-btn-hover-text, #fff);
+    border-color: var(--op-btn-hover-bg, #111827);
+}
+
+.op-publication-shell .quiz-feedback,
+.op-publication-shell .quiz-explicacao,
+.op-publication-shell .quiz-resultado,
+.quiz-estudo-artigo .quiz-feedback,
+.quiz-estudo-artigo .quiz-explicacao,
+.quiz-estudo-artigo .quiz-resultado {
+    margin: 0.75rem 0 0;
+    font-size: 1rem;
+}
+
+.op-publication-shell .quiz-ajuda-checkbox {
+    display: inline-flex;
+    align-items: flex-start;
+    gap: 0.55rem;
+    margin: 0.2rem 0 0.65rem;
+}
+
+.op-publication-shell .quiz-ajuda-checkbox input {
+    width: auto !important;
+    min-height: auto !important;
+    margin: 0.22rem 0 0;
+    padding: 0 !important;
+}
+
+.op-publication-shell .quiz-ajuda-form label,
+.op-publication-shell .comentario-form:not(.op-dialog-form) label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+}
+
+.op-publication-shell .quiz-ajuda-form textarea,
+.op-publication-shell .comentario-form:not(.op-dialog-form) input,
+.op-publication-shell .comentario-form:not(.op-dialog-form) textarea {
+    width: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 10px;
+    background: var(--op-bg, #fff);
+    color: var(--op-text, #111827);
+    padding: 0.65rem 0.75rem;
+    font: inherit;
+}
+
+.op-publication-shell .comentarios-lista {
+    display: grid;
+    gap: 1rem;
+    margin-top: 1.25rem;
+}
+
+.op-publication-shell .comentario-form:not(.op-dialog-form),
+.op-publication-shell .comentario-form-publico:not(.op-dialog-form) {
+    display: grid;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding: 1.05rem 1.1rem;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 18px;
+    background: var(--op-surface, #fff) !important;
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.06);
+}
+
+.op-publication-shell .comentario-acoes,
+.op-publication-shell .comentario-reply-contexto,
+.op-publication-shell .comentario-item header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.5rem 0.7rem;
+}
+
+.op-publication-shell .comentario-link-sair,
+.op-publication-shell .comentario-cadastro-link {
+    border: 0;
+    background: transparent;
+    color: var(--op-link, #1d4ed8);
+    text-decoration: underline;
+    cursor: pointer;
+    padding: 0;
+    font: 600 0.94rem var(--op-font-ui);
+}
+
+.op-publication-shell .comentario-form:not(.op-dialog-form) .comentario-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 0.75rem;
+}
+
+.op-publication-shell .comentario-aviso-newsletter,
+.op-publication-shell .comentario-username-status,
+.op-publication-shell .comentario-selo-verificado,
+.op-publication-shell .comentario-editado-mod {
+    color: var(--op-muted, #475569);
+}
+
+.op-publication-shell .comentario-username-status {
+    margin: 0.35rem 0 0;
+    font-size: 0.9rem;
+}
+
+.op-publication-shell .comentario-username-status.ok {
+    color: #166534;
+}
+
+.op-publication-shell .comentario-username-status.erro {
+    color: #991b1b;
+}
+
+.op-publication-shell .comentario-item {
+    padding: 0 0 1rem;
+    border: 0;
+    border-bottom: 1px solid var(--op-border, #dbe3ef);
+    background: transparent;
+}
+
+.op-publication-shell .comentario-item p {
+    margin: 0.45rem 0 0;
+}
+
+.op-publication-shell .comentario-item > p {
+    margin-left: 1rem;
+}
+
+.op-publication-shell .comentario-item-acoes {
+    margin-top: 0.4rem;
+}
+
+.op-publication-shell .comentario-resposta-inline {
+    margin-top: 0.85rem;
+}
+
+.op-publication-shell .comentario-respostas {
+    display: grid;
+    gap: 0.6rem;
+    margin-top: 0.8rem;
+    padding-left: 1rem;
+    border-left: 2px solid var(--op-border, #dbe3ef);
+}
+
+.op-publication-shell .comentario-form-publico:not(.op-dialog-form) .comentario-acoes,
+.op-publication-shell .comentario-form:not(.op-dialog-form) .comentario-acoes {
+    margin-top: 0.15rem;
+}
+
+.mensagem-sucesso,
+.mensagem-erro {
+    margin: 0;
+    padding: 0.7rem 0.8rem;
+    border-radius: 10px;
+}
+
+.mensagem-sucesso {
+    border: 1px solid #16a34a;
+    background: #dcfce7;
+    color: #166534;
+}
+
+.mensagem-erro {
+    border: 1px solid #dc2626;
+    background: #fee2e2;
+    color: #7f1d1d;
+}
+
+@media (max-width: 760px) {
+    .op-publication-shell .publicacao-barra-acoes {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+    }
+
+    .op-publication-shell .acoes-publicacao {
+        justify-content: flex-start;
+    }
+
+    .controles-leitura-flutuante {
+        left: 14px;
+    }
+}

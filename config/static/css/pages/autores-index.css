@@ -1,55 +1,173 @@
-body {
-            font-family: "Times New Roman", serif;
-            font-size: 12pt;
-            line-height: 1.6;
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 0 20px;
-            color: #111;
-        }
+.autores-layout {
+    width: 100%;
+    max-width: var(--op-layout-width, 1040px);
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--op-text, #111827);
+    font-family: var(--op-font-ui);
+    font-size: 12pt;
+    line-height: 1.6;
+}
 
-        .lista {
-            display: grid;
-            gap: 2rem;
-            margin-top: 2rem;
-        }
+.autores-topo {
+    margin-bottom: 1rem;
+}
 
-        .card {
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 2rem;
-            display: flex;
-            gap: 20px;
-            align-items: flex-start;
-        }
+.autores-layout .title {
+    color: var(--op-text, #111827);
+    font-family: var(--op-font-ui);
+    letter-spacing: 0;
+    text-rendering: auto;
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+}
 
-        .foto img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 50%;
-            display: block;
-        }
+.autores-lista {
+    display: grid;
+    gap: 1rem;
+}
 
-        .conteudo h2 {
-            margin: 0 0 0.5rem 0;
-        }
+.autor-card {
+    padding: 1rem 1.1rem;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 16px;
+    background: var(--op-surface, #fff);
+    box-shadow: 0 12px 22px rgba(15, 23, 42, 0.07);
+}
 
-        .conteudo h2 a {
-            color: inherit;
-            text-decoration: none;
-        }
+.autor-card-topo {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.9rem;
+    align-items: center;
+}
 
-        .conteudo h2 a:hover {
-            text-decoration: underline;
-        }
+.autor-card-topo > a {
+    text-decoration: none;
+}
 
-        .meta {
-            margin-bottom: 0.5rem;
-            color: #444;
-        }
-	.rodape-site {
-	    margin-top: 3rem;
-	    padding-top: 1.5rem;
-	    border-top: 1px solid #ddd;
-	    color: #444;
-	}
+.autor-card-foto,
+.autor-card-foto-vazia {
+    width: 240px;
+    height: 240px;
+    border-radius: 999px;
+    border: 1px solid var(--op-border, #dbe3ef);
+}
+
+.autor-card-foto {
+    display: block;
+    object-fit: cover;
+}
+
+.autor-card-foto-vazia {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--op-surface, #fff);
+    color: var(--op-text, #111827);
+    font: 700 1.6rem var(--op-font-ui);
+}
+
+.autor-card-info {
+    min-width: 0;
+    color: var(--op-text, #111827);
+}
+
+.autor-card h2 {
+    margin: 0 0 0.35rem;
+    font: 700 1.15rem var(--op-font-ui);
+}
+
+.autor-card h2 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.autor-card a {
+    color: var(--op-link, #1d4ed8);
+}
+
+.autor-card h2 a,
+.autor-publicacoes-link {
+    color: var(--op-text, #111827);
+}
+
+.autor-card h2 a:hover,
+.autor-publicacoes-link:hover {
+    text-decoration: underline;
+}
+
+.autor-dado,
+.autor-publicacoes-link {
+    margin: 0.35rem 0 0;
+}
+
+.autor-publicacoes-link {
+    display: inline-block;
+}
+
+.autor-redes-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin-top: 0.45rem;
+}
+
+.autor-redes-inline a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--op-text, #111827);
+    text-decoration: none;
+}
+
+.autor-redes-inline svg {
+    width: 1.35rem;
+    height: 1.35rem;
+    fill: currentColor;
+    flex: 0 0 auto;
+}
+
+.autor-redes-inline + .autor-publicacoes-link {
+    display: block;
+    margin-top: 0;
+}
+
+.autor-bio {
+    margin-top: 0.75rem;
+    text-align: justify;
+    hyphens: auto;
+}
+
+.autor-bio p {
+    margin: 0.7rem 0 0;
+}
+
+.autor-bio p:first-child {
+    margin-top: 0;
+}
+
+@media (max-width: 620px) {
+    .autores-layout {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .autor-card-topo {
+        grid-template-columns: 1fr;
+    }
+
+    .autor-card-topo > a {
+        justify-self: center;
+    }
+
+    .autor-card-foto,
+    .autor-card-foto-vazia {
+        width: 240px;
+        height: 240px;
+    }
+
+    .autor-card-info {
+        text-align: left;
+    }
+}

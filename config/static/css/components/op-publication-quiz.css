@@ -1,0 +1,147 @@
+.op-publication-shell {
+    margin-top: 0;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+}
+
+.op-publication-shell > h1 {
+    margin-bottom: 1rem;
+}
+
+.op-publication-shell .publicacao-topo-meta {
+    gap: 1rem 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.op-publication-shell .metadados-publicacao {
+    margin-bottom: 1.25rem;
+}
+
+.op-publication-shell .publicacao-barra-acoes {
+    margin-bottom: 1.35rem;
+}
+
+.op-publication-shell .resumo {
+    margin: 0 0 1.15rem;
+}
+
+.op-publication-shell .capa,
+.op-publication-shell .corpo > .midia-player,
+.op-publication-shell .corpo > .imagem-no-corpo {
+    margin-top: 1.1rem;
+    margin-bottom: 1.1rem;
+}
+
+.op-publication-shell .notas-rodape,
+.op-publication-shell .referencias,
+.op-publication-shell .creditos-imagens,
+.op-publication-shell .creditos-videos,
+.op-publication-shell .autores-dados,
+.op-publication-shell .publicacoes-relacionadas,
+.op-publication-shell .avaliacao-publicacao,
+.op-publication-shell .quiz-publicacao,
+.op-publication-shell .comentarios-publicacao {
+    scroll-margin-top: 6rem;
+}
+
+.op-publication-shell .avaliacao-publicacao,
+.op-publication-shell .quiz-publicacao,
+.op-publication-shell .comentarios-publicacao {
+    margin-top: 2rem;
+}
+
+.op-publication-shell .quiz-pergunta,
+.quiz-estudo-artigo .quiz-pergunta {
+    border-radius: 18px;
+    background: var(--op-surface, #fff);
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.06);
+}
+
+.op-publication-shell .comentario-form,
+.op-publication-shell .comentario-form-publico {
+    border-radius: 18px;
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.06);
+}
+
+.op-publication-shell .publicacoes-relacionadas .lista-relacionadas,
+.quiz-estudo-publicacoes-atual .lista-relacionadas,
+.quiz-estudo-revisao-publicacoes .lista-relacionadas {
+    display: grid;
+    gap: 1rem;
+}
+
+.op-publication-shell .publicacoes-relacionadas .home-card-publicacao,
+.quiz-estudo-publicacoes-atual .home-card-publicacao,
+.quiz-estudo-revisao-publicacoes .home-card-publicacao {
+    border-radius: 16px;
+    background: var(--op-surface, #fff);
+}
+
+.quiz-estudo-layout {
+    margin-top: 1.5rem;
+    margin-bottom: 3rem;
+}
+
+.quiz-estudo-artigo {
+    display: grid;
+    gap: 0;
+}
+
+.quiz-estudo-topo {
+    margin-bottom: 1rem;
+}
+
+.quiz-estudo-topo h1 {
+    margin: 0 0 0.75rem;
+}
+
+.quiz-estudo-filtros {
+    margin-bottom: 1rem;
+}
+
+.quiz-estudo-identidade,
+.quiz-estudo-publicacao {
+    margin-bottom: 1.25rem;
+}
+
+.quiz-estudo-identidade {
+    padding: 1.15rem;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 18px;
+    background: var(--op-surface, #fff);
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.06);
+}
+
+.quiz-estudo-publicacao.box {
+    padding: 1.15rem;
+    border-radius: 18px;
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.06);
+}
+
+.quiz-estudo-publicacoes-atual,
+.quiz-estudo-revisao {
+    margin-top: 0;
+    margin-bottom: 1.25rem;
+}
+
+.quiz-estudo-publicacoes-atual h2,
+.quiz-estudo-revisao h2 {
+    margin-bottom: 0.85rem;
+}
+
+@media (max-width: 760px) {
+    .op-publication-shell {
+        margin-top: 1rem;
+        margin-bottom: 2.5rem;
+    }
+
+    .op-publication-shell .publicacao-topo-meta,
+    .op-publication-shell .publicacao-barra-acoes {
+        gap: 0.85rem;
+    }
+
+    .quiz-estudo-layout {
+        margin-top: 1rem;
+        margin-bottom: 2.5rem;
+    }
+}

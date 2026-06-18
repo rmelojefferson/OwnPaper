@@ -1,88 +1,483 @@
-body {
-            font-family: "Times New Roman", serif;
-            font-size: 12pt;
-            line-height: 1.6;
-            max-width: 1000px;
-            margin: 40px auto;
-            padding: 0 20px;
-            color: #111;
-        }
+.busca-layout {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
 
-        .form-busca {
-            margin-bottom: 1.5rem;
-        }
+.busca-topo {
+    margin: 0 0 1.5rem;
+    max-width: 760px;
+    text-align: left;
+}
 
-        .form-busca input[type="text"] {
-            width: 300px;
-            max-width: 100%;
-            padding: 8px;
-        }
+.busca-topo h1 {
+    margin-bottom: 0.45rem;
+}
 
-        .form-busca select {
-            padding: 8px;
-            margin-left: 0.5rem;
-        }
+.busca-intro {
+    margin: 0;
+    color: var(--op-text-muted, #526071);
+}
 
-        .form-busca button {
-            padding: 8px 12px;
-            margin-left: 0.5rem;
-        }
+.form-busca {
+    display: grid;
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
 
-        .acoes-busca {
-            margin-bottom: 2rem;
-        }
+.busca-campo {
+    grid-column: span 3;
+    display: grid;
+    gap: 0.4rem;
+}
 
-        .acoes-busca form {
-            display: inline-block;
-            margin-right: 0.5rem;
-        }
+.busca-campo-filtro {
+    grid-column: span 4;
+}
 
-        .lista {
-            display: grid;
-            gap: 2rem;
-        }
+.form-busca .input,
+.form-busca .select select,
+.form-busca select {
+    min-height: 42px;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 10px;
+    background: var(--op-surface, #fff) !important;
+    color: var(--op-text, #0f172a);
+    box-shadow: none;
+}
 
-        .card {
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 2rem;
-        }
+.busca-datepicker {
+    position: relative;
+}
 
-        .card h2 a {
-            color: inherit;
-            text-decoration: none;
-        }
+.busca-datepicker-input {
+    padding-right: 3.9rem;
+}
 
-        .card h2 a:hover {
-            text-decoration: underline;
-        }
+.busca-datepicker-input::placeholder {
+    color: var(--op-muted, #526071);
+    opacity: 1;
+}
 
-        .meta {
-            margin-bottom: 1rem;
-            color: #555;
-        }
+.busca-datepicker-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0.1rem;
+    transform: translateY(-50%);
+    width: 3.3rem;
+    height: 3.3rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--op-muted, #526071);
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease;
+}
 
-        .capa {
-            margin: 1rem 0;
-        }
+.busca-datepicker-toggle:hover,
+.busca-datepicker-toggle:focus-visible {
+    background: transparent;
+    color: var(--op-accent, #d81b60);
+    outline: none;
+}
 
-        .capa img {
-            width: 180px;
-            height: auto;
-            display: block;
-        }
+.busca-datepicker-toggle svg {
+    width: 1.9rem;
+    height: 1.9rem;
+    fill: currentColor;
+}
 
-        .paginacao {
-            margin-top: 2rem;
-        }
+.busca-datepicker-popover {
+    position: absolute;
+    top: calc(100% + 0.45rem);
+    left: 0;
+    z-index: 30;
+    width: min(100%, 292px);
+    min-width: 280px;
+    padding: 0.9rem;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 16px;
+    background: var(--op-surface, #fff);
+    box-shadow: 0 18px 34px rgba(15, 23, 42, 0.16);
+}
 
-        .paginacao a,
-        .paginacao span {
-            margin-right: 0.75rem;
-        }
+.busca-datepicker.is-open-up .busca-datepicker-popover {
+    top: auto;
+    bottom: calc(100% + 0.45rem);
+}
 
-	.rodape-site {
-	    margin-top: 3rem;
-	    padding-top: 1.5rem;
-	    border-top: 1px solid #ddd;
-	    color: #444;
-	}
+.busca-datepicker.is-open .busca-datepicker-popover {
+    display: block;
+}
+
+.busca-datepicker-toolbar,
+.busca-datepicker-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.busca-datepicker-toolbar {
+    margin-bottom: 0.75rem;
+}
+
+.busca-datepicker-month {
+    flex: 1 1 auto;
+    text-align: center;
+    font-weight: 700;
+    color: var(--op-text, #0f172a);
+}
+
+.busca-datepicker-nav,
+.busca-datepicker-action {
+    min-height: 36px;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 10px;
+    background: var(--op-btn-bg, #fff);
+    color: var(--op-btn-text, #111);
+    font: 700 0.92rem var(--op-font-ui, inherit);
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.busca-datepicker-nav {
+    width: 2.2rem;
+}
+
+.busca-datepicker-action {
+    padding: 0 0.8rem;
+}
+
+.busca-datepicker-nav:hover,
+.busca-datepicker-nav:focus-visible,
+.busca-datepicker-action:hover,
+.busca-datepicker-action:focus-visible {
+    background: var(--op-btn-hover-bg, #111);
+    color: var(--op-btn-hover-text, #fff);
+    border-color: var(--op-btn-hover-bg, #111);
+    outline: none;
+}
+
+.busca-datepicker-weekdays,
+.busca-datepicker-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.25rem;
+}
+
+.busca-datepicker-weekdays {
+    margin-bottom: 0.35rem;
+}
+
+.busca-datepicker-weekdays span {
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--op-muted, #526071);
+    text-transform: uppercase;
+}
+
+.busca-datepicker-day {
+    min-height: 2.25rem;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--op-text, #0f172a);
+    font: 600 0.9rem var(--op-font-ui, inherit);
+    cursor: pointer;
+    transition: background 0.18s ease, color 0.18s ease, border-color 0.18s ease;
+}
+
+.busca-datepicker-day:hover,
+.busca-datepicker-day:focus-visible {
+    background: color-mix(in srgb, var(--op-accent, #1d4ed8) 10%, transparent);
+    border-color: color-mix(in srgb, var(--op-accent, #1d4ed8) 30%, transparent);
+    outline: none;
+}
+
+.busca-datepicker-day.is-selected {
+    background: var(--op-accent, #1d4ed8);
+    color: #fff;
+    border-color: var(--op-accent, #1d4ed8);
+}
+
+.busca-datepicker-day.is-today:not(.is-selected) {
+    border-color: color-mix(in srgb, var(--op-accent, #1d4ed8) 45%, transparent);
+    font-weight: 700;
+}
+
+.busca-datepicker-day.is-outside {
+    color: color-mix(in srgb, var(--op-muted, #526071) 72%, transparent);
+}
+
+.busca-datepicker-day:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.busca-datepicker-actions {
+    margin-top: 0.75rem;
+}
+
+.busca-datepicker-input.is-invalid {
+    border-color: #dc2626 !important;
+    box-shadow: 0 0 0 1px color-mix(in srgb, #dc2626 25%, transparent);
+}
+
+.busca-campo-amplo {
+    grid-column: 1 / -1;
+}
+
+.busca-avancada {
+    grid-column: 1 / -1;
+    margin: 0;
+    padding: 1rem 1.05rem;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 16px;
+    background: var(--op-surface, #fff);
+    box-shadow: 0 12px 22px rgba(15, 23, 42, 0.07);
+}
+
+.busca-avancada summary {
+    cursor: pointer;
+    list-style: none;
+    font-weight: 700;
+    color: var(--op-text, #0f172a);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+.busca-avancada summary::-webkit-details-marker {
+    display: none;
+}
+
+.busca-avancada summary::after {
+    content: "▾";
+    font-size: 0.78rem;
+    opacity: 0.76;
+    flex: 0 0 auto;
+}
+
+.busca-avancada[open] summary {
+    margin-bottom: 0.9rem;
+}
+
+.busca-avancada-ajuda {
+    margin: 0 0 0.9rem;
+    color: var(--op-text-muted, #526071);
+}
+
+.busca-avancada-grid {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.busca-avancada-linha {
+    display: grid;
+    grid-template-columns: minmax(150px, 220px) minmax(0, 1fr);
+    gap: 1rem;
+    align-items: end;
+}
+
+.busca-campo-operador {
+    grid-column: span 1;
+}
+
+.busca-campo-termo-avancado {
+    grid-column: span 1;
+}
+
+.busca-campo-data {
+    grid-column: span 3;
+}
+
+.busca-campo-ordenacao {
+    grid-column: span 4;
+}
+
+.busca-campo label,
+.busca-opcoes label {
+    font-weight: 700;
+    color: var(--op-text, #0f172a);
+}
+
+.busca-campo .label {
+    margin-bottom: 0.35rem;
+}
+
+.busca-opcoes {
+    grid-column: span 7;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: center;
+}
+
+.busca-opcoes label {
+    display: inline-flex;
+    gap: 0.5rem;
+    align-items: center;
+    color: var(--op-text, #0f172a);
+}
+
+.busca-acoes-principais {
+    grid-column: span 2;
+    display: flex;
+    justify-content: flex-start;
+    align-items: end;
+}
+
+.busca-acoes-principais .button,
+.acoes-busca .button {
+    min-height: 42px;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 10px;
+    padding-inline: 1rem;
+    background: var(--op-btn-bg, #fff);
+    color: var(--op-btn-text, #111);
+    box-shadow: none;
+}
+
+.form-busca button,
+.acoes-busca button,
+.paginacao a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 0.9rem;
+    text-decoration: none;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.busca-acoes-principais .button:hover,
+.acoes-busca .button:hover,
+.busca-acoes-principais .button:focus-visible,
+.acoes-busca .button:focus-visible {
+    background: var(--op-btn-hover-bg, #111);
+    color: var(--op-btn-hover-text, #fff);
+    border-color: var(--op-btn-hover-bg, #111);
+}
+
+.acoes-busca {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    margin: 0 0 1.5rem;
+}
+
+.busca-aviso-exato {
+    margin: -0.25rem 0 1.25rem;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: var(--op-text-muted, #526071);
+}
+
+.busca-aviso-csv {
+    margin: -0.85rem 0 1.5rem;
+    font-size: 0.92rem;
+    line-height: 1.5;
+    color: var(--op-text-muted, #526071);
+}
+
+.acoes-busca form {
+    margin: 0;
+    display: flex;
+}
+
+.lista {
+    display: block;
+}
+
+.lista > * {
+    margin: 0;
+}
+
+.busca-secao-resultados {
+    margin-top: 1.75rem;
+}
+
+.busca-secao-resultados h2 {
+    margin: 0 0 0.85rem;
+}
+
+.busca-card {
+    margin-bottom: 1.2rem;
+    padding: 1.15rem;
+}
+
+.lista > :last-child.busca-card,
+.lista > :last-child {
+    margin-bottom: 0;
+}
+
+.card h2,
+.card h3 {
+    margin-top: 0;
+    margin-bottom: 0.55rem;
+}
+
+.card h2 a,
+.card h3 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.card h2 a:hover,
+.card h3 a:hover {
+    text-decoration: underline;
+}
+
+.meta {
+    margin-bottom: 0.8rem;
+    color: var(--op-text-muted, #526071);
+}
+
+.capa {
+    margin: 1rem 0;
+}
+
+.capa img {
+    width: 180px;
+    max-width: 100%;
+    height: auto;
+    display: block;
+    border-radius: 12px;
+}
+
+html[data-theme="escuro"] .form-busca .input::placeholder,
+html[data-theme="escuro"] .busca-datepicker-input::placeholder {
+    color: color-mix(in srgb, var(--op-text, #f8fafc) 68%, transparent);
+    opacity: 1;
+}
+
+@media (max-width: 920px) {
+    .busca-campo,
+    .busca-campo-data,
+    .busca-opcoes,
+    .busca-acoes-principais {
+        grid-column: 1 / -1;
+    }
+
+    .busca-avancada-linha {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+    }
+
+    .busca-acoes-principais {
+        justify-content: flex-start;
+    }
+
+    .busca-datepicker-popover {
+        width: 100%;
+        min-width: 0;
+    }
+}

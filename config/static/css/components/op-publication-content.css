@@ -1,0 +1,580 @@
+.op-publication-shell {
+    font-family: var(--op-font-ui);
+    font-size: 12pt;
+    line-height: 1.65;
+    color: var(--op-text, #111827);
+    width: 100%;
+    max-width: var(--op-layout-width, 1040px);
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 0;
+    padding-right: 0;
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+}
+
+@media (max-width: 760px) {
+    .op-publication-shell {
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+}
+
+.op-publication-shell > h1 {
+    margin: 0 0 1.2rem;
+    font-family: var(--op-font-ui);
+    font-size: clamp(2rem, 2.2vw, 2.35rem);
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-align: left;
+    color: var(--op-text, #111827);
+}
+
+.op-publication-shell .publicacao-topo-meta {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
+    gap: 0.9rem 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.op-publication-shell .autores-publicacao {
+    display: grid;
+    gap: 0.8rem;
+    margin: 0;
+}
+
+.op-publication-shell .autor-linha {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    width: fit-content;
+    color: inherit;
+    text-decoration: none;
+}
+
+.op-publication-shell .autor-linha:hover {
+    text-decoration: underline;
+}
+
+.op-publication-shell .autor-miniatura,
+.op-publication-shell .autor-miniatura-vazia {
+    width: 56px;
+    height: 56px;
+    border-radius: 999px;
+    border: 1px solid var(--op-border, #dbe3ef);
+    flex: 0 0 56px;
+}
+
+.op-publication-shell .autor-miniatura {
+    display: block;
+    object-fit: cover;
+}
+
+.op-publication-shell .autor-miniatura-vazia {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font: 700 1rem var(--op-font-ui);
+    background: color-mix(in srgb, var(--op-surface, #fff) 88%, var(--op-text, #111827) 12%);
+}
+
+.op-publication-shell .publicacao-estatisticas {
+    display: inline-flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.95rem;
+    flex-wrap: wrap;
+}
+
+.op-publication-shell .publicacao-balao-metrica {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.24rem;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: var(--op-text, #111827);
+    text-decoration: none;
+    font: 700 calc(1.02rem * var(--publicacao-fonte-escala, 1)) var(--op-font-ui);
+    letter-spacing: 0;
+    line-height: 1;
+    text-rendering: auto;
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+}
+
+.op-publication-shell .publicacao-balao-metrica > span:last-child {
+    transform: none;
+}
+
+.op-publication-shell .publicacao-balao-metrica:hover {
+    color: var(--op-btn-hover-bg, #111827);
+}
+
+.op-publication-shell .publicacao-balao-icone,
+.op-publication-shell .publicacao-balao-icone svg {
+    width: 34px !important;
+    height: 34px !important;
+    min-width: 34px;
+    min-height: 34px;
+    display: block;
+    fill: currentColor;
+}
+
+.op-publication-shell .metadados-publicacao {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem 1.15rem;
+    margin-bottom: 1rem;
+}
+
+.op-publication-shell .meta {
+    margin: 0;
+    color: var(--op-muted, #475569);
+    font-size: calc(0.96rem * var(--publicacao-fonte-escala, 1));
+}
+
+.op-publication-shell .meta strong {
+    color: var(--op-text, #111827);
+}
+
+.op-publication-shell .resumo,
+.op-publication-shell .corpo,
+.op-publication-shell .corpo p,
+.op-publication-shell .corpo li {
+    font-family: var(--op-font-editorial);
+    text-align: justify;
+    text-justify: inter-word;
+    hyphens: auto;
+    overflow-wrap: break-word;
+}
+
+.op-publication-shell .resumo {
+    font-style: italic;
+    font-size: calc(1rem * var(--publicacao-fonte-escala, 1));
+    margin-bottom: 1.35rem;
+}
+
+.op-publication-shell .resumo > p,
+.op-publication-shell .corpo > p {
+    text-indent: 1.75em;
+}
+
+.op-publication-shell .resumo > p:empty,
+.op-publication-shell .corpo > p:empty {
+    text-indent: 0;
+}
+
+.op-publication-shell .palavras-chave-publicacao {
+    margin: 0 0 1.3rem;
+    font-size: calc(1rem * var(--publicacao-fonte-escala, 1));
+}
+
+.op-publication-shell .capa {
+    width: 100%;
+    max-width: 100%;
+    margin: 0 0 1.4rem;
+}
+
+.op-publication-shell .capa img {
+    display: block;
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    border-radius: 12px;
+}
+
+.op-publication-shell .midia-no-corpo {
+    width: 100%;
+    max-width: 900px;
+    margin: 1.5rem auto;
+}
+
+.op-publication-shell .imagem-no-corpo {
+    display: table;
+    width: auto;
+    max-width: min(100%, 900px);
+    margin: 1.5rem auto;
+}
+
+.op-publication-shell .imagem-no-corpo .imagem-item {
+    width: auto;
+    max-width: 100%;
+    margin: 0;
+}
+
+.op-publication-shell .imagem-pendente-aprovacao {
+    width: min(100vw - 2rem, 900px);
+    min-height: 180px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px dashed var(--cor-borda, rgba(127, 127, 127, 0.45));
+    border-radius: 14px;
+    background: color-mix(in srgb, var(--cor-fundo-card, transparent) 88%, transparent);
+    color: var(--cor-texto-secundario, currentColor);
+    font-weight: 700;
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.op-publication-shell .midia-player {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.op-publication-shell .midia-player > div,
+.op-publication-shell .midia-player iframe,
+.op-publication-shell .midia-player embed,
+.op-publication-shell .midia-player object {
+    display: block;
+    width: 100% !important;
+    max-width: 100%;
+}
+
+.op-publication-shell .midia-player iframe,
+.op-publication-shell .midia-player embed,
+.op-publication-shell .midia-player video,
+.op-publication-shell .midia-player object {
+    aspect-ratio: 16 / 9;
+    min-height: 506px;
+    border: 0;
+}
+
+.op-publication-shell .midia-player video {
+    background: #000;
+    height: auto;
+}
+
+.op-publication-shell .midia-pendente {
+    display: grid;
+    place-items: center;
+    min-height: 180px;
+    padding: 1.5rem;
+    border: 1px dashed var(--op-border, #cbd5e1);
+    border-radius: 0.75rem;
+    background: color-mix(in srgb, var(--op-surface, #fff) 92%, var(--op-text, #111827) 8%);
+    color: var(--op-muted, #475569);
+    font-family: var(--op-font-ui);
+    text-align: center;
+}
+
+.op-publication-shell .midia-titulo,
+.op-publication-shell .midia-legenda,
+.op-publication-shell .imagem-legenda,
+.op-publication-shell .imagem-legenda strong,
+.op-publication-shell .imagem-legenda div {
+    color: var(--op-text, #111827);
+    font-weight: 700;
+}
+
+.op-publication-shell .midia-titulo,
+.op-publication-shell .midia-legenda {
+    margin-top: 0.5rem;
+    width: 100%;
+    max-width: 900px;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: left;
+    font-size: calc(1rem * var(--publicacao-fonte-escala, 1));
+}
+
+.op-publication-shell .imagem-legenda {
+    margin-top: 0.35rem;
+    font-size: calc(1rem * var(--publicacao-fonte-escala, 1));
+    text-align: left;
+}
+
+.op-publication-shell .imagem-no-corpo .imagem-legenda {
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.op-publication-shell .imagem-item img {
+    display: block;
+    width: auto;
+    max-width: min(100%, 900px);
+    height: auto;
+    margin: 0;
+    border-radius: 10px;
+}
+
+.op-publication-shell .corpo,
+.op-publication-shell .notas-rodape,
+.op-publication-shell .referencias,
+.op-publication-shell .creditos-imagens,
+.op-publication-shell .creditos-videos,
+.op-publication-shell .autores-dados,
+.op-publication-shell .publicacoes-relacionadas,
+.op-publication-shell .avaliacao-publicacao,
+.op-publication-shell .quiz-publicacao,
+.op-publication-shell .comentarios-publicacao {
+    font-size: calc(1rem * var(--publicacao-fonte-escala, 1));
+}
+
+.op-publication-shell .publicacoes-relacionadas {
+    --home-card-thumb-width: 150px;
+    --home-card-thumb-ratio: 16 / 9;
+    margin-bottom: 1.25rem;
+}
+
+.op-publication-shell .corpo {
+    margin: 0 0 1.4rem;
+}
+
+.op-publication-shell .notas-rodape,
+.op-publication-shell .referencias,
+.op-publication-shell .creditos-imagens,
+.op-publication-shell .creditos-videos,
+.op-publication-shell .autores-dados,
+.op-publication-shell .publicacoes-relacionadas,
+.op-publication-shell .avaliacao-publicacao,
+.op-publication-shell .quiz-publicacao,
+.op-publication-shell .comentarios-publicacao {
+    margin: 1.8rem 0 0;
+    padding: 0;
+    border: 0 !important;
+    border-radius: 0;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.op-publication-shell .notas-rodape h2,
+.op-publication-shell .referencias h2,
+.op-publication-shell .creditos-imagens h2,
+.op-publication-shell .creditos-videos h2,
+.op-publication-shell .autores-dados h2,
+.op-publication-shell .publicacoes-relacionadas h2,
+.op-publication-shell .avaliacao-publicacao h2,
+.op-publication-shell .quiz-publicacao h2,
+.op-publication-shell .comentarios-publicacao h2 {
+    margin: 0 0 0.85rem;
+    font: 700 1.2rem var(--op-font-ui);
+    text-align: left;
+}
+
+.op-publication-shell .notas-rodape ol,
+.op-publication-shell .referencias ol {
+    margin: 0;
+    padding-inline-start: 1.75rem;
+    font-family: var(--op-font-editorial);
+}
+
+.op-publication-shell .notas-rodape li,
+.op-publication-shell .referencias li {
+    padding-inline-start: 0.35rem;
+    font-family: var(--op-font-editorial);
+}
+
+.op-publication-shell .creditos-videos ul,
+.op-publication-shell .creditos-imagens ul,
+.op-publication-shell .autores-dados-lista {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.op-publication-shell .publicacoes-relacionadas .lista-relacionadas {
+    display: block;
+}
+
+.op-publication-shell .creditos-videos ul,
+.op-publication-shell .creditos-imagens ul {
+    margin: 0 0 0 0.65rem;
+    padding: 0;
+}
+
+.op-publication-shell .credito-rede-link,
+.op-publication-shell .autor-redes-inline a {
+    color: var(--op-text, #111827);
+    text-decoration: none;
+}
+
+.op-publication-shell .credito-rede-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.32rem;
+    white-space: nowrap;
+}
+
+.op-publication-shell .autor-redes-inline {
+    display: inline-flex;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+}
+
+.op-publication-shell .autor-redes-inline a svg {
+    width: 22px !important;
+    height: 22px !important;
+    max-width: 22px;
+    max-height: 22px;
+}
+
+.op-publication-shell .autor-card {
+    border: 0;
+    border-radius: 0;
+    padding: 0;
+    background: transparent;
+}
+
+.op-publication-shell .autor-card-topo {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 0.9rem;
+    align-items: center;
+}
+
+.op-publication-shell .autor-card-foto,
+.op-publication-shell .autor-card-foto-vazia {
+    width: 200px;
+    height: 200px;
+    border-radius: 999px;
+    border: 1px solid var(--op-border, #dbe3ef);
+}
+
+.op-publication-shell .autor-card-foto {
+    display: block;
+    object-fit: cover;
+}
+
+.op-publication-shell .autor-card-foto-vazia {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font: 700 1.6rem var(--op-font-ui);
+}
+
+.op-publication-shell .autor-card-info,
+.op-publication-shell .relacionada-item {
+    min-width: 0;
+}
+
+.op-publication-shell .autor-card h3,
+.op-publication-shell .relacionada-item h3 {
+    margin: 0 0 0.35rem;
+    font: 700 1.05rem var(--op-font-ui);
+}
+
+.op-publication-shell .autor-card h3 a,
+.op-publication-shell .relacionada-item h3 a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.op-publication-shell .autor-card h3 a {
+    font-size: 1.15rem;
+}
+
+.op-publication-shell .autor-card h3 a:hover,
+.op-publication-shell .relacionada-item h3 a:hover {
+    text-decoration: underline;
+}
+
+.op-publication-shell .autor-dado,
+.op-publication-shell .autor-publicacoes-link {
+    margin: 0.35rem 0 0;
+}
+
+.op-publication-shell .autor-publicacoes-link {
+    display: inline-block;
+}
+
+.op-publication-shell .autor-redes-inline + .autor-publicacoes-link {
+    display: block;
+    margin-top: 0;
+}
+
+.op-publication-shell .creditos-imagens li {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    flex-wrap: nowrap;
+    white-space: nowrap;
+}
+
+.op-publication-shell .creditos-imagens li strong,
+.op-publication-shell .creditos-imagens li a,
+.op-publication-shell .creditos-imagens li span {
+    display: inline-flex;
+    align-items: center;
+}
+
+.op-publication-shell .publicacoes-relacionadas .home-card-publicacao {
+    margin-bottom: 1.2rem;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 14px;
+    padding: 1rem;
+    background: var(--op-surface, #f8fafc);
+    box-shadow: 0 12px 22px rgba(15, 23, 42, 0.07);
+}
+
+.op-publication-shell .publicacoes-relacionadas .lista-relacionadas > :last-child.home-card-publicacao,
+.op-publication-shell .publicacoes-relacionadas .lista-relacionadas > :last-child {
+    margin-bottom: 0;
+}
+
+.op-publication-shell .relacionada-capa-link,
+.op-publication-shell .relacionada-capa-link img {
+    display: block;
+    border-radius: 10px;
+}
+
+.op-publication-shell .relacionada-capa-link {
+    width: var(--home-card-thumb-width, 150px);
+    aspect-ratio: var(--home-card-thumb-ratio, 16 / 9);
+    overflow: hidden;
+}
+
+.op-publication-shell .relacionada-capa-link img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+@media (max-width: 860px) {
+    .op-publication-shell .publicacao-topo-meta,
+    .op-publication-shell .publicacao-barra-acoes {
+        grid-template-columns: 1fr;
+    }
+
+    .op-publication-shell .publicacao-estatisticas,
+    .op-publication-shell .acoes-publicacao {
+        justify-content: flex-start;
+    }
+}
+
+@media (max-width: 620px) {
+    .op-publication-shell .publicacao-balao-metrica {
+        flex-wrap: nowrap;
+    }
+
+    .op-publication-shell .midia-player iframe,
+    .op-publication-shell .midia-player embed,
+    .op-publication-shell .midia-player video,
+    .op-publication-shell .midia-player object {
+        min-height: 280px;
+    }
+
+    .op-publication-shell .autor-card-topo {
+        grid-template-columns: 1fr;
+    }
+
+    .op-publication-shell .autor-card-topo > a {
+        justify-self: center;
+    }
+
+    .op-publication-shell .autor-card-foto,
+    .op-publication-shell .autor-card-foto-vazia {
+        width: 200px;
+        height: 200px;
+    }
+
+    .op-publication-shell .autor-card-info {
+        text-align: left;
+    }
+}

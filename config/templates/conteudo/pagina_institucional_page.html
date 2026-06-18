@@ -1,28 +1,37 @@
-{% load static wagtailcore_tags wagtailimages_tags %}
+{% load static wagtailcore_tags wagtailimages_tags conteudo_tags %}
+{% translated page "title" "pt-br" as translated_page_title %}
+{% translated page "seo_title" "pt-br" as translated_page_seo_title %}
+{% translated page "search_description" "pt-br" as translated_page_search_description %}
+{% translated page "resumo" "pt-br" as translated_page_resumo %}
+{% translated page "corpo" "pt-br" as translated_page_corpo %}
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="utf-8">
-    <title>{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}</title>
+    <title>{% if translated_page_seo_title %}{{ translated_page_seo_title }}{% else %}{{ translated_page_title }}{% endif %}</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% if TURNSTILE_ENABLED and config_site.pagina_privacidade and config_site.pagina_privacidade.id == page.id %}
+        <script src="https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit" async defer></script>
+    {% endif %}
 
     {% if config_site.favicon %}
         {% image config_site.favicon fill-32x32 format-webp as favicon_32 %}
         <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
     {% endif %}
 
-    <meta name="description" content="{% if page.search_description %}{{ page.search_description }}{% elif page.resumo %}{{ page.resumo|striptags }}{% elif config_site.descricao_padrao %}{{ config_site.descricao_padrao }}{% else %}{{ page.title }}{% endif %}">
+    <meta name="description" content="{% if translated_page_search_description %}{{ translated_page_search_description }}{% elif translated_page_resumo %}{{ translated_page_resumo|striptags }}{% elif config_site.descricao_padrao %}{{ config_site.descricao_padrao }}{% else %}{{ translated_page_title }}{% endif %}">
 
     <meta property="og:type" content="article">
-    <meta property="og:title" content="{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}">
-    <meta property="og:description" content="{% if page.search_description %}{{ page.search_description }}{% elif page.resumo %}{{ page.resumo|striptags }}{% elif config_site.descricao_padrao %}{{ config_site.descricao_padrao }}{% else %}{{ page.title }}{% endif %}">
+    <meta property="og:title" content="{% if translated_page_seo_title %}{{ translated_page_seo_title }}{% else %}{{ translated_page_title }}{% endif %}">
+    <meta property="og:description" content="{% if translated_page_search_description %}{{ translated_page_search_description }}{% elif translated_page_resumo %}{{ translated_page_resumo|striptags }}{% elif config_site.descricao_padrao %}{{ config_site.descricao_padrao }}{% else %}{{ translated_page_title }}{% endif %}">
     <meta property="og:url" content="{{ request.build_absolute_uri }}">
-    <meta property="og:site_name" content="{% if config_site.nome_site %}{{ config_site.nome_site }}{% else %}{{ page.title }}{% endif %}">
+    <meta property="og:site_name" content="{% if config_site.nome_site %}{{ config_site.nome_site }}{% else %}{{ translated_page_title }}{% endif %}">
 
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}">
-    <meta name="twitter:description" content="{% if page.search_description %}{{ page.search_description }}{% elif page.resumo %}{{ page.resumo|striptags }}{% elif config_site.descricao_padrao %}{{ config_site.descricao_padrao }}{% else %}{{ page.title }}{% endif %}">
+    <meta name="twitter:title" content="{% if translated_page_seo_title %}{{ translated_page_seo_title }}{% else %}{{ translated_page_title }}{% endif %}">
+    <meta name="twitter:description" content="{% if translated_page_search_description %}{{ translated_page_search_description }}{% elif translated_page_resumo %}{{ translated_page_resumo|striptags }}{% elif config_site.descricao_padrao %}{{ config_site.descricao_padrao }}{% else %}{{ translated_page_title }}{% endif %}">
 
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
 
@@ -35,22 +44,59 @@
         <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ og_img.url }}">
         <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ og_img.url }}">
     {% endif %}
-    <link rel="stylesheet" href="{% static 'css/pages/pagina-institucional-page.css' %}">
+    {% include "includes/site_head_assets.html" %}
+    {% if config_site.pagina_privacidade and config_site.pagina_privacidade.id == page.id %}
+    <link rel="stylesheet" href="{% static 'css/publicacao.css' %}?v=20260429-05">
+    {% endif %}
+    <link rel="stylesheet" href="{% static 'css/pages/pagina-institucional-page.css' %}?v=20260528-02">
     {% include "includes/rastreamento_head.html" %}
 
 </head>
-<body>
+<body class="{% if config_site.pagina_privacidade and config_site.pagina_privacidade.id == page.id %}pagina-privacidade{% endif %}{% if config_site.pagina_cookies and config_site.pagina_cookies.id == page.id %}{% if config_site.pagina_privacidade and config_site.pagina_privacidade.id == page.id %} {% endif %}pagina-cookies{% endif %}">
     {% include "includes/rastreamento_body.html" %}
 
-    {% include "includes/menu_principal.html" %}
+    {% include "includes/menu_principal.html" with menu_assets_in_head=True %}
 
-    <article>
-        <h1>{{ page.title }}</h1>
+    <article class="{% if config_site.pagina_privacidade and config_site.pagina_privacidade.id == page.id %}publicacao-artigo {% endif %}pagina-institucional-artigo container is-max-desktop op-page-shell">
+        <header class="op-page-header pagina-institucional-topo">
+            <h1 class="title is-2">{{ translated_page_title }}</h1>
+        </header>
 
-        {% if page.resumo %}
-            <div class="resumo">
-                {{ page.resumo|richtext }}
+        {% if config_site.pagina_privacidade and config_site.pagina_privacidade.id == page.id %}
+            <div class="publicacao-barra-acoes pagina-institucional-barra-acoes privacidade-barra-acoes">
+                <section class="controles-leitura" aria-label="Controles de leitura">
+                    <div class="controles-leitura-botoes">
+                        <button type="button" class="controle-fonte" data-fonte-acao="diminuir" aria-label="Diminuir fonte">A-</button>
+                        <button type="button" class="controle-fonte" data-fonte-acao="padrao" aria-label="Fonte padrão">A</button>
+                        <button type="button" class="controle-fonte" data-fonte-acao="aumentar" aria-label="Aumentar fonte">A+</button>
+                    </div>
+                </section>
             </div>
+            <div class="pagina-institucional-zoom-area privacidade-zoom-area" data-publicacao-artigo>
+        {% endif %}
+
+        {% if translated_page_resumo %}
+            {% if not config_site.pagina_privacidade or config_site.pagina_privacidade.id != page.id %}
+                <div class="resumo{% if config_site.pagina_cookies and config_site.pagina_cookies.id == page.id %} cookies-resumo{% endif %}">
+                    {{ translated_page_resumo|richtext }}
+                </div>
+            {% endif %}
+        {% endif %}
+
+        {% if config_site.pagina_cookies and config_site.pagina_cookies.id == page.id %}
+            <section class="cookies-acoes op-box">
+                <div class="cookies-acoes-texto">
+                    <h2>Preferências de cookies</h2>
+                    <p>Você pode revisar e alterar sua escolha a qualquer momento sem sair desta página.</p>
+                </div>
+                <button
+                    type="button"
+                    class="cookies-gerenciar-btn"
+                    onclick="if (window.__ownpaperAbrirGerenciarCookies) { window.__ownpaperAbrirGerenciarCookies(); } else { document.dispatchEvent(new CustomEvent('op-cookie-open')); }"
+                >
+                    Gerenciar cookies
+                </button>
+            </section>
         {% endif %}
 
         {% if page.imagem_capa %}
@@ -59,13 +105,139 @@
             </div>
         {% endif %}
 
-        {% if page.corpo %}
-            <div class="corpo">
-                {{ page.corpo|richtext }}
+        {% if config_site.pagina_privacidade and config_site.pagina_privacidade.id == page.id %}
+            <div class="corpo privacidade-corpo">
+                {% if translated_page_corpo %}
+                    {{ translated_page_corpo|richtext }}
+                {% else %}
+                    {% include "includes/privacidade_texto_base.html" %}
+                {% endif %}
+            </div>
+        {% elif translated_page_corpo %}
+            <div class="corpo{% if config_site.pagina_cookies and config_site.pagina_cookies.id == page.id %} cookies-corpo op-box op-content{% endif %}">
+                {{ translated_page_corpo|richtext }}
+            </div>
+        {% endif %}
+
+        {% if config_site.pagina_privacidade and config_site.pagina_privacidade.id == page.id and config_site.pagina_newsletter %}
+            {% if request.GET.privacidade or request.GET.privacidade_email_falhou or request.GET.privacidade_confirmacao_exclusao_enviada or request.GET.privacidade_confirmacao_exclusao_email_falhou or request.GET.privacidade_exclusao_confirmada or request.GET.privacidade_exclusao_agendada or request.GET.privacidade_exclusao_agendada_email_falhou or request.GET.privacidade_exclusao_cancelada or request.GET.privacidade_exclusao_ja_executada or request.GET.privacidade_token_invalido or request.GET.privacidade_token_expirado or request.GET.captcha or request.GET.limite %}
+                <div class="privacidade-feedbacks">
+                    {% if request.GET.privacidade %}
+                        <div class="mensagem-sucesso">Sua solicitação foi registrada. Quando aplicável, a exportação foi enviada para o seu e-mail.</div>
+                    {% endif %}
+                    {% if request.GET.privacidade_email_falhou %}
+                        <div class="mensagem-sucesso">Sua solicitação foi registrada, mas não foi possível enviar o e-mail agora.</div>
+                    {% endif %}
+                    {% if request.GET.privacidade_confirmacao_exclusao_enviada %}
+                        <div class="mensagem-sucesso">Enviamos um link para confirmar a exclusão dos seus dados.</div>
+                    {% endif %}
+                    {% if request.GET.privacidade_confirmacao_exclusao_email_falhou %}
+                        <div class="mensagem-sucesso">A solicitação foi registrada, mas não foi possível enviar agora o e-mail de confirmação da exclusão.</div>
+                    {% endif %}
+                    {% if request.GET.privacidade_exclusao_confirmada %}
+                        <div class="mensagem-sucesso">A exclusão dos seus dados foi confirmada e concluída com sucesso.</div>
+                    {% endif %}
+                    {% if request.GET.privacidade_exclusao_agendada %}
+                        <div class="mensagem-sucesso">Sua exclusão foi confirmada e agendada. Enviamos um e-mail com opção para cancelá-la antes da execução.</div>
+                    {% endif %}
+                    {% if request.GET.privacidade_exclusao_agendada_email_falhou %}
+                        <div class="mensagem-sucesso">A exclusão foi agendada, mas não foi possível enviar agora o e-mail com o link de cancelamento.</div>
+                    {% endif %}
+                    {% if request.GET.privacidade_exclusao_cancelada %}
+                        <div class="mensagem-sucesso">Solicitação de exclusão cancelada com sucesso.</div>
+                    {% endif %}
+                    {% if request.GET.privacidade_exclusao_ja_executada %}
+                        <div class="mensagem-sucesso">A solicitação de exclusão já havia sido executada.</div>
+                    {% endif %}
+                    {% if request.GET.privacidade_token_invalido %}
+                        <div class="mensagem-sucesso">O link de privacidade informado é inválido.</div>
+                    {% endif %}
+                    {% if request.GET.privacidade_token_expirado %}
+                        <div class="mensagem-sucesso">O link de privacidade expirou. Faça uma nova solicitação se necessário.</div>
+                    {% endif %}
+                    {% if request.GET.captcha %}
+                        <div class="mensagem-sucesso">Não foi possível validar a verificação anti-bot. Tente novamente.</div>
+                    {% endif %}
+                    {% if request.GET.limite %}
+                        <div class="mensagem-sucesso">Muitas tentativas por agora. Aguarde um pouco e tente novamente.</div>
+                    {% endif %}
+                </div>
+            {% endif %}
+
+            <section class="privacidade-dados-bloco">
+                <h2>Solicitações de privacidade e dados</h2>
+
+                {% if TURNSTILE_ENABLED %}
+                    <div class="turnstile-widget" data-turnstile-privacidade data-sitekey="{{ TURNSTILE_SITE_KEY }}"></div>
+                {% endif %}
+
+                <form class="privacidade-dados-form" method="post" action="/newsletter/{{ config_site.pagina_newsletter.slug }}/solicitar-privacidade/">
+                    {% csrf_token %}
+                    <input type="hidden" name="cf-turnstile-response" data-turnstile-shared-input>
+                    <input type="text" name="website_privacidade" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;pointer-events:none;">
+                    <label for="id_email_privacidade">E-mail</label>
+                    <input type="email" name="email_privacidade" id="id_email_privacidade" required>
+
+                    <label for="id_tipo_privacidade">Solicitação</label>
+                    <select class="select-largo" name="tipo_privacidade" id="id_tipo_privacidade" required>
+                        <option value="">Selecione</option>
+                        <option value="acesso">Quero solicitar acesso aos meus dados</option>
+                        <option value="exclusao">Quero solicitar exclusão dos meus dados</option>
+                    </select>
+
+                    <button type="submit">Enviar solicitação</button>
+                </form>
+            </section>
+        {% endif %}
+        {% if config_site.pagina_privacidade and config_site.pagina_privacidade.id == page.id %}
             </div>
         {% endif %}
     </article>
 
-    {% include "includes/rodape_site.html" %}
+    {% include "includes/rodape_site.html" with rodape_assets_in_head=True %}
+    {% if config_site.pagina_privacidade and config_site.pagina_privacidade.id == page.id %}
+    <script src="{% static 'js/publicacao.js' %}?v=20260429-04"></script>
+    {% endif %}
+    {% if TURNSTILE_ENABLED and config_site.pagina_privacidade and config_site.pagina_privacidade.id == page.id and config_site.pagina_newsletter %}
+    <script>
+    window.ownpaperTurnstilePrivacidadeSuccess = function (token) {
+        document.querySelectorAll("[data-turnstile-shared-input]").forEach(function (input) {
+            input.value = token || "";
+        });
+    };
+    window.ownpaperTurnstilePrivacidadeExpired = function () {
+        document.querySelectorAll("[data-turnstile-shared-input]").forEach(function (input) {
+            input.value = "";
+        });
+    };
+    (function () {
+        var container = document.querySelector("[data-turnstile-privacidade]");
+        if (!container) return;
+        function temaTurnstileAtual() {
+            var tema = document.documentElement.getAttribute("data-theme") || "claro";
+            return tema === "escuro" ? "dark" : "light";
+        }
+        function renderizar() {
+            if (!window.turnstile || !container || container.dataset.widgetId) return;
+            var widgetId = window.turnstile.render(container, {
+                sitekey: container.getAttribute("data-sitekey"),
+                theme: temaTurnstileAtual(),
+                callback: window.ownpaperTurnstilePrivacidadeSuccess,
+                "expired-callback": window.ownpaperTurnstilePrivacidadeExpired,
+            });
+            container.dataset.widgetId = widgetId;
+        }
+        var observer = new MutationObserver(function () {
+            if (!window.turnstile || !container.dataset.widgetId) return;
+            window.turnstile.remove(container.dataset.widgetId);
+            container.dataset.widgetId = "";
+            renderizar();
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+        document.addEventListener("DOMContentLoaded", renderizar);
+        window.addEventListener("load", renderizar);
+    })();
+    </script>
+    {% endif %}
 </body>
 </html>

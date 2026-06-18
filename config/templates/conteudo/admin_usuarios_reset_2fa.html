@@ -1,0 +1,22 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% block titletag %}Reset de 2FA{% endblock %}
+{% block content %}
+<div class="nice-padding op-admin-panel">
+    <header class="op-admin-panel__header">
+        <div>
+            <p class="op-admin-panel__eyebrow">Administração</p>
+            <h1>Reset de 2FA</h1>
+            <p class="op-admin-panel__lead">Remova dispositivos de autenticação em dois fatores e códigos de backup atuais de um usuário do painel.</p>
+        </div>
+    </header>
+    <section class="op-admin-card op-admin-card--narrow">
+    <form method="post" class="op-admin-form-card">
+        {% csrf_token %}
+        <label class="op-admin-field">E-mail do usuário
+        <input id="id_email" name="email" type="email" required>
+        </label>
+        <button type="submit" class="button">Resetar 2FA</button>
+    </form>
+    </section>
+</div>
+{% endblock %}

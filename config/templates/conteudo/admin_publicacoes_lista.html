@@ -1,21 +1,30 @@
-{% extends "wagtailadmin/base.html" %}
+{% extends "conteudo/admin_base_custom.html" %}
 {% load static %}
 
 {% block titletag %}Publicações{% endblock %}
 
 {% block extra_css %}
     {{ block.super }}
-    <link rel="stylesheet" href="{% static 'css/admin-publicacoes-lista.css' %}">
+    <link rel="stylesheet" href="{% static 'css/admin-publicacoes-lista.css' %}?v=20260428-02">
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script src="{% static 'js/pages/busca-datepicker.js' %}?v=20260516-01" defer></script>
 {% endblock %}
 
 {% block content %}
     <div class="nice-padding admin-publicacoes">
-        <div class="admin-publicacoes-topo">
-            <h1>Publicações</h1>
+        <header class="admin-publicacoes-topo">
+            <div>
+                <h1>Publicações</h1>
+            </div>
             {% if tem_pasta_publicacoes %}
-                <a class="button button-small button-primary" href="{{ url_nova_publicacao }}">Nova publicação</a>
+                <div>
+                    <a class="button button-primary" href="{{ url_nova_publicacao }}">Nova publicação</a>
+                </div>
             {% endif %}
-        </div>
+        </header>
 
         {% if not tem_pasta_publicacoes %}
             <p class="admin-publicacoes-alerta">
@@ -23,15 +32,19 @@
             </p>
         {% endif %}
 
-        <div class="admin-publicacoes-resumo">
+        <section class="w-panel">
+            <div class="admin-publicacoes-resumo">
             <span>Total: <strong>{{ total_publicacoes }}</strong></span>
             <span>Publicadas: <strong>{{ total_publicadas }}</strong></span>
             <span>Rascunhos: <strong>{{ total_rascunhos }}</strong></span>
             <span>Com alterações não publicadas: <strong>{{ total_com_alteracoes }}</strong></span>
-        </div>
+            <span>Em revisão: <strong>{{ total_aguardando_aprovacao }}</strong></span>
+            </div>
+        </section>
 
+        <section class="w-panel">
         <form method="get" class="admin-publicacoes-filtros">
-            <label>
+            <label class="admin-publicacoes-filtros__busca">
                 Busca
                 <input type="text" name="q" value="{{ filtro_q }}" placeholder="Título, resumo, autor">
             </label>
@@ -64,38 +77,100 @@
                 Status
                 <select name="status">
                     <option value="">Todos</option>
-                    <option value="publicada" {% if filtro_status == "publicada" %}selected{% endif %}>Publicada</option>
                     <option value="rascunho" {% if filtro_status == "rascunho" %}selected{% endif %}>Rascunho</option>
-                    <option value="com_alteracoes" {% if filtro_status == "com_alteracoes" %}selected{% endif %}>Com alterações não publicadas</option>
+                    <option value="em_revisao" {% if filtro_status == "em_revisao" %}selected{% endif %}>Em revisão</option>
+                    <option value="ajustes_solicitados" {% if filtro_status == "ajustes_solicitados" %}selected{% endif %}>Ajustes solicitados</option>
+                    <option value="agendado" {% if filtro_status == "agendado" %}selected{% endif %}>Agendado</option>
+                    <option value="publicado" {% if filtro_status == "publicado" %}selected{% endif %}>Publicado</option>
+                    <option value="rejeitado" {% if filtro_status == "rejeitado" %}selected{% endif %}>Rejeitado</option>
                 </select>
             </label>
 
             <label>
-                Ano
-                <select name="ano">
-                    <option value="">Todos</option>
-                    {% for data in anos %}
-                        {% with ano_atual=data|date:"Y" %}
-                            <option value="{{ ano_atual }}" {% if filtro_ano == ano_atual %}selected{% endif %}>{{ ano_atual }}</option>
-                        {% endwith %}
-                    {% endfor %}
-                </select>
+                Data de
+                <div class="busca-datepicker" data-busca-datepicker data-date-role="from">
+                    <input
+                        class="busca-datepicker-input"
+                        type="text"
+                        name="data_de"
+                        value="{{ filtro_data_de }}"
+                        placeholder="dd/mm/aaaa"
+                        inputmode="numeric"
+                        autocomplete="off"
+                        title="Data inicial"
+                        data-datepicker-input>
+                    <button type="button" class="busca-datepicker-toggle" data-datepicker-toggle aria-label="Abrir calendário da data inicial" title="Abrir calendário">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h1V3a1 1 0 0 1 1-1Zm12 7H5v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9ZM6 6a1 1 0 0 0-1 1v1h14V7a1 1 0 0 0-1-1H6Zm1.75 4.75h2.5v2.5h-2.5v-2.5Zm4 0h2.5v2.5h-2.5v-2.5Zm4 0h2.5v2.5h-2.5v-2.5Zm-8 4h2.5v2.5h-2.5v-2.5Zm4 0h2.5v2.5h-2.5v-2.5Z"></path></svg>
+                    </button>
+                    <div class="busca-datepicker-popover" data-datepicker-popover hidden>
+                        <div class="busca-datepicker-toolbar">
+                            <button type="button" class="busca-datepicker-nav" data-datepicker-prev aria-label="Mês anterior">‹</button>
+                            <div class="busca-datepicker-month" data-datepicker-month></div>
+                            <button type="button" class="busca-datepicker-nav" data-datepicker-next aria-label="Próximo mês">›</button>
+                        </div>
+                        <div class="busca-datepicker-weekdays" aria-hidden="true">
+                            <span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span><span>Dom</span>
+                        </div>
+                        <div class="busca-datepicker-grid" data-datepicker-grid></div>
+                        <div class="busca-datepicker-actions">
+                            <button type="button" class="busca-datepicker-action" data-datepicker-today>Hoje</button>
+                            <button type="button" class="busca-datepicker-action" data-datepicker-clear>Limpar</button>
+                        </div>
+                    </div>
+                </div>
+            </label>
+
+            <label>
+                Data até
+                <div class="busca-datepicker" data-busca-datepicker data-date-role="to">
+                    <input
+                        class="busca-datepicker-input"
+                        type="text"
+                        name="data_ate"
+                        value="{{ filtro_data_ate }}"
+                        placeholder="dd/mm/aaaa"
+                        inputmode="numeric"
+                        autocomplete="off"
+                        title="Data final"
+                        data-datepicker-input>
+                    <button type="button" class="busca-datepicker-toggle" data-datepicker-toggle aria-label="Abrir calendário da data final" title="Abrir calendário">
+                        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h1V3a1 1 0 0 1 1-1Zm12 7H5v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9ZM6 6a1 1 0 0 0-1 1v1h14V7a1 1 0 0 0-1-1H6Zm1.75 4.75h2.5v2.5h-2.5v-2.5Zm4 0h2.5v2.5h-2.5v-2.5Zm4 0h2.5v2.5h-2.5v-2.5Zm-8 4h2.5v2.5h-2.5v-2.5Zm4 0h2.5v2.5h-2.5v-2.5Z"></path></svg>
+                    </button>
+                    <div class="busca-datepicker-popover" data-datepicker-popover hidden>
+                        <div class="busca-datepicker-toolbar">
+                            <button type="button" class="busca-datepicker-nav" data-datepicker-prev aria-label="Mês anterior">‹</button>
+                            <div class="busca-datepicker-month" data-datepicker-month></div>
+                            <button type="button" class="busca-datepicker-nav" data-datepicker-next aria-label="Próximo mês">›</button>
+                        </div>
+                        <div class="busca-datepicker-weekdays" aria-hidden="true">
+                            <span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span><span>Dom</span>
+                        </div>
+                        <div class="busca-datepicker-grid" data-datepicker-grid></div>
+                        <div class="busca-datepicker-actions">
+                            <button type="button" class="busca-datepicker-action" data-datepicker-today>Hoje</button>
+                            <button type="button" class="busca-datepicker-action" data-datepicker-clear>Limpar</button>
+                        </div>
+                    </div>
+                </div>
             </label>
 
             <div class="admin-publicacoes-acoes">
-                <button type="submit">Filtrar</button>
-                <a href="{% url 'admin_publicacoes_lista' %}">Limpar</a>
+                <button class="button op-admin-filter-button" type="submit" style="height:44px;min-height:44px;padding:0 18px;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;line-height:1;margin:0;">Filtrar</button>
+                <a class="button button-secondary op-admin-filter-button" href="{% url 'admin_publicacoes_lista' %}" style="height:44px;min-height:44px;padding:0 18px;display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;line-height:1;margin:0;">Limpar</a>
             </div>
         </form>
+        </section>
 
+        <section class="w-panel">
         <div class="admin-publicacoes-tabela-wrap">
-            <table class="admin-publicacoes-tabela">
+            <table class="listing admin-publicacoes-tabela">
                 <thead>
                     <tr>
                         <th>Título</th>
                         <th>Autor(es)</th>
                         <th>Categoria</th>
                         <th>Publicação</th>
+                        <th>Atualização</th>
                         <th>Status</th>
                         <th>Ações</th>
                     </tr>
@@ -103,10 +178,20 @@
                 <tbody>
                     {% for publicacao in publicacoes %}
                         <tr>
-                            <td>{{ publicacao.title }}</td>
+                            <td>
+                                {% if publicacao.id in publicacoes_editaveis_ids %}
+                                    <a href="{% url 'wagtailadmin_pages:edit' publicacao.id %}">{{ publicacao.title }}</a>
+                                {% else %}
+                                    <a href="{% url 'admin_publicacao_fluxo_editorial' publicacao.id %}">{{ publicacao.title }}</a>
+                                {% endif %}
+                            </td>
                             <td>
                                 {% for autoria in publicacao.autores_publicacao.all %}
-                                    {{ autoria.autor }}{% if not forloop.last %}, {% endif %}
+                                    {{ autoria.autor }}
+                                    {% if autoria.confirmacao_status != "confirmado" %}
+                                        <span class="status-tag status-tag--{{ autoria.confirmacao_status }}">{{ autoria.get_confirmacao_status_display }}</span>
+                                    {% endif %}
+                                    {% if not forloop.last %}, {% endif %}
                                 {% empty %}
                                     -
                                 {% endfor %}
@@ -120,16 +205,25 @@
                                 {% endif %}
                             </td>
                             <td>
-                                {% if publicacao.live and publicacao.has_unpublished_changes %}
-                                    Publicada (com alterações)
-                                {% elif publicacao.live %}
-                                    Publicada
+                                {% if publicacao.data_atualizacao %}
+                                    {{ publicacao.data_atualizacao|date:"d/m/Y" }}
+                                {% elif publicacao.latest_revision_created_at %}
+                                    {{ publicacao.latest_revision_created_at|date:"d/m/Y" }}
                                 {% else %}
-                                    Rascunho
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {{ publicacao.get_status_editorial_display }}
+                                {% if publicacao.live and publicacao.has_unpublished_changes %}
+                                    <br><small>Com alterações não publicadas</small>
                                 {% endif %}
                             </td>
                             <td class="admin-publicacoes-links">
-                                <a href="{% url 'wagtailadmin_pages:edit' publicacao.id %}">Editar</a>
+                                {% if publicacao.id in publicacoes_editaveis_ids %}
+                                    <a href="{% url 'wagtailadmin_pages:edit' publicacao.id %}">Editar</a>
+                                {% endif %}
+                                <a href="{% url 'admin_publicacao_fluxo_editorial' publicacao.id %}">Fluxo editorial</a>
                                 {% if publicacao.live and publicacao.url %}
                                     <a href="{{ publicacao.url }}" target="_blank" rel="noopener noreferrer">Visualizar</a>
                                 {% endif %}
@@ -137,23 +231,24 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="6">Nenhuma publicação encontrada com os filtros atuais.</td>
+                            <td colspan="7">Nenhuma publicação encontrada com os filtros atuais.</td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
+        </section>
 
         {% if publicacoes.paginator.num_pages > 1 %}
             <nav class="admin-publicacoes-paginacao" aria-label="Paginação">
                 {% if publicacoes.has_previous %}
-                    <a href="?{{ query_string_sem_pagina }}{% if query_string_sem_pagina %}&{% endif %}pagina={{ publicacoes.previous_page_number }}">Anterior</a>
+                    <a class="button button-secondary" href="?{{ query_string_sem_pagina }}{% if query_string_sem_pagina %}&{% endif %}pagina={{ publicacoes.previous_page_number }}">Anterior</a>
                 {% endif %}
 
                 <span>Página {{ publicacoes.number }} de {{ publicacoes.paginator.num_pages }}</span>
 
                 {% if publicacoes.has_next %}
-                    <a href="?{{ query_string_sem_pagina }}{% if query_string_sem_pagina %}&{% endif %}pagina={{ publicacoes.next_page_number }}">Próxima</a>
+                    <a class="button button-secondary" href="?{{ query_string_sem_pagina }}{% if query_string_sem_pagina %}&{% endif %}pagina={{ publicacoes.next_page_number }}">Próxima</a>
                 {% endif %}
             </nav>
         {% endif %}

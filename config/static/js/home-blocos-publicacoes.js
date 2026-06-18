@@ -1,103 +1,92 @@
 (function () {
+    function initHomeCarousel() {
         var carrossel = document.getElementById("home-carrossel");
-        var slides = document.querySelectorAll("#home-carrossel .home-carrossel-slide");
+        if (!carrossel) return;
+        if (carrossel.dataset.jsReady === "1") return;
+        carrossel.dataset.jsReady = "1";
+
+        var slides = Array.prototype.slice.call(
+            carrossel.querySelectorAll(".home-carrossel-slide")
+        );
         var botaoAnterior = document.getElementById("home-carrossel-anterior");
         var botaoProximo = document.getElementById("home-carrossel-proximo");
 
-        if (carrossel && slides.length > 1 && botaoAnterior && botaoProximo) {
-            var indiceAtual = 0;
-            var intervaloAutoplay = null;
-            var tempoSegundos = parseInt(carrossel.getAttribute("data-tempo") || "0", 10);
+        if (!slides.length) return;
 
-            function atualizarCarrossel() {
-                slides.forEach(function (slide, indice) {
-                    if (indice === indiceAtual) {
-                        slide.classList.add("ativo");
-                    } else {
-                        slide.classList.remove("ativo");
-                    }
-                });
-            }
+        var indiceAtual = 0;
+        var autoplayTimer = null;
+        var tempoSegundos = parseInt(carrossel.getAttribute("data-tempo") || "0", 10);
 
-            function iniciarAutoplay() {
-                if (tempoSegundos > 0) {
-                    intervaloAutoplay = setInterval(function () {
-                        indiceAtual = (indiceAtual + 1) % slides.length;
-                        atualizarCarrossel();
-                    }, tempoSegundos * 1000);
-                }
-            }
-
-            function reiniciarAutoplay() {
-                if (intervaloAutoplay) {
-                    clearInterval(intervaloAutoplay);
-                    intervaloAutoplay = null;
-                }
-
-                iniciarAutoplay();
-            }
-
-            botaoAnterior.addEventListener("click", function () {
-                indiceAtual = (indiceAtual - 1 + slides.length) % slides.length;
-                atualizarCarrossel();
-                reiniciarAutoplay();
+        function atualizarCarrossel() {
+            slides.forEach(function (slide, indice) {
+                slide.classList.toggle("ativo", indice === indiceAtual);
             });
+        }
 
-            botaoProximo.addEventListener("click", function () {
-                indiceAtual = (indiceAtual + 1) % slides.length;
-                atualizarCarrossel();
-                reiniciarAutoplay();
-            });
+        function irPara(indice) {
+            indiceAtual = (indice + slides.length) % slides.length;
+            atualizarCarrossel();
+        }
 
+        function proximoSlide() {
+            irPara(indiceAtual + 1);
+        }
+
+        function slideAnterior() {
+            irPara(indiceAtual - 1);
+        }
+
+        function pararAutoplay() {
+            if (!autoplayTimer) return;
+            clearInterval(autoplayTimer);
+            autoplayTimer = null;
+        }
+
+        function iniciarAutoplay() {
+            if (!(tempoSegundos > 0) || slides.length <= 1) return;
+            autoplayTimer = setInterval(function () {
+                proximoSlide();
+            }, tempoSegundos * 1000);
+        }
+
+        function reiniciarAutoplay() {
+            pararAutoplay();
             iniciarAutoplay();
         }
 
-        var listaUltimas = document.getElementById("home-lista-ultimas-publicacoes");
-        var itensUltimas = listaUltimas ? Array.prototype.slice.call(
-            listaUltimas.querySelectorAll("[data-home-ultima-item]")
-        ) : [];
-
-        if (itensUltimas.length) {
-            var quantidadeVisivel = parseInt(listaUltimas.getAttribute("data-quantidade-inicial") || "5", 10);
-            var lote = 5;
-            var observer = null;
-
-            function atualizarObservador() {
-                if (observer) {
-                    observer.disconnect();
-                }
-
-                if (quantidadeVisivel >= itensUltimas.length) {
-                    return;
-                }
-
-                var indiceGatilho = Math.max(0, quantidadeVisivel - 2);
-                var alvo = itensUltimas[indiceGatilho];
-
-                if (!alvo) {
-                    return;
-                }
-
-                observer = new IntersectionObserver(function (entries) {
-                    entries.forEach(function (entry) {
-                        if (entry.isIntersecting) {
-                            var novoLimite = Math.min(quantidadeVisivel + lote, itensUltimas.length);
-
-                            for (var i = quantidadeVisivel; i < novoLimite; i++) {
-                                itensUltimas[i].hidden = false;
-                            }
-
-                            quantidadeVisivel = novoLimite;
-                            atualizarObservador();
-                        }
-                    });
-                }, {
-                    rootMargin: "200px 0px"
-                });
-
-                observer.observe(alvo);
-            }
-
-            atualizarObservador();
+        if (botaoAnterior) {
+            botaoAnterior.addEventListener("click", function (evento) {
+                evento.preventDefault();
+                evento.stopPropagation();
+                slideAnterior();
+                reiniciarAutoplay();
+            });
         }
-    })();
+
+        if (botaoProximo) {
+            botaoProximo.addEventListener("click", function (evento) {
+                evento.preventDefault();
+                evento.stopPropagation();
+                proximoSlide();
+                reiniciarAutoplay();
+            });
+        }
+
+        carrossel.querySelectorAll(".home-carrossel-link").forEach(function (link) {
+            link.setAttribute("draggable", "false");
+        });
+
+        carrossel.addEventListener("dragstart", function (evento) {
+            evento.preventDefault();
+        });
+
+        atualizarCarrossel();
+        iniciarAutoplay();
+    }
+
+    if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initHomeCarousel, { once: true });
+    } else {
+        initHomeCarousel();
+    }
+})();

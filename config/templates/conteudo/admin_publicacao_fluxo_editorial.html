@@ -1,0 +1,423 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% load wagtailcore_tags wagtailimages_tags conteudo_tags %}
+
+{% block titletag %}Fluxo editorial{% endblock %}
+
+{% block content %}
+    <div class="nice-padding admin-shell">
+        <header class="admin-page-header">
+            <div>
+                <h1>Fluxo editorial</h1>
+            </div>
+            <div class="admin-page-actions admin-page-actions--header">
+                <a class="button button-secondary" href="{% url 'admin_publicacoes_lista' %}">Voltar para publicações</a>
+                {% if pode_editar_publicacao %}
+                    <a class="button" href="{% url 'wagtailadmin_pages:edit' publicacao.id %}">Abrir edição</a>
+                {% endif %}
+            </div>
+        </header>
+
+        <div class="admin-page-two-column">
+            <section class="w-panel">
+                <h2>{{ publicacao.title }}</h2>
+                <p><strong>Status editorial:</strong> {{ publicacao.get_status_editorial_display }}</p>
+                <p><strong>Categoria:</strong> {{ publicacao.categoria_principal|default:"-" }}</p>
+                <div class="op-admin-authorship">
+                    <p><strong>Autores:</strong></p>
+                    {% for autoria in publicacao.autores_publicacao.all %}
+                        <div class="op-admin-authorship__item">
+                            <div>
+                                <strong>{{ autoria.autor }}</strong>
+                                <span class="status-tag status-tag--{{ autoria.confirmacao_status }}">{{ autoria.get_confirmacao_status_display }}</span>
+                                {% if autoria.atribuido_por %}
+                                    <div class="op-admin-muted">Atribuída por {{ autoria.atribuido_por.username }} em {{ autoria.atribuido_em|date:"d/m/Y H:i"|default:"-" }}</div>
+                                {% endif %}
+                                {% if autoria.observacao_confirmacao %}
+                                    <div class="op-admin-muted">Observação: {{ autoria.observacao_confirmacao }}</div>
+                                {% endif %}
+                            </div>
+                            {% if autoria.confirmacao_status == "pendente" and autoria.autor.usuario_admin_id == request.user.id %}
+                                <div class="op-admin-authorship__actions">
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="acao" value="confirmar_autoria">
+                                        <input type="hidden" name="autoria_id" value="{{ autoria.id }}">
+                                        <button type="submit" class="button button-small">Confirmar autoria</button>
+                                    </form>
+                                    <form method="post">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="acao" value="rejeitar_autoria">
+                                        <input type="hidden" name="autoria_id" value="{{ autoria.id }}">
+                                        <label class="w-label-3" for="observacao-autoria-{{ autoria.id }}">Motivo opcional</label>
+                                        <input id="observacao-autoria-{{ autoria.id }}" type="text" name="observacao_confirmacao" maxlength="2000">
+                                        <button type="submit" class="button button-secondary button-small">Rejeitar</button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% empty %}
+                        <p>-</p>
+                    {% endfor %}
+                    {% if publicacao.possui_autoria_pendente and is_admin %}
+                        <p class="messages warning">
+                            Há autoria pendente. Se um admin publicar agora, a publicação será exibida temporariamente no usuário que publicou até o autor confirmar.
+                        </p>
+                    {% endif %}
+                </div>
+                <p><strong>Solicitada por:</strong> {{ publicacao.revisao_solicitada_por.username|default:"-" }}</p>
+                <p><strong>Solicitada em:</strong> {{ publicacao.revisao_solicitada_em|date:"d/m/Y H:i"|default:"-" }}</p>
+                <p><strong>Publicada em:</strong> {{ publicacao.publicado_em|date:"d/m/Y H:i"|default:"-" }}</p>
+                <p><strong>Publicado por:</strong> {{ publicacao.publicado_por.username|default:"-" }}</p>
+                <p><strong>Reabertura solicitada:</strong> {% if publicacao.reabertura_solicitada %}Sim{% else %}Não{% endif %}</p>
+                <p><strong>Revisões pendentes:</strong> {{ revisoes_pendentes_count }}</p>
+            </section>
+
+            <section class="admin-page-stack">
+                {% if autor_vinculado and publicacao.status_editorial == "rascunho" or autor_vinculado and publicacao.status_editorial == "ajustes" %}
+                    <form method="post" class="w-panel admin-page-form-stack">
+                        {% csrf_token %}
+                        <input type="hidden" name="acao" value="solicitar_revisao">
+                        <h3>{% if publicacao.status_editorial == "ajustes" %}Reenviar para revisão{% else %}Solicitar revisão{% endif %}</h3>
+                        <p class="op-admin-muted">Envie a publicação para revisão editorial e notifique os admins{% if publicacao.status_editorial == "ajustes" %} e revisores anteriores{% endif %}.</p>
+                        <button type="submit" class="button">{% if publicacao.status_editorial == "ajustes" %}Reenviar para revisão{% else %}Enviar para revisão{% endif %}</button>
+                    </form>
+                {% endif %}
+
+                {% if autor_vinculado and publicacao.status_editorial != "rascunho" and publicacao.status_editorial != "ajustes" and publicacao.status_editorial != "em_revisao" and not publicacao.reabertura_solicitada %}
+                    <form method="post" class="w-panel admin-page-form-stack">
+                        {% csrf_token %}
+                        <input type="hidden" name="acao" value="solicitar_reabertura">
+                        <h3>Solicitar reabertura</h3>
+                        <p class="op-admin-muted">Peça liberação para voltar a editar a publicação.</p>
+                        <button type="submit" class="button">Solicitar reabertura</button>
+                    </form>
+                {% endif %}
+
+                {% if is_admin %}
+                    <form method="post" class="w-panel admin-page-form-stack">
+                        {% csrf_token %}
+                        <input type="hidden" name="acao" value="atribuir_revisor">
+                        <h3>Atribuir revisores</h3>
+                        <p class="op-admin-muted">Cada revisor atribuído registra uma decisão independente.</p>
+                        <select name="revisor_ids" multiple size="6" required>
+                            {% for revisor in revisores_eligiveis %}
+                                <option value="{{ revisor.id }}">{{ revisor.username }}</option>
+                            {% endfor %}
+                        </select>
+                        <button type="submit" class="button">Atribuir selecionados</button>
+                    </form>
+
+                    <form method="post" class="w-panel admin-page-form-stack">
+                        {% csrf_token %}
+                        <input type="hidden" name="acao" value="sortear_revisor">
+                        <h3>Atribuição aleatória</h3>
+                        <p class="op-admin-muted">Escolha automaticamente revisores elegíveis para aproximar o fluxo de revisão por pares.</p>
+                        <label class="admin-page-field">
+                            Quantidade
+                            <input type="number" name="quantidade_revisores" min="1" max="10" value="1">
+                        </label>
+                        <button type="submit" class="button">Sortear revisores</button>
+                    </form>
+                {% endif %}
+
+                {% if publicacao.reabertura_solicitada %}
+                    {% if is_admin or is_reviewer %}
+                    <form method="post" class="w-panel admin-page-form-stack">
+                        {% csrf_token %}
+                        <input type="hidden" name="acao" value="liberar_reabertura">
+                        <h3>Liberar reabertura</h3>
+                        <button type="submit" class="button">Liberar edição</button>
+                    </form>
+                    {% endif %}
+                {% endif %}
+            </section>
+        </div>
+
+        <section class="w-panel op-admin-publicacao-preview">
+            <div class="op-admin-section-header">
+                <div>
+                    <h2>Prévia da publicação</h2>
+                    <p class="op-admin-muted">Leitura em modo seguro para revisão, sem acesso à edição do conteúdo.</p>
+                </div>
+            </div>
+            <article class="op-review-preview">
+                <header class="op-review-preview__header">
+                    <h3>{{ publicacao.title }}</h3>
+                    {% if publicacao.resumo %}
+                        <div class="op-review-preview__summary">{{ publicacao.resumo|richtext|linkar_marcadores }}</div>
+                    {% endif %}
+                    <dl class="op-review-preview__meta">
+                        <div><dt>Publicação</dt><dd>{{ publicacao.data_publicacao|date:"d/m/Y"|default:"-" }}</dd></div>
+                        <div><dt>Atualização</dt><dd>{{ publicacao.data_atualizacao|date:"d/m/Y"|default:"-" }}</dd></div>
+                        <div><dt>Categoria</dt><dd>{{ publicacao.categoria_principal|default:"-" }}</dd></div>
+                        <div>
+                            <dt>Tags</dt>
+                            <dd>
+                                {% for tag in publicacao.tags.all %}
+                                    {{ tag.name }}{% if not forloop.last %}, {% endif %}
+                                {% empty %}
+                                    -
+                                {% endfor %}
+                            </dd>
+                        </div>
+                    </dl>
+                    {% if publicacao.imagem_capa %}
+                        <div class="op-review-preview__cover">
+                            {% image publicacao.imagem_capa fill-900x506 %}
+                        </div>
+                    {% endif %}
+                </header>
+
+                <div class="op-review-preview__body" data-review-preview>
+                    {{ publicacao.corpo|richtext|linkar_marcadores|inserir_videos_no_corpo:publicacao|inserir_imagens_no_corpo:publicacao }}
+                </div>
+
+                {% if publicacao.quiz_habilitado or publicacao.quiz_perguntas_exibicao %}
+                    <section class="op-review-preview__quiz">
+                        <h4>Quiz vinculado</h4>
+                        {% for pergunta in publicacao.quiz_perguntas_exibicao %}
+                            <article>
+                                <strong>#{{ pergunta.id }} · {{ pergunta.pergunta }}</strong>
+                                {% if pergunta.explicacao %}<p>{{ pergunta.explicacao }}</p>{% endif %}
+                            </article>
+                        {% empty %}
+                            <p class="op-admin-muted">Quiz habilitado sem perguntas aprovadas vinculadas.</p>
+                        {% endfor %}
+                    </section>
+                {% endif %}
+            </article>
+        </section>
+
+        {% if is_admin or is_reviewer %}
+            <section class="w-panel">
+                <h2>Comentários de revisão</h2>
+                <p class="op-admin-muted">Selecione um trecho na prévia da publicação e clique em “Comentar seleção” para criar uma marcação ancorada.</p>
+                <div class="op-review-selection-toolbar">
+                    <button type="button" class="button button-secondary" data-review-comment-selection>Comentar seleção</button>
+                    <span class="op-admin-muted" data-review-selection-status>Nenhum trecho selecionado.</span>
+                </div>
+                <form method="post" class="admin-page-form-grid">
+                    {% csrf_token %}
+                    <input type="hidden" name="acao" value="adicionar_comentario_revisao">
+                    <input type="hidden" name="trecho_revisao" data-review-selected-text>
+                    <input type="hidden" name="contexto_antes_revisao" data-review-context-before>
+                    <input type="hidden" name="contexto_depois_revisao" data-review-context-after>
+                    <label class="admin-page-field" style="grid-column:1 / -1;">
+                        Trecho selecionado
+                        <textarea rows="3" readonly data-review-selected-preview placeholder="Selecione um trecho na prévia acima."></textarea>
+                    </label>
+                    <label class="admin-page-field" style="grid-column:1 / -1;">
+                        Comentário para o autor
+                        <textarea name="comentario_revisao" rows="4" required></textarea>
+                    </label>
+                    <label class="admin-page-field" style="grid-column:1 / -1;">
+                        Sugestão de alteração
+                        <textarea name="sugestao_revisao" rows="3" placeholder="Opcional. Informe uma sugestão objetiva para substituir ou ajustar o trecho selecionado."></textarea>
+                    </label>
+                    <div class="admin-page-actions" style="grid-column:1 / -1;">
+                        <button type="submit" class="button">Adicionar comentário</button>
+                    </div>
+                </form>
+            </section>
+        {% endif %}
+
+        <section class="w-panel">
+            <h2>Marcações e comentários</h2>
+            <div class="admin-page-history-list">
+                {% for comentario in comentarios_revisao %}
+                    <article class="admin-page-history-item op-review-comment{% if comentario.resolvido %} is-resolved{% endif %}" data-review-comment data-comment-id="{{ comentario.id }}" data-selected-text="{{ comentario.trecho|escape }}">
+                        <header class="op-review-comment__header">
+                            <strong>{{ comentario.criado_por.username|default:"-" }}</strong>
+                            <span>{{ comentario.criado_em|date:"d/m/Y H:i" }}</span>
+                            {% if comentario.resolvido %}
+                                <span>Resolvido por {{ comentario.resolvido_por.username|default:"-" }} em {{ comentario.resolvido_em|date:"d/m/Y H:i" }}</span>
+                            {% endif %}
+                        </header>
+                        {% if comentario.trecho %}
+                            <p class="op-review-comment__excerpt"><strong>Trecho:</strong> {{ comentario.trecho }}</p>
+                        {% endif %}
+                        {% if comentario.contexto_antes or comentario.contexto_depois %}
+                            <p class="op-review-comment__context">
+                                {% if comentario.contexto_antes %}...{{ comentario.contexto_antes }}{% endif %}
+                                {% if comentario.trecho %}<mark>{{ comentario.trecho }}</mark>{% endif %}
+                                {% if comentario.contexto_depois %}{{ comentario.contexto_depois }}...{% endif %}
+                            </p>
+                        {% endif %}
+                        <p class="op-admin-prewrap">{{ comentario.comentario }}</p>
+                        {% if comentario.sugestao %}
+                            <div class="op-review-comment__suggestion">
+                                <strong>Sugestão:</strong>
+                                <p class="op-admin-prewrap">{{ comentario.sugestao }}</p>
+                            </div>
+                        {% endif %}
+                        {% if not comentario.resolvido %}
+                            <form method="post" class="op-admin-inline-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="acao" value="resolver_comentario_revisao">
+                                <input type="hidden" name="comentario_id" value="{{ comentario.id }}">
+                                <button type="submit" class="button button-secondary">Marcar como resolvido</button>
+                            </form>
+                        {% endif %}
+                    </article>
+                {% empty %}
+                    <p>Nenhum comentário de revisão registrado ainda.</p>
+                {% endfor %}
+            </div>
+        </section>
+
+        {% if is_admin or is_reviewer %}
+            <section class="w-panel">
+                <h2>Registrar decisão de revisão</h2>
+                {% if not revisao_atribuida_ao_usuario %}
+                    <p class="op-admin-alert op-admin-alert--warning">Esta publicação não está atribuída ao seu usuário. A revisão continua liberada com alerta.</p>
+                {% endif %}
+                <form method="post" class="admin-page-form-grid">
+                    {% csrf_token %}
+                    <input type="hidden" name="acao" value="decidir_revisao">
+                    <label class="admin-page-field">
+                        Decisão
+                        <select name="decisao" required>
+                            <option value="">Selecione</option>
+                            <option value="aprovar">Aprovar{% if revisoes_pendentes_count > 1 %} esta revisão{% else %} e publicar{% endif %}</option>
+                            <option value="ajustes">Solicitar ajustes</option>
+                            <option value="rejeitar">Rejeitar</option>
+                        </select>
+                    </label>
+                    <label class="admin-page-field" style="grid-column:1 / -1;">
+                        Observações
+                        <textarea name="observacoes_revisao" rows="5"></textarea>
+                    </label>
+                    <div class="admin-page-actions" style="grid-column:1 / -1;">
+                        <button type="submit" class="button">Salvar decisão</button>
+                    </div>
+                </form>
+            </section>
+        {% endif %}
+
+        <section class="w-panel">
+            <h2>Histórico de revisões</h2>
+            <div class="admin-page-table-wrap">
+                <table class="listing">
+                    <thead>
+                        <tr>
+                            <th>Revisor</th>
+                            <th>Modo</th>
+                            <th>Decisão</th>
+                            <th>Atribuído por</th>
+                            <th>Atribuído em</th>
+                            <th>Concluído em</th>
+                            <th>Observações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for revisao in revisoes %}
+                            <tr>
+                                <td>{{ revisao.revisor.username }}</td>
+                                <td>{{ revisao.get_modo_atribuicao_display }}</td>
+                                <td>{{ revisao.get_decisao_display }}</td>
+                                <td>{{ revisao.atribuido_por.username|default:"-" }}</td>
+                                <td>{{ revisao.criado_em|date:"d/m/Y H:i"|default:"-" }}</td>
+                                <td>{{ revisao.concluido_em|date:"d/m/Y H:i"|default:"-" }}</td>
+                                <td>{{ revisao.observacoes|default:"-" }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="7">Nenhuma revisão registrada ainda.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <script>
+        (function () {
+            var preview = document.querySelector("[data-review-preview]");
+            var button = document.querySelector("[data-review-comment-selection]");
+            var status = document.querySelector("[data-review-selection-status]");
+            var selectedInput = document.querySelector("[data-review-selected-text]");
+            var beforeInput = document.querySelector("[data-review-context-before]");
+            var afterInput = document.querySelector("[data-review-context-after]");
+            var selectedPreview = document.querySelector("[data-review-selected-preview]");
+
+            function escapeRegExp(text) {
+                return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+            }
+
+            function highlightFirst(root, text, commentId) {
+                if (!root || !text) {
+                    return;
+                }
+                var walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, {
+                    acceptNode: function (node) {
+                        if (!node.nodeValue || !node.nodeValue.trim()) {
+                            return NodeFilter.FILTER_REJECT;
+                        }
+                        if (node.parentElement && node.parentElement.closest("mark")) {
+                            return NodeFilter.FILTER_REJECT;
+                        }
+                        return NodeFilter.FILTER_ACCEPT;
+                    }
+                });
+                var node;
+                var pattern = new RegExp(escapeRegExp(text.trim()).replace(/\s+/g, "\\s+"));
+                while ((node = walker.nextNode())) {
+                    var match = node.nodeValue.match(pattern);
+                    if (!match || match.index === undefined) {
+                        continue;
+                    }
+                    var range = document.createRange();
+                    range.setStart(node, match.index);
+                    range.setEnd(node, match.index + match[0].length);
+                    var mark = document.createElement("mark");
+                    mark.className = "op-review-annotation";
+                    mark.dataset.commentId = commentId;
+                    range.surroundContents(mark);
+                    return;
+                }
+            }
+
+            document.querySelectorAll("[data-review-comment][data-selected-text]").forEach(function (item) {
+                var text = item.getAttribute("data-selected-text");
+                if (text) {
+                    highlightFirst(preview, text, item.getAttribute("data-comment-id"));
+                }
+            });
+
+            if (!preview || !button || !selectedInput || !selectedPreview) {
+                return;
+            }
+
+            button.addEventListener("click", function () {
+                var selection = window.getSelection();
+                if (!selection || selection.rangeCount === 0) {
+                    status.textContent = "Selecione um trecho dentro da prévia.";
+                    return;
+                }
+                var range = selection.getRangeAt(0);
+                if (!preview.contains(range.commonAncestorContainer)) {
+                    status.textContent = "A seleção precisa estar dentro da prévia da publicação.";
+                    return;
+                }
+                var selectedText = selection.toString().replace(/\s+/g, " ").trim();
+                if (!selectedText) {
+                    status.textContent = "Selecione um trecho com texto.";
+                    return;
+                }
+                selectedText = selectedText.slice(0, 2000);
+                var allText = (preview.innerText || "").replace(/\s+/g, " ");
+                var index = allText.indexOf(selectedText);
+                selectedInput.value = selectedText;
+                selectedPreview.value = selectedText;
+                if (beforeInput && index >= 0) {
+                    beforeInput.value = allText.slice(Math.max(0, index - 220), index).trim();
+                }
+                if (afterInput && index >= 0) {
+                    afterInput.value = allText.slice(index + selectedText.length, index + selectedText.length + 220).trim();
+                }
+                status.textContent = "Trecho selecionado para comentário.";
+                selectedPreview.focus();
+            });
+        })();
+    </script>
+{% endblock %}

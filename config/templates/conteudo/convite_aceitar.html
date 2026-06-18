@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="{{ site_lang|default:"pt-br" }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Aceitar convite</title>
+    <style>
+        body { font-family: var(--op-font-ui); background: #f6f8fb; margin: 0; padding: 24px; color: #0f172a; }
+        .box { max-width: 560px; margin: 0 auto; background: #fff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 24px; }
+        h1 { margin-top: 0; font-size: 1.6rem; }
+        label { display: block; margin-top: 12px; font-weight: 600; }
+        input { width: 100%; box-sizing: border-box; padding: 10px 12px; margin-top: 6px; border: 1px solid #cbd5e1; border-radius: 8px; }
+        button { margin-top: 16px; background: #0f766e; color: #fff; border: 0; padding: 11px 14px; border-radius: 8px; cursor: pointer; font-weight: 700; }
+        .msg-ok { background: #ecfdf5; border: 1px solid #a7f3d0; color: #065f46; padding: 10px 12px; border-radius: 8px; margin-top: 12px; }
+        .msg-erro { background: #fef2f2; border: 1px solid #fecaca; color: #991b1b; padding: 10px 12px; border-radius: 8px; margin-top: 12px; }
+        ul { margin: 8px 0 0 18px; }
+        .small { color: #475569; font-size: 0.92rem; }
+        .links { margin-top: 14px; }
+        .links a { color: #0f766e; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h1>Aceitar convite</h1>
+
+        <p class="small">
+            Convite para <strong>{{ convite.email }}</strong> com os papéis
+            <strong>{{ convite.resumo_papeis }}</strong>.
+        </p>
+
+        {% if sucesso %}
+            <div class="msg-ok">
+                Conta criada com sucesso. Você já pode acessar o painel.
+            </div>
+            <div class="links">
+                <a href="/account/login/">Ir para o login</a>
+            </div>
+        {% else %}
+            {% if erro_geral %}
+                <div class="msg-erro">{{ erro_geral }}</div>
+            {% endif %}
+
+            {% if erros %}
+                <div class="msg-erro">
+                    Corrija os pontos abaixo:
+                    <ul>
+                        {% for erro in erros %}
+                            <li>{{ erro }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
+
+            {% if not erro_geral %}
+                <form method="post">
+                    {% csrf_token %}
+                    <label for="id_nome">Nome completo</label>
+                    <input id="id_nome" type="text" name="nome" value="{{ nome|default:'' }}" required>
+
+                    <label for="id_username">Nome de usuário</label>
+                    <input id="id_username" type="text" name="username" value="{{ username|default:'' }}" required>
+
+                    <label for="id_password">Senha</label>
+                    <input id="id_password" type="password" name="password" required>
+
+                    <label for="id_password_confirmacao">Confirmar senha</label>
+                    <input id="id_password_confirmacao" type="password" name="password_confirmacao" required>
+
+                    <button type="submit">Criar conta</button>
+                </form>
+            {% endif %}
+        {% endif %}
+    </div>
+</body>
+</html>

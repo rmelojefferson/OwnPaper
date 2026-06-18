@@ -1,0 +1,209 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% load static %}
+
+{% block titletag %}Estatísticas{% endblock %}
+
+{% block content %}
+<div class="nice-padding op-admin-panel op-admin-panel--wide">
+    <header class="op-admin-panel__header">
+        <div>
+            <h1>Estatísticas</h1>
+            <p class="op-admin-panel__lead">Acompanhe indicadores internos simplificados do site, operação e fluxo editorial.</p>
+            <p class="op-admin-panel__meta">
+                Este painel é um resumo operacional. Para análise histórica profunda, use ferramentas dedicadas como Plausible, Umami ou Matomo.
+            </p>
+        </div>
+        <div class="op-admin-panel__actions">
+            <a class="button button-secondary" href="{% url 'wagtailadmin_home' %}">Voltar ao painel</a>
+        </div>
+    </header>
+
+    <section class="w-panel op-admin-card">
+        <h2>Como estas estatísticas funcionam</h2>
+        <p>
+            Estatísticas internas:
+            {% if estatisticas_config.internas_ativas %}<strong>ativas</strong>{% else %}<strong>desativadas</strong>{% endif %}.
+            Elas só são registradas quando o visitante aceita cookies opcionais.
+        </p>
+        <ul class="op-admin-stat-list">
+            <li><span>Retenção dos agregados diários</span><strong>{{ estatisticas_config.retencao_agregados }} dias</strong></li>
+            <li><span>Retenção dos eventos brutos</span><strong>{{ estatisticas_config.retencao_brutos }} dias</strong></li>
+        </ul>
+        <p class="op-admin-muted">
+            Eventos brutos são sinais individuais de permanência, como caminho acessado, início da sessão,
+            último sinal e duração aproximada. Eles usam hash de sessão e não registram nome, e-mail,
+            usuário do painel ou IP nessa estatística.
+        </p>
+        <p class="op-admin-muted">
+            Para analytics profundo, use ferramentas dedicadas como Plausible, Umami, Matomo, Cloudflare Analytics,
+            Google Analytics ou Tag Manager. O OwnPaper evita campo de script livre; as integrações são por campos
+            estruturados para reduzir risco de script malicioso.
+        </p>
+    </section>
+
+    <section class="admin-stats-grid" aria-label="Resumo de estatísticas">
+        <article class="op-admin-metric-card">
+            <span>Leituras acumuladas</span>
+            <strong>{{ metricas.leituras_total }}</strong>
+        </article>
+        <article class="op-admin-metric-card">
+            <span>Publicações cadastradas</span>
+            <strong>{{ metricas.publicacoes_total }}</strong>
+            <small>{{ metricas.publicacoes_publicadas }} publicadas</small>
+        </article>
+        <article class="op-admin-metric-card">
+            <span>Comentários no sistema</span>
+            <strong>{{ metricas.comentarios_total }}</strong>
+            <small>{{ metricas.comentarios_pendentes }} pendentes</small>
+        </article>
+        <article class="op-admin-metric-card">
+            <span>Mensagens no inbox</span>
+            <strong>{{ metricas.mensagens_total }}</strong>
+            <small>{{ metricas.mensagens_pendentes }} pendentes</small>
+        </article>
+        <article class="op-admin-metric-card">
+            <span>Usuários ativos</span>
+            <strong>{{ metricas.usuarios_ativos }}</strong>
+            <small>{{ metricas.usuarios_total }} cadastrados</small>
+        </article>
+        <article class="op-admin-metric-card">
+            <span>Tempo médio no site</span>
+            <strong>{{ metricas.tempo_medio_site }}</strong>
+            <small>{{ metricas.tempo_amostras_total }} amostras disponíveis</small>
+        </article>
+        <article class="op-admin-metric-card">
+            <span>Newsletter ativa</span>
+            <strong>{{ metricas.newsletter_ativos }}</strong>
+        </article>
+        <article class="op-admin-metric-card">
+            <span>E-mails enviados</span>
+            <strong>{{ metricas.emails_enviados_total }}</strong>
+            <small>{{ metricas.emails_falhas_total }} falhas</small>
+        </article>
+        <article class="op-admin-metric-card">
+            <span>Aberturas e cliques</span>
+            <strong>{{ metricas.emails_aberturas_total }}</strong>
+            <small>{{ metricas.emails_cliques_total }} cliques</small>
+        </article>
+    </section>
+
+    <section class="op-admin-two-column">
+        <article class="w-panel op-admin-card">
+            <h2>Publicações mais lidas</h2>
+            <div class="op-admin-table-wrap">
+                <table class="listing op-admin-listing-table op-admin-listing-table--stats">
+                    <thead>
+                        <tr>
+                            <th>Publicação</th>
+                            <th>Leituras</th>
+                            <th>Comentários</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for publicacao in top_publicacoes %}
+                            <tr>
+                                <td><a href="{% url 'wagtailadmin_pages:edit' publicacao.id %}">{{ publicacao.title }}</a></td>
+                                <td>{{ publicacao.total_visualizacoes }}</td>
+                                <td>{{ publicacao.comentarios_total }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr><td colspan="3">Nenhuma publicação encontrada.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
+
+        <article class="w-panel op-admin-card">
+            <h2>Mais comentadas</h2>
+            <div class="op-admin-table-wrap">
+                <table class="listing op-admin-listing-table op-admin-listing-table--stats">
+                    <thead>
+                        <tr>
+                            <th>Publicação</th>
+                            <th>Comentários</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for publicacao in top_comentadas %}
+                            <tr>
+                                <td><a href="{% url 'wagtailadmin_pages:edit' publicacao.id %}">{{ publicacao.title }}</a></td>
+                                <td>{{ publicacao.comentarios_total }}</td>
+                            </tr>
+                        {% empty %}
+                            <tr><td colspan="2">Nenhum comentário encontrado.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </section>
+
+    <section class="w-panel op-admin-card">
+        <h2>Páginas com mais sessões registradas</h2>
+        <div class="op-admin-table-wrap">
+            <table class="listing op-admin-listing-table op-admin-listing-table--stats">
+                <thead>
+                    <tr>
+                        <th>Caminho</th>
+                        <th>Sessões</th>
+                        <th>Tempo total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in top_tempo %}
+                        <tr>
+                            <td><code>{{ item.path }}</code></td>
+                            <td>{{ item.sessoes_total }}</td>
+                            <td>
+                                {% if item.sessoes_total %}
+                                    {{ item.tempo_total|floatformat:0 }}s total
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="3">Nenhuma amostra de permanência registrada.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="op-admin-three-column">
+        <article class="w-panel op-admin-card">
+            <h2>Status editorial</h2>
+            <ul class="op-admin-stat-list">
+                {% for item in publicacoes_status %}
+                    <li><span>{{ item.status }}</span><strong>{{ item.total }}</strong></li>
+                {% empty %}
+                    <li><span>Nenhuma publicação</span><strong>0</strong></li>
+                {% endfor %}
+            </ul>
+        </article>
+
+        <article class="w-panel op-admin-card">
+            <h2>Status dos comentários</h2>
+            <ul class="op-admin-stat-list">
+                {% for item in comentarios_status %}
+                    <li><span>{{ item.status }}</span><strong>{{ item.total }}</strong></li>
+                {% empty %}
+                    <li><span>Nenhum comentário</span><strong>0</strong></li>
+                {% endfor %}
+            </ul>
+        </article>
+
+        <article class="w-panel op-admin-card">
+            <h2>Status das mensagens</h2>
+            <ul class="op-admin-stat-list">
+                {% for item in mensagens_status %}
+                    <li><span>{{ item.status }}</span><strong>{{ item.total }}</strong></li>
+                {% empty %}
+                    <li><span>Nenhuma mensagem</span><strong>0</strong></li>
+                {% endfor %}
+            </ul>
+        </article>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,104 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% block titletag %}Notificações de publicações{% endblock %}
+{% block content %}
+<div class="nice-padding op-admin-panel">
+    <header class="op-admin-panel__header">
+        <div>
+            <p class="op-admin-panel__eyebrow">Operação</p>
+            <h1>Notificações de publicações</h1>
+            <p class="op-admin-panel__lead">Configure o modo de envio, execute o consolidado manualmente e acompanhe o histórico das notificações editoriais.</p>
+            <p class="op-admin-panel__meta">Inscritos ativos na newsletter: <strong>{{ total_newsletter_ativa }}</strong></p>
+        </div>
+    </header>
+
+    <section class="op-admin-card">
+        <h2>Como funciona</h2>
+        <p>
+            Esta área controla os avisos enviados aos inscritos ativos da newsletter quando novas publicações entram no ar.
+            Ela não substitui o disparo em massa: é um fluxo específico para comunicar publicações novas.
+        </p>
+        <ul class="op-admin-code-list">
+            <li><strong>Desativada:</strong> nenhuma notificação automática de publicação é enviada.</li>
+            <li><strong>Imediata:</strong> quando uma publicação é publicada, o sistema tenta enviar um e-mail para a newsletter.</li>
+            <li><strong>Consolidada por período:</strong> o sistema reúne publicações novas desde o último envio e manda um resumo na frequência escolhida.</li>
+            <li><strong>Enviar consolidado agora:</strong> força manualmente o envio do resumo, se houver publicações novas no período.</li>
+        </ul>
+        <p class="op-admin-panel__meta">
+            Todos os envios gerados por este fluxo aparecem no histórico abaixo e também no histórico geral de disparos.
+        </p>
+    </section>
+
+    <section class="op-admin-card">
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="acao" value="salvar_config">
+            <div class="op-admin-section-header">
+                <h2>Configuração</h2>
+                <button class="button" type="submit">Salvar configuração</button>
+            </div>
+            <div class="op-admin-form-grid">
+                <div class="op-admin-field">
+                    <label for="id_modo">Modo</label>
+                    <select id="id_modo" name="modo">
+                        {% for valor, rotulo in modo_choices %}
+                            <option value="{{ valor }}" {% if config_site.notificacao_publicacoes_modo == valor %}selected{% endif %}>{{ rotulo }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="op-admin-field">
+                    <label for="id_periodo_dias">Frequência do consolidado</label>
+                    <select id="id_periodo_dias" name="periodo_dias">
+                        {% for valor, rotulo in periodo_dias_choices %}
+                            <option value="{{ valor }}" {% if periodo_dias_atual == valor %}selected{% endif %}>{{ rotulo }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+            <p class="op-admin-panel__meta">Último envio: {{ config_site.notificacao_publicacoes_ultimo_envio_em|date:"d/m/Y H:i:s"|default:"-" }}</p>
+        </form>
+    </section>
+
+    <section class="op-admin-card">
+        <h2>Disparo manual do consolidado</h2>
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="acao" value="enviar_periodico_agora">
+            <button type="submit" class="button">Enviar consolidado agora</button>
+        </form>
+    </section>
+
+    <section class="op-admin-card">
+        <h2>Histórico de notificações</h2>
+        <div class="op-admin-table-wrap">
+            <table class="listing op-admin-listing-table op-admin-listing-table--email-publications">
+                <thead>
+                    <tr>
+                        <th>Quando</th>
+                        <th>Tipo</th>
+                        <th>Status</th>
+                        <th>Assunto</th>
+                        <th>Destinatários</th>
+                        <th>Enviados</th>
+                        <th>Falhas</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in historico %}
+                        <tr>
+                            <td>{{ item.criado_em|date:"d/m/Y H:i" }}</td>
+                            <td>{{ item.get_tipo_display }}</td>
+                            <td>{{ item.get_status_display }}</td>
+                            <td>{{ item.assunto }}</td>
+                            <td>{{ item.total_destinatarios }}</td>
+                            <td>{{ item.total_enviados }}</td>
+                            <td>{{ item.total_falhas }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="7">Sem histórico.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}

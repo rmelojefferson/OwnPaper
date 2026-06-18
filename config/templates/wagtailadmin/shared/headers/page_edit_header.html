@@ -1,0 +1,22 @@
+{% extends 'wagtailadmin/shared/headers/slim_header.html' %}
+{% load wagtailadmin_tags i18n admin_explorer_tags %}
+
+{% block breadcrumbs %}
+    {% ownpaper_page_breadcrumbs page as ownpaper_breadcrumbs %}
+    {% breadcrumbs ownpaper_breadcrumbs %}
+{% endblock %}
+
+{% block actions %}
+    {% ownpaper_is_publicacao page as is_publicacao_page %}
+    {% if is_publicacao_page %}
+        <a href="{% url 'admin_publicacoes_lista' %}" class="w-header-button button button-secondary">Voltar para Publicações</a>
+    {% endif %}
+    {% for button in buttons %}
+        {% component button %}
+    {% endfor %}
+{% endblock %}
+
+{% block toggles %}
+    {{ block.super }}
+    {% include "wagtailadmin/shared/page_status_tag_new.html" with page=page_for_status %}
+{% endblock %}

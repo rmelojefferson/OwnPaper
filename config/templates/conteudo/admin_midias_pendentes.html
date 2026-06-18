@@ -1,0 +1,285 @@
+{% extends "conteudo/admin_base_custom.html" %}
+
+{% block titletag %}Mídias pendentes{% endblock %}
+
+{% block content %}
+<div class="nice-padding op-admin-panel op-admin-panel--wide op-admin-media-pending">
+    <header class="op-admin-panel__header">
+        <div>
+            <p class="op-admin-panel__eyebrow">Editorial</p>
+            <h1>Mídias pendentes</h1>
+            <p class="op-admin-panel__lead">
+                Envie imagens, PDFs ou vídeos para quarentena. O arquivo é sanitizado antes de ficar pendente e só entra na biblioteca pública depois da aprovação.
+            </p>
+        </div>
+    </header>
+
+    <section class="op-admin-card">
+        <h2>Enviar mídia</h2>
+        <form method="post" enctype="multipart/form-data" class="op-admin-form-grid op-admin-form-grid--media">
+            {% csrf_token %}
+            <input type="hidden" name="acao" value="upload">
+            <div class="op-admin-field">
+                <label for="{{ form.titulo.id_for_label }}">Título</label>
+                {{ form.titulo }}
+                {{ form.titulo.errors }}
+            </div>
+            <div class="op-admin-field">
+                <label for="{{ form.tipo.id_for_label }}">Tipo</label>
+                {{ form.tipo }}
+                {{ form.tipo.errors }}
+            </div>
+            <div class="op-admin-field op-admin-field--file">
+                <label for="{{ form.arquivo.id_for_label }}">Arquivo</label>
+                <div class="op-admin-file-control">
+                    {{ form.arquivo }}
+                    {{ form.arquivo.errors }}
+                </div>
+                <p class="help op-admin-file-help">
+                    Formatos aceitos: JPG, PNG, WebP, PDF, MP4 e WebM.
+                    SVG não é aceito. Limite: {{ max_upload_mb }} MB para imagem/PDF e {{ max_video_upload_mb }} MB para vídeo.
+                </p>
+            </div>
+            <div class="op-admin-form-actions op-admin-form-actions--media">
+                <button type="submit" class="button op-admin-filter-button">Enviar para aprovação</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="op-admin-card">
+        <h2>Filtros</h2>
+        <form method="get" class="op-admin-form-grid op-admin-form-grid--media-filter">
+            <div class="op-admin-field op-admin-field--wide">
+                <label for="id_q">Busca</label>
+                <input id="id_q" type="search" name="q" value="{{ filtro_q }}" placeholder="Título, arquivo ou usuário">
+            </div>
+            <div class="op-admin-field">
+                <label for="id_tipo">Tipo</label>
+                <select id="id_tipo" name="tipo">
+                    <option value="">Todos</option>
+                    {% for valor, rotulo in tipo_choices %}
+                        <option value="{{ valor }}" {% if filtro_tipo == valor %}selected{% endif %}>{{ rotulo }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="op-admin-field">
+                <label for="id_status">Status</label>
+                <select id="id_status" name="status">
+                    <option value="">Todos</option>
+                    {% for valor, rotulo in status_choices %}
+                        <option value="{{ valor }}" {% if filtro_status == valor %}selected{% endif %}>{{ rotulo }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="op-admin-form-actions op-admin-form-actions--media-filter">
+                <button type="submit" class="button op-admin-filter-button">Filtrar</button>
+                <a href="{% url 'admin_midias_pendentes' %}" class="button button-secondary op-admin-filter-button">Limpar</a>
+            </div>
+        </form>
+    </section>
+
+    <section class="op-admin-card">
+        <h2>Fila</h2>
+        <div class="op-admin-media-list">
+            <table class="listing op-admin-listing-table op-admin-media-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Preview</th>
+                        <th>Mídia</th>
+                        <th>Tipo</th>
+                        <th>Status</th>
+                        <th>Envio</th>
+                        <th>Revisão</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for midia in midias %}
+                        <tr>
+                            <td>#{{ midia.id }}</td>
+                            <td class="op-admin-media-preview-cell">
+                                {% if not midia.arquivo_disponivel %}
+                                    <span class="op-admin-media-preview op-admin-media-preview--missing">
+                                        Arquivo indisponível
+                                    </span>
+                                {% elif midia.tipo == "imagem" %}
+                                    <button
+                                        type="button"
+                                        class="op-admin-media-preview"
+                                        data-media-preview-url="{% url 'admin_midia_pendente_preview' midia.id %}"
+                                        data-media-preview-type="imagem"
+                                        data-media-preview-title="{{ midia.titulo }}"
+                                    >
+                                        <img src="{% url 'admin_midia_pendente_preview' midia.id %}" alt="Preview de {{ midia.titulo }}">
+                                    </button>
+                                {% elif midia.tipo == "documento" %}
+                                    <button
+                                        type="button"
+                                        class="op-admin-media-preview op-admin-media-preview--document"
+                                        data-media-preview-url="{% url 'admin_midia_pendente_preview' midia.id %}"
+                                        data-media-preview-type="documento"
+                                        data-media-preview-title="{{ midia.titulo }}"
+                                    >
+                                        PDF
+                                    </button>
+                                {% elif midia.tipo == "video" %}
+                                    <button
+                                        type="button"
+                                        class="op-admin-media-preview op-admin-media-preview--video"
+                                        data-media-preview-url="{% url 'admin_midia_pendente_preview' midia.id %}"
+                                        data-media-preview-type="video"
+                                        data-media-preview-title="{{ midia.titulo }}"
+                                    >
+                                        Vídeo
+                                    </button>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                <strong>{{ midia.titulo }}</strong>
+                                <div class="help">{{ midia.nome_original|default:"-" }}</div>
+                                <div class="help">{{ midia.content_type }} · {{ midia.tamanho_bytes }} bytes</div>
+                                {% if midia.observacao %}
+                                    <div class="help">Observação: {{ midia.observacao }}</div>
+                                {% endif %}
+                            </td>
+                            <td>{{ midia.get_tipo_display }}</td>
+                            <td>{{ midia.get_status_display }}</td>
+                            <td>
+                                {{ midia.criado_em|date:"d/m/Y H:i" }}<br>
+                                {{ midia.criado_por.username|default:"-" }}
+                            </td>
+                            <td>
+                                {% if midia.revisado_em %}
+                                    {{ midia.revisado_em|date:"d/m/Y H:i" }}<br>
+                                    {{ midia.revisado_por.username|default:"-" }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if midia.status == "pendente" and pode_aprovar %}
+                                    <div class="op-admin-media-actions">
+                                        <form method="post" action="{% url 'admin_midia_pendente_acao' midia.id 'aprovar' %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="button op-admin-filter-button">Aprovar</button>
+                                        </form>
+                                        <form method="post" action="{% url 'admin_midia_pendente_acao' midia.id 'rejeitar' %}">
+                                            {% csrf_token %}
+                                            <button type="submit" class="button button-secondary op-admin-filter-button">Rejeitar</button>
+                                        </form>
+                                    </div>
+                                {% elif midia.imagem_aprovada %}
+                                    <a class="button button-secondary" href="{% url 'wagtailimages:edit' midia.imagem_aprovada.id %}">Abrir imagem</a>
+                                {% elif midia.documento_aprovado %}
+                                    <a class="button button-secondary" href="{% url 'wagtaildocs:edit' midia.documento_aprovado.id %}">Abrir documento</a>
+                                {% elif midia.video_aprovado %}
+                                    <a class="button button-secondary" href="{{ midia.video_aprovado.url }}" target="_blank" rel="noopener noreferrer">Abrir vídeo</a>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="8">Nenhuma mídia encontrada.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% if pagina.has_other_pages %}
+            <p class="op-admin-panel__meta">
+                Página {{ pagina.number }} de {{ pagina.paginator.num_pages }}
+                {% if pagina.has_previous %}<a href="?p={{ pagina.previous_page_number }}">Anterior</a>{% endif %}
+                {% if pagina.has_next %}<a href="?p={{ pagina.next_page_number }}">Próxima</a>{% endif %}
+            </p>
+        {% endif %}
+    </section>
+</div>
+
+<div class="op-admin-media-modal" data-media-preview-modal hidden>
+    <div class="op-admin-media-modal__backdrop" data-media-preview-close></div>
+    <section class="op-admin-media-modal__dialog" role="dialog" aria-modal="true" aria-labelledby="op-admin-media-modal-title">
+        <header class="op-admin-media-modal__header">
+            <h2 id="op-admin-media-modal-title" data-media-preview-title>Preview da mídia</h2>
+            <button type="button" class="button button-secondary" data-media-preview-close>Fechar</button>
+        </header>
+        <div class="op-admin-media-modal__body" data-media-preview-body></div>
+        <footer class="op-admin-media-modal__footer">
+            <a class="button button-secondary" href="#" target="_blank" rel="noopener noreferrer" data-media-preview-open>Abrir em nova aba</a>
+        </footer>
+    </section>
+</div>
+
+<script>
+    (function () {
+        var modal = document.querySelector("[data-media-preview-modal]");
+        if (!modal) {
+            return;
+        }
+        var title = modal.querySelector("[data-media-preview-title]");
+        var body = modal.querySelector("[data-media-preview-body]");
+        var openLink = modal.querySelector("[data-media-preview-open]");
+
+        function closeModal() {
+            modal.hidden = true;
+            body.innerHTML = "";
+            openLink.href = "#";
+        }
+
+        function openModal(trigger) {
+            var url = trigger.getAttribute("data-media-preview-url");
+            var type = trigger.getAttribute("data-media-preview-type");
+            var mediaTitle = trigger.getAttribute("data-media-preview-title") || "Preview da mídia";
+            title.textContent = mediaTitle;
+            openLink.href = url;
+            body.innerHTML = "";
+
+            if (type === "imagem") {
+                var img = document.createElement("img");
+                img.src = url;
+                img.alt = mediaTitle;
+                body.appendChild(img);
+            } else if (type === "video") {
+                var video = document.createElement("video");
+                video.controls = true;
+                video.preload = "metadata";
+                var source = document.createElement("source");
+                source.src = url;
+                video.appendChild(source);
+                body.appendChild(video);
+            } else {
+                var frame = document.createElement("iframe");
+                frame.src = url;
+                frame.title = mediaTitle;
+                frame.setAttribute("loading", "lazy");
+                body.appendChild(frame);
+            }
+            modal.hidden = false;
+        }
+
+        document.addEventListener("click", function (event) {
+            var trigger = event.target.closest("[data-media-preview-url]");
+            if (trigger) {
+                event.preventDefault();
+                openModal(trigger);
+                return;
+            }
+            if (event.target.closest("[data-media-preview-close]")) {
+                event.preventDefault();
+                closeModal();
+            }
+        });
+
+        document.addEventListener("keydown", function (event) {
+            if (event.key === "Escape" && !modal.hidden) {
+                closeModal();
+            }
+        });
+    }());
+</script>
+{% endblock %}

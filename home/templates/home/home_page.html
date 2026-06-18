@@ -1,7 +1,7 @@
 {% load static wagtailcore_tags wagtailimages_tags %}
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="{{ site_lang|default:"pt-br" }}">
 <head>
     <meta charset="utf-8">
     <title>
@@ -39,22 +39,20 @@
         <meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ og_img.url }}">
         <meta name="twitter:image" content="{{ request.scheme }}://{{ request.get_host }}{{ og_img.url }}">
     {% endif %}
-    <link rel="stylesheet" href="{% static 'css/pages/home-page.css' %}">
-    <link rel="stylesheet" href="{% static 'css/home-blocos-publicacoes.css' %}">
-    <script src="{% static 'js/home-blocos-publicacoes.js' %}" defer></script>
+    {% include "includes/site_head_assets.html" %}
+    <link rel="stylesheet" href="{% static 'css/pages/home-page.css' %}?v=20260423-03">
+    <link rel="stylesheet" href="{% static 'css/home-blocos-publicacoes.css' %}?v=20260423-01">
+    <script src="{% static 'js/home-blocos-publicacoes.js' %}?v=20260422-01" defer></script>
     {% include "includes/rastreamento_head.html" %}
 
 </head>
-<body>
+<body>{% spaceless %}
     {% include "includes/rastreamento_body.html" %}
-
-    {% include "includes/menu_principal.html" %}
-
+    {% include "includes/menu_principal.html" with menu_assets_in_head=True %}
     <h1 class="home-visualmente-oculto">{{ page.title }}</h1>
-
-    {% include "includes/home_blocos_publicacoes.html" %}
-    {% include "includes/botao_topo.html" %}
-    {% include "includes/rodape_site.html" %}
-
-</body>
+    <main class="home-layout container is-max-desktop op-page-shell">
+        {% include "includes/home_blocos_publicacoes.html" %}
+    </main>
+    {% include "includes/rodape_site.html" with rodape_assets_in_head=True %}
+{% endspaceless %}</body>
 </html>

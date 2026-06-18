@@ -1,0 +1,72 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ provider_label }} - OwnPaper</title>
+    {% include "includes/site_head_assets.html" %}
+    <style>
+        body{font:16px/1.5 var(--op-font-ui);margin:0;padding:24px;background:var(--op-bg,#f8fafc);color:var(--op-text,#0f172a)}
+        .card{max-width:520px;margin:0 auto;padding:24px;border:1px solid var(--op-border,#dbe3ef);border-radius:16px;background:var(--op-surface,#fff);box-shadow:0 16px 32px rgba(15,23,42,.08)}
+        h1{margin:0 0 12px;font-size:1.35rem}
+        p{margin:0 0 16px}
+        .erro{color:#991b1b;background:color-mix(in srgb, var(--op-surface,#fff) 72%, #fecaca 28%);border:1px solid #fecaca;border-radius:10px;padding:12px}
+        .ok{color:#166534;background:color-mix(in srgb, var(--op-surface,#fff) 72%, #86efac 28%);border:1px solid #86efac;border-radius:10px;padding:12px}
+        .acoes{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px}
+        .botao{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 14px;border:1px solid var(--op-border,#cbd5e1);border-radius:10px;background:var(--op-btn-bg,#fff);color:var(--op-btn-text,#0f172a);text-decoration:none;font-weight:700;cursor:pointer}
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>{{ provider_label }}</h1>
+        {% if status == "ok" %}
+            <p class="ok">
+                Autenticação concluída com sucesso. Esta janela será fechada automaticamente.
+            </p>
+        {% else %}
+            <p class="erro">{{ mensagem }}</p>
+            <div class="acoes">
+                {% if page %}
+                    <a class="botao" href="{{ page.url }}">
+                        Voltar para o quiz
+                    </a>
+                {% endif %}
+                <button class="botao" type="button" onclick="window.close()">
+                    Fechar
+                </button>
+            </div>
+        {% endif %}
+    </div>
+    {% if status == "ok" and page %}
+        <script>
+        (function () {
+            var payload = {
+                type: "ownpaper-quiz-oauth-success",
+                redirectUrl: "{{ page.url }}?quiz_auth=login_ok"
+            };
+            try {
+                if (window.opener && !window.opener.closed) {
+                    try { window.opener.postMessage(payload, window.location.origin); } catch (err) {}
+                    try {
+                        window.opener.localStorage.setItem("ownpaper-quiz-oauth-success", JSON.stringify({
+                            redirectUrl: payload.redirectUrl,
+                            at: Date.now()
+                        }));
+                    } catch (err) {}
+                    try { window.opener.location.replace(payload.redirectUrl); } catch (err) {}
+                    try { window.opener.focus(); } catch (err) {}
+                }
+            } catch (err) {}
+            try {
+                window.localStorage.setItem("ownpaper-quiz-oauth-success", JSON.stringify({
+                    redirectUrl: payload.redirectUrl,
+                    at: Date.now()
+                }));
+            } catch (err) {}
+            window.setTimeout(function () { window.close(); }, 500);
+        })();
+        </script>
+    {% endif %}
+</body>
+</html>

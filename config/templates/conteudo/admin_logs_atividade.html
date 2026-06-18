@@ -1,0 +1,110 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% block titletag %}Logs de atividade{% endblock %}
+{% block content %}
+<div class="nice-padding op-admin-panel op-admin-panel--wide">
+    <header class="op-admin-panel__header">
+        <div>
+            <p class="op-admin-panel__eyebrow">Administração</p>
+            <h1>Logs de atividade</h1>
+            <p class="op-admin-panel__lead">Filtre ações administrativas, exporte registros e acompanhe a trilha de auditoria do painel.</p>
+        </div>
+    </header>
+
+    <section class="op-admin-card">
+        <h2>Integridade da auditoria</h2>
+        {% if integridade_logs.ok %}
+            <p class="op-admin-muted">
+                Cadeia criptográfica íntegra. {{ integridade_logs.total }} registro(s) verificado(s).
+            </p>
+            {% if integridade_logs.ultimo_hash %}
+                <p><strong>Último hash:</strong> <code>{{ integridade_logs.ultimo_hash }}</code></p>
+            {% endif %}
+        {% else %}
+            <p class="op-admin-error">
+                Integridade comprometida: {{ integridade_logs.erro }}
+                {% if integridade_logs.log_id %} Registro #{{ integridade_logs.log_id }}.{% endif %}
+            </p>
+            {% if integridade_logs.esperado %}
+                <p class="op-admin-muted">Esperado: {{ integridade_logs.esperado }}. Encontrado: {{ integridade_logs.encontrado }}.</p>
+            {% endif %}
+        {% endif %}
+        <p class="op-admin-muted">
+            Os logs são encadeados por hash e bloqueados contra edição/remoção pela aplicação. Em PostgreSQL,
+            também há trigger no banco bloqueando UPDATE e DELETE na tabela de auditoria.
+        </p>
+    </section>
+
+    <section class="op-admin-card">
+    <form method="get" class="op-admin-form-grid op-admin-form-grid--logs">
+        <div class="op-admin-field">
+            <label for="id_q">Busca</label>
+            <input id="id_q" type="text" name="q" value="{{ filtro_q }}" placeholder="detalhes, alvo, e-mail...">
+        </div>
+        <div class="op-admin-field">
+            <label for="id_acao">Ação</label>
+            <select id="id_acao" name="acao">
+                <option value="">Todas</option>
+                {% for acao in acoes_disponiveis %}
+                    <option value="{{ acao }}" {% if filtro_acao == acao %}selected{% endif %}>{{ acao }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="op-admin-field">
+            <label for="id_usuario">ID do usuário</label>
+            <input id="id_usuario" type="text" name="usuario" value="{{ filtro_usuario }}" placeholder="ex.: 12">
+        </div>
+        <div class="op-admin-form-actions">
+            <button type="submit" class="button">Filtrar</button>
+            <a class="button button-secondary" href="?{{ request.GET.urlencode }}{% if request.GET %}&{% endif %}export=csv">Exportar CSV</a>
+        </div>
+    </form>
+    </section>
+
+    <section class="op-admin-card">
+    <div class="op-admin-table-wrap">
+        <table class="listing op-admin-listing-table op-admin-listing-table--logs">
+            <thead>
+                <tr>
+                    <th>Quando</th>
+                    <th>Seq.</th>
+                    <th>Ação</th>
+                    <th>Usuário</th>
+                    <th>ID</th>
+                    <th>Alvo</th>
+                    <th>IP</th>
+                    <th>Detalhes</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in logs %}
+                    <tr>
+                        <td>{{ item.criado_em|date:"d/m/Y H:i:s" }}</td>
+                        <td>{{ item.sequencia|default:"-" }}</td>
+                        <td><code>{{ item.acao }}</code></td>
+                        <td>{{ item.usuario_username|default:"-" }}<br><small>{{ item.usuario_email|default:"-" }}</small></td>
+                        <td>{{ item.usuario_id_ref|default:"-" }}</td>
+                        <td><small>{{ item.alvo_tipo|default:"-" }}</small><br>{{ item.alvo_repr|default:"-" }} {% if item.alvo_id %}(#{{ item.alvo_id }}){% endif %}</td>
+                        <td>{{ item.ip|default:"-" }}</td>
+                        <td>{{ item.detalhes|default:"-" }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="8">Nenhum log encontrado.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    </section>
+
+    {% if logs.has_other_pages %}
+        <div class="op-admin-pagination">
+            {% if logs.has_previous %}
+                <a class="button button-secondary" href="?{% if query_string_sem_pagina %}{{ query_string_sem_pagina }}&{% endif %}pagina={{ logs.previous_page_number }}">Anterior</a>
+            {% endif %}
+            <span>Página {{ logs.number }} de {{ logs.paginator.num_pages }}</span>
+            {% if logs.has_next %}
+                <a class="button button-secondary" href="?{% if query_string_sem_pagina %}{{ query_string_sem_pagina }}&{% endif %}pagina={{ logs.next_page_number }}">Próxima</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

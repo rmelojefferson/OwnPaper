@@ -1,11 +1,15 @@
-{% load static wagtailcore_tags wagtailimages_tags %}
+{% load static wagtailcore_tags wagtailimages_tags conteudo_tags %}
+{% translated page "title" "pt-br" as translated_page_title %}
+{% translated page "seo_title" "pt-br" as translated_page_seo_title %}
+{% translated page "search_description" "pt-br" as translated_page_search_description %}
+{% translated page "introducao" "pt-br" as translated_page_introducao %}
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="utf-8">
-    <title>{% if page.seo_title %}{{ page.seo_title }}{% else %}{{ page.title }}{% endif %}</title>
-    <meta name="description" content="{% if page.search_description %}{{ page.search_description }}{% else %}{{ page.title }}{% endif %}">
+    <title>{% if translated_page_seo_title %}{{ translated_page_seo_title }}{% else %}{{ translated_page_title }}{% endif %}</title>
+    <meta name="description" content="{% if translated_page_search_description %}{{ translated_page_search_description }}{% else %}{{ translated_page_title }}{% endif %}">
     <link rel="canonical" href="{{ request.build_absolute_uri }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
@@ -13,44 +17,107 @@
         {% image config_site.favicon fill-32x32 format-webp as favicon_32 %}
         <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
     {% endif %}
-    <link rel="stylesheet" href="{% static 'css/pages/publicacoes-index-page.css' %}">
+    {% include "includes/site_head_assets.html" %}
+    <link rel="stylesheet" href="{% static 'css/pages/publicacoes-index-page.css' %}?v=20260428-02">
+    <link rel="stylesheet" href="{% static 'css/home-blocos-publicacoes.css' %}?v=20260428-02">
     {% include "includes/rastreamento_head.html" %}
 
 </head>
 <body>
     {% include "includes/rastreamento_body.html" %}
 
-    {% include "includes/menu_principal.html" %}
+    {% include "includes/menu_principal.html" with menu_assets_in_head=True %}
 
-    <main>
-        <h1>{{ page.title }}</h1>
+    <main class="publicacoes-index-layout container is-max-desktop op-page-shell">
+        <header class="op-page-header">
+            <h1 class="title is-2">{{ translated_page_title }}</h1>
+        </header>
 
-        {% if page.introducao %}
-            <div class="introducao">
-                {{ page.introducao|richtext }}
+        {% if translated_page_introducao %}
+            <div class="introducao content op-content">
+                {{ translated_page_introducao|richtext }}
             </div>
         {% endif %}
 
-        <div class="lista-publicacoes">
+        <div class="home-lista-publicacoes lista-publicacoes">
             {% for publicacao in publicacoes %}
-                <article class="publicacao-item">
-                    <h2><a href="{% pageurl publicacao %}">{{ publicacao.title }}</a></h2>
+                <article class="home-card-publicacao publicacao-item">
+                    <div class="home-card-topo{% if not publicacao.imagem_capa %} sem-miniatura{% endif %}">
+                        {% if publicacao.imagem_capa %}
+                            <a class="home-card-miniatura" href="{{ publicacao.url }}" aria-label="{{ publicacao.title }}">
+                                {% image publicacao.imagem_capa fill-360x204 %}
+                            </a>
+                        {% endif %}
 
-                    {% if publicacao.data_publicacao %}
-                        <div class="meta">{{ publicacao.data_publicacao|date:"d/m/Y" }}</div>
-                    {% endif %}
+                        <div class="home-card-conteudo">
+                            <div class="home-card-titulo-linha">
+                                <h3>
+                                    <a href="{% pageurl publicacao %}">{{ publicacao.title }}</a>
+                                </h3>
+                                {% if publicacao.total_visualizacoes > 0 %}
+                                    <span class="home-card-views-inline" title="Visualizações">
+                                        <span class="home-card-views-inline-icone" aria-hidden="true">
+                                            <svg viewBox="0 0 24 24"><path d="M12 5c5.23 0 9.27 3.37 10.84 6.34a1.24 1.24 0 0 1 0 1.32C21.27 15.63 17.23 19 12 19S2.73 15.63 1.16 12.66a1.24 1.24 0 0 1 0-1.32C2.73 8.37 6.77 5 12 5Zm0 2C7.78 7 4.42 9.63 3.2 12 4.42 14.37 7.78 17 12 17s7.58-2.63 8.8-5C19.58 9.63 16.22 7 12 7Zm0 1.8A3.2 3.2 0 1 1 8.8 12 3.2 3.2 0 0 1 12 8.8Zm0 2A1.2 1.2 0 1 0 13.2 12 1.2 1.2 0 0 0 12 10.8Z"></path></svg>
+                                        </span>
+                                        <span>{{ publicacao.total_visualizacoes }}</span>
+                                    </span>
+                                {% endif %}
+                            </div>
 
+                            <div class="home-meta-publicacao">
+                                {% if publicacao.data_publicacao %}
+                                    Publicado em {{ publicacao.data_publicacao|date:"d/m/Y" }}
+                                {% elif publicacao.first_published_at %}
+                                    Publicado em {{ publicacao.first_published_at|date:"d/m/Y" }}
+                                {% endif %}
+
+                                {% if publicacao.last_published_at and publicacao.first_published_at and publicacao.last_published_at != publicacao.first_published_at %}
+                                    {% if publicacao.data_publicacao or publicacao.first_published_at %} · {% endif %}
+                                    Atualizado em {{ publicacao.last_published_at|date:"d/m/Y" }}
+                                {% endif %}
+
+                                {% with autor=publicacao.autores_ordenados|first %}
+                                    {% if autor %}
+                                        <br>Por <a href="/autores/{{ autor.username }}/">{{ autor }}</a>
+                                    {% elif publicacao.autoria_publica_fallback_nome %}
+                                        <br>Por {{ publicacao.autoria_publica_fallback_nome }}
+                                    {% endif %}
+                                {% endwith %}
+                                {% if publicacao.comentarios_aprovados_count > 1 or publicacao.total_visualizacoes > 1 %}
+                                    <div class="home-publicacao-estatisticas">
+                                        {% if publicacao.comentarios_aprovados_count > 1 %}
+                                            <span class="home-publicacao-balao" title="Comentários">
+                                                <span class="home-publicacao-balao-icone" aria-hidden="true">
+                                                    <svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2h9A3.5 3.5 0 0 1 20 5.5v6A3.5 3.5 0 0 1 16.5 15H9l-4.2 3.5c-.32.27-.8.04-.8-.38V15.1A3.49 3.49 0 0 1 4 11.5v-6Z"></path></svg>
+                                                </span>
+                                                <span>{{ publicacao.comentarios_aprovados_count }}</span>
+                                            </span>
+                                        {% endif %}
+                                        {% if publicacao.total_visualizacoes > 1 %}
+                                            <span class="home-publicacao-balao" title="Visualizações">
+                                                <span class="home-publicacao-balao-icone" aria-hidden="true">
+                                                    <svg viewBox="0 0 24 24"><path d="M12 5c5.23 0 9.27 3.37 10.84 6.34a1.24 1.24 0 0 1 0 1.32C21.27 15.63 17.23 19 12 19S2.73 15.63 1.16 12.66a1.24 1.24 0 0 1 0-1.32C2.73 8.37 6.77 5 12 5Zm0 2C7.78 7 4.42 9.63 3.2 12 4.42 14.37 7.78 17 12 17s7.58-2.63 8.8-5C19.58 9.63 16.22 7 12 7Zm0 1.8A3.2 3.2 0 1 1 8.8 12 3.2 3.2 0 0 1 12 8.8Zm0 2A1.2 1.2 0 1 0 13.2 12 1.2 1.2 0 0 0 12 10.8Z"></path></svg>
+                                                </span>
+                                                <span>{{ publicacao.total_visualizacoes }}</span>
+                                            </span>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
                     {% if publicacao.resumo %}
-                        <div>{{ publicacao.resumo|richtext }}</div>
+                        <div class="home-resumo-publicacao">
+                            {{ publicacao.resumo|richtext|safe }}
+                        </div>
                     {% endif %}
                 </article>
             {% empty %}
-                <p>Nenhuma publicação cadastrada.</p>
+                <p>Nenhuma publicação cadastrada ainda.</p>
             {% endfor %}
         </div>
     </main>
 
-    {% include "includes/botao_topo.html" %}
-    {% include "includes/rodape_site.html" %}
+    {% include "includes/rodape_site.html" with rodape_assets_in_head=True %}
 </body>
 </html>

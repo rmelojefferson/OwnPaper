@@ -1,0 +1,122 @@
+{% load static wagtailcore_tags wagtailimages_tags %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ config_site.doacoes_titulo|default:"Apoie este projeto" }}</title>
+    {% include "includes/site_head_assets.html" %}
+    <link rel="stylesheet" href="{% static 'css/pages/pagina-apoio.css' %}?v=20260525-01">
+    {% include "includes/rastreamento_head.html" %}
+</head>
+<body>
+    {% include "includes/rastreamento_body.html" %}
+    {% include "includes/menu_principal.html" with menu_assets_in_head=True %}
+
+    <main class="pagina-apoio-shell container is-max-desktop op-page-shell">
+        <header class="pagina-apoio-hero">
+            <p class="pagina-apoio-eyebrow">Apoio</p>
+            <h1>{{ config_site.doacoes_titulo|default:"Apoie este projeto" }}</h1>
+            {% if config_site.doacoes_descricao %}
+                <div class="pagina-apoio-intro op-content">
+                    {{ config_site.doacoes_descricao|richtext }}
+                </div>
+            {% endif %}
+        </header>
+
+        <section class="pagina-apoio-grid">
+            {% if config_site.doacoes_pix_ativo and config_site.doacoes_pix_chave or config_site.doacoes_pix_ativo and config_site.doacoes_pix_qr_code or config_site.doacoes_pix_ativo and config_site.doacoes_pix_copia_cola %}
+                <article class="pagina-apoio-card op-card">
+                    <h2>Pix</h2>
+                    {% if config_site.doacoes_pix_qr_code %}
+                        {% image config_site.doacoes_pix_qr_code fill-220x220 as pix_qr %}
+                        <img class="pagina-apoio-qr" src="{{ pix_qr.url }}" alt="QR Code Pix">
+                    {% endif %}
+                    {% if config_site.doacoes_pix_chave %}
+                        <p class="pagina-apoio-label">Chave Pix</p>
+                        <p class="pagina-apoio-chave">{{ config_site.doacoes_pix_chave }}</p>
+                    {% endif %}
+                    {% if config_site.doacoes_pix_copia_cola %}
+                        <p class="pagina-apoio-label">Pix copia e cola</p>
+                        <p class="pagina-apoio-chave pagina-apoio-chave--longa">{{ config_site.doacoes_pix_copia_cola }}</p>
+                    {% endif %}
+                </article>
+            {% endif %}
+
+            {% if config_site.doacoes_apoiase_ativo and config_site.doacoes_apoiase_url %}
+                <article class="pagina-apoio-card op-card">
+                    <h2>Apoia.se</h2>
+                    <p>Contribua pela página do projeto no Apoia.se.</p>
+                    <a class="pagina-apoio-botao" href="{{ config_site.doacoes_apoiase_url }}" target="_blank" rel="noopener noreferrer">Apoiar no Apoia.se</a>
+                </article>
+            {% endif %}
+
+            {% if config_site.doacoes_buymeacoffee_ativo and config_site.doacoes_buymeacoffee_url %}
+                <article class="pagina-apoio-card op-card">
+                    <h2>Buy Me a Coffee</h2>
+                    <p>Envie um apoio avulso ou recorrente pela plataforma.</p>
+                    <a class="pagina-apoio-botao" href="{{ config_site.doacoes_buymeacoffee_url }}" target="_blank" rel="noopener noreferrer">Abrir Buy Me a Coffee</a>
+                </article>
+            {% endif %}
+
+            {% if config_site.doacoes_paypal_ativo and config_site.doacoes_paypal_link %}
+                <article class="pagina-apoio-card op-card">
+                    <h2>PayPal</h2>
+                    <p>Faça uma doação usando PayPal ou os métodos disponíveis na plataforma.</p>
+                    <a class="pagina-apoio-botao" href="{{ config_site.doacoes_paypal_link }}" target="_blank" rel="noopener noreferrer">Doar pelo PayPal</a>
+                </article>
+            {% endif %}
+
+            {% if config_site.doacoes_mercadopago_ativo and config_site.doacoes_mercadopago_url %}
+                <article class="pagina-apoio-card op-card">
+                    <h2>Mercado Pago</h2>
+                    <p>Apoie usando o link público configurado no Mercado Pago.</p>
+                    <a class="pagina-apoio-botao" href="{{ config_site.doacoes_mercadopago_url }}" target="_blank" rel="noopener noreferrer">Abrir Mercado Pago</a>
+                </article>
+            {% endif %}
+
+            {% if config_site.doacoes_github_sponsors_ativo and config_site.doacoes_github_sponsors_url %}
+                <article class="pagina-apoio-card op-card">
+                    <h2>GitHub Sponsors</h2>
+                    <p>Apoie o projeto pelo GitHub Sponsors.</p>
+                    <a class="pagina-apoio-botao" href="{{ config_site.doacoes_github_sponsors_url }}" target="_blank" rel="noopener noreferrer">Apoiar no GitHub</a>
+                </article>
+            {% endif %}
+
+            {% if config_site.doacoes_bitcoin_ativo and config_site.doacoes_bitcoin_endereco %}
+                <article class="pagina-apoio-card op-card">
+                    <h2>Bitcoin</h2>
+                    <p class="pagina-apoio-label">Endereço da carteira</p>
+                    <p class="pagina-apoio-chave pagina-apoio-chave--longa">{{ config_site.doacoes_bitcoin_endereco }}</p>
+                    <a class="pagina-apoio-botao" href="{{ config_site.doacoes_bitcoin_uri }}">Abrir carteira Bitcoin</a>
+                </article>
+            {% endif %}
+
+            {% if config_site.doacoes_ethereum_ativo and config_site.doacoes_ethereum_endereco %}
+                <article class="pagina-apoio-card op-card">
+                    <h2>Ethereum</h2>
+                    <p class="pagina-apoio-label">Endereço da carteira</p>
+                    <p class="pagina-apoio-chave pagina-apoio-chave--longa">{{ config_site.doacoes_ethereum_endereco }}</p>
+                    <a class="pagina-apoio-botao" href="{{ config_site.doacoes_ethereum_uri }}">Abrir carteira Ethereum</a>
+                </article>
+            {% endif %}
+
+            {% if config_site.doacoes_link_externo %}
+                <article class="pagina-apoio-card op-card">
+                    <h2>Link complementar</h2>
+                    <p><a href="{{ config_site.doacoes_link_externo }}" target="_blank" rel="noopener noreferrer">{{ config_site.doacoes_link_externo }}</a></p>
+                </article>
+            {% endif %}
+        </section>
+
+        {% if config_site.doacoes_detalhes %}
+            <section class="pagina-apoio-card op-card op-content">
+                <h2>Outras formas de apoio</h2>
+                {{ config_site.doacoes_detalhes|richtext }}
+            </section>
+        {% endif %}
+    </main>
+
+    {% include "includes/rodape_site.html" with rodape_assets_in_head=True %}
+</body>
+</html>

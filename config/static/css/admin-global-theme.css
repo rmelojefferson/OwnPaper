@@ -1,0 +1,724 @@
+:root,
+.w-theme-light {
+    --op-admin-sidebar-width: 320px;
+    --op-admin-primary: #1f3b5c;
+    --op-admin-secondary: #3b82f6;
+    --op-admin-sidebar: #16283f;
+    --op-admin-sidebar-hover: #213652;
+    --op-admin-surface: #f8fbff;
+    --op-admin-surface-alt: #eaf1f8;
+    --op-admin-surface-dark: #1b2f45;
+    --op-admin-text: #1b2d3f;
+    --op-admin-text-muted: #627589;
+    --op-admin-text-dark: #f5faff;
+    --op-admin-critical: #c65052;
+    --op-admin-info: #3b82f6;
+    --op-admin-warning: #d8a33a;
+    --op-admin-focus: #3b82f6;
+    --w-color-primary: var(--op-admin-primary);
+    --w-color-primary-200: var(--op-admin-sidebar-hover);
+    --w-color-secondary: var(--op-admin-secondary);
+    --w-color-secondary-400: #2f6fd4;
+    --w-color-secondary-50: #e8f0fd;
+    --w-color-info-50: #e8f0fd;
+    --w-color-info-100: var(--op-admin-info);
+    --w-color-critical-50: #faecec;
+    --w-color-critical-200: var(--op-admin-critical);
+    --w-color-surface-page: var(--op-admin-surface);
+    --w-color-surface-field: #ffffff;
+    --w-color-surface-field-inactive: #edf3f8;
+    --w-color-surface-header: var(--op-admin-surface-alt);
+    --w-color-surface-menus: var(--op-admin-sidebar);
+    --w-color-surface-menu-item-active: var(--op-admin-sidebar-hover);
+    --w-color-surface-tooltip: var(--op-admin-primary);
+    --w-color-surface-button-default: var(--op-admin-secondary);
+    --w-color-surface-button-hover: #2f6fd4;
+    --w-color-surface-button-inactive: #9aabbb;
+    --w-color-surface-button-outline-hover: #e8f0fd;
+    --w-color-surface-button-critical-hover: #faecec;
+    --w-color-surface-status-label: #e8f0fd;
+    --w-color-surface-info-panel: #e8f0fd;
+    --w-color-surface-dashboard-panel: #ffffff;
+    --w-color-text-button: #ffffff;
+    --w-color-text-label-menus-default: rgba(238, 248, 251, 0.82);
+    --w-color-text-label-menus-active: var(--op-admin-text-dark);
+    --w-color-text-label: var(--op-admin-primary);
+    --w-color-text-context: var(--op-admin-text);
+    --w-color-text-meta: var(--op-admin-text-muted);
+    --w-color-text-placeholder: #7c8d99;
+    --w-color-text-link-default: var(--op-admin-secondary);
+    --w-color-text-link-hover: #2f6fd4;
+    --w-color-text-button-outline-default: var(--op-admin-secondary);
+    --w-color-text-button-outline-hover: #2f6fd4;
+    --w-color-text-highlight: #dbe8fb;
+    --w-color-text-error: var(--op-admin-critical);
+    --w-color-text-button-critical-outline-hover: var(--op-admin-critical);
+    --w-color-text-status-label: var(--op-admin-info);
+    --w-color-text-link-info: var(--op-admin-info);
+    --w-color-icon-primary: var(--op-admin-primary);
+    --w-color-icon-primary-hover: var(--op-admin-sidebar-hover);
+    --w-color-icon-secondary: var(--op-admin-text-muted);
+    --w-color-icon-secondary-hover: var(--op-admin-primary);
+    --w-color-border-furniture: #d7e2ee;
+    --w-color-border-button-small-outline-default: #c6d7e8;
+    --w-color-border-field-default: #c6d7e8;
+    --w-color-border-button-default: #a7bbd1;
+    --w-color-border-button-hover: var(--op-admin-secondary);
+    --w-color-border-button-outline-default: var(--op-admin-secondary);
+    --w-color-border-button-outline-hover: #2f6fd4;
+    --w-color-border-furniture-more-contrast: var(--op-admin-text-muted);
+    --w-color-focus: var(--op-admin-focus);
+    --w-color-border-focus: var(--op-admin-focus);
+}
+
+.w-theme-dark {
+    --op-admin-sidebar-width: 320px;
+    --op-admin-primary: #1f3b5c;
+    --op-admin-secondary: #3b82f6;
+    --op-admin-sidebar: #16283f;
+    --op-admin-sidebar-hover: #213652;
+    --op-admin-surface: #1b2f45;
+    --op-admin-surface-alt: #24384f;
+    --op-admin-surface-dark: #16283f;
+    --op-admin-text: #f5faff;
+    --op-admin-text-muted: #b7cade;
+    --op-admin-text-dark: #f5faff;
+    --op-admin-critical: #de7678;
+    --op-admin-info: #77adff;
+    --op-admin-warning: #e1bc68;
+    --op-admin-focus: #3b82f6;
+    --w-color-primary: var(--op-admin-primary);
+    --w-color-primary-200: #294767;
+    --w-color-secondary: var(--op-admin-secondary);
+    --w-color-secondary-400: #6ea7ff;
+    --w-color-secondary-50: #1b3048;
+    --w-color-info-50: #1a314a;
+    --w-color-info-100: var(--op-admin-info);
+    --w-color-critical-50: #3b2024;
+    --w-color-critical-200: var(--op-admin-critical);
+    --w-color-surface-page: var(--op-admin-surface);
+    --w-color-surface-field: var(--op-admin-surface-alt);
+    --w-color-surface-field-inactive: #20344b;
+    --w-color-surface-header: #15283d;
+    --w-color-surface-menus: var(--op-admin-sidebar);
+    --w-color-surface-menu-item-active: var(--op-admin-sidebar-hover);
+    --w-color-surface-tooltip: #24384f;
+    --w-color-surface-button-default: var(--op-admin-secondary);
+    --w-color-surface-button-hover: #6ea7ff;
+    --w-color-surface-button-inactive: #60758a;
+    --w-color-surface-button-outline-hover: #22374c;
+    --w-color-surface-button-critical-hover: #3b2024;
+    --w-color-surface-status-label: #22384f;
+    --w-color-surface-info-panel: #1a314a;
+    --w-color-surface-dashboard-panel: var(--op-admin-sidebar);
+    --w-color-text-button: #ffffff;
+    --w-color-text-label-menus-default: rgba(238, 248, 251, 0.82);
+    --w-color-text-label-menus-active: var(--op-admin-text-dark);
+    --w-color-text-label: var(--op-admin-text);
+    --w-color-text-context: var(--op-admin-text);
+    --w-color-text-meta: var(--op-admin-text-muted);
+    --w-color-text-placeholder: #7f97a5;
+    --w-color-text-link-default: #83b4ff;
+    --w-color-text-link-hover: #b2ceff;
+    --w-color-text-button-outline-default: #83b4ff;
+    --w-color-text-button-outline-hover: #b2ceff;
+    --w-color-text-highlight: #1f3247;
+    --w-color-text-error: var(--op-admin-critical);
+    --w-color-text-button-critical-outline-hover: var(--op-admin-critical);
+    --w-color-text-status-label: var(--op-admin-info);
+    --w-color-text-link-info: var(--op-admin-info);
+    --w-color-icon-primary: var(--op-admin-text);
+    --w-color-icon-primary-hover: #ffffff;
+    --w-color-icon-secondary: var(--op-admin-text-muted);
+    --w-color-icon-secondary-hover: var(--op-admin-text);
+    --w-color-border-furniture: #344c66;
+    --w-color-border-button-small-outline-default: #49647f;
+    --w-color-border-field-default: #3a5470;
+    --w-color-border-button-default: #49647f;
+    --w-color-border-button-hover: #77adff;
+    --w-color-border-button-outline-default: #6fa4ff;
+    --w-color-border-button-outline-hover: #98beff;
+    --w-color-border-furniture-more-contrast: #b7cade;
+    --w-color-focus: var(--op-admin-focus);
+    --w-color-border-focus: var(--op-admin-focus);
+}
+
+@media (prefers-color-scheme: dark) {
+    .w-theme-system {
+        --op-admin-sidebar-width: 320px;
+        --op-admin-primary: #1f3b5c;
+        --op-admin-secondary: #3b82f6;
+        --op-admin-sidebar: #16283f;
+        --op-admin-sidebar-hover: #213652;
+        --op-admin-surface: #1b2f45;
+        --op-admin-surface-alt: #24384f;
+        --op-admin-surface-dark: #16283f;
+        --op-admin-text: #f5faff;
+        --op-admin-text-muted: #b7cade;
+        --op-admin-text-dark: #f5faff;
+        --op-admin-critical: #de7678;
+        --op-admin-info: #77adff;
+        --op-admin-warning: #e1bc68;
+        --op-admin-focus: #3b82f6;
+        --w-color-primary: var(--op-admin-primary);
+        --w-color-primary-200: #294767;
+        --w-color-secondary: var(--op-admin-secondary);
+        --w-color-secondary-400: #6ea7ff;
+        --w-color-secondary-50: #1b3048;
+        --w-color-info-50: #1a314a;
+        --w-color-info-100: var(--op-admin-info);
+        --w-color-critical-50: #3b2024;
+        --w-color-critical-200: var(--op-admin-critical);
+        --w-color-surface-page: var(--op-admin-surface);
+        --w-color-surface-field: var(--op-admin-surface-alt);
+        --w-color-surface-field-inactive: #20344b;
+        --w-color-surface-header: #15283d;
+        --w-color-surface-menus: var(--op-admin-sidebar);
+        --w-color-surface-menu-item-active: var(--op-admin-sidebar-hover);
+        --w-color-surface-tooltip: #24384f;
+        --w-color-surface-button-default: var(--op-admin-secondary);
+        --w-color-surface-button-hover: #6ea7ff;
+        --w-color-surface-button-inactive: #60758a;
+        --w-color-surface-button-outline-hover: #22374c;
+        --w-color-surface-button-critical-hover: #3b2024;
+        --w-color-surface-status-label: #22384f;
+        --w-color-surface-info-panel: #1a314a;
+        --w-color-surface-dashboard-panel: var(--op-admin-sidebar);
+        --w-color-text-button: #ffffff;
+        --w-color-text-label-menus-default: rgba(238, 248, 251, 0.82);
+        --w-color-text-label-menus-active: var(--op-admin-text-dark);
+        --w-color-text-label: var(--op-admin-text);
+        --w-color-text-context: var(--op-admin-text);
+        --w-color-text-meta: var(--op-admin-text-muted);
+        --w-color-text-placeholder: #7f97a5;
+        --w-color-text-link-default: #83b4ff;
+        --w-color-text-link-hover: #b2ceff;
+        --w-color-text-button-outline-default: #83b4ff;
+        --w-color-text-button-outline-hover: #b2ceff;
+        --w-color-text-highlight: #1f3247;
+        --w-color-text-error: var(--op-admin-critical);
+        --w-color-text-button-critical-outline-hover: var(--op-admin-critical);
+        --w-color-text-status-label: var(--op-admin-info);
+        --w-color-text-link-info: var(--op-admin-info);
+        --w-color-icon-primary: var(--op-admin-text);
+        --w-color-icon-primary-hover: #ffffff;
+        --w-color-icon-secondary: var(--op-admin-text-muted);
+        --w-color-icon-secondary-hover: var(--op-admin-text);
+        --w-color-border-furniture: #344c66;
+        --w-color-border-button-small-outline-default: #49647f;
+        --w-color-border-field-default: #3a5470;
+        --w-color-border-button-default: #49647f;
+        --w-color-border-button-hover: #77adff;
+        --w-color-border-button-outline-default: #6fa4ff;
+        --w-color-border-button-outline-hover: #98beff;
+        --w-color-border-furniture-more-contrast: #b7cade;
+        --w-color-focus: var(--op-admin-focus);
+        --w-color-border-focus: var(--op-admin-focus);
+    }
+}
+
+@media screen and (min-width: 50em) {
+    .sidebar,
+    .sidebar-loading,
+    .sidebar.sidebar--slim {
+        width: var(--op-admin-sidebar-width) !important;
+        min-width: var(--op-admin-sidebar-width) !important;
+        max-width: var(--op-admin-sidebar-width) !important;
+    }
+
+    .sidebar .sidebar-panel,
+    .sidebar.sidebar--slim .sidebar-panel {
+        --width: var(--op-admin-sidebar-width) !important;
+    }
+
+    .sidebar .sidebar-sub-menu-panel,
+    .sidebar.sidebar--slim .sidebar-sub-menu-panel {
+        width: var(--op-admin-sidebar-width) !important;
+    }
+
+    .sidebar-sub-menu-panel > h2,
+    .sidebar-sub-menu-panel__list {
+        width: 100% !important;
+    }
+
+    .sidebar-panel--open {
+        inset-inline-start: var(--op-admin-sidebar-width) !important;
+        transform: translateX(0) !important;
+    }
+
+    .sidebar--slim .sidebar-panel .sidebar-panel--open {
+        inset-inline-start: var(--op-admin-sidebar-width) !important;
+        transform: translateX(0) !important;
+    }
+
+    .wrapper,
+    .sidebar-collapsed .wrapper {
+        padding-inline-start: var(--op-admin-sidebar-width) !important;
+    }
+
+    #wagtail-sidebar ~ .content-wrapper {
+        padding-inline-start: 0 !important;
+        margin-inline-start: 0 !important;
+        width: 100% !important;
+        max-width: none !important;
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    .sidebar--hidden,
+    .sidebar-loading--hidden {
+        inset-inline-start: calc(var(--op-admin-sidebar-width) * -1) !important;
+    }
+}
+
+@media screen and (min-width: 50em) {
+    #wagtail-sidebar .sidebar__collapse-toggle {
+        display: none !important;
+    }
+}
+
+.sidebar-sub-menu-panel > h2,
+[id^="wagtail-sidebar-submenu"][id$="-title"] {
+    width: 100% !important;
+    box-sizing: border-box !important;
+    padding-inline: 1rem !important;
+}
+
+#wagtail-sidebar #menu-search-q {
+    padding-inline-start: 3.4375rem !important;
+}
+
+#wagtail-sidebar button[aria-label="Busca"],
+#wagtail-sidebar button[aria-label="Search"] {
+    position: absolute !important;
+    top: 50% !important;
+    left: 1.4375rem !important;
+    transform: translateY(-50%) !important;
+    width: auto !important;
+    min-width: 0 !important;
+    height: auto !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: transparent !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    outline: none !important;
+    appearance: none !important;
+    z-index: 2 !important;
+    flex: 0 0 auto !important;
+}
+
+#wagtail-sidebar button[aria-label="Busca"]::before,
+#wagtail-sidebar button[aria-label="Search"]::before,
+#wagtail-sidebar button[aria-label="Busca"]::after,
+#wagtail-sidebar button[aria-label="Search"]::after {
+    content: none !important;
+    display: none !important;
+}
+
+.op-admin-brand-logo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    color: var(--w-color-text-label-menus-active, #f5faff);
+}
+
+.op-admin-brand-logo--sidebar,
+#wagtail-sidebar .op-admin-brand-logo {
+    width: 224px !important;
+    height: 224px !important;
+    min-width: 224px !important;
+    min-height: 224px !important;
+    max-width: 224px !important;
+    max-height: 224px !important;
+}
+
+#wagtail-sidebar .sidebar-wagtail-branding,
+#wagtail-sidebar .sidebar-wagtail-branding__link {
+    min-height: 244px !important;
+    padding-block: 10px !important;
+}
+
+.messages ul li.success,
+.messages ul li.warning,
+.messages ul li.error,
+.messages ul li.info {
+    border: 1px solid transparent;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+}
+
+.messages ul li.success {
+    background: color-mix(in srgb, var(--w-color-secondary) 14%, white 86%) !important;
+    border-color: color-mix(in srgb, var(--w-color-secondary) 36%, white 64%) !important;
+    color: var(--w-color-text-context) !important;
+}
+
+.messages ul li.success .messages-icon,
+.messages ul li.success svg {
+    color: var(--w-color-secondary) !important;
+    fill: currentColor !important;
+}
+
+.messages ul li.warning {
+    background: color-mix(in srgb, var(--w-color-warning-100, var(--op-admin-warning)) 18%, white 82%) !important;
+    border-color: color-mix(in srgb, var(--w-color-warning-100, var(--op-admin-warning)) 34%, white 66%) !important;
+    color: var(--w-color-text-context) !important;
+}
+
+.messages ul li.warning .messages-icon,
+.messages ul li.warning svg {
+    color: var(--w-color-warning-100, var(--op-admin-warning)) !important;
+    fill: currentColor !important;
+}
+
+.messages ul li.error {
+    background: color-mix(in srgb, var(--w-color-critical-200) 14%, white 86%) !important;
+    border-color: color-mix(in srgb, var(--w-color-critical-200) 34%, white 66%) !important;
+    color: var(--w-color-text-context) !important;
+}
+
+.messages ul li.error .messages-icon,
+.messages ul li.error svg {
+    color: var(--w-color-critical-200) !important;
+    fill: currentColor !important;
+}
+
+.w-field__help,
+.w-field__help .help,
+.w-field__help .help *,
+[data-field-help],
+[data-field-help] .help,
+[data-field-help] .help *,
+.c-sf-help .help,
+.c-sf-help .help *,
+.w-help-text {
+    color: color-mix(in srgb, var(--w-color-text-context) 78%, var(--w-color-text-meta) 22%) !important;
+}
+
+.w-field__help .help strong,
+.w-field__help .help b,
+[data-field-help] .help strong,
+[data-field-help] .help b,
+.c-sf-help .help strong,
+.c-sf-help .help b {
+    color: var(--w-color-text-context) !important;
+}
+
+.help-block.help-info {
+    background: color-mix(in srgb, var(--w-color-info-100, var(--op-admin-info)) 12%, white 88%) !important;
+    border-color: color-mix(in srgb, var(--w-color-info-100, var(--op-admin-info)) 26%, white 74%) !important;
+    color: var(--w-color-text-context) !important;
+}
+
+.help-block.help-warning {
+    background: color-mix(in srgb, var(--w-color-warning-100, var(--op-admin-warning)) 14%, white 86%) !important;
+    border-color: color-mix(in srgb, var(--w-color-warning-100, var(--op-admin-warning)) 28%, white 72%) !important;
+    color: var(--w-color-text-context) !important;
+}
+
+.w-text-positive-100 {
+    color: var(--w-color-secondary) !important;
+}
+
+.w-theme-dark .messages ul li.success,
+.w-theme-dark .messages ul li.warning,
+.w-theme-dark .messages ul li.error,
+.w-theme-dark .messages ul li.info {
+    box-shadow: none;
+}
+
+.w-theme-dark .messages ul li.success {
+    background: color-mix(in srgb, var(--w-color-secondary) 22%, var(--w-color-surface-field) 78%) !important;
+    border-color: color-mix(in srgb, var(--w-color-secondary) 40%, var(--w-color-surface-field) 60%) !important;
+    color: var(--op-admin-text-dark) !important;
+}
+
+.w-theme-dark .messages ul li.warning {
+    background: color-mix(in srgb, var(--w-color-warning-100, var(--op-admin-warning)) 24%, var(--w-color-surface-field) 76%) !important;
+    border-color: color-mix(in srgb, var(--w-color-warning-100, var(--op-admin-warning)) 42%, var(--w-color-surface-field) 58%) !important;
+    color: var(--op-admin-text-dark) !important;
+}
+
+.w-theme-dark .messages ul li.error {
+    background: color-mix(in srgb, var(--w-color-critical-200) 22%, var(--w-color-surface-field) 78%) !important;
+    border-color: color-mix(in srgb, var(--w-color-critical-200) 40%, var(--w-color-surface-field) 60%) !important;
+    color: var(--op-admin-text-dark) !important;
+}
+
+.w-theme-dark .w-field__help,
+.w-theme-dark .w-field__help .help,
+.w-theme-dark .w-field__help .help *,
+.w-theme-dark [data-field-help],
+.w-theme-dark [data-field-help] .help,
+.w-theme-dark [data-field-help] .help *,
+.w-theme-dark .c-sf-help .help,
+.w-theme-dark .c-sf-help .help *,
+.w-theme-dark .w-help-text {
+    color: color-mix(in srgb, var(--op-admin-text-dark) 92%, var(--op-admin-text-muted) 8%) !important;
+}
+
+.w-theme-dark .w-field__help .help strong,
+.w-theme-dark .w-field__help .help b,
+.w-theme-dark [data-field-help] .help strong,
+.w-theme-dark [data-field-help] .help b,
+.w-theme-dark .c-sf-help .help strong,
+.w-theme-dark .c-sf-help .help b {
+    color: #fff !important;
+}
+
+.w-theme-dark .help-block.help-info {
+    background: color-mix(in srgb, var(--w-color-info-100, var(--op-admin-info)) 22%, var(--w-color-surface-field) 78%) !important;
+    border-color: color-mix(in srgb, var(--w-color-info-100, var(--op-admin-info)) 38%, var(--w-color-surface-field) 62%) !important;
+    color: var(--op-admin-text-dark) !important;
+}
+
+.w-theme-dark .help-block.help-warning {
+    background: color-mix(in srgb, var(--w-color-warning-100, var(--op-admin-warning)) 24%, var(--w-color-surface-field) 76%) !important;
+    border-color: color-mix(in srgb, var(--w-color-warning-100, var(--op-admin-warning)) 40%, var(--w-color-surface-field) 60%) !important;
+    color: var(--op-admin-text-dark) !important;
+}
+
+@media (prefers-color-scheme: dark) {
+    .w-theme-system .messages ul li.success,
+    .w-theme-system .messages ul li.warning,
+    .w-theme-system .messages ul li.error,
+    .w-theme-system .messages ul li.info {
+        box-shadow: none;
+    }
+
+    .w-theme-system .messages ul li.success {
+        background: color-mix(in srgb, var(--w-color-secondary) 22%, var(--w-color-surface-field) 78%) !important;
+        border-color: color-mix(in srgb, var(--w-color-secondary) 40%, var(--w-color-surface-field) 60%) !important;
+        color: var(--op-admin-text-dark) !important;
+    }
+
+    .w-theme-system .messages ul li.warning {
+        background: color-mix(in srgb, var(--w-color-warning-100, var(--op-admin-warning)) 24%, var(--w-color-surface-field) 76%) !important;
+        border-color: color-mix(in srgb, var(--w-color-warning-100, var(--op-admin-warning)) 42%, var(--w-color-surface-field) 58%) !important;
+        color: var(--op-admin-text-dark) !important;
+    }
+
+    .w-theme-system .messages ul li.error {
+        background: color-mix(in srgb, var(--w-color-critical-200) 22%, var(--w-color-surface-field) 78%) !important;
+        border-color: color-mix(in srgb, var(--w-color-critical-200) 40%, var(--w-color-surface-field) 60%) !important;
+        color: var(--op-admin-text-dark) !important;
+    }
+
+    .w-theme-system .w-field__help,
+    .w-theme-system .w-field__help .help,
+    .w-theme-system .w-field__help .help *,
+    .w-theme-system [data-field-help],
+    .w-theme-system [data-field-help] .help,
+    .w-theme-system [data-field-help] .help *,
+    .w-theme-system .c-sf-help .help,
+    .w-theme-system .c-sf-help .help *,
+    .w-theme-system .w-help-text {
+        color: color-mix(in srgb, var(--op-admin-text-dark) 92%, var(--op-admin-text-muted) 8%) !important;
+    }
+
+    .w-theme-system .w-field__help .help strong,
+    .w-theme-system .w-field__help .help b,
+    .w-theme-system [data-field-help] .help strong,
+    .w-theme-system [data-field-help] .help b,
+    .w-theme-system .c-sf-help .help strong,
+    .w-theme-system .c-sf-help .help b {
+        color: #fff !important;
+    }
+
+    .w-theme-system .help-block.help-info {
+        background: color-mix(in srgb, var(--w-color-info-100, var(--op-admin-info)) 22%, var(--w-color-surface-field) 78%) !important;
+        border-color: color-mix(in srgb, var(--w-color-info-100, var(--op-admin-info)) 38%, var(--w-color-surface-field) 62%) !important;
+        color: var(--op-admin-text-dark) !important;
+    }
+
+    .w-theme-system .help-block.help-warning {
+        background: color-mix(in srgb, var(--w-color-warning-100, var(--op-admin-warning)) 24%, var(--w-color-surface-field) 76%) !important;
+        border-color: color-mix(in srgb, var(--w-color-warning-100, var(--op-admin-warning)) 40%, var(--w-color-surface-field) 60%) !important;
+        color: var(--op-admin-text-dark) !important;
+    }
+}
+
+.op-admin-account-zoom {
+    margin-top: 1.25rem;
+}
+
+.op-admin-zoom-preference {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.op-admin-zoom-preference__value {
+    min-width: 3.25rem;
+    text-align: center;
+    color: var(--w-color-text-context, currentColor);
+}
+
+.op-admin-zoom-preference button[disabled] {
+    cursor: not-allowed;
+    opacity: 0.55;
+}
+
+@media screen and (max-width: 49.999em) {
+    html,
+    body#wagtail {
+        max-width: 100vw;
+        overflow-x: hidden;
+    }
+
+    body#wagtail .wrapper {
+        display: block !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        padding-inline-start: 0 !important;
+        overflow-x: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    body#wagtail #wagtail-sidebar {
+        display: none !important;
+    }
+
+    body#wagtail .content-wrapper,
+    body#wagtail #wagtail-sidebar ~ .content-wrapper {
+        position: relative !important;
+        inset-inline-start: 0 !important;
+        inset-inline-end: auto !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        margin-inline: 0 !important;
+        padding-inline: 0 !important;
+        box-sizing: border-box !important;
+        overflow-x: hidden !important;
+    }
+
+    body#wagtail .content,
+    body#wagtail .nice-padding,
+    body#wagtail .w-form-width,
+    body#wagtail .w-panel,
+    body#wagtail .w-panel__content,
+    body#wagtail form,
+    body#wagtail fieldset {
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    body#wagtail .content {
+        padding-inline: 1rem !important;
+    }
+
+    body#wagtail .content > *,
+    body#wagtail .content .header,
+    body#wagtail .content .nice-padding,
+    body#wagtail .content .w-tabs,
+    body#wagtail .content .tab-content,
+    body#wagtail .content .fields,
+    body#wagtail .content .field,
+    body#wagtail .content .w-field,
+    body#wagtail .content .w-field__wrapper,
+    body#wagtail .content .w-field__input,
+    body#wagtail .content .help,
+    body#wagtail .content .help-block {
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        overflow-wrap: anywhere;
+    }
+
+    body#wagtail .content .header,
+    body#wagtail .content .w-header,
+    body#wagtail .content .actions,
+    body#wagtail .content .actionbutton,
+    body#wagtail .content .dropdown,
+    body#wagtail .content .w-dropdown-button {
+        flex-wrap: wrap !important;
+        max-width: 100% !important;
+    }
+
+    body#wagtail .content [class*="grid"],
+    body#wagtail .content [class*="Grid"],
+    body#wagtail .content .row,
+    body#wagtail .content .w-grid,
+    body#wagtail .content .op-admin-form-grid,
+    body#wagtail .content .op-admin-two-column,
+    body#wagtail .content .op-admin-settings-layout,
+    body#wagtail .content .op-admin-dashboard__cards,
+    body#wagtail .content .op-admin-dashboard__stats,
+    body#wagtail .content .op-admin-dashboard__section-grid {
+        display: grid !important;
+        grid-template-columns: minmax(0, 1fr) !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    body#wagtail .content [class^="col"],
+    body#wagtail .content [class*=" col"],
+    body#wagtail .content [class*="w-col"],
+    body#wagtail .content .left,
+    body#wagtail .content .right {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        float: none !important;
+    }
+
+    body#wagtail .content table,
+    body#wagtail .content .listing,
+    body#wagtail .content .listing tbody,
+    body#wagtail .content .listing tr,
+    body#wagtail .content .listing th,
+    body#wagtail .content .listing td {
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+        overflow-wrap: anywhere;
+        word-break: break-word;
+    }
+
+    body#wagtail .content table {
+        table-layout: fixed;
+        width: 100% !important;
+    }
+
+    body#wagtail .content pre,
+    body#wagtail .content code {
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+    }
+
+    body#wagtail img,
+    body#wagtail svg,
+    body#wagtail video,
+    body#wagtail iframe {
+        max-width: 100%;
+    }
+
+    body#wagtail input,
+    body#wagtail select,
+    body#wagtail textarea,
+    body#wagtail .chooser,
+    body#wagtail .w-combobox,
+    body#wagtail .tagit,
+    body#wagtail .Draftail-Editor,
+    body#wagtail .Draftail-Editor__wrapper {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+        box-sizing: border-box !important;
+    }
+
+    body#wagtail .button,
+    body#wagtail .w-button,
+    body#wagtail button {
+        white-space: normal;
+    }
+}

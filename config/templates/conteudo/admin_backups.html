@@ -1,0 +1,214 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% block titletag %}Backups{% endblock %}
+{% block content %}
+<div class="nice-padding op-admin-panel op-admin-panel--wide">
+    <header class="op-admin-panel__header">
+        <div>
+            <p class="op-admin-panel__eyebrow">Administração</p>
+            <h1>Backups</h1>
+            <p class="op-admin-panel__lead">Acompanhe, solicite e proteja backups do OwnPaper em um único fluxo operacional.</p>
+            <p class="op-admin-panel__meta"><strong>Site:</strong> {{ site.hostname }}{% if site.port %}:{{ site.port }}{% endif %}</p>
+        </div>
+        <div class="op-admin-actions">
+            <a class="button button-secondary" href="{% url 'admin_saude_operacional' %}">Saúde do sistema</a>
+        </div>
+    </header>
+
+    <section class="op-admin-card">
+        <h2>Como usar backups no OwnPaper</h2>
+        <div class="admin-stats-grid op-admin-backup-policy-grid" aria-label="Modelo operacional de backup">
+            <article class="op-admin-metric-card">
+                <span>Backup local</span>
+                <strong>/app/backups</strong>
+                <small>recuperação rápida enquanto o servidor estiver íntegro</small>
+            </article>
+            <article class="op-admin-metric-card">
+                <span>Download protegido</span>
+                <strong>link temporário</strong>
+                <small>alternativa manual para instalações sem segundo servidor</small>
+            </article>
+            <article class="op-admin-metric-card">
+                <span>Destino externo</span>
+                <strong>{% if backup_backend_config.external_backend == 'webdav' %}WebDAV ativo{% else %}local{% endif %}</strong>
+                <small>configurado exclusivamente no backend/.env</small>
+            </article>
+            <article class="op-admin-metric-card">
+                <span>Restauração</span>
+                <strong>backend</strong>
+                <small>não é feita pelo painel por segurança</small>
+            </article>
+        </div>
+        <p class="op-admin-panel__meta">
+            Credenciais de armazenamento externo não são configuradas pelo painel. WebDAV, quando usado, deve ser definido no backend por variáveis de ambiente.
+        </p>
+    </section>
+
+    <section class="op-admin-card">
+        <form method="post">
+            {% csrf_token %}
+            <input type="hidden" name="acao" value="salvar_config">
+            <div class="op-admin-section-header">
+                <div>
+                    <h2>Relatório por e-mail</h2>
+                    <p class="op-admin-panel__meta">O relatório informa status, tamanho, checksum e, quando o backup concluir, um link temporário protegido para download manual.</p>
+                </div>
+                <button type="submit" class="button">Salvar relatório</button>
+            </div>
+            <div class="op-admin-form-grid op-admin-form-grid--backup-report">
+                <div class="op-admin-field">
+                    <label for="id_backup_email_destino">E-mail do relatório</label>
+                    <input id="id_backup_email_destino" name="backup_email_destino" type="email" value="{{ config_site.backup_email_destino|default:'' }}">
+                </div>
+                <div class="op-admin-checkbox-wrap">
+                    <input id="id_backup_enviar_relatorio" name="backup_enviar_relatorio" type="checkbox" {% if config_site.backup_enviar_relatorio %}checked{% endif %}>
+                    <label for="id_backup_enviar_relatorio">Enviar relatório simples por e-mail após a execução do backup</label>
+                </div>
+            </div>
+            <p class="op-admin-panel__meta">Última execução: {{ config_site.backup_ultimo_envio_em|date:"d/m/Y H:i:s"|default:"-" }}</p>
+        </form>
+    </section>
+
+    <section class="op-admin-card">
+        <form method="post" autocomplete="off">
+            {% csrf_token %}
+            <input type="hidden" name="acao" value="solicitar_backup">
+            <div class="op-admin-section-header">
+                <div>
+                    <h2>Solicitar backup</h2>
+                    <p class="op-admin-panel__meta">A solicitação entra em fila e é executada pelo scheduler, sem travar o painel em arquivos grandes.</p>
+                </div>
+                <button type="submit" class="button">Solicitar backup</button>
+            </div>
+            <div class="op-admin-form-grid op-admin-form-grid--backup-request">
+                <div class="op-admin-field">
+                    <label for="id_backup_escopo">Escopo</label>
+                    <select id="id_backup_escopo" name="escopo" required>
+                        {% for valor,label in backup_scope_choices %}
+                            <option value="{{ valor }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="op-admin-field">
+                    <label for="id_backup_senha_atual">Senha atual</label>
+                    <input id="id_backup_senha_atual" name="senha_atual" type="password" autocomplete="current-password" required>
+                </div>
+                <div class="op-admin-field">
+                    <label for="id_backup_token_2fa">Código 2FA</label>
+                    <input id="id_backup_token_2fa" name="token_2fa" type="text" inputmode="numeric" autocomplete="one-time-code" required>
+                </div>
+            </div>
+            <div class="op-admin-checkbox-wrap op-admin-checkbox-wrap--backup-confirm">
+                <input id="id_backup_confirmar" name="confirmar_backup" type="checkbox" required>
+                <label for="id_backup_confirmar">Confirmo que este backup será gerado no servidor e que a restauração continua sendo um procedimento técnico documentado no backend.</label>
+            </div>
+        </form>
+    </section>
+
+    <section class="op-admin-card">
+        <h2>Política operacional</h2>
+        <div class="admin-stats-grid op-admin-backup-policy-grid" aria-label="Política operacional de backup">
+            <article class="op-admin-metric-card">
+                <span>Backup automático</span>
+                <strong>{% if backup_backend_config.enabled %}Ativo{% else %}Desativado{% endif %}</strong>
+            </article>
+            <article class="op-admin-metric-card">
+                <span>Período</span>
+                <strong>{{ backup_backend_config.interval_hours }}h</strong>
+                <small>{% if backup_backend_config.interval_hours == 168 %}semanal{% else %}configurado no backend{% endif %}</small>
+            </article>
+            <article class="op-admin-metric-card">
+                <span>Retenção local</span>
+                <strong>{{ backup_backend_config.retention_days }} dias</strong>
+            </article>
+            <article class="op-admin-metric-card">
+                <span>Mídia pública</span>
+                <strong>{% if backup_backend_config.include_media %}Incluída{% else %}Não incluída{% endif %}</strong>
+            </article>
+            <article class="op-admin-metric-card">
+                <span>Mídia privada</span>
+                <strong>{% if backup_backend_config.include_private_media %}Incluída{% else %}Não incluída{% endif %}</strong>
+                <small>quarentena e arquivos privados</small>
+            </article>
+            <article class="op-admin-metric-card">
+                <span>Destino externo</span>
+                <strong>{{ backup_backend_config.external_backend }}</strong>
+                <small>fonte: {{ backup_backend_config.external_config_source }}</small>
+            </article>
+        </div>
+    </section>
+
+    <section class="op-admin-card">
+        <div class="op-admin-section-header">
+            <div>
+                <h2>Ações protegidas</h2>
+                <p class="op-admin-panel__meta">Cada ação exige senha atual e 2FA para reduzir risco em sessões abertas.</p>
+            </div>
+        </div>
+        <div class="op-admin-backup-actions-grid">
+            <form method="post" autocomplete="off" class="op-admin-inline-card">
+                {% csrf_token %}
+                <input type="hidden" name="acao" value="executar_backup_total">
+                <h3>Backup total</h3>
+                <p class="op-admin-panel__meta">Coloca backup total na fila; o scheduler gera localmente e envia ao destino externo se ele estiver configurado no backend.</p>
+                <label>Senha atual<input name="senha_atual" type="password" autocomplete="current-password" required></label>
+                <label>Código 2FA<input name="token_2fa" type="text" inputmode="numeric" autocomplete="one-time-code" required></label>
+                <button type="submit" class="button">Solicitar backup total</button>
+            </form>
+        </div>
+    </section>
+
+    <section class="op-admin-card">
+        <h2>Histórico e download protegido</h2>
+        <p class="op-admin-panel__meta">Downloads são servidos por view protegida, exigem senha atual e 2FA, validam checksum e o token expira após uso.</p>
+        <div class="op-admin-table-wrap">
+            <table class="listing op-admin-listing-table op-admin-listing-table--backups">
+                <thead>
+                    <tr>
+                        <th>Quando</th>
+                        <th>Tipo</th>
+                        <th>Escopo</th>
+                        <th>Status</th>
+                        <th>Formato DB</th>
+                        <th>Mídia</th>
+                        <th>Tamanho</th>
+                        <th>Arquivo</th>
+                        <th>Solicitado por</th>
+                        <th>Download</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in historico %}
+                        <tr>
+                            <td>{{ item.criado_em|date:"d/m/Y H:i:s" }}</td>
+                            <td>{{ item.get_tipo_display }}</td>
+                            <td>{{ item.detalhes.escopo_label|default:"Backup total" }}</td>
+                            <td>{{ item.get_status_display }}</td>
+                            <td>{{ item.formato_db }}</td>
+                            <td>{% if item.inclui_midia %}sim{% else %}não{% endif %}</td>
+                            <td>{{ item.arquivo_tamanho_bytes }}</td>
+                            <td class="op-admin-breakall">{{ item.arquivo_caminho|default:"-" }}</td>
+                            <td>{{ item.solicitado_por.username|default:"sistema" }}</td>
+                            <td>
+                                {% if item.status == 'concluido' and item.arquivo_caminho %}
+                                    <form method="post" autocomplete="off" class="op-admin-download-form">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="acao" value="gerar_download">
+                                        <input type="hidden" name="backup_id" value="{{ item.id }}">
+                                        <input name="senha_atual" type="password" placeholder="Senha" autocomplete="current-password" required>
+                                        <input name="token_2fa" type="text" inputmode="numeric" placeholder="2FA" autocomplete="one-time-code" required>
+                                        <button type="submit" class="button button-secondary">Gerar link</button>
+                                    </form>
+                                {% else %}
+                                    -
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="10">Nenhum backup registrado.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}

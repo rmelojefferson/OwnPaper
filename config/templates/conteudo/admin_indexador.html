@@ -1,0 +1,52 @@
+{% extends "conteudo/admin_base_custom.html" %}
+
+{% block titletag %}Indexador{% endblock %}
+
+{% block content %}
+<div class="nice-padding op-admin-panel op-admin-panel--wide">
+    <header class="op-admin-panel__header">
+        <div>
+            <p class="op-admin-panel__eyebrow">Operação</p>
+            <h1>Indexador</h1>
+            <p class="op-admin-panel__lead">Gerencie os registros indexados, importe bases em CSV e baixe o modelo de importação.</p>
+        </div>
+        <div class="op-admin-panel__actions">
+            <a class="button button-secondary" href="{% url 'wagtailadmin_home' %}">Voltar ao painel</a>
+        </div>
+    </header>
+
+    <section class="admin-stats-grid" aria-label="Resumo do indexador">
+        <article class="op-admin-metric-card">
+            <span>Registros cadastrados</span>
+            <strong>{{ registros_total }}</strong>
+        </article>
+        <article class="op-admin-metric-card">
+            <span>Registros ativos</span>
+            <strong>{{ registros_ativos }}</strong>
+        </article>
+        <article class="op-admin-metric-card">
+            <span>Registros inativos</span>
+            <strong>{{ registros_inativos }}</strong>
+        </article>
+    </section>
+
+    <section class="op-admin-two-column">
+        <article class="w-panel op-admin-card">
+            <h2>Registros do indexador</h2>
+            <p class="op-admin-panel__meta">Consulte, edite e publique os registros disponíveis na busca pública do indexador.</p>
+            <div class="op-admin-panel__actions">
+                <a class="button" href="{{ registros_url }}">Abrir registros</a>
+            </div>
+        </article>
+
+        <article class="w-panel op-admin-card">
+            <h2>Importar CSV</h2>
+            <p class="op-admin-panel__meta">Importe registros em lote usando a validação e sanitização do OwnPaper.</p>
+            <div class="op-admin-panel__actions">
+                <a class="button" href="{{ importar_url }}">Importar CSV</a>
+                <a class="button button-secondary" href="{{ modelo_url }}">Baixar modelo CSV</a>
+            </div>
+        </article>
+    </section>
+</div>
+{% endblock %}

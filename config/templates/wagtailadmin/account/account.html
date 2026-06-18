@@ -1,0 +1,94 @@
+{% extends "wagtailadmin/generic/form.html" %}
+{% load i18n wagtailadmin_tags static %}
+
+{% block form_content %}
+    <div class="w-tabs" data-controller="w-tabs" data-action="popstate@window->w-tabs#select" data-w-tabs-use-location-value="true">
+        <div class="w-tabs__wrapper">
+            <div role="tablist" class="w-tabs__list" data-action="keydown.right->w-tabs#selectNext keydown.left->w-tabs#selectPrevious keydown.home->w-tabs#selectFirst keydown.end->w-tabs#selectLast">
+                {% for tab in panels_by_tab.keys %}
+                    {% include 'wagtailadmin/shared/tabs/tab_nav_link.html' with tab_id=tab.name title=tab.title %}
+                {% endfor %}
+
+                {% if menu_items %}
+                    {% include 'wagtailadmin/shared/tabs/tab_nav_link.html' with tab_id='actions' title=_("Mais ações") %}
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="tab-content">
+            {% csrf_token %}
+
+            {% for tab, panels in panels_by_tab.items %}
+                <section
+                    id="tab-{{ tab.name|cautious_slugify }}"
+                    class="w-tabs__panel"
+                    role="tabpanel"
+                    hidden
+                    aria-labelledby="tab-label-{{ tab.name|cautious_slugify }}"
+                    data-w-tabs-target="panel"
+                    data-action="w-focus:focus->w-tabs#selectInside"
+                >
+                    {% for panel in panels %}
+                        {% if panel.name == "theme" %}
+                            {% panel id=panel.name heading="Tema e zoom" heading_size="label" classname="collapsed" %}
+                                <div class="w-account-settings-panel w-mt-5">
+                                    {{ panel.render }}
+                                    <div class="w-field__wrapper op-admin-account-zoom" data-field-wrapper>
+                                        <label class="w-field__label">Zoom do painel</label>
+                                        <div class="w-field" data-field>
+                                            <div class="w-field__help" data-field-help>
+                                                <div class="help">Ajusta o tamanho da interface administrativa neste navegador.</div>
+                                            </div>
+                                            <div class="w-field__input" data-field-input>
+                                                <div class="op-admin-zoom-preference" data-op-admin-zoom-controls aria-label="Zoom do painel">
+                                                    <button type="button" class="button button-secondary" data-op-admin-zoom="down">A-</button>
+                                                    <strong class="op-admin-zoom-preference__value" data-op-admin-zoom-value>100%</strong>
+                                                    <button type="button" class="button button-secondary" data-op-admin-zoom="up">A+</button>
+                                                    <button type="button" class="button button-secondary" data-op-admin-zoom="reset">Padrão</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endpanel %}
+                        {% else %}
+                            {% panel id=panel.name heading=panel.title heading_size="label" classname="collapsed" %}
+                                <div class="w-account-settings-panel w-mt-5">
+                                    {{ panel.render }}
+                                </div>
+                            {% endpanel %}
+                        {% endif %}
+                    {% endfor %}
+                </section>
+            {% endfor %}
+
+            {% if menu_items %}
+                <section
+                    id="tab-actions"
+                    class="w-tabs__panel"
+                    role="tabpanel"
+                    hidden
+                    aria-labelledby="tab-label-actions"
+                    data-w-tabs-target="panel"
+                    data-action="w-focus:focus->w-tabs#selectInside"
+                >
+                    <ul class="listing">
+                        {% for item in menu_items %}
+                            <li class="row row-flush">
+                                <div class="col6">
+                                    <a href="{{ item.url }}" class="button button-primary">{{ item.label }}</a>
+                                </div>
+                                <small class="col6">{{ item.help_text }}</small>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </section>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script src="{% static 'js/admin/zoom.js' %}" defer></script>
+{% endblock %}

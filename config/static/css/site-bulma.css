@@ -1,0 +1,250 @@
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+}
+
+body {
+    background: var(--op-bg, #f8fafc);
+    color: var(--op-text, #0f172a);
+    font-family: var(--op-font-ui);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+::selection {
+    background: color-mix(in srgb, var(--op-accent, #1d4ed8) 32%, transparent);
+    color: var(--op-text, #0f172a);
+}
+
+html[data-theme="escuro"] ::selection {
+    background: color-mix(in srgb, var(--op-accent, #93c5fd) 52%, transparent);
+    color: #f8fafc;
+}
+
+:root {
+    --op-font-ui: "Avenir Next", "Segoe UI Variable", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    --op-font-editorial: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", "URW Palladio L", Georgia, serif;
+    --bulma-family-primary: var(--op-font-ui);
+    --bulma-body-background-color: var(--op-bg, #f8fafc);
+    --bulma-body-family: var(--op-font-ui);
+    --bulma-body-color: var(--op-text, #0f172a);
+    --bulma-text-strong: var(--op-text, #0f172a);
+    --bulma-link-text: var(--op-link, #1d4ed8);
+    --bulma-link-text-hover: var(--op-accent, #1d4ed8);
+    --bulma-border: var(--op-border, #dbe3ef);
+    --bulma-scheme-main: var(--op-bg, #f8fafc);
+    --bulma-background: var(--op-bg, #f8fafc);
+    --bulma-text: var(--op-text, #0f172a);
+    --bulma-box-background-color: var(--op-surface, #ffffff);
+    --bulma-box-color: var(--op-text, #0f172a);
+    --bulma-box-shadow: 0 16px 30px rgba(15, 23, 42, 0.06);
+    --bulma-card-background-color: var(--op-surface, #ffffff);
+    --bulma-card-color: var(--op-text, #0f172a);
+    --bulma-card-shadow: 0 16px 30px rgba(15, 23, 42, 0.06);
+    --bulma-input-background-color: var(--op-surface, #ffffff);
+    --bulma-input-border-color: var(--op-border, #dbe3ef);
+    --bulma-input-color: var(--op-text, #0f172a);
+    --bulma-input-shadow: none;
+    --bulma-input-focus-border-color: var(--op-accent, #1d4ed8);
+    --bulma-input-focus-shadow-size: 0;
+    --bulma-button-background-color: var(--op-btn-bg, #ffffff);
+    --bulma-button-border-color: var(--op-border, #dbe3ef);
+    --bulma-button-color: var(--op-btn-text, #0f172a);
+    --bulma-button-hover-border-color: var(--op-btn-hover-bg, #1d4ed8);
+    --bulma-button-hover-color: var(--op-btn-hover-text, #ffffff);
+    --bulma-button-focus-border-color: var(--op-accent, #1d4ed8);
+    --bulma-button-focus-color: var(--op-btn-hover-text, #ffffff);
+    --bulma-primary: var(--op-accent, #1d4ed8);
+    --bulma-primary-h: 221deg;
+    --bulma-primary-s: 83%;
+    --bulma-primary-l: 53%;
+}
+
+.op-page-shell,
+.newsletter-layout,
+.contato-layout,
+.quiz-estudo-layout,
+.conteudo-institucional,
+.publicacao-artigo {
+    width: 100%;
+    max-width: var(--op-layout-width, 1040px);
+    margin-top: 1rem;
+    margin-bottom: 3rem;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 1.5rem;
+    box-sizing: border-box;
+}
+
+.op-page-shell {
+    padding-top: 0;
+}
+
+.op-page-header {
+    margin: 0 0 1rem;
+    max-width: 760px;
+    text-align: left;
+}
+
+.op-page-header h1,
+.op-page-header .title {
+    margin: 0;
+    color: var(--op-text, #0f172a);
+    font-family: var(--op-font-ui);
+    font-size: clamp(2rem, 2.2vw, 2.35rem);
+    line-height: 1.1;
+    font-weight: 700;
+    letter-spacing: 0;
+    text-rendering: auto;
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+}
+
+.op-page-subtitle,
+.op-muted-text {
+    color: var(--op-muted, #526071);
+}
+
+.op-box,
+.op-card {
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 18px;
+    background: var(--op-surface, #ffffff);
+    box-shadow: 0 16px 30px rgba(15, 23, 42, 0.06);
+}
+
+.op-box {
+    padding: 1.15rem;
+}
+
+.op-section {
+    margin-bottom: 1.25rem;
+}
+
+.op-field-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: flex-end;
+}
+
+.op-field-row > * {
+    min-width: 0;
+}
+
+.op-message {
+    padding: 0.9rem 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 14px;
+    background: var(--op-surface, #ffffff);
+}
+
+.op-button {
+    font-family: inherit;
+    font-weight: 700;
+}
+
+.op-content a {
+    text-decoration: underline;
+    text-underline-offset: 0.14em;
+}
+
+.op-content p:last-child,
+.op-content ul:last-child,
+.op-content ol:last-child {
+    margin-bottom: 0;
+}
+
+.menu-principal {
+    margin-bottom: 1rem;
+}
+
+.menu-principal-inner,
+.rodape-site-inner {
+    width: min(100%, calc(var(--op-layout-width, 1040px) + (2 * var(--op-layout-padding-inline, 20px))));
+    max-width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: var(--op-layout-padding-inline, 20px);
+    padding-right: var(--op-layout-padding-inline, 20px);
+    box-sizing: border-box;
+}
+
+.home-card-publicacao.card {
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 14px;
+    background: var(--op-surface, #ffffff);
+    box-shadow: 0 12px 22px rgba(15, 23, 42, 0.07);
+}
+
+.home-paginacao-ultimas,
+.paginacao {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.home-paginacao-ultimas a,
+.paginacao a,
+.pagination-link,
+.pagination-next,
+.pagination-previous {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    height: 36px;
+    border: 1px solid var(--op-border, #dbe3ef);
+    background: var(--op-btn-bg, var(--op-surface, #f8fafc));
+    color: var(--op-btn-text, var(--op-text, #0f172a));
+    padding: 0 0.78rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.home-paginacao-ultimas a:hover,
+.paginacao a:hover {
+    border-color: var(--op-btn-hover-bg, var(--op-accent, #1d4ed8));
+    background: var(--op-btn-hover-bg, var(--op-accent, #1d4ed8));
+    color: var(--op-btn-hover-text, #ffffff);
+}
+
+.home-paginacao-ultimas span,
+.paginacao span {
+    font-weight: 600;
+    color: var(--op-muted, #526071);
+}
+
+@media (max-width: 760px) {
+    :root {
+        --op-layout-padding-inline: 14px;
+    }
+
+    .op-page-shell,
+    .newsletter-layout,
+    .contato-layout,
+    .quiz-estudo-layout,
+    .conteudo-institucional,
+    .publicacao-artigo {
+        margin-top: 1rem;
+        margin-bottom: 2rem;
+        padding-left: var(--op-layout-padding-inline, 14px);
+        padding-right: var(--op-layout-padding-inline, 14px);
+        padding-bottom: 1.25rem;
+    }
+
+    .menu-principal-inner,
+    .rodape-site-inner {
+        padding-left: var(--op-layout-padding-inline, 14px);
+        padding-right: var(--op-layout-padding-inline, 14px);
+    }
+}

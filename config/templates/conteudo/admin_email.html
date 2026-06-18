@@ -1,0 +1,62 @@
+{% extends "conteudo/admin_base_custom.html" %}
+
+{% block titletag %}E-mails{% endblock %}
+
+{% block content %}
+<div class="nice-padding op-admin-panel op-admin-panel--wide">
+    <header class="op-admin-panel__header">
+        <div>
+            <p class="op-admin-panel__eyebrow">Relacionamento e campanhas</p>
+            <h1>E-mails</h1>
+            <p class="op-admin-panel__lead">Centralize disparos, templates de campanha e notificações automáticas de publicações.</p>
+        </div>
+        <div class="op-admin-panel__actions">
+            <a class="button button-secondary" href="{% url 'wagtailadmin_home' %}">Voltar ao painel</a>
+        </div>
+    </header>
+
+    <section class="admin-stats-grid" aria-label="Resumo de e-mails">
+        <article class="op-admin-metric-card">
+            <span>Disparos cadastrados</span>
+            <strong>{{ disparos_total }}</strong>
+            <small>{{ disparos_30d }} nos últimos 30 dias</small>
+        </article>
+        <article class="op-admin-metric-card">
+            <span>Entregas em 30 dias</span>
+            <strong>{{ enviados_30d }}</strong>
+            <small>{{ falhas_30d }} falha{{ falhas_30d|pluralize }}</small>
+        </article>
+        <article class="op-admin-metric-card">
+            <span>Templates</span>
+            <strong>{{ templates_ativos }}</strong>
+            <small>{{ templates_total }} template{{ templates_total|pluralize }} no total</small>
+        </article>
+    </section>
+
+    <section class="op-admin-two-column">
+        <article class="w-panel op-admin-card">
+            <h2>Disparo em massa</h2>
+            <p class="op-admin-panel__meta">Crie disparos manuais, envie testes, visualize previews e acompanhe histórico de envio.</p>
+            <div class="op-admin-panel__actions">
+                <a class="button" href="{{ disparos_url }}">Abrir disparos</a>
+            </div>
+        </article>
+
+        <article class="w-panel op-admin-card">
+            <h2>Templates de campanha</h2>
+            <p class="op-admin-panel__meta">Gerencie modelos reutilizáveis para campanhas e comunicados.</p>
+            <div class="op-admin-panel__actions">
+                <a class="button" href="{{ templates_url }}">Abrir templates</a>
+            </div>
+        </article>
+
+        <article class="w-panel op-admin-card">
+            <h2>Notificações de publicações</h2>
+            <p class="op-admin-panel__meta">Configure avisos automáticos ou manuais de novas publicações para a newsletter.</p>
+            <div class="op-admin-panel__actions">
+                <a class="button" href="{{ publicacoes_url }}">Abrir notificações</a>
+            </div>
+        </article>
+    </section>
+</div>
+{% endblock %}

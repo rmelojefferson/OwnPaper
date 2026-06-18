@@ -17,6 +17,7 @@
         <meta name="description" content="{{ page.search_description }}" />
         {% endif %}
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="alternate" type="application/rss+xml" title="RSS - Publicações" href="/rss.xml">
 
         {# Force all links in the live preview panel to be opened in a new tab #}
         {% if request.in_preview_panel %}
@@ -24,7 +25,7 @@
         {% endif %}
 
         {# Global stylesheets #}
-        <link rel="stylesheet" type="text/css" href="{% static 'css/config.css' %}">
+        {% include "includes/site_head_assets.html" %}
 
         {% block extra_css %}
         {# Override this in templates to add extra stylesheets #}
@@ -41,7 +42,7 @@
         {% block content %}{% endblock %}
 
         {# Global javascript #}
-        <script type="text/javascript" src="{% static 'js/config.js' %}"></script>
+        <script type="text/javascript" src="{% static 'js/config.js' %}?v=20260428-02"></script>
 
         {% block extra_js %}
         {# Override this in templates to add extra javascript #}

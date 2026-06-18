@@ -1,0 +1,53 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% block titletag %}Importar inscritos da newsletter{% endblock %}
+{% block content %}
+    <div class="nice-padding op-admin-panel">
+        <header class="op-admin-panel__header">
+            <div>
+                <p class="op-admin-panel__eyebrow">Operação</p>
+                <h1>Importar inscritos da newsletter (CSV)</h1>
+                <p class="op-admin-panel__lead">
+            Faça upload de um CSV com coluna obrigatória <code>email</code>.
+            As colunas opcionais são <code>origem</code>, <code>ativo</code> e <code>consentimento</code>.
+                </p>
+            </div>
+            <div class="op-admin-panel__actions">
+                <a class="button button-secondary" href="{% url 'admin_newsletter_modelo_csv' %}">Baixar modelo CSV</a>
+                <a class="button button-secondary" href="{% url 'wagtailsnippets_conteudo_inscritonewsletter:list' %}">Ver inscritos</a>
+            </div>
+        </header>
+
+        <section class="op-admin-card op-admin-card--narrow">
+        <form method="post" enctype="multipart/form-data" class="op-admin-form-card">
+            {% csrf_token %}
+            <div class="op-admin-field">
+                <label for="id_arquivo_csv"><strong>Arquivo CSV</strong></label><br>
+                <input id="id_arquivo_csv" type="file" name="arquivo_csv" accept=".csv" required>
+            </div>
+
+            <div class="op-admin-form-grid">
+                <div class="op-admin-field">
+                    <label for="id_status_inicial"><strong>Status inicial padrão</strong></label><br>
+                    <select id="id_status_inicial" name="status_inicial">
+                        <option value="ativo" selected>Ativo</option>
+                        <option value="inativo">Inativo</option>
+                    </select>
+                </div>
+                <div class="op-admin-field">
+                    <label for="id_origem_padrao"><strong>Origem padrão</strong></label><br>
+                    <input id="id_origem_padrao" type="text" name="origem_padrao" value="importacao_csv_admin">
+                </div>
+            </div>
+
+            <div>
+                <label class="op-admin-checkbox-line">
+                    <input type="checkbox" name="consentimento_padrao" value="1" checked>
+                    <span>Marcar consentimento como ativo por padrão</span>
+                </label>
+            </div>
+
+            <button type="submit" class="button">Importar CSV</button>
+        </form>
+        </section>
+    </div>
+{% endblock %}

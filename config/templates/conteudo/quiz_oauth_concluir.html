@@ -1,0 +1,181 @@
+{% load static wagtailcore_tags %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ provider_label }} - OwnPaper</title>
+    {% include "includes/site_head_assets.html" %}
+    <style>
+        body{font:16px/1.5 var(--op-font-ui);margin:0;padding:24px;background:var(--op-bg,#f8fafc);color:var(--op-text,#0f172a)}
+        .card{max-width:560px;margin:0 auto;padding:24px;border:1px solid var(--op-border,#dbe3ef);border-radius:16px;background:var(--op-surface,#fff);box-shadow:0 16px 32px rgba(15,23,42,.08)}
+        h1{margin:0 0 10px;font-size:1.35rem}
+        p{margin:0 0 16px}
+        form{display:grid;gap:14px}
+        label{display:block;font-weight:700;margin-bottom:4px}
+        input{width:100%;min-height:42px;padding:10px 12px;border:1px solid var(--op-border,#cbd5e1);border-radius:10px;box-sizing:border-box;font:inherit;background:var(--op-surface,#fff);color:var(--op-text,#0f172a)}
+        .erro{color:#991b1b;background:color-mix(in srgb, var(--op-surface,#fff) 72%, #fecaca 28%);border:1px solid #fecaca;border-radius:10px;padding:12px}
+        .meta{color:var(--op-muted,#475569);font-size:.95rem}
+        .acoes{display:flex;gap:10px;flex-wrap:wrap}
+        .botao{display:inline-flex;align-items:center;justify-content:center;min-height:42px;padding:0 14px;border:1px solid var(--op-border,#cbd5e1);border-radius:10px;background:var(--op-btn-bg,#fff);color:var(--op-btn-text,#0f172a);text-decoration:none;font-weight:700;cursor:pointer}
+        .botao-principal{background:var(--op-btn-hover-bg,#0f172a);color:var(--op-btn-hover-text,#fff);border-color:var(--op-btn-hover-bg,#0f172a)}
+        .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+        .grid .span-2{grid-column:1/-1}
+        .hint{margin:6px 0 0;font-size:.92rem;color:var(--op-muted,#475569)}
+        .hint.ok{color:#166534}
+        .hint.erro{padding:0;border:0;background:transparent;color:#991b1b}
+        .priv-box{display:grid;gap:10px;padding:14px;border:1px solid var(--op-border,#dbe3ef);border-radius:12px;background:color-mix(in srgb, var(--op-surface,#fff) 78%, var(--op-bg,#f8fafc) 22%)}
+        .priv-box h2{margin:0;font-size:1rem}
+        .priv-scroll{max-height:220px;overflow:auto;padding:12px;border:1px solid var(--op-border,#cbd5e1);border-radius:10px;background:var(--op-surface,#fff)}
+        .priv-scroll p:first-child{margin-top:0}
+        .priv-scroll p:last-child{margin-bottom:0}
+        .priv-check{display:flex;align-items:flex-start;gap:10px;font-size:.95rem;line-height:1.45}
+        .priv-check input{width:auto;min-height:auto;padding:0;margin:3px 0 0;flex:0 0 auto}
+        .priv-check[aria-disabled="true"]{opacity:.68}
+        @media (max-width:640px){.grid{grid-template-columns:1fr}}
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>{{ provider_label }}</h1>
+        <p class="meta">
+            Confirme seus dados para finalizar o acesso ao histórico do quiz.
+        </p>
+
+        {% if erro == "campos" %}
+            <p class="erro">Preencha os campos obrigatórios.</p>
+        {% elif erro == "email" %}
+            <p class="erro">Informe um e-mail válido.</p>
+        {% elif erro == "usuario" %}
+            <p class="erro">Este nome de usuário ou e-mail já está em uso por outra conta.</p>
+        {% elif erro == "privacidade" %}
+            <p class="erro">Você precisa concordar com os termos de privacidade e dados para finalizar seu cadastro.</p>
+        {% endif %}
+
+        <form method="post" action="{% url 'quiz_oauth_concluir' page.id %}">
+            {% csrf_token %}
+            <div class="grid">
+            <div>
+                <label for="oauth-nome">Nome</label>
+                <input id="oauth-nome" name="nome" type="text" required value="{{ valores.nome|default:'' }}">
+            </div>
+            <div>
+                <label for="oauth-sobrenome">Sobrenome</label>
+                <input id="oauth-sobrenome" name="sobrenome" type="text" required value="{{ valores.sobrenome|default:'' }}">
+            </div>
+            <div class="span-2">
+                <label for="oauth-username">Nome de usuário</label>
+                <input id="oauth-username" name="username" type="text" required value="{{ valores.username|default:pending.suggested_username }}" data-username-input data-username-check-url="{% url 'username_disponivel' %}">
+                <p class="hint" data-username-status></p>
+            </div>
+            <div class="span-2">
+                <label for="oauth-email">E-mail</label>
+                <input id="oauth-email" name="email" type="email" required value="{{ valores.email|default:pending.email }}">
+            </div>
+            <div class="span-2">
+                <label for="oauth-orcid">ORCID</label>
+                <input id="oauth-orcid" name="orcid" type="text" value="{{ valores.orcid|default:pending.orcid }}" placeholder="0000-0000-0000-0000">
+            </div>
+            <div class="span-2 priv-box">
+                <h2>Privacidade e dados</h2>
+                <div class="priv-scroll" data-privacy-scrollbox>
+                    {% if config_site and config_site.pagina_privacidade and config_site.pagina_privacidade.corpo %}
+                        {{ config_site.pagina_privacidade.corpo|richtext }}
+                    {% else %}
+                        {% include "includes/privacidade_texto_base.html" %}
+                    {% endif %}
+                </div>
+                <label class="priv-check" aria-disabled="true">
+                    <input name="aceitou_privacidade_cadastro" type="checkbox" value="1" required disabled data-privacy-checkbox>
+                    Li os termos de privacidade e dados e concordo com o uso dos meus dados para cadastro, autenticação, moderação e solicitações de privacidade.
+                </label>
+            </div>
+            </div>
+            <div class="acoes">
+                <button class="botao botao-principal" type="submit" data-submit-finalizar>
+                    Finalizar acesso
+                </button>
+                <button class="botao" type="button" onclick="window.close()">
+                    Fechar
+                </button>
+            </div>
+        </form>
+    </div>
+    <script>
+    (function () {
+        var checkbox = document.querySelector("[data-privacy-checkbox]");
+        var scrollbox = document.querySelector("[data-privacy-scrollbox]");
+        var usernameInput = document.querySelector("[data-username-input]");
+        var usernameStatus = document.querySelector("[data-username-status]");
+        var submit = document.querySelector("[data-submit-finalizar]");
+        var pendingRequest = 0;
+
+        function updateSubmitState() {
+            if (!submit) return;
+            var blocked = checkbox && checkbox.disabled;
+            var invalid = usernameStatus && usernameStatus.dataset.available === "false";
+            submit.disabled = !!blocked || !!invalid;
+        }
+
+        function releaseCheckbox() {
+            if (!checkbox) return;
+            checkbox.disabled = false;
+            var label = checkbox.closest(".priv-check");
+            if (label) label.setAttribute("aria-disabled", "false");
+            updateSubmitState();
+        }
+
+        if (scrollbox && checkbox) {
+            function checkScroll() {
+                if (scrollbox.scrollTop + scrollbox.clientHeight >= scrollbox.scrollHeight - 4) {
+                    releaseCheckbox();
+                }
+            }
+            checkScroll();
+            scrollbox.addEventListener("scroll", checkScroll, { passive: true });
+        }
+
+        if (usernameInput && usernameStatus) {
+            var timer = null;
+            function renderStatus(payload) {
+                usernameStatus.textContent = payload.message || "";
+                usernameStatus.className = "hint" + (payload.available ? " ok" : payload.normalized ? " erro" : "");
+                usernameStatus.dataset.available = payload.available ? "true" : "false";
+                if (payload.normalized && usernameInput.value.trim() !== payload.normalized) {
+                    usernameStatus.textContent += " Será normalizado como @" + payload.normalized;
+                }
+                updateSubmitState();
+            }
+            usernameInput.addEventListener("input", function () {
+                clearTimeout(timer);
+                timer = setTimeout(function () {
+                    var raw = usernameInput.value.trim();
+                    if (!raw) {
+                        renderStatus({ available: false, normalized: "", message: "Informe um nome de usuário." });
+                        return;
+                    }
+                    var requestId = ++pendingRequest;
+                    fetch(usernameInput.getAttribute("data-username-check-url") + "?username=" + encodeURIComponent(raw), { headers: { "X-Requested-With": "XMLHttpRequest" } })
+                        .then(function (response) { return response.json(); })
+                        .then(function (payload) {
+                            if (requestId !== pendingRequest) return;
+                            renderStatus(payload);
+                        })
+                        .catch(function () {
+                            if (requestId !== pendingRequest) return;
+                            renderStatus({ available: false, normalized: "", message: "Não foi possível validar o nome de usuário agora." });
+                        });
+                }, 220);
+            });
+            if (usernameInput.value.trim()) {
+                usernameInput.dispatchEvent(new Event("input"));
+            } else {
+                updateSubmitState();
+            }
+        } else {
+            updateSubmitState();
+        }
+    }());
+    </script>
+</body>
+</html>

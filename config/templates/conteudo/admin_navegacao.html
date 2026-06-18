@@ -1,0 +1,102 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% block titletag %}Menu e rodapé{% endblock %}
+{% block content %}
+<div class="nice-padding op-admin-panel op-admin-panel--wide">
+    <header class="op-admin-panel__header">
+        <div>
+            <p class="op-admin-panel__eyebrow">Administração</p>
+            <h1>Menu e rodapé</h1>
+            <p class="op-admin-panel__lead">Centralize os caminhos de edição do menu principal e do rodapé público, com visibilidade do que está ativo e das URLs resolvidas.</p>
+            <p class="op-admin-panel__meta"><strong>Site:</strong> {{ site.hostname }}{% if site.port %}:{{ site.port }}{% endif %}</p>
+        </div>
+        <div class="op-admin-panel__actions">
+            <a class="button button-secondary" href="{% url 'admin_configuracoes_site_secao' 'menu-navegacao' %}">Configurar comportamento do menu</a>
+            <a class="button button-secondary" href="{% url 'admin_configuracoes_site_secao' 'identidade-seo' %}">Texto/copyright do rodapé</a>
+        </div>
+    </header>
+
+    <section class="op-admin-card">
+        <div class="op-admin-section-header">
+            <div>
+                <h2>Menu principal</h2>
+                <p class="op-admin-muted">Modo customizado: <strong>{% if config_site.usar_menu_customizado %}ativo{% else %}desativado{% endif %}</strong></p>
+            </div>
+            <div class="op-admin-panel__actions">
+                <a class="button button-primary" href="{% url 'wagtailsnippets_conteudo_menuprincipalgrupo:add' %}">Adicionar grupo</a>
+                <a class="button button-secondary" href="{% url 'wagtailsnippets_conteudo_menuprincipalgrupo:list' %}">Gerenciar menu principal</a>
+                <a class="button button-secondary" href="{% url 'admin_configuracoes_site_secao' 'menu-navegacao' %}">Comportamento e logo</a>
+            </div>
+        </div>
+        <p class="op-admin-muted">Esta área lista os grupos usados pelo menu customizado. Os subitens são configurados dentro de cada grupo. O comportamento do botão Início e os logos ficam em <strong>Configurações do site > Menu e navegação</strong>.</p>
+        <div class="op-admin-table-wrap">
+            <table class="listing op-admin-listing-table op-admin-listing-table--nav">
+                <thead>
+                    <tr>
+                        <th>Ordem</th>
+                        <th>Título</th>
+                        <th>Tipo</th>
+                        <th>Subitens</th>
+                        <th>URL resolvida</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in menu_grupos %}
+                        <tr>
+                            <td>{{ item.sort_order }}</td>
+                            <td>{{ item.titulo }}</td>
+                            <td>{{ item.get_tipo_display }}</td>
+                            <td>{{ item.subitens.count }}</td>
+                            <td>{{ item.url_resolvida|default:"-" }}</td>
+                            <td><a href="{% url 'wagtailsnippets_conteudo_menuprincipalgrupo:edit' item.pk %}">Editar grupo</a></td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="6">Nenhum item de menu cadastrado.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="op-admin-card">
+        <div class="op-admin-section-header">
+            <div>
+                <h2>Rodapé</h2>
+                <p class="op-admin-muted">Links exibidos no fechamento institucional do site.</p>
+            </div>
+            <div class="op-admin-panel__actions">
+                <a class="button button-primary" href="{% url 'wagtailsnippets_conteudo_rodapelink:add' %}">Adicionar link ao rodapé</a>
+                <a class="button button-secondary" href="{% url 'wagtailsnippets_conteudo_rodapelink:list' %}">Gerenciar links do rodapé</a>
+                <a class="button button-secondary" href="{% url 'admin_configuracoes_site_secao' 'identidade-seo' %}">Texto/copyright do rodapé</a>
+            </div>
+        </div>
+        <p class="op-admin-muted">Se houver links cadastrados aqui, eles substituem os atalhos automáticos do rodapé. Se não houver links manuais, o site usa os atalhos configurados: contato, sobre, privacidade, cookies, newsletter, indexador e quiz. O texto institucional e o copyright ficam em <strong>Configurações do site > Identidade e SEO</strong>.</p>
+        <div class="op-admin-table-wrap">
+            <table class="listing op-admin-listing-table op-admin-listing-table--footer">
+                <thead>
+                    <tr>
+                        <th>Ordem</th>
+                        <th>Ativo</th>
+                        <th>Título</th>
+                        <th>Tipo</th>
+                        <th>URL resolvida</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in rodape_links %}
+                        <tr>
+                            <td>{{ item.sort_order }}</td>
+                            <td>{% if item.ativo %}sim{% else %}não{% endif %}</td>
+                            <td>{{ item.titulo }}</td>
+                            <td>{{ item.get_tipo_display }}</td>
+                            <td>{{ item.url_resolvida|default:"-" }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="5">Nenhum link de rodapé cadastrado.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -1,13 +1,26 @@
 {% load wagtailembeds_tags %}
 
 <div class="midia-no-corpo">
-    {% if midia.titulo %}
-        <h3>{{ midia.titulo }}</h3>
-    {% endif %}
-
     <div class="midia-player">
-        {% embed midia.url %}
+        {% if midia.is_video_local %}
+            {% if midia.video_local_aprovado %}
+                <video controls preload="metadata">
+                    <source src="{{ midia.video_url }}" type="{{ midia.video_content_type|default:'video/mp4' }}">
+                    Seu navegador não suporta reprodução de vídeo.
+                </video>
+            {% elif midia.video_local_pendente %}
+                <div class="midia-pendente">Vídeo aguardando aprovação editorial.</div>
+            {% else %}
+                <div class="midia-pendente">Vídeo local indisponível.</div>
+            {% endif %}
+        {% elif midia.url %}
+            {% embed midia.url %}
+        {% endif %}
     </div>
+
+    {% if midia.titulo %}
+        <div class="midia-titulo">{{ midia.titulo }}</div>
+    {% endif %}
 
     {% if midia.legenda %}
         <div class="midia-legenda">

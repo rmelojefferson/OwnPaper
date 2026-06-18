@@ -1,0 +1,85 @@
+{% extends "two_factor/_base_focus.html" %}
+{% load i18n %}
+{% load two_factor_tags %}
+
+{% block extra_media %}
+  {{ form.media }}
+{% endblock %}
+
+{% block auth_card_class %}auth-card--login{% endblock %}
+
+{% block content %}
+  {% if wizard.steps.current == 'token' %}
+    <p>{{ device|as_verbose_action }}</p>
+  {% elif wizard.steps.current == 'backup' %}
+    <p>Use este formulário para inserir um código de backup.</p>
+  {% endif %}
+
+  <form action="" method="post" class="auth-login-form">
+    {% csrf_token %}
+    {{ wizard.management_form }}
+
+    {% if wizard.form.non_field_errors %}
+      <ul class="errorlist">
+        {% for error in wizard.form.non_field_errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    {% for hidden in wizard.form.hidden_fields %}
+      {{ hidden }}
+    {% endfor %}
+
+    {% if wizard.steps.current == 'auth' %}
+      <div class="auth-form-grid">
+        <div class="auth-field">
+          <label for="{{ wizard.form.username.id_for_label }}">Nome de usuário</label>
+          {{ wizard.form.username }}
+          {% if wizard.form.username.help_text %}
+            <span class="helptext">{{ wizard.form.username.help_text }}</span>
+          {% endif %}
+          {% if wizard.form.username.errors %}
+            <ul class="errorlist">
+              {% for error in wizard.form.username.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+        <div class="auth-field">
+          <label for="{{ wizard.form.password.id_for_label }}">Senha</label>
+          {{ wizard.form.password }}
+          {% if wizard.form.password.help_text %}
+            <span class="helptext">{{ wizard.form.password.help_text }}</span>
+          {% endif %}
+          {% if wizard.form.password.errors %}
+            <ul class="errorlist">
+              {% for error in wizard.form.password.errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      </div>
+    {% else %}
+      {% include "two_factor/_wizard_forms.html" %}
+    {% endif %}
+
+    <div class="auth-actions auth-actions--single">
+      {% if wizard.steps.current == 'auth' %}
+        <button type="submit" class="btn btn-primary btn-block">Entrar</button>
+      {% elif wizard.steps.current == 'token' %}
+        <button type="submit" class="btn btn-primary btn-block">Validar código</button>
+      {% elif wizard.steps.current == 'backup' %}
+        <button type="submit" class="btn btn-primary btn-block">Validar código de backup</button>
+      {% else %}
+        <button type="submit" class="btn btn-primary btn-block">Continuar</button>
+      {% endif %}
+    </div>
+  </form>
+
+  {% if wizard.steps.current == 'auth' %}
+    <p class="auth-note auth-note--compact"><a href="{% url 'password_reset' %}">Esqueci minha senha</a></p>
+  {% endif %}
+{% endblock %}

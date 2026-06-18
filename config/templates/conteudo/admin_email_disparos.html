@@ -1,0 +1,184 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% block titletag %}Disparo em massa{% endblock %}
+{% block content %}
+<div class="nice-padding op-admin-panel op-admin-panel--wide">
+    <header class="op-admin-panel__header">
+        <div>
+            <p class="op-admin-panel__eyebrow">Operação</p>
+            <h1>Disparo em massa</h1>
+            <p class="op-admin-panel__lead">Monte campanhas, envie testes, acompanhe indicadores recentes e acesse o histórico completo dos disparos.</p>
+        </div>
+    </header>
+    <section class="op-admin-metric-grid op-admin-metric-grid--wide">
+        <div class="op-admin-metric-card"><small>30 dias</small><div class="op-admin-metric-card__value">{{ metricas_30d.disparos }}</div><small>disparos</small></div>
+        <div class="op-admin-metric-card"><small>Destinatários</small><div class="op-admin-metric-card__value">{{ metricas_30d.destinatarios }}</div><small>total</small></div>
+        <div class="op-admin-metric-card"><small>Enviados</small><div class="op-admin-metric-card__value">{{ metricas_30d.enviados }}</div><small>30 dias</small></div>
+        <div class="op-admin-metric-card"><small>Falhas</small><div class="op-admin-metric-card__value">{{ metricas_30d.falhas }}</div><small>30 dias</small></div>
+        <div class="op-admin-metric-card"><small>Taxa de entrega</small><div class="op-admin-metric-card__value">{{ metricas_30d.taxa_entrega }}%</div><small>30 dias</small></div>
+        <div class="op-admin-metric-card"><small>Taxa de falha</small><div class="op-admin-metric-card__value">{{ metricas_30d.taxa_falha }}%</div><small>30 dias</small></div>
+        <div class="op-admin-metric-card"><small>Aberturas únicas</small><div class="op-admin-metric-card__value">{{ metricas_30d.aberturas_unicas }}</div><small>30 dias</small></div>
+        <div class="op-admin-metric-card"><small>Aberturas totais</small><div class="op-admin-metric-card__value">{{ metricas_30d.aberturas_total }}</div><small>30 dias</small></div>
+        <div class="op-admin-metric-card"><small>Cliques totais</small><div class="op-admin-metric-card__value">{{ metricas_30d.cliques_total }}</div><small>30 dias</small></div>
+        <div class="op-admin-metric-card"><small>Taxa de abertura</small><div class="op-admin-metric-card__value">{{ metricas_30d.taxa_abertura }}%</div><small>única</small></div>
+        <div class="op-admin-metric-card"><small>CTR</small><div class="op-admin-metric-card__value">{{ metricas_30d.ctr }}%</div><small>cliques/entregues</small></div>
+    </section>
+
+    <section class="op-admin-card">
+        <form method="post">
+            {% csrf_token %}
+            <div class="op-admin-field">
+                <label for="id_template_pronto">Template pronto (opcional)</label>
+                <select id="id_template_pronto" name="tpl" onchange="if(this.value){window.location='?tpl='+this.value}else{window.location='?'}">
+                    <option value="">Sem template</option>
+                    {% if templates_prontos %}
+                        <optgroup label="Prontos do sistema">
+                            {% for tpl in templates_prontos %}
+                                <option value="builtin:{{ tpl.id }}">{{ tpl.nome }}</option>
+                            {% endfor %}
+                        </optgroup>
+                    {% endif %}
+                    {% if templates_salvos %}
+                        <optgroup label="Salvos no painel">
+                            {% for tpl in templates_salvos %}
+                                <option value="saved:{{ tpl.id }}">{{ tpl.nome }}</option>
+                            {% endfor %}
+                        </optgroup>
+                    {% endif %}
+                </select>
+                <p class="op-admin-panel__meta"><a href="{% url 'admin_email_templates' %}">Gerenciar templates salvos</a></p>
+            </div>
+            <div class="op-admin-form-grid op-admin-form-grid--email-compose">
+                <div class="op-admin-field">
+                    <label for="id_segmento">Segmento</label>
+                    <select id="id_segmento" name="segmento">
+                        {% for item in segmento_info %}
+                            <option value="{{ item.valor }}" {% if segmento_inicial == item.valor %}selected{% endif %}>{{ item.rotulo }} ({{ item.estimativa }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="op-admin-field">
+                    <label for="id_assunto">Assunto</label>
+                    <input id="id_assunto" name="assunto" type="text" required value="{{ assunto_inicial|default:'' }}">
+                </div>
+            </div>
+            <div class="op-admin-field">
+                <label for="id_corpo_html">Corpo da mensagem</label>
+                <p class="op-admin-panel__meta">Use o editor visual para escrever o e-mail. O sistema gera e sanitiza o HTML automaticamente no envio.</p>
+                <textarea id="id_corpo_html" name="corpo_html" rows="10" required data-email-richtext>{{ corpo_inicial|default:'' }}</textarea>
+            </div>
+            <div class="op-admin-form-grid op-admin-form-grid--email-actions">
+                <div class="op-admin-field">
+                    <label for="id_email_teste">E-mail para teste</label>
+                    <input id="id_email_teste" name="email_teste" type="email">
+                </div>
+                <div class="op-admin-form-actions">
+                    <button type="submit" class="button button-secondary" name="acao" value="preview">Pré-visualizar</button>
+                    <button type="submit" class="button button-secondary" name="acao" value="enviar_teste">Enviar teste</button>
+                    <button type="submit" class="button" name="acao" value="enviar_agora">Enviar agora</button>
+                </div>
+            </div>
+        </form>
+    </section>
+
+    {% if preview_html_sanitizado %}
+        <section class="op-admin-card">
+            <h2>Pré-visualização</h2>
+            <p><strong>Assunto:</strong> {{ preview_assunto }}</p>
+            <div class="op-admin-preview-box">
+                {{ preview_html_sanitizado|safe }}
+            </div>
+        </section>
+    {% endif %}
+
+    <section class="op-admin-card">
+        <h2>Histórico</h2>
+        <form method="get" class="op-admin-form-grid op-admin-form-grid--history-filter">
+            <div class="op-admin-field">
+                <label for="id_tipo_historico">Tipo</label>
+                <select id="id_tipo_historico" name="tipo">
+                    <option value="">Todos</option>
+                    <option value="manual" {% if filtro_historico_tipo == 'manual' %}selected{% endif %}>Manual</option>
+                    <option value="publicacoes_imediata" {% if filtro_historico_tipo == 'publicacoes_imediata' %}selected{% endif %}>Publicações (imediata)</option>
+                    <option value="publicacoes_periodica" {% if filtro_historico_tipo == 'publicacoes_periodica' %}selected{% endif %}>Publicações (periódica)</option>
+                </select>
+            </div>
+            <div class="op-admin-field">
+                <label for="id_status_historico">Status</label>
+                <select id="id_status_historico" name="status_historico">
+                    <option value="">Todos</option>
+                    <option value="pendente" {% if filtro_historico_status == 'pendente' %}selected{% endif %}>Pendente</option>
+                    <option value="enviando" {% if filtro_historico_status == 'enviando' %}selected{% endif %}>Enviando</option>
+                    <option value="concluido" {% if filtro_historico_status == 'concluido' %}selected{% endif %}>Concluído</option>
+                    <option value="falhou" {% if filtro_historico_status == 'falhou' %}selected{% endif %}>Falhou</option>
+                </select>
+            </div>
+            <div class="op-admin-form-actions">
+                <button type="submit" class="button button-secondary">Filtrar histórico</button>
+            </div>
+        </form>
+        <div class="op-admin-table-wrap">
+            <table class="listing op-admin-listing-table op-admin-listing-table--email-history">
+                <thead>
+                    <tr>
+                        <th>Quando</th>
+                        <th>Tipo</th>
+                        <th>Segmento</th>
+                        <th>Assunto</th>
+                        <th>Status</th>
+                        <th>Destinatários</th>
+                        <th>Enviados</th>
+                        <th>Falhas</th>
+                        <th>Entrega %</th>
+                        <th>Falha %</th>
+                        <th>Aberturas únicas</th>
+                        <th>Aberturas</th>
+                        <th>Cliques</th>
+                        <th>Abertura %</th>
+                        <th>CTR %</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in historico %}
+                        <tr>
+                            <td>{{ item.criado_em|date:"d/m/Y H:i" }}</td>
+                            <td>{{ item.get_tipo_display }}</td>
+                            <td>{{ item.get_segmento_display }}</td>
+                            <td>{{ item.assunto }}</td>
+                            <td>{{ item.get_status_display }}</td>
+                            <td>{{ item.total_destinatarios }}</td>
+                            <td>{{ item.total_enviados }}</td>
+                            <td>{{ item.total_falhas }}</td>
+                            <td>{{ item.taxa_entrega }}%</td>
+                            <td>{{ item.taxa_falha }}%</td>
+                            <td>{{ item.aberturas_unicas }}</td>
+                            <td>{{ item.total_aberturas }}</td>
+                            <td>{{ item.total_cliques }}</td>
+                            <td>{{ item.taxa_abertura_unica }}%</td>
+                            <td>{{ item.ctr_unico }}%</td>
+                            <td><a class="button button-small button-secondary" href="{% url 'admin_email_disparo_detalhe' item.id %}">Detalhar</a></td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="16">Sem disparos registrados.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+</div>
+<script>
+    (function () {
+        var select = document.getElementById("id_template_pronto");
+        var selectedValue = "{{ tpl_id|default:''|escapejs }}";
+        if (select && selectedValue) {
+            select.value = selectedValue;
+        }
+    })();
+</script>
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    {% load static %}
+    <script src="{% static 'js/admin/email-richtext.js' %}" defer></script>
+{% endblock %}

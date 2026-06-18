@@ -1,0 +1,292 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% load static %}
+
+{% block titletag %}Perguntas do quiz{% endblock %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/admin-quiz-catalogo-lista.css' %}?v=20260522-01">
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    <script src="{% static 'js/pages/busca-datepicker.js' %}?v=20260516-01" defer></script>
+{% endblock %}
+
+{% block content %}
+    <div class="nice-padding admin-quiz-catalogo">
+        <header class="admin-publicacoes-topo">
+            <div>
+                <h1>Perguntas do quiz</h1>
+            </div>
+            <div>
+                <a class="button button-primary" href="{{ url_nova_pergunta }}">Nova pergunta reutilizável</a>
+            </div>
+        </header>
+
+        <section class="w-panel">
+            <div class="admin-quiz-catalogo-resumo">
+                <span>Total: <strong>{{ total_perguntas }}</strong></span>
+                <span>Ativas: <strong>{{ total_ativas }}</strong></span>
+                <span>Em uso: <strong>{{ total_em_uso }}</strong></span>
+                <span>Sem uso: <strong>{{ total_sem_uso }}</strong></span>
+            </div>
+        </section>
+
+        <section class="w-panel">
+            <form method="get" class="admin-quiz-catalogo-filtros">
+                <label class="admin-quiz-catalogo-filtros__busca">
+                    Busca
+                    <input type="text" name="q" value="{{ filtro_q }}" placeholder="ID, pergunta ou explicação">
+                </label>
+
+                <label>
+                    Categoria
+                    <select name="categoria">
+                        <option value="">Todas</option>
+                        {% for categoria in categorias %}
+                            <option value="{{ categoria.id }}" {% if filtro_categoria == categoria.id|stringformat:"s" %}selected{% endif %}>{{ categoria.nome }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+
+                <label>
+                    Tag
+                    <select name="tag">
+                        <option value="">Todas</option>
+                        {% for tag in tags %}
+                            <option value="{{ tag.id }}" {% if filtro_tag == tag.id|stringformat:"s" %}selected{% endif %}>{{ tag.name }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+
+                <label>
+                    Status
+                    <select name="status">
+                        <option value="">Todos</option>
+                        <option value="ativa" {% if filtro_status == "ativa" %}selected{% endif %}>Ativa</option>
+                        <option value="inativa" {% if filtro_status == "inativa" %}selected{% endif %}>Inativa</option>
+                    </select>
+                </label>
+
+                <label>
+                    Aprovação
+                    <select name="aprovacao">
+                        <option value="">Todas</option>
+                        <option value="pendente" {% if filtro_aprovacao == "pendente" %}selected{% endif %}>Pendente</option>
+                        <option value="aprovado" {% if filtro_aprovacao == "aprovado" %}selected{% endif %}>Aprovada</option>
+                        <option value="rejeitado" {% if filtro_aprovacao == "rejeitado" %}selected{% endif %}>Rejeitada</option>
+                    </select>
+                </label>
+
+                <label>
+                    Uso
+                    <select name="uso">
+                        <option value="">Todos</option>
+                        <option value="em_uso" {% if filtro_uso == "em_uso" %}selected{% endif %}>Em uso</option>
+                        <option value="sem_uso" {% if filtro_uso == "sem_uso" %}selected{% endif %}>Sem uso</option>
+                    </select>
+                </label>
+
+                <label>
+                    Ordenar
+                    <select name="ordenar">
+                        <option value="atualizado_desc" {% if filtro_ordenar == "atualizado_desc" %}selected{% endif %}>Atualização mais recente</option>
+                        <option value="atualizado_asc" {% if filtro_ordenar == "atualizado_asc" %}selected{% endif %}>Atualização mais antiga</option>
+                        <option value="criado_desc" {% if filtro_ordenar == "criado_desc" %}selected{% endif %}>Criação mais recente</option>
+                        <option value="criado_asc" {% if filtro_ordenar == "criado_asc" %}selected{% endif %}>Criação mais antiga</option>
+                        <option value="pergunta_asc" {% if filtro_ordenar == "pergunta_asc" %}selected{% endif %}>Pergunta A-Z</option>
+                        <option value="pergunta_desc" {% if filtro_ordenar == "pergunta_desc" %}selected{% endif %}>Pergunta Z-A</option>
+                        <option value="uso_desc" {% if filtro_ordenar == "uso_desc" %}selected{% endif %}>Mais usadas</option>
+                        <option value="uso_asc" {% if filtro_ordenar == "uso_asc" %}selected{% endif %}>Menos usadas</option>
+                    </select>
+                </label>
+
+                <label>
+                    Atualizada de
+                    <div class="busca-datepicker" data-busca-datepicker data-date-role="from">
+                        <input class="busca-datepicker-input" type="text" name="data_de" value="{{ filtro_data_de }}" placeholder="dd/mm/aaaa" inputmode="numeric" autocomplete="off" data-datepicker-input>
+                        <button type="button" class="busca-datepicker-toggle" data-datepicker-toggle aria-label="Abrir calendário da data inicial" title="Abrir calendário">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h1V3a1 1 0 0 1 1-1Zm12 7H5v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9ZM6 6a1 1 0 0 0-1 1v1h14V7a1 1 0 0 0-1-1H6Zm1.75 4.75h2.5v2.5h-2.5v-2.5Zm4 0h2.5v2.5h-2.5v-2.5Zm4 0h2.5v2.5h-2.5v-2.5Zm-8 4h2.5v2.5h-2.5v-2.5Zm4 0h2.5v2.5h-2.5v-2.5Z"></path></svg>
+                        </button>
+                        <div class="busca-datepicker-popover" data-datepicker-popover hidden>
+                            <div class="busca-datepicker-toolbar">
+                                <button type="button" class="busca-datepicker-nav" data-datepicker-prev aria-label="Mês anterior">‹</button>
+                                <div class="busca-datepicker-month" data-datepicker-month></div>
+                                <button type="button" class="busca-datepicker-nav" data-datepicker-next aria-label="Próximo mês">›</button>
+                            </div>
+                            <div class="busca-datepicker-weekdays" aria-hidden="true">
+                                <span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span><span>Dom</span>
+                            </div>
+                            <div class="busca-datepicker-grid" data-datepicker-grid></div>
+                            <div class="busca-datepicker-actions">
+                                <button type="button" class="busca-datepicker-action" data-datepicker-today>Hoje</button>
+                                <button type="button" class="busca-datepicker-action" data-datepicker-clear>Limpar</button>
+                            </div>
+                        </div>
+                    </div>
+                </label>
+
+                <label>
+                    Atualizada até
+                    <div class="busca-datepicker" data-busca-datepicker data-date-role="to">
+                        <input class="busca-datepicker-input" type="text" name="data_ate" value="{{ filtro_data_ate }}" placeholder="dd/mm/aaaa" inputmode="numeric" autocomplete="off" data-datepicker-input>
+                        <button type="button" class="busca-datepicker-toggle" data-datepicker-toggle aria-label="Abrir calendário da data final" title="Abrir calendário">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2a1 1 0 0 1 1 1v1h8V3a1 1 0 1 1 2 0v1h1a3 3 0 0 1 3 3v12a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3h1V3a1 1 0 0 1 1-1Zm12 7H5v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9ZM6 6a1 1 0 0 0-1 1v1h14V7a1 1 0 0 0-1-1H6Zm1.75 4.75h2.5v2.5h-2.5v-2.5Zm4 0h2.5v2.5h-2.5v-2.5Zm4 0h2.5v2.5h-2.5v-2.5Zm-8 4h2.5v2.5h-2.5v-2.5Zm4 0h2.5v2.5h-2.5v-2.5Z"></path></svg>
+                        </button>
+                        <div class="busca-datepicker-popover" data-datepicker-popover hidden>
+                            <div class="busca-datepicker-toolbar">
+                                <button type="button" class="busca-datepicker-nav" data-datepicker-prev aria-label="Mês anterior">‹</button>
+                                <div class="busca-datepicker-month" data-datepicker-month></div>
+                                <button type="button" class="busca-datepicker-nav" data-datepicker-next aria-label="Próximo mês">›</button>
+                            </div>
+                            <div class="busca-datepicker-weekdays" aria-hidden="true">
+                                <span>Seg</span><span>Ter</span><span>Qua</span><span>Qui</span><span>Sex</span><span>Sáb</span><span>Dom</span>
+                            </div>
+                            <div class="busca-datepicker-grid" data-datepicker-grid></div>
+                            <div class="busca-datepicker-actions">
+                                <button type="button" class="busca-datepicker-action" data-datepicker-today>Hoje</button>
+                                <button type="button" class="busca-datepicker-action" data-datepicker-clear>Limpar</button>
+                            </div>
+                        </div>
+                    </div>
+                </label>
+
+                <div class="admin-quiz-catalogo-acoes">
+                    <button type="submit" class="button">Filtrar</button>
+                    <a class="button button-secondary" href="{% url 'admin_quiz_catalogo_lista' %}">Limpar</a>
+                </div>
+            </form>
+        </section>
+
+        <section class="w-panel">
+            <div class="admin-quiz-catalogo-tabela-wrap">
+                <table class="listing admin-quiz-catalogo-tabela">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Pergunta</th>
+                            <th class="admin-quiz-catalogo-col-status">Status</th>
+                            <th>Categoria e tags</th>
+                            <th>Uso em publicações</th>
+                            <th>Atualização</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for pergunta in perguntas %}
+                            <tr>
+                                <td>#{{ pergunta.id }}</td>
+                                <td>
+                                    <a class="admin-quiz-catalogo-pergunta-link" href="{% url 'wagtailsnippets_conteudo_perguntaquizcatalogo:edit' pergunta.id %}">
+                                        <strong>{{ pergunta.pergunta }}</strong>
+                                    </a>
+                                    {% if pergunta.explicacao %}
+                                        <div class="admin-quiz-catalogo-explicacao">{{ pergunta.explicacao|truncatechars:180 }}</div>
+                                    {% endif %}
+                                </td>
+                                <td class="admin-quiz-catalogo-col-status">
+                                    <span class="admin-quiz-catalogo-badge {% if pergunta.aprovacao_status == 'aprovado' %}is-approved{% elif pergunta.aprovacao_status == 'rejeitado' %}is-rejected{% else %}is-pending{% endif %}">
+                                        {{ pergunta.get_aprovacao_status_display }}
+                                    </span>
+                                    <span class="admin-quiz-catalogo-badge {% if pergunta.ativa %}is-active{% else %}is-inactive{% endif %}">
+                                        {% if pergunta.ativa %}Ativa{% else %}Inativa{% endif %}
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="admin-quiz-catalogo-meta"><strong>Classificação da pergunta:</strong></div>
+                                    <div class="admin-quiz-catalogo-meta">Categoria: {{ pergunta.categoria_editorial|default:"-" }}</div>
+                                    <div class="admin-quiz-catalogo-meta">
+                                        Tag:
+                                        {% with tags_pergunta=pergunta.tags_editoriais_ordenadas %}
+                                            {% if tags_pergunta %}
+                                                {{ tags_pergunta.0.name }}
+                                                {% if tags_pergunta|length > 1 %}
+                                                    <details class="admin-quiz-catalogo-details">
+                                                        <summary>+ {{ tags_pergunta|length|add:"-1" }} tag(s)</summary>
+                                                        <div class="admin-quiz-catalogo-details-body">
+                                                            {% for tag in tags_pergunta|slice:"1:" %}
+                                                                <span>{{ tag.name }}</span>{% if not forloop.last %}<br>{% endif %}
+                                                            {% endfor %}
+                                                        </div>
+                                                    </details>
+                                                {% endif %}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        {% endwith %}
+                                    </div>
+                                    <div class="admin-quiz-catalogo-meta admin-quiz-catalogo-meta-group"><strong>Classificação das publicações onde ela está em uso:</strong></div>
+                                    <div class="admin-quiz-catalogo-meta">
+                                        Categoria:
+                                        {% with categorias_uso=pergunta.categorias_em_uso %}
+                                            {% if categorias_uso %}
+                                                {{ categorias_uso.0.nome }}
+                                                {% if categorias_uso|length > 1 %}
+                                                    <details class="admin-quiz-catalogo-details">
+                                                        <summary>+ {{ categorias_uso|length|add:"-1" }} categoria(s)</summary>
+                                                        <div class="admin-quiz-catalogo-details-body">
+                                                            {% for categoria in categorias_uso|slice:"1:" %}
+                                                                <span>{{ categoria.nome }}</span>{% if not forloop.last %}<br>{% endif %}
+                                                            {% endfor %}
+                                                        </div>
+                                                    </details>
+                                                {% endif %}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        {% endwith %}
+                                    </div>
+                                    <div class="admin-quiz-catalogo-meta">
+                                        Tag:
+                                        {% with tags_uso=pergunta.tags_em_uso %}
+                                            {% if tags_uso %}
+                                                {{ tags_uso.0.name }}
+                                                {% if tags_uso|length > 1 %}
+                                                    <details class="admin-quiz-catalogo-details">
+                                                        <summary>+ {{ tags_uso|length|add:"-1" }} tag(s)</summary>
+                                                        <div class="admin-quiz-catalogo-details-body">
+                                                            {% for tag in tags_uso|slice:"1:" %}
+                                                                <span>{{ tag.name }}</span>{% if not forloop.last %}<br>{% endif %}
+                                                            {% endfor %}
+                                                        </div>
+                                                    </details>
+                                                {% endif %}
+                                            {% else %}
+                                                -
+                                            {% endif %}
+                                        {% endwith %}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="admin-quiz-catalogo-meta"><strong>Total:</strong> {{ pergunta.total_usos|default:0 }}</div>
+                                    <div class="admin-quiz-catalogo-meta">
+                                        {% for publicacao in pergunta.publicacoes_vinculadas_admin|slice:":3" %}
+                                            {{ publicacao.title }}{% if not forloop.last %}<br>{% endif %}
+                                        {% empty %}
+                                            Sem uso
+                                        {% endfor %}
+                                        {% if pergunta.total_usos > 3 %}
+                                            <br>+ {{ pergunta.total_usos|add:"-3" }} uso(s)
+                                        {% endif %}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="admin-quiz-catalogo-meta"><strong>Criada:</strong> {{ pergunta.criado_em|date:"d/m/Y H:i" }}</div>
+                                    <div class="admin-quiz-catalogo-meta"><strong>Atualizada:</strong> {{ pergunta.atualizado_em|date:"d/m/Y H:i" }}</div>
+                                </td>
+                                <td class="admin-quiz-catalogo-links">
+                                    <a href="{% url 'wagtailsnippets_conteudo_perguntaquizcatalogo:edit' pergunta.id %}">Editar</a>
+                                </td>
+                            </tr>
+                        {% empty %}
+                            <tr>
+                                <td colspan="7">Nenhuma pergunta encontrada com os filtros atuais.</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+{% endblock %}

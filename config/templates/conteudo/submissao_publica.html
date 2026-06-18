@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Submissões públicas</title>
+    {% include "includes/site_head_assets.html" %}
+    {% include "includes/rastreamento_head.html" %}
+</head>
+<body>
+    {% include "includes/rastreamento_body.html" %}
+    {% include "includes/menu_principal.html" with menu_assets_in_head=True %}
+
+    <main class="container is-max-desktop op-page-shell">
+        <section class="op-card op-content" style="padding: clamp(1.25rem, 3vw, 2rem); margin: 2rem 0;">
+            <p class="op-eyebrow">Submissões</p>
+            <h1>Enviar texto para avaliação</h1>
+            {% if indisponivel %}
+                <p>As submissões públicas não estão habilitadas neste projeto.</p>
+            {% elif sucesso %}
+                <p><strong>Submissão recebida.</strong> O PDF foi sanitizado e enviado para triagem editorial.</p>
+                <p>Se for aceita, você receberá orientação para completar sua ficha de autoria e preparar o texto final.</p>
+            {% else %}
+                <p>Envie um PDF com sua proposta. O arquivo passa por verificação e sanitização antes de ficar disponível para avaliação.</p>
+                {% if config_site.submissoes_exigir_orcid %}
+                    <p><strong>ORCID é obrigatório</strong> para submissões neste projeto.</p>
+                {% endif %}
+                {% if erros %}
+                    <div class="op-alert op-alert--error">
+                        {% for erro in erros %}<p>{{ erro }}</p>{% endfor %}
+                    </div>
+                {% endif %}
+                <form method="post" enctype="multipart/form-data" class="op-form-stack">
+                    {% csrf_token %}
+                    <label>Título<input type="text" name="titulo" maxlength="255" required value="{{ valores.titulo|default:'' }}"></label>
+                    <label>Resumo<textarea name="resumo" rows="5" required>{{ valores.resumo|default:'' }}</textarea></label>
+                    {% if usuario_publico %}
+                        <p>Enviando como <strong>{{ usuario_publico.username }}</strong> ({{ usuario_publico.email }}).</p>
+                        {% if not usuario_publico.orcid %}
+                            <label>ORCID{% if config_site.submissoes_exigir_orcid %} obrigatório{% endif %}<input type="text" name="orcid" value="{{ valores.orcid|default:'' }}" placeholder="0000-0000-0000-0000"></label>
+                        {% endif %}
+                    {% else %}
+                        <label>Nome<input type="text" name="nome" maxlength="120" required value="{{ valores.nome|default:'' }}"></label>
+                        <label>E-mail<input type="email" name="email" required value="{{ valores.email|default:'' }}"></label>
+                        <label>Nome de usuário<input type="text" name="username" required value="{{ valores.username|default:'' }}"></label>
+                        <label>ORCID{% if config_site.submissoes_exigir_orcid %} obrigatório{% endif %}<input type="text" name="orcid" value="{{ valores.orcid|default:'' }}" placeholder="0000-0000-0000-0000"></label>
+                    {% endif %}
+                    <label>Mensagem para a equipe<textarea name="mensagem" rows="4">{{ valores.mensagem|default:'' }}</textarea></label>
+                    <label>PDF da submissão<input type="file" name="arquivo_pdf" accept="application/pdf,.pdf" required></label>
+                    <p class="op-muted">Limite: {{ config_site.submissoes_limite_pdf_mb|default:25 }} MB. Apenas PDF. Arquivos com recursos ativos, anexos ou assinatura antivírus são bloqueados.</p>
+                    <button class="op-button" type="submit">Enviar submissão</button>
+                </form>
+            {% endif %}
+        </section>
+    </main>
+
+    {% include "includes/rodape_site.html" with rodape_assets_in_head=True %}
+</body>
+</html>

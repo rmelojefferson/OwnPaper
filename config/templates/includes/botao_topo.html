@@ -1,6 +1,109 @@
-{% load static %}
-<link rel="stylesheet" href="{% static 'css/botao-topo.css' %}">
-<button type="button" id="botao-topo" class="botao-topo" aria-label="Voltar ao topo">
+<style>
+    #botao-topo[hidden] {
+        display: none !important;
+    }
+
+    #botao-topo {
+        position: fixed;
+        right: 20px;
+        bottom: 20px;
+        z-index: 999;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 42px;
+        padding: 0.72rem 0.95rem;
+        border-radius: 12px;
+        box-sizing: border-box;
+        border: 1px solid color-mix(in srgb, var(--op-btn-hover-bg, #1d4ed8) 32%, var(--op-border, #dbe3ef));
+        background: color-mix(in srgb, var(--op-btn-bg, #ffffff) 82%, transparent);
+        color: var(--op-btn-text, #111827);
+        box-shadow: 0 10px 24px rgba(15, 23, 42, 0.16);
+        cursor: pointer;
+        font: 700 0.94rem var(--op-font-ui, inherit);
+        line-height: 1;
+        transform: translateY(var(--botao-topo-offset-y, 0));
+        transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease, opacity 0.16s ease;
+    }
+
+    #botao-topo:hover,
+    #botao-topo:focus-visible {
+        background: var(--op-btn-hover-bg, #111827);
+        color: var(--op-btn-hover-text, #ffffff);
+        border-color: var(--op-btn-hover-bg, #111827);
+    }
+
+    #botao-topo:focus-visible {
+        outline: 2px solid var(--op-accent, #1d4ed8);
+        outline-offset: 2px;
+    }
+
+    html[data-theme='escuro'] #botao-topo {
+        border-color: color-mix(in srgb, var(--op-btn-hover-bg, #ffffff) 45%, var(--op-border, #334155));
+        background: color-mix(in srgb, var(--op-btn-hover-bg, #ffffff) 78%, transparent);
+        color: var(--op-btn-hover-text, #0f172a);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.34);
+    }
+
+    @media (min-width: 1180px) {
+        #botao-topo {
+            left: calc(
+                50% + (var(--op-layout-width, 1040px) / 2) + var(--op-layout-padding-inline, 20px)
+            );
+            right: auto;
+        }
+    }
+</style>
+<button
+    type="button"
+    id="botao-topo"
+    aria-label="Voltar ao topo"
+    hidden
+>
     ↑ Topo
 </button>
-<script src="{% static 'js/botao-topo.js' %}" defer></script>
+<script>
+    (function () {
+        var botaoTopo = document.getElementById("botao-topo");
+
+        if (!botaoTopo) {
+            return;
+        }
+
+        function obterScrollAtual() {
+            return window.scrollY
+                || window.pageYOffset
+                || document.documentElement.scrollTop
+                || document.body.scrollTop
+                || 0;
+        }
+
+        function atualizarVisibilidadeBotaoTopo() {
+            botaoTopo.hidden = obterScrollAtual() <= 300;
+
+            var rodape = document.querySelector(".rodape-site");
+            if (!rodape) {
+                botaoTopo.style.setProperty("--botao-topo-offset-y", "0px");
+                return;
+            }
+
+            var viewportHeight = window.innerHeight || document.documentElement.clientHeight || 0;
+            var footerRect = rodape.getBoundingClientRect();
+            var espacamentoFinal = window.innerWidth <= 760 ? 32 : 48;
+            var sobreposicao = Math.max(0, viewportHeight - footerRect.top + espacamentoFinal);
+
+            botaoTopo.style.setProperty("--botao-topo-offset-y", String(-sobreposicao) + "px");
+        }
+
+        botaoTopo.addEventListener("click", function () {
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+        });
+
+        window.addEventListener("scroll", atualizarVisibilidadeBotaoTopo, { passive: true });
+        window.addEventListener("resize", atualizarVisibilidadeBotaoTopo, { passive: true });
+        atualizarVisibilidadeBotaoTopo();
+    })();
+</script>

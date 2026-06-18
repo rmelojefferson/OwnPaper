@@ -1,5 +1,5 @@
 .home-secao {
-        margin: 2.5rem 0;
+        margin: 1rem 0;
         --home-card-thumb-width: 180px;
         --home-card-thumb-ratio: 16 / 9;
     }
@@ -9,14 +9,21 @@
     }
 
     .home-lista-publicacoes {
-        display: grid;
-        gap: 1rem;
+        display: block;
     }
 
     .home-card-publicacao {
-        border: 1px solid #ddd;
+        margin-bottom: 1.2rem;
+        border: 1px solid var(--op-border, #dbe3ef);
+        border-radius: 14px;
         padding: 1rem;
-        background: #fff;
+        background: var(--op-surface, #f8fafc);
+        box-shadow: 0 12px 22px rgba(15, 23, 42, 0.07);
+    }
+
+    .home-lista-publicacoes > :last-child.home-card-publicacao,
+    .home-lista-publicacoes > :last-child {
+        margin-bottom: 0;
     }
 
     .home-card-topo {
@@ -27,11 +34,16 @@
         margin-bottom: 0.6rem;
     }
 
+    .home-card-topo.sem-miniatura {
+        grid-template-columns: 1fr;
+    }
+
     .home-card-miniatura {
         display: block;
         width: var(--home-card-thumb-width);
         aspect-ratio: var(--home-card-thumb-ratio);
         overflow: hidden;
+        border-radius: 10px;
     }
 
     .home-card-miniatura img {
@@ -44,6 +56,50 @@
     .home-card-publicacao h3 {
         margin-top: 0;
         margin-bottom: 0.35rem;
+        font-family: var(--op-font-ui);
+        font-weight: 700;
+        letter-spacing: 0;
+        line-height: 1.25;
+        text-rendering: auto;
+        -webkit-font-smoothing: auto;
+        -moz-osx-font-smoothing: auto;
+    }
+
+    .home-card-publicacao h3 a {
+        font-weight: inherit;
+    }
+
+    .home-card-titulo-linha {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 0.75rem;
+    }
+
+    .home-card-titulo-linha h3 {
+        flex: 1 1 auto;
+        margin-bottom: 0;
+    }
+
+    .home-card-views-inline {
+        display: none;
+        align-items: center;
+        gap: 0.3rem;
+        flex: 0 0 auto;
+        font: 700 0.82rem var(--op-font-ui);
+        color: inherit;
+        white-space: nowrap;
+        text-rendering: auto;
+        -webkit-font-smoothing: auto;
+        -moz-osx-font-smoothing: auto;
+    }
+
+    .home-card-views-inline-icone,
+    .home-card-views-inline-icone svg {
+        width: 18px;
+        height: 18px;
+        display: block;
+        fill: currentColor;
     }
 
     .home-card-publicacao p {
@@ -52,8 +108,42 @@
 
     .home-meta-publicacao {
         font-size: 0.95rem;
-        color: #555;
+        color: var(--op-muted, #526071);
         margin-bottom: 0;
+    }
+
+    .home-publicacao-estatisticas {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+        margin-top: 0.55rem;
+        width: 100%;
+        clear: both;
+    }
+
+    .home-publicacao-balao {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.36rem;
+        min-height: auto;
+        padding: 0;
+        border: 0;
+        border-radius: 0;
+        background: transparent;
+        color: var(--op-text, #0f172a);
+        font: 700 0.82rem var(--op-font-ui);
+        letter-spacing: 0;
+        text-rendering: auto;
+        -webkit-font-smoothing: auto;
+        -moz-osx-font-smoothing: auto;
+    }
+
+    .home-publicacao-balao-icone,
+    .home-publicacao-balao-icone svg {
+        width: 20px;
+        height: 20px;
+        display: block;
+        fill: currentColor;
     }
 
     .home-resumo-publicacao {
@@ -68,9 +158,12 @@
         width: 100%;
         margin: 0;
         position: relative;
-        border: 1px solid #ddd;
-        background: #fff;
+        border: 1px solid var(--op-border, #dbe3ef);
+        background: var(--op-surface, #f8fafc);
+        border-radius: 16px;
         overflow: hidden;
+        box-shadow: 0 18px 34px rgba(15, 23, 42, 0.11);
+        user-select: none;
     }
 
     .home-carrossel-slide {
@@ -88,6 +181,7 @@
         position: relative;
         color: #fff;
         text-decoration: none;
+        cursor: pointer;
     }
 
     .home-carrossel-imagem img {
@@ -95,6 +189,8 @@
         height: 420px;
         object-fit: cover;
         display: block;
+        pointer-events: none;
+        -webkit-user-drag: none;
     }
 
     .home-carrossel-titulo {
@@ -108,7 +204,12 @@
 
     .home-carrossel-titulo h3 {
         margin: 0;
+        font-family: var(--op-font-ui);
+        letter-spacing: 0;
         color: #fff;
+        text-rendering: auto;
+        -webkit-font-smoothing: auto;
+        -moz-osx-font-smoothing: auto;
     }
 
     .home-carrossel-seta {
@@ -128,6 +229,17 @@
         align-items: center;
         justify-content: center;
         padding: 0;
+        touch-action: manipulation;
+    }
+
+    .home-carrossel-seta:hover,
+    .home-carrossel-seta:focus-visible,
+    .home-carrossel-seta:active {
+        background: var(--op-btn-hover-bg, #1d4ed8);
+        color: var(--op-btn-hover-text, #fff);
+        transform: translateY(-50%);
+        outline: none;
+        box-shadow: none;
     }
 
     .home-carrossel-seta-anterior {
@@ -138,7 +250,7 @@
         right: 12px;
     }
 
-    .home-visualmente-oculto {
+.home-visualmente-oculto {
         position: absolute !important;
         width: 1px !important;
         height: 1px !important;
@@ -148,15 +260,130 @@
         clip: rect(0, 0, 0, 0) !important;
         white-space: nowrap !important;
         border: 0 !important;
-    }
+}
 
-    @media (max-width: 640px) {
+.home-paginacao-ultimas {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+    align-items: center;
+}
+
+.home-paginacao-ultimas a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    height: 36px;
+    border: 1px solid var(--op-border, #dbe3ef);
+    background: var(--op-btn-bg, var(--op-surface, #f8fafc));
+    color: var(--op-btn-text, var(--op-text, #0f172a));
+    padding: 0 0.78rem;
+    border-radius: 10px;
+    font-size: 0.9rem;
+    font-weight: 700;
+}
+
+.home-paginacao-ultimas a:hover {
+    border-color: var(--op-btn-hover-bg, var(--op-accent, #1d4ed8));
+    background: var(--op-btn-hover-bg, var(--op-accent, #1d4ed8));
+    color: var(--op-btn-hover-text, #ffffff);
+}
+
+.home-paginacao-ultimas span {
+    font-weight: 600;
+}
+
+.home-secao h2 {
+    font-weight: 700;
+}
+
+html[data-theme='escuro'] .home-secao h2,
+html[data-theme='escuro'] .home-paginacao-ultimas,
+html[data-theme='escuro'] .home-paginacao-ultimas span {
+    color: var(--op-text, #f8fafc);
+}
+
+html[data-theme='escuro'] .home-meta-publicacao,
+html[data-theme='escuro'] .home-meta-publicacao a {
+    color: var(--op-text, #f8fafc) !important;
+}
+
+html[data-theme='escuro'] .home-meta-publicacao .home-autor-link {
+    color: var(--op-link, var(--op-accent, #93c5fd)) !important;
+    font-weight: 400;
+}
+
+@media (max-width: 640px) {
+        .home-card-views-inline {
+            display: inline-flex;
+        }
+
+        .home-secao {
+            --home-card-thumb-width: 100%;
+        }
+
+        .home-card-publicacao {
+            padding: 0;
+            overflow: hidden;
+        }
+
         .home-card-topo {
             grid-template-columns: 1fr;
+            margin-bottom: 0;
+            position: relative;
         }
 
         .home-card-miniatura {
             width: 100%;
-            max-width: 220px;
+            max-width: none;
+            border-radius: 0;
+        }
+
+        .home-card-topo > .home-card-conteudo {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            padding: 0.85rem 1rem;
+            background: linear-gradient(to top, rgba(0, 0, 0, 0.72), rgba(0, 0, 0, 0));
+            color: #fff;
+        }
+
+        .home-card-topo > .home-card-conteudo a,
+        .home-card-topo > .home-card-conteudo .home-card-views-inline {
+            color: #fff;
+        }
+
+        .home-card-topo > .home-card-conteudo .home-meta-publicacao,
+        .home-card-topo > .home-card-conteudo .home-publicacao-estatisticas {
+            display: none;
+        }
+
+        .home-card-topo > .home-card-conteudo .home-card-titulo-linha {
+            flex-direction: column-reverse;
+            align-items: flex-start;
+            gap: 0.35rem;
+        }
+
+        .home-card-topo.sem-miniatura > .home-card-conteudo {
+            position: static;
+            padding: 1rem;
+            background: transparent;
+            color: var(--op-text, #0f172a);
+        }
+
+        .home-card-topo.sem-miniatura > .home-card-conteudo a,
+        .home-card-topo.sem-miniatura > .home-card-conteudo .home-card-views-inline {
+            color: var(--op-text, #0f172a);
+        }
+
+        .home-carrossel-imagem img {
+            height: 240px;
+        }
+
+        .home-carrossel-titulo {
+            padding: 0.85rem 1rem;
         }
     }

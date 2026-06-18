@@ -1,0 +1,70 @@
+{% extends "conteudo/admin_base_custom.html" %}
+
+{% block titletag %}Newsletter{% endblock %}
+
+{% block content %}
+<div class="nice-padding op-admin-panel op-admin-panel--wide">
+    <header class="op-admin-panel__header">
+        <div>
+            <p class="op-admin-panel__eyebrow">Relacionamento e campanhas</p>
+            <h1>Newsletter</h1>
+            <p class="op-admin-panel__lead">Gerencie inscritos, importações, eventos de consentimento e solicitações de privacidade.</p>
+        </div>
+        <div class="op-admin-panel__actions">
+            <a class="button button-secondary" href="{% url 'wagtailadmin_home' %}">Voltar ao painel</a>
+        </div>
+    </header>
+
+    <section class="admin-stats-grid" aria-label="Resumo da newsletter">
+        <article class="op-admin-metric-card">
+            <span>Inscritos ativos</span>
+            <strong>{{ inscritos_ativos }}</strong>
+            <small>{{ inscritos_total }} inscrito{{ inscritos_total|pluralize }} no total</small>
+        </article>
+        <article class="op-admin-metric-card">
+            <span>Eventos registrados</span>
+            <strong>{{ eventos_total }}</strong>
+            <small>inscrições, confirmações e cancelamentos</small>
+        </article>
+        <article class="op-admin-metric-card">
+            <span>Privacidade</span>
+            <strong>{{ solicitacoes_pendentes }}</strong>
+            <small>solicitação{{ solicitacoes_pendentes|pluralize:" pendente, pendentes" }}</small>
+        </article>
+    </section>
+
+    <section class="op-admin-two-column">
+        <article class="w-panel op-admin-card">
+            <h2>Inscritos</h2>
+            <p class="op-admin-panel__meta">Consulte, edite e audite os cadastros da newsletter.</p>
+            <div class="op-admin-panel__actions">
+                <a class="button" href="{{ inscritos_url }}">Abrir inscritos</a>
+            </div>
+        </article>
+
+        <article class="w-panel op-admin-card">
+            <h2>Importar CSV</h2>
+            <p class="op-admin-panel__meta">Importe inscritos em lote com consentimento e sanitização do arquivo.</p>
+            <div class="op-admin-panel__actions">
+                <a class="button" href="{{ importar_url }}">Importar inscritos</a>
+            </div>
+        </article>
+
+        <article class="w-panel op-admin-card">
+            <h2>Eventos</h2>
+            <p class="op-admin-panel__meta">Acompanhe o histórico de inscrições, confirmações e cancelamentos.</p>
+            <div class="op-admin-panel__actions">
+                <a class="button" href="{{ eventos_url }}">Abrir eventos</a>
+            </div>
+        </article>
+
+        <article class="w-panel op-admin-card">
+            <h2>Solicitações de privacidade</h2>
+            <p class="op-admin-panel__meta">Atenda pedidos de acesso ou exclusão de dados relacionados à newsletter.</p>
+            <div class="op-admin-panel__actions">
+                <a class="button" href="{{ privacidade_url }}">Abrir solicitações</a>
+            </div>
+        </article>
+    </section>
+</div>
+{% endblock %}

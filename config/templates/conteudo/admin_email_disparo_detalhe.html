@@ -1,0 +1,191 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% block titletag %}Detalhe do disparo{% endblock %}
+{% block content %}
+<div class="nice-padding op-admin-panel op-admin-panel--wide">
+    <header class="op-admin-panel__header">
+        <div>
+            <p class="op-admin-panel__eyebrow">Operação</p>
+            <h1>Detalhe do disparo</h1>
+            <p class="op-admin-panel__lead">Analise desempenho, domínios, links clicados e a lista detalhada de destinatários do disparo selecionado.</p>
+        </div>
+        <div class="op-admin-panel__actions">
+            <a class="button button-secondary" href="{% url 'admin_email_disparos' %}">Voltar para disparos</a>
+        </div>
+    </header>
+
+    <section class="op-admin-card">
+        <p><strong>Assunto:</strong> {{ disparo.assunto }}</p>
+        <p><strong>Tipo:</strong> {{ disparo.get_tipo_display }} | <strong>Segmento:</strong> {{ disparo.get_segmento_display }}</p>
+        <p><strong>Status:</strong> {{ disparo.get_status_display }}</p>
+        <p><strong>Destinatários:</strong> {{ disparo.total_destinatarios }} | <strong>Enviados:</strong> {{ disparo.total_enviados }} | <strong>Falhas:</strong> {{ disparo.total_falhas }}</p>
+        <p><strong>Aberturas únicas:</strong> {{ aberturas_unicas_filtrado }} | <strong>Aberturas:</strong> {{ aberturas_total_filtrado }} | <strong>Cliques:</strong> {{ cliques_total_filtrado }}</p>
+        <p><strong>Taxa de entrega:</strong> {{ taxa_entrega }}% | <strong>Taxa de falha:</strong> {{ taxa_falha }}% | <strong>Taxa de abertura:</strong> {{ taxa_abertura }}% | <strong>CTR:</strong> {{ ctr }}%</p>
+        {% if disparo.erro %}<p class="op-admin-error"><strong>Erro:</strong> {{ disparo.erro }}</p>{% endif %}
+    </section>
+
+    <section class="op-admin-card">
+    <form method="get" class="op-admin-form-grid op-admin-form-grid--email-detail-filter">
+        <div class="op-admin-field">
+            <label for="id_status">Status</label>
+            <select id="id_status" name="status">
+                <option value="">Todos</option>
+                {% for valor, rotulo in status_choices %}
+                    <option value="{{ valor }}" {% if filtro_status == valor %}selected{% endif %}>{{ rotulo }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="op-admin-field">
+            <label for="id_q">E-mail contém</label>
+            <input id="id_q" name="q" value="{{ filtro_q }}">
+        </div>
+        <div class="op-admin-field">
+            <label for="id_dominio">Domínio (sem @)</label>
+            <input id="id_dominio" name="dominio" value="{{ filtro_dominio }}" placeholder="gmail.com">
+        </div>
+        <div class="op-admin-field">
+            <label for="id_periodo_links">Período dos links</label>
+            <select id="id_periodo_links" name="periodo_links">
+                <option value="7" {% if periodo_links == '7' %}selected{% endif %}>Últimos 7 dias</option>
+                <option value="30" {% if periodo_links == '30' %}selected{% endif %}>Últimos 30 dias</option>
+                <option value="90" {% if periodo_links == '90' %}selected{% endif %}>Últimos 90 dias</option>
+                <option value="all" {% if periodo_links == 'all' %}selected{% endif %}>Todo período</option>
+            </select>
+        </div>
+        <div class="op-admin-form-actions">
+            <button type="submit" class="button">Filtrar</button>
+        </div>
+    </form>
+    <p class="op-admin-panel__meta">
+        <a class="button button-secondary" href="?{% if query_string_sem_pagina %}{{ query_string_sem_pagina }}&{% endif %}export=csv">Exportar filtros em CSV</a>
+    </p>
+    <section class="op-admin-card op-admin-card--compact">
+        <strong>Filtro atual:</strong>
+        <span>Total {{ total_filtrado }}</span> |
+        <span>Enviados {{ enviados_filtrado }}</span> |
+        <span>Falhas {{ falhas_filtrado }}</span> |
+        <span>Aberturas únicas {{ aberturas_unicas_filtrado }}</span> |
+        <span>Aberturas {{ aberturas_total_filtrado }}</span> |
+        <span>Cliques {{ cliques_total_filtrado }}</span> |
+        <span>Entrega {{ taxa_entrega }}%</span> |
+        <span>Falha {{ taxa_falha }}%</span> |
+        <span>Abertura {{ taxa_abertura }}%</span> |
+        <span>CTR {{ ctr }}%</span>
+    </section>
+    </section>
+
+    <section class="op-admin-card">
+        <h2>Domínios (top 20)</h2>
+        <div class="op-admin-table-wrap">
+            <table class="listing op-admin-listing-table op-admin-listing-table--email-domains">
+                <thead>
+                    <tr>
+                        <th>Domínio</th>
+                        <th>Total</th>
+                        <th>Enviados</th>
+                        <th>Falhas</th>
+                        <th>Entrega %</th>
+                        <th>Falha %</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in dominio_stats %}
+                        <tr>
+                            <td>{{ item.dominio }}</td>
+                            <td>{{ item.total }}</td>
+                            <td>{{ item.enviados }}</td>
+                            <td>{{ item.falhas }}</td>
+                            <td>{{ item.taxa_entrega }}%</td>
+                            <td>{{ item.taxa_falha }}%</td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="6">Sem dados de domínio para este disparo.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="op-admin-card">
+        <h2>Links mais clicados (top 20)</h2>
+        <p class="op-admin-muted">Total de cliques nos links filtrados: <strong>{{ total_cliques_links }}</strong></p>
+        {% if comparativo_links %}
+            <p class="op-admin-muted">
+                Janela atual ({{ comparativo_links.dias }} dias): <strong>{{ comparativo_links.atual }}</strong> |
+                Janela anterior: <strong>{{ comparativo_links.anterior }}</strong> |
+                Variação: <strong>{{ comparativo_links.variacao_absoluta }}</strong>
+                ({{ comparativo_links.variacao_percentual }}%) |
+                Tendência: <strong>{{ comparativo_links.tendencia }}</strong>
+            </p>
+        {% endif %}
+        <div class="op-admin-table-wrap">
+            <table class="listing op-admin-listing-table op-admin-listing-table--email-links">
+                <thead>
+                    <tr>
+                        <th>URL</th>
+                        <th>Cliques</th>
+                        <th>Percentual</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in top_links %}
+                        <tr>
+                            <td class="op-admin-breakall op-admin-url-cell">{{ item.url }}</td>
+                            <td>{{ item.total }}</td>
+                            <td>{{ item.percentual }}%</td>
+                        </tr>
+                    {% empty %}
+                        <tr><td colspan="3">Sem cliques registrados para os filtros atuais.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="op-admin-card">
+    <div class="op-admin-table-wrap">
+        <table class="listing op-admin-listing-table op-admin-listing-table--email-destinations">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>E-mail</th>
+                    <th>Status</th>
+                    <th>Enviado em</th>
+                    <th>Aberto em</th>
+                    <th>Aberturas</th>
+                    <th>Cliques</th>
+                    <th>Erro</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in destinos %}
+                    <tr>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.email }}</td>
+                        <td>{{ item.get_status_display }}</td>
+                        <td>{{ item.enviado_em|date:"d/m/Y H:i:s"|default:"-" }}</td>
+                        <td>{{ item.aberto_em|date:"d/m/Y H:i:s"|default:"-" }}</td>
+                        <td>{{ item.total_aberturas }}</td>
+                        <td>{{ item.total_cliques }}</td>
+                        <td>{{ item.erro|truncatechars:180|default:"-" }}</td>
+                    </tr>
+                {% empty %}
+                    <tr><td colspan="8">Sem destinatários para os filtros informados.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    </section>
+
+    {% if destinos.has_other_pages %}
+        <div class="op-admin-pagination">
+            {% if destinos.has_previous %}
+                <a class="button button-secondary" href="?{% if query_string_sem_pagina %}{{ query_string_sem_pagina }}&{% endif %}pagina={{ destinos.previous_page_number }}">Anterior</a>
+            {% endif %}
+            <span>Página {{ destinos.number }} de {{ destinos.paginator.num_pages }}</span>
+            {% if destinos.has_next %}
+                <a class="button button-secondary" href="?{% if query_string_sem_pagina %}{{ query_string_sem_pagina }}&{% endif %}pagina={{ destinos.next_page_number }}">Próxima</a>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>
+{% endblock %}

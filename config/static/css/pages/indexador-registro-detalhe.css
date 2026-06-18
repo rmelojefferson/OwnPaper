@@ -1,9 +1,177 @@
-body {
-            font-family: "Times New Roman", serif;
-            font-size: 12pt;
-            line-height: 1.6;
-            max-width: 900px;
-            margin: 40px auto;
-            padding: 0 20px;
-            color: #111;
-        }
+.indexador-registro-layout {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    color: var(--op-text, #111827);
+    font-family: var(--op-font-ui);
+    font-size: 12pt;
+    line-height: 1.6;
+}
+
+.indexador-registro-voltar {
+    margin: 0 0 1rem;
+}
+
+.indexador-registro-voltar a {
+    font-weight: 700;
+    text-decoration: none;
+}
+
+.indexador-registro-voltar a:hover {
+    text-decoration: underline;
+}
+
+.indexador-registro-topo {
+    margin-bottom: 1.35rem;
+    max-width: 880px;
+}
+
+.indexador-registro-layout .op-page-header .title,
+.indexador-registro-layout .op-page-header h1 {
+    color: var(--op-text, #111827);
+    font-family: var(--op-font-ui);
+    letter-spacing: 0;
+    text-rendering: auto;
+    -webkit-font-smoothing: auto;
+    -moz-osx-font-smoothing: auto;
+}
+
+.indexador-registro-rotulo {
+    margin: 0 0 0.45rem;
+    color: var(--op-muted, #526071);
+    font-size: 0.94rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+}
+
+.indexador-registro-subtitulo {
+    margin: 0.55rem 0 0;
+    color: var(--op-muted, #526071);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    align-items: center;
+}
+
+.indexador-registro-resumo-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.indexador-registro-card {
+    padding: 1rem 1.1rem;
+}
+
+.indexador-registro-card h2,
+.indexador-registro-secao h2 {
+    margin: 0 0 0.8rem;
+    color: var(--op-text, #111827);
+    font: 700 1.05rem var(--op-font-ui);
+}
+
+.indexador-registro-fatos {
+    margin: 0;
+    display: grid;
+    gap: 0.9rem;
+}
+
+.indexador-registro-fato {
+    display: grid;
+    gap: 0.22rem;
+}
+
+.indexador-registro-fato dt {
+    color: var(--op-muted, #526071);
+    font-size: 0.92rem;
+    font-weight: 700;
+}
+
+.indexador-registro-fato dd {
+    margin: 0;
+    color: var(--op-text, #111827);
+}
+
+.indexador-registro-acoes {
+    margin-top: 1rem;
+}
+
+.indexador-registro-acoes .button {
+    min-height: 42px;
+    border: 1px solid var(--op-border, #dbe3ef);
+    border-radius: 10px;
+    padding-inline: 1rem;
+    background: var(--op-btn-bg, #fff);
+    color: var(--op-btn-text, #111);
+    box-shadow: none;
+    font-weight: 700;
+}
+
+.indexador-registro-acoes .button:hover,
+.indexador-registro-acoes .button:focus-visible {
+    background: var(--op-btn-hover-bg, #111);
+    color: var(--op-btn-hover-text, #fff);
+    border-color: var(--op-btn-hover-bg, #111);
+}
+
+.indexador-registro-autores {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 0.8rem;
+}
+
+.indexador-registro-autores li {
+    display: grid;
+    gap: 0.18rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--op-border, #dbe3ef) 82%, transparent);
+}
+
+.indexador-registro-autores li:last-child {
+    border-bottom: 0;
+    padding-bottom: 0;
+}
+
+.indexador-registro-autor-nome {
+    color: var(--op-text, #111827);
+    font-weight: 700;
+}
+
+.indexador-registro-autor-orcid {
+    color: var(--op-muted, #526071);
+    font-size: 0.94rem;
+}
+
+.indexador-registro-secao {
+    margin-bottom: 1rem;
+}
+
+.indexador-registro-texto,
+.indexador-registro-link {
+    color: var(--op-text, #111827);
+}
+
+.indexador-registro-texto p {
+    margin: 0;
+    text-align: justify;
+    hyphens: auto;
+}
+
+.indexador-registro-link {
+    margin: 0;
+    word-break: break-word;
+}
+
+.indexador-registro-layout a {
+    color: var(--op-link, #1d4ed8);
+}
+
+@media (max-width: 760px) {
+    .indexador-registro-resumo-grid {
+        grid-template-columns: 1fr;
+    }
+}

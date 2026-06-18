@@ -1,7 +1,7 @@
-{% load static wagtailcore_tags wagtailimages_tags %}
+{% load static wagtailcore_tags wagtailimages_tags conteudo_tags %}
 
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="utf-8">
     <title>Categorias</title>
@@ -11,32 +11,41 @@
         {% image config_site.favicon fill-32x32 format-webp as favicon_32 %}
         <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
     {% endif %}
-    <link rel="stylesheet" href="{% static 'css/pages/categorias-index.css' %}">
+    {% include "includes/site_head_assets.html" %}
+    <link rel="stylesheet" href="{% static 'css/pages/categorias-index.css' %}?v=20260428-02">
+    <script src="{% static 'js/pages/taxonomy-filter.js' %}?v=20260507-02" defer></script>
     {% include "includes/rastreamento_head.html" %}
 
 </head>
 <body>
     {% include "includes/rastreamento_body.html" %}
 
-    {% include "includes/menu_principal.html" %}
+    {% include "includes/menu_principal.html" with menu_assets_in_head=True %}
 
-    <h1>Categorias</h1>
-
-    <div class="lista">
+    <main class="categorias-layout container is-max-desktop op-page-shell">
+    <header class="op-page-header">
+        <h1 class="title is-2">Categorias</h1>
+    </header>
+    <div class="categorias-filtro op-box" data-taxonomy-filter-root>
+        <label class="label" for="categorias-busca">Buscar categoria</label>
+        <div class="control">
+            <input class="input" id="categorias-busca" type="text" placeholder="Digite para filtrar categorias" data-taxonomy-filter-input>
+        </div>
+    </div>
+    <div class="categorias-lista" role="list" data-taxonomy-filter-list>
         {% for categoria in categorias %}
-            <article class="card">
-                <h2>
-                    <a href="/categorias/{{ categoria.slug }}/">{{ categoria.nome }}</a>
-                </h2>
-
+            <a class="categorias-chip" href="/categorias/{{ categoria.slug }}/" role="listitem" aria-label="Categoria {{ categoria.nome }}" data-taxonomy-filter-item data-taxonomy-filter-value="{{ categoria.nome }}">
+                <span class="categorias-chip-titulo">{{ categoria.nome }}</span>
+                <span class="categorias-chip-meta">{{ categoria.total_publicacoes }} publicação(ões)</span>
                 {% if categoria.descricao %}
-                    <div>{{ categoria.descricao|linebreaks }}</div>
+                    <span class="categorias-chip-descricao">{{ categoria.descricao|striptags|truncatechars:90 }}</span>
                 {% endif %}
-            </article>
+            </a>
         {% empty %}
             <p>Nenhuma categoria cadastrada ainda.</p>
         {% endfor %}
     </div>
-{% include "includes/rodape_site.html" %}
+    </main>
+{% include "includes/rodape_site.html" with rodape_assets_in_head=True %}
 </body>
 </html>

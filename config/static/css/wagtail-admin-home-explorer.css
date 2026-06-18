@@ -1,0 +1,220 @@
+.op-admin-explorer {
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    --op-admin-zoom: 0.85;
+    --op-admin-folder-size: calc(168px * var(--op-admin-zoom));
+    --op-admin-folder-gap: calc(8px * var(--op-admin-zoom));
+    --op-admin-folder-pad-y: calc(10px * var(--op-admin-zoom));
+    --op-admin-folder-pad-x: calc(10px * var(--op-admin-zoom));
+    --op-admin-folder-icon-box: calc(42px * var(--op-admin-zoom));
+    --op-admin-folder-icon-size: calc(22px * var(--op-admin-zoom));
+    --op-admin-folder-font-size: calc(0.9rem * var(--op-admin-zoom));
+}
+
+.op-admin-explorer-header {
+    text-align: center;
+    margin-bottom: 22px;
+}
+
+.op-admin-explorer-subtitle {
+    margin-top: -2px;
+    color: #5c667a;
+}
+
+.op-admin-legend {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+}
+
+.op-admin-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border: 1px solid #d9e2ee;
+    border-radius: 999px;
+    padding: 5px 9px;
+    background: #fff;
+    font-size: 0.82rem;
+    color: #344256;
+}
+
+.op-admin-legend-item i {
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    display: inline-block;
+}
+
+.op-admin-explorer-actions {
+    margin-top: 12px;
+    display: inline-flex;
+    gap: 8px;
+}
+
+.op-admin-folders {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(var(--op-admin-folder-size), var(--op-admin-folder-size)));
+    justify-content: center;
+    gap: var(--op-admin-folder-gap);
+}
+
+.op-admin-folder-link {
+    --cat-bg: #e8f0ff;
+    --cat-fg: #1d4ed8;
+    --cat-border: #bfdbfe;
+    width: var(--op-admin-folder-size);
+    height: var(--op-admin-folder-size);
+    min-width: var(--op-admin-folder-size);
+    min-height: var(--op-admin-folder-size);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    text-align: center;
+    border: 0;
+    border-radius: 12px;
+    background: var(--op-admin-card-bg, #fff);
+    color: var(--op-admin-card-text, #0f172a);
+    text-decoration: none;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.05);
+    padding: calc(8px * var(--op-admin-zoom)) var(--op-admin-folder-pad-x);
+    overflow: hidden;
+    transition: transform 140ms ease, box-shadow 140ms ease, background-color 140ms ease;
+}
+
+.op-admin-folder-link:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 16px 34px rgba(15, 23, 42, 0.08);
+}
+
+.op-admin-folder-icon {
+    width: var(--op-admin-folder-icon-box);
+    height: var(--op-admin-folder-icon-box);
+    display: grid;
+    place-items: center;
+    border-radius: calc(10px * var(--op-admin-zoom));
+    background: color-mix(in srgb, var(--cat-bg) 80%, white);
+    color: var(--cat-fg);
+    border: 0;
+    box-sizing: border-box;
+    flex: 0 0 auto;
+}
+
+.op-admin-folder-icon svg,
+.op-admin-folder-icon .icon {
+    width: var(--op-admin-folder-icon-size) !important;
+    height: var(--op-admin-folder-icon-size) !important;
+    min-width: var(--op-admin-folder-icon-size);
+    min-height: var(--op-admin-folder-icon-size);
+    max-width: var(--op-admin-folder-icon-size);
+    max-height: var(--op-admin-folder-icon-size);
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: var(--op-admin-folder-icon-size) !important;
+    display: block;
+}
+
+.op-admin-folder-link > span:last-child {
+    font-size: var(--op-admin-folder-font-size);
+    line-height: 1.05;
+    min-height: 0;
+    margin: 8px 0 0;
+}
+
+html[data-theme="light"] .op-admin-folder-link {
+    --op-admin-card-bg: #ffffff;
+    --op-admin-card-text: #0f172a;
+}
+
+html[data-theme="dark"] .op-admin-folder-link {
+    --op-admin-card-bg: #111827;
+    --op-admin-card-text: #e2e8f0;
+}
+
+html[data-theme="light"] .op-admin-folder-icon {
+    background: color-mix(in srgb, var(--cat-bg) 70%, white);
+    color: var(--cat-fg);
+}
+
+html[data-theme="dark"] .op-admin-folder-icon {
+    background: color-mix(in srgb, var(--cat-fg) 30%, #111827);
+    color: #f8fafc;
+}
+
+/* No tema escuro do admin, deixa os cartões e os ícones com cantos mais retos. */
+html[data-theme="dark"] .op-admin-folder-link {
+    border-radius: 10px;
+}
+
+html[data-theme="dark"] .op-admin-folder-icon {
+    border-radius: 8px;
+}
+
+.op-admin-folder-link.cat-comunicacao {
+    --cat-bg: #ecfdf5;
+    --cat-fg: #047857;
+}
+
+.op-admin-folder-link.cat-conteudo {
+    --cat-bg: #eff6ff;
+    --cat-fg: #1d4ed8;
+}
+
+.op-admin-folder-link.cat-config {
+    --cat-bg: #fef3c7;
+    --cat-fg: #92400e;
+}
+
+.op-admin-folder-link.cat-usuarios {
+    --cat-bg: #f5f3ff;
+    --cat-fg: #6d28d9;
+}
+
+.op-admin-legend-item.cat-comunicacao i {
+    background: #ecfdf5;
+    border-color: #a7f3d0;
+}
+
+.op-admin-legend-item.cat-conteudo i {
+    background: #eff6ff;
+    border-color: #bfdbfe;
+}
+
+.op-admin-legend-item.cat-config i {
+    background: #fef3c7;
+    border-color: #fcd34d;
+}
+
+.op-admin-legend-item.cat-usuarios i {
+    background: #f5f3ff;
+    border-color: #ddd6fe;
+}
+
+.op-admin-secondary {
+    margin-top: 24px;
+}
+
+.op-admin-secondary h2 {
+    text-align: center;
+    font-size: 1.05rem;
+    margin-bottom: 8px;
+}
+
+@media (max-width: 520px) {
+    .op-admin-folders {
+        grid-template-columns: repeat(auto-fit, minmax(calc(150px * var(--op-admin-zoom)), calc(150px * var(--op-admin-zoom))));
+    }
+
+    .op-admin-folder-link {
+        width: calc(150px * var(--op-admin-zoom));
+        height: calc(150px * var(--op-admin-zoom));
+        min-width: calc(150px * var(--op-admin-zoom));
+        min-height: calc(150px * var(--op-admin-zoom));
+    }
+}

@@ -1,0 +1,52 @@
+{% extends "two_factor/_base_focus.html" %}
+{% load i18n %}
+
+{% block extra_media %}
+  {{ form.media }}
+{% endblock %}
+
+{% block content %}
+  <h1>Configurar verificação em duas etapas</h1>
+
+  {% if wizard.steps.current == 'welcome' %}
+    <p>Você está prestes a ativar uma camada extra de segurança para a sua conta.</p>
+  {% elif wizard.steps.current == 'method' %}
+    <p>Selecione o método de autenticação que deseja usar.</p>
+  {% elif wizard.steps.current == 'generator' %}
+    <p>Use seu aplicativo autenticador para escanear o QR Code abaixo.</p>
+    <p><img src="{{ QR_URL }}" alt="QR Code" class="bg-white"/></p>
+    <p>Se preferir, configure manualmente usando o segredo TOTP:</p>
+    <p><strong>Segredo:</strong> <a href="{{ otpauth_url }}">{{ secret_key }}</a></p>
+    <p>Depois, digite o código de 6 dígitos no campo abaixo e clique em <strong>Próximo</strong>.</p>
+  {% elif wizard.steps.current == 'sms' %}
+    <p>Informe o telefone para receber código por SMS.</p>
+  {% elif wizard.steps.current == 'call' %}
+    <p>Informe o telefone para receber código por chamada.</p>
+  {% elif wizard.steps.current == 'validation' %}
+    {% if challenge_succeeded %}
+      {% if device.method == 'call' %}
+        <p>Estamos ligando para você. Digite os números informados na chamada.</p>
+      {% elif device.method == 'sms' %}
+        <p>Enviamos um SMS. Digite o código recebido.</p>
+      {% endif %}
+    {% else %}
+      <p class="auth-note" role="alert">
+        Não foi possível validar o método selecionado. Revise os dados e tente novamente.
+      </p>
+    {% endif %}
+  {% elif wizard.steps.current == 'yubikey' %}
+    <p>Insira o token da sua YubiKey para vinculá-la à conta.</p>
+  {% endif %}
+
+  <form action="" method="post">{% csrf_token %}
+    {% include "two_factor/_wizard_forms.html" %}
+
+    <input type="submit" value="" hidden />
+
+    {% include "two_factor/_wizard_actions.html" %}
+  </form>
+
+  <p class="auth-note">
+    <a href="{% url 'two_factor:login' %}">Voltar para o login</a>
+  </p>
+{% endblock %}

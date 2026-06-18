@@ -1,0 +1,49 @@
+{% extends "conteudo/admin_base_custom.html" %}
+
+{% block titletag %}Categorias e Tags{% endblock %}
+
+{% block content %}
+<div class="nice-padding op-admin-panel op-admin-panel--wide">
+    <header class="op-admin-panel__header">
+        <div>
+            <p class="op-admin-panel__eyebrow">Editorial</p>
+            <h1>Categorias e Tags</h1>
+            <p class="op-admin-panel__lead">Gerencie as taxonomias editoriais usadas em publicações e perguntas do quiz.</p>
+        </div>
+        <div class="op-admin-panel__actions">
+            <a class="button button-secondary" href="{% url 'wagtailadmin_home' %}">Voltar ao painel</a>
+        </div>
+    </header>
+
+    <section class="admin-stats-grid" aria-label="Resumo de categorias e tags">
+        <article class="op-admin-metric-card">
+            <span>Categorias cadastradas</span>
+            <strong>{{ categorias_total }}</strong>
+            <small>{{ categorias_pendentes }} pendente{{ categorias_pendentes|pluralize }} de revisão</small>
+        </article>
+        <article class="op-admin-metric-card">
+            <span>Tags cadastradas</span>
+            <strong>{{ tags_total }}</strong>
+            <small>{{ tags_pendentes }} pendente{{ tags_pendentes|pluralize }} de revisão</small>
+        </article>
+    </section>
+
+    <section class="op-admin-two-column">
+        <article class="w-panel op-admin-card">
+            <h2>Categorias</h2>
+            <p class="op-admin-panel__meta">Organizam o tema principal das publicações e também servem como tema editorial das perguntas do quiz.</p>
+            <div class="op-admin-panel__actions">
+                <a class="button" href="{{ categorias_url }}">Abrir categorias</a>
+            </div>
+        </article>
+
+        <article class="w-panel op-admin-card">
+            <h2>Tags</h2>
+            <p class="op-admin-panel__meta">Complementam a classificação das publicações e das perguntas reutilizáveis.</p>
+            <div class="op-admin-panel__actions">
+                <a class="button" href="{{ tags_url }}">Abrir tags</a>
+            </div>
+        </article>
+    </section>
+</div>
+{% endblock %}

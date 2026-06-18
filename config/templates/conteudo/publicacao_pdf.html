@@ -1,8 +1,9 @@
+{% load conteudo_tags %}
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="utf-8">
-    <title>{{ page.title }}</title>
+    <title>{{ translated_page_title|default:page.title }}</title>
     <style>
         @page {
             size: A4;
@@ -16,6 +17,15 @@
             color: #111;
             text-align: justify;
             hyphens: auto;
+        }
+
+        h1, h2, h3,
+        .secao-texto,
+        .secao-texto p,
+        .secao-texto li,
+        .lista-final-item,
+        .lista-final-item p {
+            font-family: Times-Roman, serif;
         }
 
         h1 {
@@ -73,6 +83,16 @@
         p, li {
             text-align: justify;
             hyphens: auto;
+            line-height: 1.5;
+        }
+
+        p {
+            margin-top: 0;
+            margin-bottom: 0;
+        }
+
+        .pdf-paragrafo-apos-imagem {
+            margin-top: 12pt;
         }
 
         .rodape-info {
@@ -102,6 +122,7 @@
             display: inline-block;
             max-width: 100%;
             text-align: left;
+            vertical-align: top;
         }
 
         .pdf-imagem img {
@@ -113,8 +134,21 @@
 
         .pdf-legenda {
             margin-top: 6pt;
+            margin-bottom: 0;
             text-align: left;
             font-size: 10pt;
+            line-height: 1.5;
+        }
+
+        .pdf-legenda-titulo,
+        .pdf-legenda-texto {
+            margin: 0;
+            padding: 0;
+            line-height: 1.5;
+        }
+
+        .pdf-legenda-titulo strong {
+            font-weight: bold;
         }
 
         .pdf-video img {
@@ -157,7 +191,7 @@
     </style>
 </head>
 <body>
-    <h1>{{ page.title }}</h1>
+    <h1>{{ translated_page_title|default:page.title }}</h1>
 
     <table class="meta-bloco">
         <tr>
@@ -172,13 +206,35 @@
                     {% if page.last_published_at and page.first_published_at and page.last_published_at != page.first_published_at %}
                         {% if page.data_publicacao or page.first_published_at %} | {% endif %}
                         Atualizado em {{ page.last_published_at|date:"d/m/Y" }}
+                        {% if page.atualizador_publico %}
+                            por <a href="{{ site_base_url }}/autores/{{ page.atualizador_publico.username }}/" target="_blank" rel="noopener noreferrer">{{ page.atualizador_publico }}</a>
+                        {% elif page.atualizador_publico_nome %}
+                            por {{ page.atualizador_publico_nome }}
+                        {% endif %}
                     {% endif %}
                 </div>
 
-                {% if page.palavras_chave %}
+                {% if translated_page_palavras_chave %}
                     <div class="meta">
-                        <strong>Palavras-chave:</strong> {{ page.palavras_chave }}
+                        <strong>Palavras-chave:</strong> {{ translated_page_palavras_chave }}
                     </div>
+                {% endif %}
+
+                {% if autores %}
+                    {% for autor in autores %}
+                        <div class="meta">
+                            <strong>Autor:</strong>
+                            <a href="{{ site_base_url }}/autores/{{ autor.username }}/" target="_blank" rel="noopener noreferrer">{{ autor.nome_completo|default:autor.nome_exibicao|default:autor.username }}</a>
+                            {% if autor.orcid %}
+                                | <strong>ORCID:</strong>
+                                {% if autor.orcid_url %}
+                                    <a href="{{ autor.orcid_url }}" target="_blank" rel="noopener noreferrer">{{ autor.orcid }}</a>
+                                {% else %}
+                                    {{ autor.orcid }}
+                                {% endif %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
                 {% endif %}
             </td>
             <td class="qr-publicacao">
@@ -191,13 +247,13 @@
     </table>
 
     {% if resumo_html %}
-        <div class="secao">
+        <div class="secao secao-texto">
             {{ resumo_html }}
         </div>
     {% endif %}
 
     {% if corpo_html %}
-        <div class="secao">
+        <div class="secao secao-texto">
             {{ corpo_html }}
         </div>
     {% endif %}
@@ -213,8 +269,8 @@
                         {% endif %}
                         {% if item.titulo or item.legenda %}
                             <div class="pdf-legenda">
-                                {% if item.titulo %}<strong>{{ item.titulo }}</strong>{% endif %}
-                                {% if item.legenda %}<div>{{ item.legenda }}</div>{% endif %}
+                                {% if item.titulo %}<div class="pdf-legenda-titulo"><strong>{{ item.titulo }}</strong></div>{% endif %}
+                                {% if item.legenda %}<div class="pdf-legenda-texto">{{ item.legenda }}</div>{% endif %}
                             </div>
                         {% endif %}
                     </div>
@@ -232,7 +288,7 @@
                     {% if item.qr_data_uri %}
                         <img src="{{ item.qr_data_uri }}" alt="QR do vídeo">
                     {% endif %}
-                    <div class="pdf-video-url">{{ item.url }}</div>
+                    <div class="pdf-video-url">{{ item.pdf_url|default:"Vídeo aguardando aprovação editorial." }}</div>
                 </div>
             {% endfor %}
         </div>
@@ -245,7 +301,10 @@
                 {% for nota in notas_rodape %}
                     <div class="lista-final-item" id="{{ nota.anchor_id }}">
                         <a name="{{ nota.anchor_id }}"></a>
-                        {% if nota.marcador_display %}{{ nota.marcador_display }}. {% endif %}{{ nota.conteudo_html }}
+                        {% for marcador in nota.marcadores %}
+                            {% if marcador != nota.marcador_base %}<a name="nota-{{ marcador|id_marcador }}"></a>{% endif %}
+                        {% endfor %}
+                        {% if nota.marcadores_display %}{{ nota.marcadores_display }}. {% endif %}{{ nota.conteudo_html }}
                         <a class="voltar-indice" href="#{{ nota.anchor_src_id }}">[voltar]</a>
                     </div>
                 {% endfor %}
@@ -260,7 +319,10 @@
                 {% for ref in referencias %}
                     <div class="lista-final-item" id="{{ ref.anchor_id }}">
                         <a name="{{ ref.anchor_id }}"></a>
-                        {% if ref.marcador_display %}{{ ref.marcador_display }}. {% endif %}{{ ref.texto }}
+                        {% for marcador in ref.marcadores %}
+                            {% if marcador != ref.marcador_base %}<a name="ref-{{ marcador|id_marcador }}"></a>{% endif %}
+                        {% endfor %}
+                        {% if ref.marcadores_display %}{{ ref.marcadores_display }}. {% endif %}{{ ref.texto }}
                         {% if ref.url %} <a href="{{ ref.url }}">{{ ref.url }}</a>{% endif %}
                         {% if ref.observacoes %}<div>{{ ref.observacoes }}</div>{% endif %}
                         <a class="voltar-indice" href="#{{ ref.anchor_src_id }}">[voltar]</a>
@@ -276,6 +338,7 @@
             <ul class="lista-final">
                 {% for item in creditos_videos %}
                     <li>
+                        {% if item.marcadores_display %}{{ item.marcadores_display }} — {% endif %}
                         {% if item.titulo %}<strong>{{ item.titulo }}</strong> — {% endif %}
                         {% if item.credito_url %}
                             <a href="{{ item.credito_url }}">{{ item.credito_url }}</a>
@@ -298,6 +361,7 @@
             <ul class="lista-final">
                 {% for item in creditos_imagens %}
                     <li>
+                        {% if item.marcadores_display %}{{ item.marcadores_display }} — {% endif %}
                         {% if item.titulo %}<strong>{{ item.titulo }}</strong> — {% endif %}
                         {% if item.credito_url %}
                             <a href="{{ item.credito_url }}">{{ item.credito_url }}</a>
@@ -319,8 +383,15 @@
             <h2>Autor da publicação</h2>
                 {% for autor in autores %}
                 <div>
-                    <strong>{{ autor.nome_completo|default:autor }}</strong>
-                    {% if autor.orcid %} — ORCID: {{ autor.orcid }}{% endif %}
+                    <strong><a href="{{ site_base_url }}/autores/{{ autor.username }}/" target="_blank" rel="noopener noreferrer">{{ autor.nome_completo|default:autor }}</a></strong>
+                    {% if autor.orcid %}
+                        — ORCID:
+                        {% if autor.orcid_url %}
+                            <a href="{{ autor.orcid_url }}" target="_blank" rel="noopener noreferrer">{{ autor.orcid }}</a>
+                        {% else %}
+                            {{ autor.orcid }}
+                        {% endif %}
+                    {% endif %}
                 </div>
                 {% if autor.mini_bio %}
                     <div>{{ autor.mini_bio|linebreaks }}</div>

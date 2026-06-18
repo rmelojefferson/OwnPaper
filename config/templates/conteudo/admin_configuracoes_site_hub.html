@@ -1,0 +1,32 @@
+{% extends "conteudo/admin_base_custom.html" %}
+
+{% block titletag %}Configurações do site{% endblock %}
+
+{% block content %}
+<div class="nice-padding op-admin-panel op-admin-panel--wide">
+    <header class="op-admin-panel__header">
+        <div>
+            <p class="op-admin-panel__eyebrow">Administração</p>
+            <h1>Configurações do site</h1>
+            <p class="op-admin-panel__lead">Ajustes estruturais do projeto, separados por área para evitar páginas longas e alterações acidentais.</p>
+            <p class="op-admin-panel__meta"><strong>Site:</strong> {{ site.hostname }}{% if site.port %}:{{ site.port }}{% endif %}</p>
+        </div>
+        <div class="op-admin-panel__actions">
+            <a class="button button-secondary" href="{{ url_admin_inicio }}">Voltar ao painel</a>
+        </div>
+    </header>
+
+    <section class="admin-stats-grid op-admin-settings-grid" aria-label="Seções das configurações do site">
+        {% for secao in secoes %}
+            <article class="w-panel op-admin-card op-admin-settings-card">
+                <p class="op-admin-panel__eyebrow">{{ secao.eyebrow }}</p>
+                <h2>{{ secao.titulo }}</h2>
+                <p class="op-admin-panel__meta">{{ secao.descricao }}</p>
+                <div class="op-admin-panel__actions">
+                    <a class="button" href="{{ secao.url }}">Abrir seção</a>
+                </div>
+            </article>
+        {% endfor %}
+    </section>
+</div>
+{% endblock %}

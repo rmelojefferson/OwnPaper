@@ -1,0 +1,24 @@
+{% load wagtailadmin_tags %}
+
+{% if tem_totp %}
+    <p class="help">Códigos de recuperação ativos: <strong>{{ total_backup_codes }}</strong></p>
+
+    {% for field in form %}
+        {% formattedfield field %}
+    {% endfor %}
+
+    <p class="help">Ao gerar novos códigos, os anteriores são invalidados.</p>
+
+    {% if backup_codes_gerados %}
+        <div class="help-block help-warning">
+            <strong>Salve estes códigos agora. Eles são exibidos uma única vez.</strong>
+            <ul>
+                {% for codigo in backup_codes_gerados %}
+                    <li><code>{{ codigo }}</code></li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% else %}
+    <p class="error-message">Configure primeiro o autenticador em duas etapas para liberar backup codes.</p>
+{% endif %}

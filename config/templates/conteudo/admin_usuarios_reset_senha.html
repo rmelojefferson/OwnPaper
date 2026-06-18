@@ -1,0 +1,23 @@
+{% extends "conteudo/admin_base_custom.html" %}
+{% block titletag %}Disparar reset de senha{% endblock %}
+{% block content %}
+<div class="nice-padding op-admin-panel">
+    <header class="op-admin-panel__header">
+        <div>
+            <p class="op-admin-panel__eyebrow">Administração</p>
+            <h1>Disparar reset de senha</h1>
+            <p class="op-admin-panel__lead">Envie um link de redefinição de senha para um usuário do painel usando o fluxo operacional padrão.</p>
+        </div>
+    </header>
+
+    <section class="op-admin-card op-admin-card--narrow">
+    <form method="post" class="op-admin-form-card">
+        {% csrf_token %}
+        <label class="op-admin-field">E-mail do usuário
+        <input id="id_email" name="email" type="email" required>
+        </label>
+        <button type="submit" class="button button-longrunning">Enviar reset</button>
+    </form>
+    </section>
+</div>
+{% endblock %}

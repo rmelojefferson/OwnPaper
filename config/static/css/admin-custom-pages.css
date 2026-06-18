@@ -1,0 +1,2047 @@
+.admin-shell {
+    display: grid;
+    gap: 1rem;
+}
+
+.admin-shell,
+.op-admin-panel,
+.admin-publicacoes,
+.admin-quiz-catalogo {
+    padding-top: 1.75rem;
+    padding-bottom: 2rem;
+}
+
+.op-admin-panel {
+    display: grid;
+    gap: 1rem;
+}
+
+.admin-page-header,
+.op-admin-panel__header,
+.op-admin-section-header,
+.admin-publicacoes-topo {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.admin-page-header h1,
+.op-admin-panel__header h1,
+.op-admin-section-header h1,
+.admin-publicacoes-topo h1,
+.op-admin-card h2,
+.admin-page-card h2 {
+    margin: 0;
+}
+
+.admin-page-meta,
+.op-admin-muted,
+.op-admin-panel__lead,
+.op-admin-panel__meta {
+    color: var(--w-color-text-meta, #667085);
+}
+
+.op-admin-panel__eyebrow {
+    display: none;
+}
+
+.admin-page-actions,
+.op-admin-form-actions,
+.op-admin-panel__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.admin-shell .button,
+.op-admin-panel .button,
+.admin-publicacoes .button,
+.admin-quiz-catalogo .button {
+    white-space: nowrap;
+}
+
+.admin-page-actions--stack {
+    align-items: stretch;
+}
+
+.admin-page-card-grid,
+.op-admin-metric-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1rem;
+}
+
+.admin-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 1rem;
+}
+
+.admin-page-two-column,
+.op-admin-two-column {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(280px, 1fr);
+    gap: 1rem;
+    align-items: start;
+}
+
+.op-admin-three-column {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    align-items: start;
+}
+
+.admin-page-stack,
+.op-admin-stack {
+    display: grid;
+    gap: 1rem;
+}
+
+.admin-page-form-grid,
+.op-admin-form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.875rem;
+}
+
+.admin-page-form-stack,
+.op-admin-form-stack {
+    display: grid;
+    gap: 1rem;
+}
+
+.admin-page-field,
+.op-admin-field {
+    display: grid;
+    gap: 0.35rem;
+}
+
+.admin-page-field > label,
+.op-admin-field > label {
+    font-weight: 600;
+}
+
+.admin-page-field input:not([type="checkbox"]):not([type="radio"]),
+.admin-page-field select,
+.admin-page-field textarea,
+.op-admin-field input:not([type="checkbox"]):not([type="radio"]),
+.op-admin-field select,
+.op-admin-field textarea {
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.admin-page-field--checkbox,
+.op-admin-field--checkbox {
+    align-content: start;
+}
+
+.op-admin-checkbox-line {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-weight: 600;
+}
+
+.op-admin-error {
+    color: var(--w-color-text-error, #b42318);
+}
+
+.op-admin-prewrap {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.admin-page-history-list,
+.op-admin-history-list {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.admin-page-history-item,
+.op-admin-history-item {
+    padding-block: 0.25rem;
+}
+
+.admin-page-table-wrap,
+.op-admin-table-wrap {
+    overflow-x: auto;
+}
+
+.op-admin-preview-box {
+    padding: 1rem;
+    border: 1px solid var(--w-color-border-furniture, #d0d5dd);
+    border-radius: 0.5rem;
+    background: var(--w-color-surface-page, #fff);
+}
+
+.op-review-preview {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 920px;
+}
+
+.op-review-preview__header,
+.op-review-preview__body,
+.op-review-preview__quiz,
+.op-review-comment {
+    display: grid;
+    gap: 0.85rem;
+}
+
+.op-review-preview__header h3 {
+    margin: 0;
+    font-size: clamp(1.6rem, 2.6vw, 2.25rem);
+    line-height: 1.1;
+}
+
+.op-review-preview__summary {
+    color: var(--w-color-text-meta, #667085);
+    font-size: 1rem;
+}
+
+.op-review-preview__meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.75rem;
+    margin: 0;
+}
+
+.op-review-preview__meta div {
+    display: grid;
+    gap: 0.2rem;
+}
+
+.op-review-preview__meta dt {
+    color: var(--w-color-text-meta, #667085);
+    font-weight: 700;
+}
+
+.op-review-preview__meta dd {
+    margin: 0;
+}
+
+.op-review-preview__cover img {
+    width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+}
+
+.op-review-preview__body {
+    font-size: 1rem;
+    line-height: 1.65;
+}
+
+.op-review-selection-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin: 0.5rem 0 1rem;
+}
+
+.op-review-annotation,
+.op-review-comment__context mark {
+    padding: 0.08rem 0.18rem;
+    border-radius: 0.2rem;
+    background: color-mix(in srgb, var(--w-color-secondary, #fedb00) 55%, transparent);
+    color: inherit;
+}
+
+.op-review-preview__body img,
+.op-review-preview__body iframe {
+    max-width: 100%;
+}
+
+.op-review-preview__quiz {
+    padding-top: 1rem;
+    border-top: 1px solid var(--w-color-border-furniture, #d0d5dd);
+}
+
+.op-review-comment {
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--w-color-border-furniture, #d0d5dd);
+}
+
+.op-review-comment:last-child {
+    border-bottom: 0;
+}
+
+.op-review-comment.is-resolved {
+    opacity: 0.72;
+}
+
+.op-review-comment__header {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 0.85rem;
+    color: var(--w-color-text-meta, #667085);
+}
+
+.op-review-comment__header strong {
+    color: var(--w-color-text-context, inherit);
+}
+
+.op-review-comment__excerpt {
+    margin: 0;
+}
+
+.op-review-comment__context,
+.op-review-comment__suggestion {
+    margin: 0;
+    padding: 0.75rem;
+    border-inline-start: 4px solid var(--w-color-border-furniture, #d0d5dd);
+    background: var(--w-color-surface-field, #f8fafc);
+}
+
+.op-review-comment__context {
+    color: var(--w-color-text-meta, #667085);
+    font-size: 0.92rem;
+}
+
+.op-review-comment__suggestion p {
+    margin: 0.35rem 0 0;
+}
+
+.op-admin-metric-card {
+    display: grid;
+    gap: 0.25rem;
+    padding: 1rem;
+    border: 1px solid var(--w-color-border-furniture, #d0d5dd);
+    border-radius: 0.5rem;
+    background: var(--w-color-surface-page, #fff);
+}
+
+.op-admin-metric-card span,
+.op-admin-metric-card small {
+    color: var(--w-color-text-meta, #667085);
+}
+
+.op-admin-metric-card__value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.op-admin-metric-card strong {
+    color: var(--w-color-text-context, inherit);
+    font-size: 1.55rem;
+    line-height: 1.1;
+}
+
+.op-admin-stat-list {
+    display: grid;
+    gap: 0.65rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.op-admin-stat-list li {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid var(--w-color-border-furniture, #d0d5dd);
+}
+
+.op-admin-stat-list li:last-child {
+    padding-bottom: 0;
+    border-bottom: 0;
+}
+
+.op-admin-listing-table--stats {
+    min-width: 520px;
+}
+
+.op-admin-divider {
+    border: 0;
+    border-top: 1px solid var(--w-color-border-furniture, #d0d5dd);
+    margin: 1rem 0;
+}
+
+@media (max-width: 900px) {
+    .admin-page-two-column,
+    .op-admin-two-column,
+    .op-admin-three-column {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.op-admin-form-grid--stats-filter {
+    grid-template-columns: repeat(2, minmax(220px, 1fr)) auto;
+    align-items: end;
+}
+
+.op-admin-form-grid--stats-filter .op-admin-form-actions {
+    align-items: end;
+    flex-wrap: nowrap;
+}
+
+.op-admin-form-grid--stats-filter .op-admin-form-actions .button,
+.op-admin-form-grid--stats-filter .op-admin-form-actions button {
+    min-height: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.op-admin-form-grid--backup-report {
+    grid-template-columns: minmax(320px, 1fr) minmax(280px, 1fr);
+    align-items: end;
+}
+
+.op-admin-form-grid--backup-request {
+    grid-template-columns: minmax(260px, 1.3fr) minmax(220px, 1fr) minmax(180px, 0.8fr);
+    align-items: end;
+}
+
+.op-admin-form-grid--backup-confirmation {
+    grid-template-columns: minmax(220px, 1fr) minmax(180px, 0.8fr);
+    align-items: end;
+    max-width: 620px;
+    margin-top: 0.9rem;
+}
+
+.op-admin-field--span-2 {
+    grid-column: span 2;
+}
+
+.op-admin-form-grid--backup-report .op-admin-field input {
+    min-height: 44px;
+}
+
+.op-admin-form-grid--backup-request .op-admin-field input,
+.op-admin-form-grid--backup-request .op-admin-field select,
+.op-admin-form-grid--backup-confirmation .op-admin-field input {
+    min-height: 44px;
+    width: 100%;
+}
+
+.op-admin-form-grid--backup-report .op-admin-checkbox-wrap {
+    min-height: 44px;
+    align-items: center;
+    padding: 0.55rem 0;
+}
+
+.op-admin-checkbox-wrap--backup-confirm {
+    align-items: flex-start;
+    margin-top: 0.85rem;
+}
+
+.op-admin-backup-policy-grid {
+    margin-top: 0.75rem;
+}
+
+.op-admin-backup-policy-grid .op-admin-metric-card {
+    min-height: 104px;
+    align-content: start;
+}
+
+.op-admin-backup-policy-grid .op-admin-metric-card strong {
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
+}
+
+.op-admin-backup-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(260px, 1fr));
+    gap: 1rem;
+}
+
+.op-admin-inline-card {
+    border: 1px solid var(--w-color-border-field-default, #d5d7da);
+    border-radius: 12px;
+    padding: 1rem;
+    background: var(--w-color-surface-field, #fff);
+}
+
+.op-admin-inline-card h3 {
+    margin-top: 0;
+}
+
+.op-admin-settings-grid {
+    align-items: stretch;
+}
+
+.op-admin-settings-card {
+    display: grid;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 0.85rem;
+    align-content: start;
+}
+
+.op-admin-settings-card h2 {
+    margin-bottom: 0 !important;
+}
+
+.op-admin-settings-card > .op-admin-panel__actions {
+    align-self: end;
+    margin-top: 0.35rem;
+}
+
+.op-admin-settings-card > .op-admin-panel__actions .button {
+    width: 100%;
+    justify-content: center;
+}
+
+.op-admin-settings-card__topics {
+    margin: 0;
+    padding-left: 1.1rem;
+    color: var(--w-color-text-meta, #475467);
+}
+
+.op-admin-settings-card__topics li + li {
+    margin-top: 0.35rem;
+}
+
+.op-admin-settings-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.op-admin-settings-tab.is-active {
+    border-color: var(--w-color-text-link-default, #1d4ed8);
+    background: color-mix(in srgb, var(--w-color-text-link-default, #1d4ed8) 12%, var(--w-color-surface-field, #fff));
+    color: var(--w-color-text-link-default, #1d4ed8);
+}
+
+.op-admin-form-grid--settings {
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.op-admin-config-institutional .op-admin-field input:not([type="checkbox"]):not([type="radio"]),
+.op-admin-config-institutional .op-admin-field select {
+    height: 44px;
+    min-height: 44px;
+}
+
+.op-admin-form-grid--institutional-pages,
+.op-admin-form-grid--institutional-tools {
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+    gap: 0.75rem;
+    align-items: start;
+}
+
+.op-admin-form-grid--institutional-pages .op-admin-field,
+.op-admin-form-grid--institutional-tools .op-admin-field {
+    grid-template-rows: minmax(2.15rem, auto) 44px auto;
+    align-content: start;
+}
+
+.op-admin-form-grid--institutional-pages .op-admin-field > span:first-child,
+.op-admin-form-grid--institutional-tools .op-admin-field > span:first-child {
+    min-height: 2.15rem;
+    display: flex;
+    align-items: flex-end;
+}
+
+.op-admin-settings-layout {
+    grid-template-columns: minmax(0, 1.4fr) minmax(300px, 0.75fr);
+}
+
+.op-admin-settings-identity {
+    display: grid;
+    gap: 1rem;
+}
+
+.op-admin-config-identity {
+    display: grid;
+    gap: 1rem;
+}
+
+.op-admin-config-identity .op-admin-inline-card {
+    display: grid;
+    gap: 0.875rem;
+    margin: 0;
+    border-radius: 0.5rem;
+}
+
+.op-admin-config-identity .op-admin-inline-card h3,
+.op-admin-config-identity .op-admin-inline-card p {
+    margin: 0;
+}
+
+.op-admin-config-identity .op-admin-field input:not([type="checkbox"]):not([type="radio"]),
+.op-admin-config-identity .op-admin-field select {
+    height: 44px;
+    min-height: 44px;
+}
+
+.op-admin-config-identity .op-admin-field textarea {
+    min-height: 112px;
+    resize: vertical;
+}
+
+.op-admin-form-grid--identity-primary,
+.op-admin-form-grid--identity-footer {
+    grid-template-columns: repeat(3, minmax(220px, 1fr));
+    gap: 0.75rem;
+}
+
+.op-admin-form-grid--identity-primary .op-admin-field {
+    grid-template-rows: 1.35rem 44px auto;
+    align-content: start;
+}
+
+.op-admin-form-grid--identity-primary .op-admin-field > span:first-child {
+    min-height: 1.35rem;
+    display: flex;
+    align-items: flex-end;
+}
+
+.op-admin-settings-media-card {
+    display: grid;
+    gap: 0.875rem;
+}
+
+.op-admin-settings-media-card__content {
+    display: grid;
+    grid-template-columns: minmax(180px, 320px) minmax(260px, 1fr);
+    gap: 0.75rem;
+    align-items: start;
+}
+
+.op-admin-settings-image-preview {
+    min-height: 128px;
+    display: grid;
+    place-items: center;
+    border: 1px dashed var(--w-color-border-field-default, #d5d7da);
+    border-radius: 0.5rem;
+    background:
+        linear-gradient(45deg, color-mix(in srgb, var(--w-color-surface-page, #fff) 92%, #000 8%) 25%, transparent 25%),
+        linear-gradient(-45deg, color-mix(in srgb, var(--w-color-surface-page, #fff) 92%, #000 8%) 25%, transparent 25%),
+        linear-gradient(45deg, transparent 75%, color-mix(in srgb, var(--w-color-surface-page, #fff) 92%, #000 8%) 75%),
+        linear-gradient(-45deg, transparent 75%, color-mix(in srgb, var(--w-color-surface-page, #fff) 92%, #000 8%) 75%);
+    background-size: 18px 18px;
+    background-position: 0 0, 0 9px, 9px -9px, -9px 0;
+    color: var(--w-color-text-meta, #475467);
+    overflow: hidden;
+}
+
+.op-admin-settings-image-preview img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+
+.op-admin-settings-image-preview--icon {
+    min-height: 112px;
+}
+
+.op-admin-settings-image-preview--icon img {
+    width: 96px;
+    height: 96px;
+    border-radius: 0.5rem;
+}
+
+.op-admin-config-menu .op-admin-field input:not([type="checkbox"]):not([type="radio"]),
+.op-admin-config-menu .op-admin-field select {
+    height: 44px;
+    min-height: 44px;
+}
+
+.op-admin-config-theme .op-admin-field input:not([type="checkbox"]):not([type="radio"]):not([type="color"]),
+.op-admin-config-theme .op-admin-field select {
+    height: 44px;
+    min-height: 44px;
+}
+
+.op-admin-form-grid--theme-base {
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 0.75rem;
+}
+
+.op-admin-form-grid--theme-palette {
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 0.75rem;
+}
+
+.op-admin-form-grid--theme-social {
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+    gap: 0.75rem;
+}
+
+.op-admin-form-grid--theme-base .op-admin-field,
+.op-admin-form-grid--theme-social .op-admin-field {
+    grid-template-rows: minmax(1.35rem, auto) 44px auto;
+    align-content: start;
+}
+
+.op-admin-form-grid--theme-palette .op-admin-field {
+    grid-template-rows: minmax(1.35rem, auto) auto auto;
+    align-content: start;
+}
+
+.op-admin-form-grid--theme-base .op-admin-field > span:first-child,
+.op-admin-form-grid--theme-palette .op-admin-field > span:first-child,
+.op-admin-form-grid--theme-social .op-admin-field > span:first-child {
+    min-height: 1.35rem;
+    display: flex;
+    align-items: flex-end;
+}
+
+.op-admin-config-theme .op-admin-field--theme-color .op-admin-palette-shell {
+    margin-top: 0;
+    max-width: 100%;
+}
+
+.op-admin-config-theme .op-admin-field--theme-color > .op-admin-muted {
+    margin-top: 0.5rem;
+}
+
+.op-admin-config-integrations .op-admin-field input:not([type="checkbox"]):not([type="radio"]),
+.op-admin-config-integrations .op-admin-field select {
+    height: 44px;
+    min-height: 44px;
+}
+
+.op-admin-config-integrations .op-admin-integrations-checkbox input[type="checkbox"] {
+    position: absolute !important;
+    inline-size: 1px !important;
+    block-size: 1px !important;
+    width: 1px !important;
+    height: 1px !important;
+    min-width: 1px !important;
+    min-height: 1px !important;
+    max-width: 1px !important;
+    max-height: 1px !important;
+    opacity: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+    clip-path: inset(50%) !important;
+}
+
+.op-admin-form-grid--integrations-verification,
+.op-admin-form-grid--integrations-provider,
+.op-admin-form-grid--integrations-shlink {
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+    gap: 0.75rem;
+}
+
+.op-admin-form-grid--integrations-analytics {
+    grid-template-columns: repeat(2, minmax(260px, 1fr));
+    gap: 0.75rem;
+}
+
+.op-admin-form-grid--integrations-stats {
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+    gap: 0.5rem 0.75rem;
+    align-items: start;
+}
+
+.op-admin-form-grid--integrations-shlink {
+    gap: 0.5rem 0.75rem;
+}
+
+.op-admin-form-grid--integrations-stats,
+.op-admin-form-grid--integrations-shlink {
+    min-height: 7.25rem;
+}
+
+.op-admin-form-grid--integrations-stats .op-admin-integrations-checkbox,
+.op-admin-form-grid--integrations-shlink .op-admin-integrations-checkbox {
+    grid-column: 1 / -1;
+}
+
+.op-admin-form-grid--integrations-verification .op-admin-field,
+.op-admin-form-grid--integrations-provider .op-admin-field,
+.op-admin-form-grid--integrations-analytics .op-admin-field,
+.op-admin-form-grid--integrations-stats .op-admin-field:not(.op-admin-field--checkbox),
+.op-admin-form-grid--integrations-shlink .op-admin-field:not(.op-admin-field--checkbox) {
+    align-content: start;
+}
+
+.op-admin-form-grid--integrations-verification .op-admin-field,
+.op-admin-form-grid--integrations-provider .op-admin-field,
+.op-admin-form-grid--integrations-analytics .op-admin-field {
+    grid-template-rows: minmax(2.7rem, auto) 44px auto;
+}
+
+.op-admin-form-grid--integrations-stats .op-admin-field:not(.op-admin-field--checkbox),
+.op-admin-form-grid--integrations-shlink .op-admin-field:not(.op-admin-field--checkbox) {
+    grid-template-rows: minmax(2.15rem, auto) 44px auto;
+}
+
+.op-admin-form-grid--integrations-verification .op-admin-field > span:first-child,
+.op-admin-form-grid--integrations-provider .op-admin-field > span:first-child,
+.op-admin-form-grid--integrations-analytics .op-admin-field > span:first-child,
+.op-admin-form-grid--integrations-stats .op-admin-field:not(.op-admin-field--checkbox) > span:first-child,
+.op-admin-form-grid--integrations-shlink .op-admin-field:not(.op-admin-field--checkbox) > span:first-child {
+    display: flex;
+    align-items: flex-end;
+}
+
+.op-admin-form-grid--integrations-verification .op-admin-field > span:first-child,
+.op-admin-form-grid--integrations-provider .op-admin-field > span:first-child,
+.op-admin-form-grid--integrations-analytics .op-admin-field > span:first-child {
+    min-height: 2.7rem;
+}
+
+.op-admin-form-grid--integrations-stats .op-admin-field:not(.op-admin-field--checkbox) > span:first-child,
+.op-admin-form-grid--integrations-shlink .op-admin-field:not(.op-admin-field--checkbox) > span:first-child {
+    min-height: 2.15rem;
+}
+
+.op-admin-integrations-checkbox {
+    display: block;
+    padding-top: 0;
+}
+
+.op-admin-config-integrations .op-admin-integrations-checkbox .op-admin-menu-checkbox-line {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 1.5rem;
+    margin: 0 !important;
+    font-weight: 600;
+    line-height: 1.25;
+    position: relative;
+}
+
+.op-admin-config-integrations .op-admin-integrations-checkbox .op-admin-menu-checkbox {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    box-sizing: border-box;
+    border: 1px solid var(--w-color-border-field-default, #9ca3af);
+    border-radius: 3px;
+    background: var(--w-color-surface-field, #fff);
+}
+
+.op-admin-config-integrations .op-admin-integrations-checkbox input[type="checkbox"]:checked + .op-admin-menu-checkbox::before {
+    content: "✓";
+    color: var(--w-color-text-context, #1f3b5c);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.op-admin-config-integrations .op-admin-integrations-checkbox input[type="checkbox"]:focus-visible + .op-admin-menu-checkbox {
+    outline: 2px solid var(--w-color-border-focus, #3b82f6);
+    outline-offset: 2px;
+}
+
+.op-admin-config-integrations .op-admin-integrations-checkbox .op-admin-menu-checkbox-help {
+    display: block;
+    margin-top: 0.375rem;
+    margin-left: 1.5rem;
+    line-height: 1.35;
+}
+
+.op-admin-config-communication .op-admin-field input:not([type="checkbox"]):not([type="radio"]),
+.op-admin-config-communication .op-admin-field select {
+    height: 44px;
+    min-height: 44px;
+}
+
+.op-admin-form-grid--communication-comments,
+.op-admin-form-grid--communication-notifications,
+.op-admin-form-grid--communication-submissions {
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+    gap: 0.75rem;
+    align-items: start;
+}
+
+.op-admin-form-grid--communication-notifications .op-admin-field,
+.op-admin-form-grid--communication-submissions .op-admin-field:not(.op-admin-field--checkbox) {
+    grid-template-rows: minmax(2.15rem, auto) 44px auto;
+    align-content: start;
+}
+
+.op-admin-form-grid--communication-notifications .op-admin-field > span:first-child,
+.op-admin-form-grid--communication-submissions .op-admin-field:not(.op-admin-field--checkbox) > span:first-child {
+    min-height: 2.15rem;
+    display: flex;
+    align-items: flex-end;
+}
+
+.op-admin-communication-checkbox {
+    display: block;
+}
+
+.op-admin-config-communication .op-admin-communication-checkbox input[type="checkbox"] {
+    position: absolute !important;
+    inline-size: 1px !important;
+    block-size: 1px !important;
+    width: 1px !important;
+    height: 1px !important;
+    min-width: 1px !important;
+    min-height: 1px !important;
+    max-width: 1px !important;
+    max-height: 1px !important;
+    opacity: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+    clip-path: inset(50%) !important;
+}
+
+.op-admin-config-communication .op-admin-communication-checkbox .op-admin-menu-checkbox-line {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 1.5rem;
+    margin: 0 !important;
+    font-weight: 600;
+    line-height: 1.25;
+    position: relative;
+}
+
+.op-admin-config-communication .op-admin-communication-checkbox .op-admin-menu-checkbox {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    box-sizing: border-box;
+    border: 1px solid var(--w-color-border-field-default, #9ca3af);
+    border-radius: 3px;
+    background: var(--w-color-surface-field, #fff);
+}
+
+.op-admin-config-communication .op-admin-communication-checkbox input[type="checkbox"]:checked + .op-admin-menu-checkbox::before {
+    content: "✓";
+    color: var(--w-color-text-context, #1f3b5c);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.op-admin-config-communication .op-admin-communication-checkbox input[type="checkbox"]:focus-visible + .op-admin-menu-checkbox {
+    outline: 2px solid var(--w-color-border-focus, #3b82f6);
+    outline-offset: 2px;
+}
+
+.op-admin-config-communication .op-admin-communication-checkbox .op-admin-menu-checkbox-help {
+    display: block;
+    margin-top: 0.375rem;
+    margin-left: 1.5rem;
+    line-height: 1.35;
+}
+
+.op-admin-readonly-grid--communication {
+    display: grid;
+    grid-template-columns: minmax(240px, 1fr);
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.op-admin-readonly-item {
+    border: 1px solid var(--w-color-border-furniture, #d1d5db);
+    border-radius: 0.5rem;
+    padding: 0.85rem 1rem;
+    background: var(--w-color-surface-page, #fff);
+}
+
+.op-admin-readonly-item span {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--w-color-text-meta, #4b5563);
+    font-size: 0.875rem;
+}
+
+.op-admin-readonly-item strong {
+    display: block;
+    color: var(--w-color-text-context, #111827);
+    font-size: 0.95rem;
+}
+
+.op-admin-config-operation .op-admin-field input:not([type="checkbox"]):not([type="radio"]),
+.op-admin-config-operation .op-admin-field select {
+    height: 44px;
+    min-height: 44px;
+}
+
+.op-admin-config-operation .op-admin-field textarea {
+    min-height: 120px;
+}
+
+.op-admin-form-grid--operation-maintenance,
+.op-admin-form-grid--operation-editorial,
+.op-admin-form-grid--operation-backup {
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+    gap: 0.75rem;
+    align-items: start;
+}
+
+.op-admin-form-grid--operation-maintenance .op-admin-operation-checkbox,
+.op-admin-form-grid--operation-editorial .op-admin-operation-checkbox {
+    grid-column: 1 / -1;
+}
+
+.op-admin-form-grid--operation-maintenance .op-admin-field:not(.op-admin-field--checkbox),
+.op-admin-form-grid--operation-backup .op-admin-field:not(.op-admin-field--checkbox) {
+    grid-template-rows: minmax(2.15rem, auto) 44px auto;
+    align-content: start;
+}
+
+.op-admin-form-grid--operation-maintenance .op-admin-field:not(.op-admin-field--checkbox) > span:first-child,
+.op-admin-form-grid--operation-backup .op-admin-field:not(.op-admin-field--checkbox) > span:first-child {
+    min-height: 2.15rem;
+    display: flex;
+    align-items: flex-end;
+}
+
+.op-admin-operation-checkbox {
+    display: block;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--w-color-border-furniture, #d1d5db);
+    border-radius: 0.5rem;
+    background: color-mix(in srgb, var(--w-color-surface-page, #fff) 88%, var(--w-color-surface-field, #fff));
+}
+
+.op-admin-config-operation .op-admin-operation-checkbox input[type="checkbox"] {
+    position: absolute !important;
+    inline-size: 1px !important;
+    block-size: 1px !important;
+    width: 1px !important;
+    height: 1px !important;
+    min-width: 1px !important;
+    min-height: 1px !important;
+    max-width: 1px !important;
+    max-height: 1px !important;
+    opacity: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+    clip-path: inset(50%) !important;
+}
+
+.op-admin-config-operation .op-admin-operation-checkbox .op-admin-menu-checkbox-line {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 1.5rem;
+    margin: 0 !important;
+    font-weight: 600;
+    line-height: 1.25;
+    position: relative;
+}
+
+.op-admin-config-operation .op-admin-operation-checkbox .op-admin-menu-checkbox {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    box-sizing: border-box;
+    border: 1px solid var(--w-color-border-field-default, #9ca3af);
+    border-radius: 3px;
+    background: var(--w-color-surface-field, #fff);
+}
+
+.op-admin-config-operation .op-admin-operation-checkbox input[type="checkbox"]:checked + .op-admin-menu-checkbox::before {
+    content: "✓";
+    color: var(--w-color-text-context, #1f3b5c);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.op-admin-config-operation .op-admin-operation-checkbox input[type="checkbox"]:focus-visible + .op-admin-menu-checkbox {
+    outline: 2px solid var(--w-color-border-focus, #3b82f6);
+    outline-offset: 2px;
+}
+
+.op-admin-config-operation .op-admin-operation-checkbox .op-admin-menu-checkbox-help {
+    display: block;
+    margin-top: 0.375rem;
+    margin-left: 1.5rem;
+    line-height: 1.35;
+}
+
+.op-admin-readonly-grid--operation {
+    display: grid;
+    grid-template-columns: minmax(240px, 1fr);
+    gap: 0.75rem;
+    margin-top: 1rem;
+}
+
+.op-admin-config-donations .op-admin-field input:not([type="checkbox"]):not([type="radio"]),
+.op-admin-config-donations .op-admin-field select {
+    height: 44px;
+    min-height: 44px;
+}
+
+.op-admin-config-donations .op-admin-field textarea {
+    min-height: 96px;
+}
+
+.op-admin-config-donations .Draftail-Editor__wrapper,
+.op-admin-config-donations .Draftail-Toolbar,
+.op-admin-config-donations .Draftail-Editor {
+    max-width: 100%;
+}
+
+.op-admin-config-donations .Draftail-Editor__wrapper {
+    border: 1px solid var(--w-color-border-field-default, #9ca3af);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    background: var(--w-color-surface-field, #fff);
+}
+
+.op-admin-config-donations .Draftail-Toolbar {
+    border-bottom: 1px solid var(--w-color-border-furniture, #d1d5db);
+    background: var(--w-color-surface-page, #fff);
+}
+
+.op-admin-config-donations .Draftail-Editor {
+    min-height: 140px;
+}
+
+.op-admin-config-donations .public-DraftEditor-content {
+    min-height: 120px;
+    padding: 0.85rem 1rem;
+}
+
+.op-admin-settings-layout--donations .op-admin-inline-card {
+    align-content: start;
+}
+
+.op-admin-settings-layout--donations .op-admin-inline-card > h3 {
+    line-height: 1.25;
+}
+
+.op-admin-settings-layout--donations .op-admin-inline-card > .op-admin-panel__meta {
+    min-height: 2.6rem;
+}
+
+.op-admin-form-grid--donations-display,
+.op-admin-form-grid--donations-pix,
+.op-admin-form-grid--donations-platforms,
+.op-admin-form-grid--donations-crypto {
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+    gap: 0.75rem;
+    align-items: start;
+}
+
+.op-admin-form-grid--donations-display {
+    grid-template-columns: repeat(3, minmax(190px, 1fr));
+}
+
+.op-admin-form-grid--donations-display .op-admin-field:not(.op-admin-field--checkbox),
+.op-admin-form-grid--donations-pix .op-admin-donations-checkbox,
+.op-admin-form-grid--donations-platforms .op-admin-donations-checkbox,
+.op-admin-form-grid--donations-crypto .op-admin-donations-checkbox {
+    grid-column: 1 / -1;
+}
+
+.op-admin-form-grid--donations-platforms,
+.op-admin-form-grid--donations-crypto {
+    row-gap: 0.6rem;
+}
+
+.op-admin-form-grid--donations-display .op-admin-field:not(.op-admin-field--checkbox),
+.op-admin-form-grid--donations-pix .op-admin-field:not(.op-admin-field--checkbox),
+.op-admin-form-grid--donations-platforms .op-admin-field:not(.op-admin-field--checkbox),
+.op-admin-form-grid--donations-crypto .op-admin-field:not(.op-admin-field--checkbox) {
+    grid-template-rows: minmax(2.15rem, auto) 44px auto;
+    align-content: start;
+}
+
+.op-admin-form-grid--donations-display .op-admin-field:not(.op-admin-field--checkbox) > span:first-child,
+.op-admin-form-grid--donations-pix .op-admin-field:not(.op-admin-field--checkbox) > span:first-child,
+.op-admin-form-grid--donations-platforms .op-admin-field:not(.op-admin-field--checkbox) > span:first-child,
+.op-admin-form-grid--donations-crypto .op-admin-field:not(.op-admin-field--checkbox) > span:first-child {
+    min-height: 2.15rem;
+    display: flex;
+    align-items: flex-end;
+}
+
+.op-admin-donations-checkbox {
+    display: block;
+    padding: 0.65rem 0.75rem;
+    border: 1px solid var(--w-color-border-furniture, #d1d5db);
+    border-radius: 0.5rem;
+    background: color-mix(in srgb, var(--w-color-surface-page, #fff) 88%, var(--w-color-surface-field, #fff));
+}
+
+.op-admin-config-donations .op-admin-donations-checkbox input[type="checkbox"] {
+    position: absolute !important;
+    inline-size: 1px !important;
+    block-size: 1px !important;
+    width: 1px !important;
+    height: 1px !important;
+    min-width: 1px !important;
+    min-height: 1px !important;
+    max-width: 1px !important;
+    max-height: 1px !important;
+    opacity: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+    clip-path: inset(50%) !important;
+}
+
+.op-admin-config-donations .op-admin-donations-checkbox .op-admin-menu-checkbox-line {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 1.5rem;
+    margin: 0 !important;
+    font-weight: 600;
+    line-height: 1.25;
+    position: relative;
+}
+
+.op-admin-config-donations .op-admin-donations-checkbox .op-admin-menu-checkbox {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    box-sizing: border-box;
+    border: 1px solid var(--w-color-border-field-default, #9ca3af);
+    border-radius: 3px;
+    background: var(--w-color-surface-field, #fff);
+}
+
+.op-admin-config-donations .op-admin-donations-checkbox input[type="checkbox"]:checked + .op-admin-menu-checkbox::before {
+    content: "✓";
+    color: var(--w-color-text-context, #1f3b5c);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.op-admin-config-donations .op-admin-donations-checkbox input[type="checkbox"]:focus-visible + .op-admin-menu-checkbox {
+    outline: 2px solid var(--w-color-border-focus, #3b82f6);
+    outline-offset: 2px;
+}
+
+.op-admin-config-donations .op-admin-donations-checkbox .op-admin-menu-checkbox-help {
+    display: block;
+    margin-top: 0.375rem;
+    margin-left: 1.5rem;
+    line-height: 1.35;
+}
+
+.op-admin-donation-qr-row {
+    margin-top: 0.75rem;
+    grid-template-columns: 180px minmax(260px, 1fr);
+    gap: 0.75rem;
+    align-items: start;
+}
+
+.op-admin-donation-qr-row .op-admin-settings-image-preview {
+    min-height: 160px;
+}
+
+.op-admin-donation-qr-row .op-admin-field {
+    grid-template-rows: minmax(2.15rem, auto) 44px auto;
+    align-content: start;
+}
+
+.op-admin-donation-qr-row .op-admin-field > span:first-child {
+    min-height: 2.15rem;
+    display: flex;
+    align-items: flex-end;
+}
+
+.op-admin-menu-top-grid {
+    display: grid;
+    grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr);
+    gap: 1rem;
+    align-items: stretch;
+}
+
+.op-admin-form-grid--menu-toggles {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+}
+
+.op-admin-form-grid--menu-primary {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+}
+
+.op-admin-menu-top-grid > .op-admin-inline-card {
+    height: 100%;
+    align-content: start;
+}
+
+.op-admin-form-grid--menu-toggles .op-admin-field--checkbox {
+    display: block;
+    padding: 0;
+}
+
+.op-admin-form-grid--menu-toggles .op-admin-checkbox-line {
+    display: inline-flex;
+    min-height: 1.65rem;
+    align-items: center;
+    gap: 0.5rem;
+    line-height: 1.25;
+}
+
+.op-admin-form-grid--menu-toggles input[type="checkbox"] {
+    appearance: auto;
+    width: auto;
+    height: auto;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    accent-color: var(--w-color-secondary, #3b82f6);
+    flex: 0 0 auto;
+}
+
+.op-admin-form-grid--menu-primary .op-admin-field {
+    grid-template-rows: 1.35rem 44px auto;
+    align-content: start;
+}
+
+.op-admin-form-grid--menu-primary .op-admin-field > span:first-child {
+    min-height: 1.35rem;
+    display: flex;
+    align-items: flex-end;
+}
+
+.op-admin-form-grid--menu-logos {
+    grid-template-columns: repeat(2, minmax(260px, 1fr));
+    gap: 0.875rem;
+}
+
+.op-admin-form-grid--menu-dimensions {
+    grid-template-columns: repeat(4, minmax(170px, 1fr));
+    gap: 0.75rem;
+}
+
+.op-admin-form-grid--menu-dimensions .op-admin-field {
+    grid-template-rows: minmax(2.7rem, auto) 44px auto;
+    align-content: start;
+}
+
+.op-admin-form-grid--menu-dimensions .op-admin-field > span:first-child {
+    min-height: 2.7rem;
+    display: flex;
+    align-items: flex-end;
+}
+
+.op-admin-settings-image-preview--logo {
+    min-height: 140px;
+    padding: 0.75rem;
+}
+
+.op-admin-settings-image-preview--logo img {
+    max-height: 120px;
+    width: auto;
+}
+
+@media (max-width: 900px) {
+    .op-admin-settings-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .op-admin-form-grid--identity-primary,
+    .op-admin-form-grid--identity-footer,
+    .op-admin-form-grid--institutional-pages,
+    .op-admin-form-grid--institutional-tools,
+    .op-admin-menu-top-grid,
+    .op-admin-form-grid--menu-toggles,
+    .op-admin-form-grid--menu-primary,
+    .op-admin-form-grid--menu-logos,
+    .op-admin-form-grid--menu-dimensions,
+    .op-admin-form-grid--theme-base,
+    .op-admin-form-grid--theme-palette,
+    .op-admin-form-grid--theme-social,
+    .op-admin-form-grid--integrations-verification,
+    .op-admin-form-grid--integrations-provider,
+    .op-admin-form-grid--integrations-analytics,
+    .op-admin-form-grid--integrations-stats,
+    .op-admin-form-grid--integrations-shlink,
+    .op-admin-form-grid--communication-comments,
+    .op-admin-form-grid--communication-notifications,
+    .op-admin-form-grid--communication-submissions,
+    .op-admin-form-grid--donations-display,
+    .op-admin-form-grid--donations-pix,
+    .op-admin-form-grid--donations-platforms,
+    .op-admin-form-grid--donations-crypto,
+    .op-admin-form-grid--operation-maintenance,
+    .op-admin-form-grid--operation-editorial,
+    .op-admin-form-grid--operation-backup,
+    .op-admin-donation-qr-row,
+    .op-admin-settings-media-card__content {
+        grid-template-columns: 1fr;
+    }
+}
+
+.op-admin-inline-card label {
+    display: block;
+    font-weight: 700;
+    margin-top: 0.75rem;
+}
+
+.op-admin-config-menu .op-admin-form-grid--menu-primary label.op-admin-field,
+.op-admin-config-menu .op-admin-form-grid--menu-dimensions label.op-admin-field {
+    display: grid !important;
+    margin-top: 0 !important;
+    font-weight: 600;
+}
+
+.op-admin-config-menu .op-admin-form-grid--menu-toggles .op-admin-menu-checkbox-line {
+    display: inline-flex !important;
+    flex-direction: row;
+    align-items: center;
+    width: auto !important;
+    margin-top: 0 !important;
+    font-weight: 600;
+    position: relative;
+    gap: 0.5rem;
+    line-height: 1.25;
+}
+
+.op-admin-config-menu .op-admin-form-grid--menu-toggles .op-admin-menu-checkbox-help {
+    display: block;
+    margin-top: 0.25rem;
+    margin-left: 1.5rem;
+    line-height: 1.35;
+}
+
+.op-admin-config-menu .op-admin-form-grid--menu-toggles input[type="checkbox"].op-admin-menu-toggle-input {
+    position: absolute !important;
+    inline-size: 1px !important;
+    block-size: 1px !important;
+    width: 1px !important;
+    height: 1px !important;
+    min-width: 1px !important;
+    min-height: 1px !important;
+    max-width: 1px !important;
+    max-height: 1px !important;
+    opacity: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+    pointer-events: none !important;
+    clip-path: inset(50%) !important;
+}
+
+.op-admin-config-menu .op-admin-form-grid--menu-toggles .op-admin-menu-checkbox {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+    box-sizing: border-box;
+    border: 1px solid var(--w-color-border-field-default, #9ca3af);
+    border-radius: 3px;
+    background: var(--w-color-surface-field, #fff);
+}
+
+.op-admin-config-menu .op-admin-form-grid--menu-toggles input[type="checkbox"].op-admin-menu-toggle-input:checked + .op-admin-menu-checkbox::before {
+    content: "✓";
+    color: var(--w-color-text-context, #1f3b5c);
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.op-admin-config-menu .op-admin-form-grid--menu-toggles input[type="checkbox"].op-admin-menu-toggle-input:focus-visible + .op-admin-menu-checkbox {
+    outline: 2px solid var(--w-color-border-focus, #3b82f6);
+    outline-offset: 2px;
+}
+
+.op-admin-inline-card input,
+.op-admin-download-form input {
+    min-height: 40px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.op-admin-inline-card .button {
+    width: 100%;
+    margin-top: 0.9rem;
+}
+
+.op-admin-download-form {
+    display: grid;
+    grid-template-columns: minmax(110px, 1fr) minmax(80px, 0.7fr) auto;
+    gap: 0.45rem;
+    align-items: center;
+    min-width: 360px;
+}
+
+@media (max-width: 780px) {
+    .op-admin-form-grid--backup-report,
+    .op-admin-form-grid--backup-request,
+    .op-admin-form-grid--backup-confirmation,
+    .op-admin-backup-actions-grid,
+    .op-admin-download-form {
+        grid-template-columns: 1fr;
+    }
+
+    .op-admin-field--span-2 {
+        grid-column: auto;
+    }
+}
+
+.busca-datepicker {
+    position: relative;
+    width: 100%;
+}
+
+.busca-datepicker-input {
+    width: 100%;
+    height: 44px;
+    min-height: 44px;
+    box-sizing: border-box;
+    line-height: 1.4;
+    padding-right: 3.4rem;
+}
+
+.busca-datepicker-input::placeholder {
+    opacity: 1;
+}
+
+.busca-datepicker-toggle {
+    position: absolute;
+    top: 50%;
+    right: 0.1rem;
+    transform: translateY(-50%);
+    width: 3rem;
+    height: 3rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 0;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--w-color-text-meta, #667085);
+    cursor: pointer;
+    transition: color 0.18s ease;
+}
+
+.busca-datepicker-toggle:hover,
+.busca-datepicker-toggle:focus-visible {
+    background: transparent;
+    color: var(--w-color-secondary, #3b82f6);
+    outline: none;
+}
+
+.busca-datepicker-toggle svg {
+    width: 1.6rem;
+    height: 1.6rem;
+    fill: currentColor;
+}
+
+.busca-datepicker-popover {
+    position: absolute;
+    top: calc(100% + 0.45rem);
+    left: 0;
+    z-index: 30;
+    width: min(100%, 292px);
+    min-width: 280px;
+    padding: 0.9rem;
+    border: 1px solid var(--w-color-border-furniture, #d0d5dd);
+    border-radius: 0.5rem;
+    background: var(--w-color-surface-field, #fff);
+    box-shadow: 0 18px 34px rgba(15, 23, 42, 0.16);
+    overflow-x: hidden;
+    overscroll-behavior: contain;
+}
+
+.busca-datepicker.is-open-up .busca-datepicker-popover {
+    top: auto;
+    bottom: calc(100% + 0.45rem);
+}
+
+.busca-datepicker.is-open .busca-datepicker-popover {
+    display: block;
+}
+
+.busca-datepicker-toolbar,
+.busca-datepicker-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+.busca-datepicker-toolbar {
+    margin-bottom: 0.75rem;
+}
+
+.busca-datepicker-month {
+    flex: 1 1 auto;
+    text-align: center;
+    font-weight: 700;
+    color: var(--w-color-text-context, inherit);
+}
+
+.busca-datepicker-nav,
+.busca-datepicker-action {
+    min-height: 36px;
+    border: 1px solid var(--w-color-border-field-default, #d5d7da);
+    border-radius: 0.375rem;
+    background: var(--w-color-surface-field, #fff);
+    color: var(--w-color-text-context, inherit);
+    font: 700 0.92rem inherit;
+    cursor: pointer;
+}
+
+.busca-datepicker-nav {
+    width: 2.2rem;
+}
+
+.busca-datepicker-action {
+    padding: 0 0.8rem;
+}
+
+.busca-datepicker-nav:hover,
+.busca-datepicker-nav:focus-visible,
+.busca-datepicker-action:hover,
+.busca-datepicker-action:focus-visible {
+    background: var(--w-color-surface-button-default, #3b82f6);
+    color: var(--w-color-text-button, #fff);
+    border-color: var(--w-color-border-button-hover, #3b82f6);
+    outline: none;
+}
+
+.busca-datepicker-weekdays,
+.busca-datepicker-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 0.25rem;
+}
+
+.busca-datepicker-weekdays {
+    margin-bottom: 0.35rem;
+}
+
+.busca-datepicker-weekdays span {
+    text-align: center;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--w-color-text-meta, #667085);
+    text-transform: uppercase;
+}
+
+.busca-datepicker-day {
+    min-height: 2.25rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 1px solid transparent;
+    border-radius: 0.375rem;
+    background: transparent;
+    color: var(--w-color-text-context, inherit);
+    font: 600 0.9rem inherit;
+    text-align: center;
+    cursor: pointer;
+}
+
+.busca-datepicker-day:hover,
+.busca-datepicker-day:focus-visible {
+    background: var(--w-color-surface-button-outline-hover, #e8f0fd);
+    border-color: var(--w-color-border-button-outline-hover, #3b82f6);
+    outline: none;
+}
+
+.busca-datepicker-day.is-selected {
+    background: var(--w-color-surface-button-default, #3b82f6);
+    color: var(--w-color-text-button, #fff);
+    border-color: var(--w-color-border-button-hover, #3b82f6);
+}
+
+.busca-datepicker-day.is-today:not(.is-selected) {
+    border-color: var(--w-color-border-focus, #3b82f6);
+    font-weight: 700;
+}
+
+.busca-datepicker-day.is-outside {
+    color: color-mix(in srgb, var(--w-color-text-meta, #667085) 72%, transparent);
+}
+
+.busca-datepicker-day:disabled {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.busca-datepicker-actions {
+    margin-top: 0.75rem;
+}
+
+.busca-datepicker-input.is-invalid {
+    border-color: var(--w-color-text-error, #b42318) !important;
+    box-shadow: 0 0 0 1px color-mix(in srgb, var(--w-color-text-error, #b42318) 25%, transparent);
+}
+
+@media (max-width: 900px) {
+    .op-admin-form-grid--stats-filter {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .op-admin-form-grid--stats-filter .op-admin-form-actions {
+        flex-wrap: wrap;
+    }
+}
+
+.op-admin-form-grid--global-search {
+    grid-template-columns: minmax(320px, 2fr) repeat(3, minmax(180px, 1fr));
+}
+
+.op-admin-form-grid--global-search .op-admin-field--wide {
+    grid-column: 1 / -1;
+}
+
+.op-admin-search-checkbox {
+    align-self: end;
+    min-height: 2.75rem;
+}
+
+.op-admin-listing-table--global-search {
+    min-width: 980px;
+}
+
+@media (max-width: 900px) {
+    .op-admin-form-grid--global-search {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+.op-admin-form-grid--global-search .op-admin-form-actions {
+    align-items: end;
+    flex-wrap: nowrap;
+}
+
+.op-admin-form-grid--global-search .op-admin-form-actions .button,
+.op-admin-form-grid--global-search .op-admin-form-actions button {
+    min-height: 44px;
+    height: 44px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    margin: 0;
+}
+
+.op-admin-form-grid--global-search .op-admin-form-actions > .button,
+.op-admin-form-grid--global-search .op-admin-form-actions > button {
+    min-height: 44px !important;
+    height: 44px !important;
+    padding: 0 1.125rem !important;
+    border-width: 2px !important;
+    line-height: 1 !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+}
+
+.op-admin-filter-button {
+    height: 44px !important;
+    min-height: 44px !important;
+    padding: 0 18px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    box-sizing: border-box !important;
+    line-height: 1 !important;
+    margin: 0 !important;
+}
+
+.op-admin-form-grid--media,
+.op-admin-form-grid--media-filter {
+    align-items: end;
+}
+
+.op-admin-form-grid--media {
+    align-items: start;
+}
+
+.op-admin-form-grid--media-filter {
+    grid-template-columns: minmax(280px, 1.5fr) repeat(2, minmax(180px, 0.75fr)) auto;
+}
+
+.op-admin-media-pending .op-admin-field input:not([type="checkbox"]):not([type="radio"]),
+.op-admin-media-pending .op-admin-field select {
+    min-height: 44px;
+    height: 44px;
+    box-sizing: border-box;
+}
+
+.op-admin-media-pending .op-admin-field input[type="file"] {
+    height: auto;
+    min-height: 44px;
+    padding-block: 0.55rem;
+}
+
+.op-admin-form-actions--media,
+.op-admin-form-actions--media-filter {
+    align-items: end;
+}
+
+.op-admin-form-actions--media {
+    align-self: start;
+    padding-top: calc(1.15rem + 0.35rem);
+}
+
+.op-admin-form-actions--media .button,
+.op-admin-form-actions--media-filter .button,
+.op-admin-media-actions .button {
+    min-width: 118px;
+}
+
+.op-admin-media-list {
+    overflow-x: auto;
+}
+
+.op-admin-media-table th,
+.op-admin-media-table td {
+    vertical-align: top;
+}
+
+.op-admin-media-preview-cell {
+    width: 132px;
+}
+
+.op-admin-media-preview {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 112px;
+    min-height: 74px;
+    border: 1px solid var(--w-color-border-furniture, #d0d5dd);
+    border-radius: 0.5rem;
+    background: var(--w-color-surface-field, #fff);
+    color: var(--w-color-text-label, inherit);
+    overflow: hidden;
+    text-decoration: none;
+    font-weight: 700;
+}
+
+.op-admin-media-preview img {
+    display: block;
+    width: 100%;
+    height: 74px;
+    object-fit: cover;
+}
+
+.op-admin-media-preview--document {
+    min-height: 74px;
+}
+
+.op-admin-media-preview--video {
+    min-height: 74px;
+}
+
+.op-admin-media-preview--missing {
+    padding: 0.5rem;
+    border-style: dashed;
+    color: var(--w-color-text-meta, #667085);
+    font-size: 0.82rem;
+    line-height: 1.2;
+    text-align: center;
+    cursor: default;
+}
+
+.op-admin-media-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.op-admin-media-actions form {
+    margin: 0;
+}
+
+@media (max-width: 72rem) {
+    .op-admin-form-grid--media-filter {
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .op-admin-form-actions--media-filter {
+        grid-column: 1 / -1;
+    }
+}
+
+.op-admin-field--file {
+    align-self: start;
+}
+
+.op-admin-file-control {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+}
+
+.op-admin-file-help {
+    margin-top: 0.35rem;
+}
+
+.op-admin-media-preview {
+    border: 1px solid var(--w-color-border-furniture, #d0d5dd);
+    cursor: pointer;
+    padding: 0;
+}
+
+.op-admin-media-preview:hover,
+.op-admin-media-preview:focus-visible {
+    border-color: var(--w-color-border-focus, #3b82f6);
+    outline: none;
+}
+
+.op-admin-media-modal[hidden] {
+    display: none;
+}
+
+.op-admin-media-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: grid;
+    place-items: center;
+    padding: 2rem;
+}
+
+.op-admin-media-modal__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.62);
+}
+
+.op-admin-media-modal__dialog {
+    position: relative;
+    z-index: 1;
+    width: min(1100px, 96vw);
+    max-height: 92vh;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    border-radius: 0.75rem;
+    background: var(--w-color-surface-page, #fff);
+    color: var(--w-color-text-context, #111827);
+    box-shadow: 0 24px 70px rgba(15, 23, 42, 0.35);
+    overflow: hidden;
+}
+
+.op-admin-media-modal__header,
+.op-admin-media-modal__footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid var(--w-color-border-furniture, #d0d5dd);
+}
+
+.op-admin-media-modal__footer {
+    justify-content: flex-end;
+    border-top: 1px solid var(--w-color-border-furniture, #d0d5dd);
+    border-bottom: 0;
+}
+
+.op-admin-media-modal__header h2 {
+    margin: 0;
+}
+
+.op-admin-media-modal__body {
+    min-height: 340px;
+    max-height: calc(92vh - 150px);
+    padding: 1rem;
+    display: grid;
+    place-items: center;
+    overflow: auto;
+    background: color-mix(in srgb, var(--w-color-surface-page, #fff) 88%, black 12%);
+}
+
+.op-admin-media-modal__body img {
+    max-width: 100%;
+    max-height: calc(92vh - 190px);
+    object-fit: contain;
+}
+
+.op-admin-media-modal__body video {
+    display: block;
+    width: 100%;
+    max-width: 1000px;
+    max-height: calc(92vh - 190px);
+    background: #000;
+}
+
+.op-admin-media-modal__body iframe {
+    width: 100%;
+    height: min(72vh, 760px);
+    border: 0;
+    background: #fff;
+}
+
+.op-email-editor {
+    display: grid;
+    gap: 0;
+    border: 1px solid var(--w-color-border-field-default, #d5d7da);
+    border-radius: 0.75rem;
+    background: var(--w-color-surface-field, #fff);
+    overflow: hidden;
+}
+
+.op-email-editor__toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    padding: 0.55rem;
+    border-bottom: 1px solid var(--w-color-border-field-default, #d5d7da);
+    background: color-mix(in srgb, var(--w-color-surface-page, #fff) 92%, var(--w-color-text-context, #111827) 8%);
+}
+
+.op-email-editor__button {
+    min-height: 2rem;
+    padding-inline: 0.65rem;
+}
+
+.op-email-editor__area {
+    min-height: 18rem;
+    padding: 1rem;
+    background: var(--w-color-surface-page, #fff);
+    color: var(--w-color-text-context, #111827);
+    outline: none;
+    line-height: 1.55;
+}
+
+.op-email-editor__area:focus {
+    box-shadow: inset 0 0 0 2px var(--w-color-focus, #1d4ed8);
+}
+
+.op-email-editor__area p,
+.op-email-editor__area ul,
+.op-email-editor__area ol,
+.op-email-editor__area h2 {
+    margin-block: 0 0.85rem;
+}
+
+.op-email-editor__area h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.op-email-editor__help {
+    margin: 0;
+    padding: 0.7rem 1rem;
+    border-top: 1px solid var(--w-color-border-field-default, #d5d7da);
+}
+
+.op-email-editor__source {
+    display: none;
+}

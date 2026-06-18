@@ -1,0 +1,504 @@
+{% load static wagtailcore_tags wagtailimages_tags conteudo_tags %}
+{% translated page "title" "pt-br" as translated_page_title %}
+{% translated page "seo_title" "pt-br" as translated_page_seo_title %}
+{% translated page "introducao" "pt-br" as translated_page_introducao %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="utf-8">
+    <title>{% if translated_page_seo_title %}{{ translated_page_seo_title }}{% else %}{{ translated_page_title }}{% endif %}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% include "includes/site_head_assets.html" %}
+    <link rel="stylesheet" href="{% static 'css/home-blocos-publicacoes.css' %}?v=20260428-02">
+    <link rel="stylesheet" href="{% static 'css/publicacao.css' %}?v=20260501-02">
+    <link rel="stylesheet" href="{% static 'css/components/op-dialogs.css' %}?v=20260501-01">
+    <link rel="stylesheet" href="{% static 'css/components/op-publication-quiz.css' %}?v=20260501-01">
+    <link rel="stylesheet" href="{% static 'css/components/op-publication-components.css' %}?v=20260501-01">
+    <link rel="stylesheet" href="{% static 'css/pages/quiz-estudo-page.css' %}?v=20260501-02">
+    {% include "includes/rastreamento_head.html" %}
+</head>
+<body class="pagina-quiz-estudo">
+    {% include "includes/rastreamento_body.html" %}
+    {% include "includes/menu_principal.html" with menu_assets_in_head=True %}
+
+    <main class="quiz-estudo-layout container is-max-desktop op-page-shell">
+        <article class="quiz-estudo-artigo">
+            <header class="op-page-header quiz-estudo-topo">
+                <h1 class="title is-2">{{ translated_page_title }}</h1>
+                {% if translated_page_introducao %}
+                    <div class="quiz-estudo-introducao">{{ translated_page_introducao|richtext }}</div>
+                {% endif %}
+            </header>
+
+            {% if quiz_usuario %}
+            <section class="quiz-estudo-identidade box">
+                    <div class="quiz-estudo-identidade-barra">
+                        <p class="quiz-estudo-identidade-texto">
+                            Você está logado como <strong>{{ quiz_usuario.username }}</strong>. Suas sessões do quiz podem ser salvas.
+                        </p>
+                        <div class="quiz-estudo-identidade-acoes">
+                            <a class="acao-publicacao acao-publicacao-secundaria" href="{% url 'quiz_logout' page.id %}">
+                                Sair
+                            </a>
+                        </div>
+                    </div>
+                    <details class="quiz-estudo-historico" data-quiz-historico>
+                        <summary>Meu histórico</summary>
+                        <div class="quiz-estudo-historico-corpo">
+                            <section
+                                class="quiz-estudo-historico-resumo"
+                                data-quiz-history-summary
+                                data-total-sessoes="{{ quiz_historico_resumo.total_sessoes|default:0 }}"
+                                data-total-corretas="{{ quiz_historico_resumo.total_corretas|default:0 }}"
+                                data-total-erradas="{{ quiz_historico_resumo.total_erradas|default:0 }}"
+                                data-total-puladas="{{ quiz_historico_resumo.total_puladas|default:0 }}"
+                                data-total-consideradas="{{ quiz_historico_resumo.total_consideradas|default:0 }}"
+                            >
+                                <h2>Score geral</h2>
+                                <div class="quiz-estudo-historico-resumo-principal">
+                                    <div
+                                        class="quiz-score-wheel quiz-estudo-historico-score-wheel"
+                                        data-quiz-history-summary-wheel
+                                        style="--quiz-score-wheel: conic-gradient(var(--quiz-score-correct, #22c55e) 0 {{ quiz_historico_resumo.pct_corretas|default:0 }}%, var(--quiz-score-wrong, #ef4444) {{ quiz_historico_resumo.pct_corretas|default:0 }}% {{ quiz_historico_resumo.pct_corretas_erradas|default:0 }}%, var(--quiz-score-skipped, #f59e0b) {{ quiz_historico_resumo.pct_corretas_erradas|default:0 }}% 100%);"
+                                    >
+                                        <div class="quiz-score-wheel-centro">
+                                            <strong data-quiz-history-summary-percent>{{ quiz_historico_resumo.media_percentual|default:0 }}%</strong>
+                                            <span>Acerto</span>
+                                        </div>
+                                    </div>
+                                    <ul class="quiz-score-legenda quiz-estudo-historico-legenda" data-quiz-history-summary-legend>
+                                        <li class="is-correct">
+                                            <span class="quiz-score-legenda-ponto"></span>
+                                            <span>corretas: <strong>{{ quiz_historico_resumo.total_corretas|default:0 }}</strong> ({{ quiz_historico_resumo.pct_corretas|default:0 }}%)</span>
+                                        </li>
+                                        <li class="is-wrong">
+                                            <span class="quiz-score-legenda-ponto"></span>
+                                            <span>erradas: <strong>{{ quiz_historico_resumo.total_erradas|default:0 }}</strong> ({{ quiz_historico_resumo.pct_erradas|default:0 }}%)</span>
+                                        </li>
+                                        <li class="is-skipped">
+                                            <span class="quiz-score-legenda-ponto"></span>
+                                            <span>puladas: <strong>{{ quiz_historico_resumo.total_puladas|default:0 }}</strong> ({{ quiz_historico_resumo.pct_puladas|default:0 }}%)</span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <p class="quiz-estudo-historico-resumo-meta" data-quiz-history-summary-meta>
+                                    {{ quiz_historico_resumo.total_sessoes|default:0 }} sess{{ quiz_historico_resumo.total_sessoes|default:0|pluralize:"ão,ões" }} salva{{ quiz_historico_resumo.total_sessoes|default:0|pluralize }} · {{ quiz_historico_resumo.total_consideradas|default:0 }} quest{{ quiz_historico_resumo.total_consideradas|default:0|pluralize:"ão,ões" }} considerada{{ quiz_historico_resumo.total_consideradas|default:0|pluralize }}
+                                </p>
+                            </section>
+                            <h3 class="quiz-estudo-historico-subtitulo">Sessões recentes</h3>
+                            {% if quiz_historico_sessoes %}
+                                <div class="quiz-estudo-historico-lista" data-quiz-historico-lista>
+                                    {% for sessao in quiz_historico_sessoes %}
+                                        <article class="quiz-estudo-historico-item">
+                                            <div class="quiz-estudo-historico-topo">
+                                                <strong>{{ sessao.finalizado_em|date:"d/m/Y H:i" }}</strong>
+                                                <span>{{ sessao.media_percentual }}%</span>
+                                            </div>
+                                            <div class="quiz-estudo-historico-barra" aria-hidden="true">
+                                                <span style="width: {{ sessao.media_percentual }}%"></span>
+                                            </div>
+                                            <p>
+                                                {{ sessao.corretas }} corretas · {{ sessao.erradas }} erradas · {{ sessao.puladas }} puladas
+                                            </p>
+                                        </article>
+                                    {% endfor %}
+                                </div>
+                            {% else %}
+                                <p class="quiz-estudo-historico-vazio" data-quiz-historico-vazio>
+                                    Você ainda não tem sessões do quiz salvas.
+                                </p>
+                            {% endif %}
+                        </div>
+                    </details>
+            </section>
+            {% endif %}
+
+            <form method="get" class="quiz-estudo-filtros">
+                <div class="quiz-estudo-filtros-campos">
+                    <div class="quiz-estudo-filtro-campo">
+                        <label for="id_tema">Categoria</label>
+                        <select id="id_tema" name="tema">
+                            <option value="">Todas as categorias</option>
+                            {% for tema in temas_quiz %}
+                                {% translated tema "nome" "pt-br" as translated_tema_nome %}
+                                <option value="{{ tema.slug }}" {% if tema_slug == tema.slug %}selected{% endif %}>{{ translated_tema_nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="quiz-estudo-filtro-campo">
+                        <label for="id_tag">Tag</label>
+                        <select id="id_tag" name="tag">
+                            <option value="">Todas as tags</option>
+                            {% for tag in tags_quiz %}
+                                {% translated tag "name" "pt-br" as translated_tag_nome %}
+                                <option value="{{ tag.slug }}" {% if tag_slug == tag.slug %}selected{% endif %}>{{ translated_tag_nome }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div class="quiz-estudo-filtros-acoes">
+                    <button type="submit" class="acao-publicacao">Filtrar</button>
+                    {% if tema_slug or tag_slug %}
+                        <a class="acao-publicacao acao-publicacao-secundaria" href="{{ page.url }}">Limpar filtros</a>
+                    {% endif %}
+                </div>
+            </form>
+
+            {% if quiz_perguntas %}
+                <section
+                    class="quiz-publicacao quiz-estudo-publicacao box"
+                    data-quiz-publicacao
+                    data-quiz-context="pagina-quiz"
+                    data-quiz-page-url="{{ page.url }}"
+                    data-lang="pt-br"
+                    data-msg-correct="Resposta correta."
+                    data-msg-wrong="Resposta incorreta."
+                    data-msg-result-prefix="Você acertou"
+                    data-msg-result-mid="de"
+                    data-msg-result-answered="respondidas"
+                    data-msg-result-answered-only="perguntas respondidas"
+                    data-msg-result-correct="corretas"
+                    data-msg-result-wrong="erradas"
+                    data-msg-result-skipped="puladas"
+                    data-msg-result-average="média"
+                    data-msg-history-correct="corretas"
+                    data-msg-history-wrong="erradas"
+                    data-msg-history-skipped="puladas"
+                    data-msg-score-title="Resultado da sessão"
+                    data-quiz-finish-anytime="1"
+                    data-quiz-session-save-url="{% url 'quiz_sessao_salvar' page.id %}"
+                    data-quiz-session-authenticated="{% if quiz_usuario %}1{% else %}0{% endif %}"
+                    data-quiz-csrf-token="{{ csrf_token }}"
+                    data-quiz-current-theme-filter="{{ tema_slug }}"
+                    data-quiz-current-tag-filter="{{ tag_slug }}"
+                >
+                    <h2>Quiz de estudos</h2>
+                    <p class="quiz-publicacao-intro">Responda uma pergunta por vez e revise as que errou ao final.</p>
+                    <div class="quiz-publicacao-perguntas">
+                        {% for pergunta in quiz_perguntas %}
+                            {% translated pergunta "pergunta" "pt-br" as translated_quiz_pergunta %}
+                            {% translated pergunta "explicacao" "pt-br" as translated_quiz_explicacao %}
+                            <article class="quiz-pergunta" data-quiz-pergunta data-quiz-question-key="{{ pergunta.quiz_dom_id }}" data-quiz-multi="{% if pergunta.possui_multiplas_corretas %}1{% else %}0{% endif %}" data-quiz-require-all="{% if pergunta.exigir_todas_corretas %}1{% else %}0{% endif %}" {% if not forloop.first %}hidden{% endif %}>
+                                <h3>Pergunta {{ forloop.counter }}</h3>
+                                <p class="quiz-pergunta-texto">{{ translated_quiz_pergunta }}</p>
+                                <div class="quiz-opcoes">
+                                    {% for opcao in pergunta.opcoes.all %}
+                                        {% translated opcao "texto" "pt-br" as translated_quiz_opcao %}
+                                        <button
+                                            type="button"
+                                            class="quiz-opcao"
+                                            data-quiz-opcao
+                                            data-quiz-opcao-index="{{ forloop.counter0 }}"
+                                            data-correta="{% if opcao.correta %}1{% else %}0{% endif %}"
+                                        >
+                                            {{ translated_quiz_opcao }}
+                                        </button>
+                                    {% endfor %}
+                                </div>
+                                <div class="quiz-ajuda">
+                                    <button type="button" class="quiz-btn" data-quiz-responder>
+                                        Responder
+                                    </button>
+                                </div>
+                                <p class="quiz-feedback" data-quiz-feedback hidden></p>
+                                {% if translated_quiz_explicacao %}
+                                    <p class="quiz-explicacao" data-quiz-explicacao hidden>{{ translated_quiz_explicacao }}</p>
+                                {% endif %}
+                            </article>
+                        {% endfor %}
+                    </div>
+                    <div class="quiz-acoes">
+                        <button type="button" class="quiz-btn" data-quiz-anterior disabled>Anterior</button>
+                        <button type="button" class="quiz-btn" data-quiz-pular>Pular</button>
+                        <button type="button" class="quiz-btn" data-quiz-proximo>Próxima</button>
+                        <button type="button" class="quiz-btn" data-quiz-finalizar>Finalizar</button>
+                        <button type="button" class="quiz-btn" data-quiz-refazer hidden>Refazer erradas</button>
+                    </div>
+                    {% if not quiz_usuario %}
+                        <div class="quiz-estudo-login-cta">
+                            <p class="quiz-estudo-identidade-texto">
+                                Faça login para salvar suas sessões do quiz e construir seu histórico.
+                            </p>
+                            <button type="button" class="acao-publicacao" data-quiz-login-open>
+                                Entrar
+                            </button>
+                        </div>
+                    {% endif %}
+                </section>
+
+                {% with publicacoes_atuais=quiz_perguntas.0.quiz_publicacoes_vinculadas %}
+                <section class="quiz-estudo-publicacoes-atual publicacoes-relacionadas" data-quiz-estudo-publicacoes-atual {% if not publicacoes_atuais %}hidden{% endif %}>
+                    <h2>Publicações desta pergunta</h2>
+                    <div class="home-lista-publicacoes lista-relacionadas" data-quiz-estudo-publicacoes-atual-lista>
+                        {% for origem in publicacoes_atuais %}
+                            {% translated origem "title" "pt-br" as translated_origem_title %}
+                            {% translated origem "resumo" "pt-br" as translated_origem_resumo %}
+                            <article class="home-card-publicacao relacionada-item" data-publication-id="{{ origem.id }}">
+                                <div class="home-card-topo{% if not origem.imagem_capa %} sem-miniatura{% endif %}">
+                                    {% if origem.imagem_capa %}
+                                        <a class="home-card-miniatura relacionada-capa-link" href="{{ origem.url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ translated_origem_title }}">
+                                            {% image origem.imagem_capa fill-360x204 %}
+                                        </a>
+                                    {% endif %}
+                                    <div class="home-card-conteudo">
+                                        <div class="home-card-titulo-linha">
+                                            <h3><a href="{{ origem.url }}" target="_blank" rel="noopener noreferrer">{{ translated_origem_title }}</a></h3>
+                                            {% if origem.total_visualizacoes > 0 %}
+                                                <span class="home-card-views-inline" title="Visualizações">
+                                                    <span class="home-card-views-inline-icone" aria-hidden="true">
+                                                        <svg viewBox="0 0 24 24"><path d="M12 5c5.23 0 9.27 3.37 10.84 6.34a1.24 1.24 0 0 1 0 1.32C21.27 15.63 17.23 19 12 19S2.73 15.63 1.16 12.66a1.24 1.24 0 0 1 0-1.32C2.73 8.37 6.77 5 12 5Zm0 2C7.78 7 4.42 9.63 3.2 12 4.42 14.37 7.78 17 12 17s7.58-2.63 8.8-5C19.58 9.63 16.22 7 12 7Zm0 1.8A3.2 3.2 0 1 1 8.8 12 3.2 3.2 0 0 1 12 8.8Zm0 2A1.2 1.2 0 1 0 13.2 12 1.2 1.2 0 0 0 12 10.8Z"></path></svg>
+                                                    </span>
+                                                    <span>{{ origem.total_visualizacoes }}</span>
+                                                </span>
+                                            {% endif %}
+                                        </div>
+                                        <div class="home-meta-publicacao">
+                                                {% if origem.data_publicacao %}Publicado em {{ origem.data_publicacao|date:"d/m/Y" }}{% endif %}
+                                                {% with autor=origem.autores_ordenados|first %}
+                                                    {% if autor %}
+                                                    <br>Por <a href="/autores/{{ autor.username }}/" target="_blank" rel="noopener noreferrer">{{ autor }}</a>
+                                                {% endif %}
+                                            {% endwith %}
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if translated_origem_resumo %}
+                                    <div class="home-resumo-publicacao">
+                                        {{ translated_origem_resumo|richtext|safe }}
+                                    </div>
+                                {% endif %}
+                            </article>
+                        {% endfor %}
+                    </div>
+                </section>
+                {% endwith %}
+
+                <section class="quiz-estudo-revisao" data-quiz-estudo-revisao hidden>
+                    <h2>Sugestões de estudo</h2>
+                    <p class="quiz-estudo-revisao-vazio" data-quiz-estudo-revisao-vazio hidden>
+                        As perguntas erradas ou puladas desta sessão ainda não têm categorias, tags ou publicações vinculadas para sugestões de estudo.
+                    </p>
+                    <div class="quiz-estudo-revisao-temas" data-quiz-estudo-revisao-temas hidden>
+                        <h3>Categorias para revisar</h3>
+                        <ul class="quiz-estudo-revisao-temas-lista" data-quiz-estudo-revisao-temas-lista></ul>
+                    </div>
+                    <div class="quiz-estudo-revisao-tags" data-quiz-estudo-revisao-tags hidden>
+                        <h3>Tags para revisar</h3>
+                        <ul class="quiz-estudo-revisao-tags-lista" data-quiz-estudo-revisao-tags-lista></ul>
+                    </div>
+                    <div class="quiz-estudo-revisao-publicacoes publicacoes-relacionadas" data-quiz-estudo-revisao-publicacoes hidden>
+                        <h3>Publicações recomendadas</h3>
+                        <div class="quiz-estudo-revisao-publicacoes-lista" data-quiz-estudo-revisao-publicacoes-lista></div>
+                    </div>
+                </section>
+
+                    <div class="quiz-score-modal op-score-dialog" data-quiz-score-modal hidden>
+                        <div class="quiz-score-modal-backdrop" data-quiz-score-close></div>
+                        <div class="quiz-score-modal-card op-score-dialog-card" role="dialog" aria-modal="true" aria-labelledby="quiz-score-modal-title">
+                            <button type="button" class="quiz-score-modal-fechar" data-quiz-score-close aria-label="Fechar">×</button>
+                            <h3 id="quiz-score-modal-title">Resultado da sessão</h3>
+                            <div class="quiz-score-wheel" data-quiz-score-wheel>
+                                <div class="quiz-score-wheel-centro">
+                                    <strong data-quiz-score-percentual>0%</strong>
+                                    <span>Acerto</span>
+                                </div>
+                            </div>
+                            <div class="quiz-score-resumo" data-quiz-score-resumo></div>
+                            <ul class="quiz-score-legenda" data-quiz-score-legenda></ul>
+                        </div>
+                    </div>
+                </section>
+
+                {% if not quiz_usuario %}
+                    <div class="comentario-popup op-dialog" data-quiz-login-popup data-state="{{ quiz_popup_active_state|default:'login' }}" {% if quiz_popup_open %}data-open="1"{% endif %} hidden>
+                        <div class="comentario-popup-card op-dialog-card" role="dialog" aria-modal="true" aria-labelledby="quiz-login-popup-titulo">
+                            <button type="button" class="comentario-popup-fechar" data-quiz-login-close aria-label="Fechar">×</button>
+                            <h3 id="quiz-login-popup-titulo">Acesso ao quiz</h3>
+                            <div class="op-dialog-panel" data-quiz-login-painel="login" {% if quiz_popup_active_state != "login" %}hidden{% endif %}>
+                                <form method="post" action="{% url 'quiz_login_solicitar_codigo' page.id %}" class="quiz-estudo-login-form op-dialog-form">
+                                    {% csrf_token %}
+                                    <label for="quiz-login-email">E-mail</label>
+                                    <input id="quiz-login-email" name="email" type="email" required autocomplete="email">
+                                    {% if quiz_popup_error == 'login_nao_encontrado' %}
+                                        <p class="mensagem-erro comentario-popup-mensagem">Nenhuma conta foi encontrada para este e-mail.</p>
+                                    {% elif quiz_popup_error == 'erro_email' %}
+                                        <p class="mensagem-erro comentario-popup-mensagem">E-mail inválido.</p>
+                                    {% elif quiz_popup_error == 'erro_envio_email' %}
+                                        <p class="mensagem-erro comentario-popup-mensagem">Não foi possível enviar o código agora.</p>
+                                    {% endif %}
+                                    <button type="submit" class="acao-publicacao">Receber código de acesso</button>
+                                    <button type="button" class="comentario-cadastro-link comentario-cadastro-link-bloco" data-quiz-login-step="cadastro">Faça seu cadastro</button>
+                                </form>
+                                {% if comentario_oauth_providers.orcid or comentario_oauth_providers.github or comentario_oauth_providers.google or comentario_oauth_providers.codeberg %}
+                                    <div class="comentario-oauth-box">
+                                        <p class="comentario-oauth-titulo">Ou continue com:</p>
+                                        {% include "includes/quiz_oauth_acoes.html" %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="op-dialog-panel" data-quiz-login-painel="cadastro" {% if quiz_popup_active_state != "cadastro" %}hidden{% endif %}>
+                                <form method="post" action="{% url 'quiz_cadastro_solicitar_codigo' page.id %}" class="quiz-estudo-login-form op-dialog-form">
+                                    {% csrf_token %}
+                                    <div class="comentario-grid">
+                                        <div>
+                                            <label for="quiz-cadastro-nome">Nome</label>
+                                            <input id="quiz-cadastro-nome" name="nome" type="text" required>
+                                        </div>
+                                        <div>
+                                            <label for="quiz-cadastro-sobrenome">Sobrenome</label>
+                                            <input id="quiz-cadastro-sobrenome" name="sobrenome" type="text" required>
+                                        </div>
+                                        <div>
+                                            <label for="quiz-cadastro-username">Nome de usuário</label>
+                                            <input id="quiz-cadastro-username" name="username" type="text" required data-username-input data-username-check-url="{% url 'username_disponivel' %}">
+                                            <p class="comentario-username-status" data-username-status></p>
+                                        </div>
+                                        <div>
+                                            <label for="quiz-cadastro-email">E-mail</label>
+                                            <input id="quiz-cadastro-email" name="email" type="email" required>
+                                        </div>
+                                        <div>
+                                            <label for="quiz-cadastro-orcid">ORCID (opcional)</label>
+                                            <input id="quiz-cadastro-orcid" name="orcid" type="text" placeholder="0000-0000-0000-0000">
+                                        </div>
+                                    </div>
+                                    {% if quiz_popup_error == 'cadastro_campos' %}
+                                        <p class="mensagem-erro comentario-popup-mensagem">Preencha os campos obrigatórios para continuar.</p>
+                                    {% elif quiz_popup_error == 'erro_usuario_email' %}
+                                        <p class="mensagem-erro comentario-popup-mensagem">Este e-mail já está cadastrado.</p>
+                                    {% elif quiz_popup_error == 'erro_usuario_duplicado' %}
+                                        <p class="mensagem-erro comentario-popup-mensagem">Este nome de usuário já está em uso.</p>
+                                    {% elif quiz_popup_error == 'erro_orcid' %}
+                                        <p class="mensagem-erro comentario-popup-mensagem">ORCID inválido. Use o formato 0000-0000-0000-0000 com dígito verificador válido.</p>
+                                    {% elif quiz_popup_error == 'erro_orcid_duplicado' %}
+                                        <p class="mensagem-erro comentario-popup-mensagem">Este ORCID já está vinculado a outra conta.</p>
+                                    {% elif quiz_popup_error == 'erro_identidade_conflito' %}
+                                        <p class="mensagem-erro comentario-popup-mensagem">O e-mail, usuário e ORCID informados apontam para contas diferentes. Revise os dados ou entre com a conta correta.</p>
+                                    {% elif quiz_popup_error == 'privacidade' %}
+                                        <p class="mensagem-erro comentario-popup-mensagem">Você precisa concordar com os termos de privacidade e dados para finalizar seu cadastro.</p>
+                                    {% endif %}
+                                    <p class="comentario-aviso-newsletter">
+                                        Seu e-mail também será cadastrado na newsletter. Você pode cancelar na página de newsletter.
+                                    </p>
+                                    <p class="comentario-aviso-newsletter">
+                                        O ORCID é opcional e ajuda a identificar perfis acadêmicos com mais clareza.
+                                    </p>
+                                    <div class="comentario-privacidade-viewer">
+                                        <h4>Privacidade e dados</h4>
+                                        <div class="comentario-privacidade-scroll" data-privacy-scrollbox>
+                                            {% if config_site.pagina_privacidade and config_site.pagina_privacidade.corpo %}
+                                                {{ config_site.pagina_privacidade.corpo|richtext }}
+                                            {% else %}
+                                                {% include "includes/privacidade_texto_base.html" %}
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    <label class="quiz-ajuda-checkbox comentario-aceite-privacidade" aria-disabled="true">
+                                        <input type="checkbox" name="aceitou_privacidade_cadastro" value="1" required disabled data-privacy-checkbox>
+                                        <span>
+                                            Li os termos de privacidade e dados e concordo com o uso dos meus dados para cadastro, autenticação, moderação, histórico do quiz e solicitações de privacidade.
+                                            {% if config_site.pagina_privacidade %}
+                                                <a href="{{ config_site.pagina_privacidade.url }}" target="_blank" rel="noopener noreferrer">Privacidade e dados</a>
+                                            {% endif %}
+                                        </span>
+                                    </label>
+                                    <button type="submit" class="acao-publicacao" data-submit-finalizar>Criar conta e enviar código</button>
+                                </form>
+                                <button type="button" class="comentario-cadastro-link" data-quiz-login-step="login">Já tenho cadastro</button>
+                            </div>
+                            <div class="op-dialog-panel" data-quiz-login-painel="codigo" {% if quiz_popup_active_state != "codigo" %}hidden{% endif %}>
+                                {% if quiz_auth_pending %}
+                                    <form method="post" action="{% url 'quiz_confirmar_codigo' page.id %}" class="quiz-estudo-login-form quiz-estudo-login-form--codigo op-dialog-form">
+                                        {% csrf_token %}
+                                        <p class="mensagem-sucesso">Código enviado para {{ quiz_auth_pending.masked_email }}.</p>
+                                        {% if quiz_popup_error == 'codigo_invalido' or quiz_popup_error == 'token_invalido' %}
+                                            <p class="mensagem-erro comentario-popup-mensagem">Código inválido ou expirado.</p>
+                                        {% endif %}
+                                        <label for="quiz-login-codigo">Código de confirmação</label>
+                                        <input id="quiz-login-codigo" name="codigo" type="text" inputmode="numeric" maxlength="6" required autocomplete="one-time-code">
+                                        <button type="submit" class="acao-publicacao">Confirmar e entrar</button>
+                                        <button type="button" class="comentario-cadastro-link comentario-cadastro-link-bloco" data-quiz-login-step="login">Usar outro e-mail</button>
+                                    </form>
+                                {% elif quiz_popup_error == 'codigo_enviado' or quiz_popup_error == 'cadastro_codigo_enviado' %}
+                                    <p class="mensagem-sucesso">Código enviado. Confira seu e-mail para continuar.</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
+                <section class="quiz-estudo-mapa" hidden aria-hidden="true">
+                    <ol class="quiz-estudo-mapa-lista" data-quiz-estudo-origens-fonte>
+                        {% for pergunta in quiz_perguntas %}
+                            <li data-quiz-question-key="{{ pergunta.quiz_dom_id }}">
+                                {% if pergunta.quiz_tema %}
+                                    {% translated pergunta.quiz_tema "nome" "pt-br" as translated_quiz_tema %}
+                                    <span data-quiz-theme-label data-quiz-theme-slug="{{ pergunta.quiz_tema.slug }}" data-quiz-theme-url="{% url 'categoria_detalhe' pergunta.quiz_tema.slug %}">{{ translated_quiz_tema }}</span>
+                                {% endif %}
+                                {% if pergunta.quiz_tags %}
+                                    <div data-quiz-tags>
+                                        {% for tag in pergunta.quiz_tags %}
+                                            <span data-quiz-tag-label data-quiz-tag-slug="{{ tag.slug }}" data-quiz-tag-url="{% url 'publicacoes_por_tag' tag.slug %}">{{ tag.name }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                                {% with origens=pergunta.quiz_publicacoes_vinculadas %}
+                                    {% if origens %}
+                                        <div data-quiz-publicacoes>
+                                            {% for origem in origens %}
+                                                {% translated origem "title" "pt-br" as translated_origem_title %}
+                                                {% translated origem "resumo" "pt-br" as translated_origem_resumo %}
+                                                <article class="home-card-publicacao relacionada-item" data-publication-id="{{ origem.id }}">
+                                                    <div class="home-card-topo{% if not origem.imagem_capa %} sem-miniatura{% endif %}">
+                                                        {% if origem.imagem_capa %}
+                                                            <a class="home-card-miniatura relacionada-capa-link" href="{{ origem.url }}" target="_blank" rel="noopener noreferrer" aria-label="{{ translated_origem_title }}">
+                                                                {% image origem.imagem_capa fill-360x204 %}
+                                                            </a>
+                                                        {% endif %}
+                                                        <div class="home-card-conteudo">
+                                                            <div class="home-card-titulo-linha">
+                                                                <h3><a href="{{ origem.url }}" target="_blank" rel="noopener noreferrer">{{ translated_origem_title }}</a></h3>
+                                                                {% if origem.total_visualizacoes > 0 %}
+                                                                    <span class="home-card-views-inline" title="Visualizações">
+                                                                        <span class="home-card-views-inline-icone" aria-hidden="true">
+                                                                            <svg viewBox="0 0 24 24"><path d="M12 5c5.23 0 9.27 3.37 10.84 6.34a1.24 1.24 0 0 1 0 1.32C21.27 15.63 17.23 19 12 19S2.73 15.63 1.16 12.66a1.24 1.24 0 0 1 0-1.32C2.73 8.37 6.77 5 12 5Zm0 2C7.78 7 4.42 9.63 3.2 12 4.42 14.37 7.78 17 12 17s7.58-2.63 8.8-5C19.58 9.63 16.22 7 12 7Zm0 1.8A3.2 3.2 0 1 1 8.8 12 3.2 3.2 0 0 1 12 8.8Zm0 2A1.2 1.2 0 1 0 13.2 12 1.2 1.2 0 0 0 12 10.8Z"></path></svg>
+                                                                        </span>
+                                                                        <span>{{ origem.total_visualizacoes }}</span>
+                                                                    </span>
+                                                                {% endif %}
+                                                            </div>
+                                                            <div class="home-meta-publicacao">
+                                                                {% if origem.data_publicacao %}Publicado em {{ origem.data_publicacao|date:"d/m/Y" }}{% endif %}
+                                                                {% with autor=origem.autores_ordenados|first %}
+                                                                    {% if autor %}
+                                                                        <br>Por <a href="/autores/{{ autor.username }}/" target="_blank" rel="noopener noreferrer">{{ autor }}</a>
+                                                                    {% endif %}
+                                                                {% endwith %}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    {% if translated_origem_resumo %}
+                                                        <div class="home-resumo-publicacao">
+                                                            {{ translated_origem_resumo|richtext|safe }}
+                                                        </div>
+                                                    {% endif %}
+                                                </article>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                {% endwith %}
+                            </li>
+                        {% endfor %}
+                    </ol>
+                </section>
+            {% else %}
+                <p class="quiz-estudo-vazio">
+                    Nenhuma pergunta está disponível para os filtros selecionados.
+                </p>
+            {% endif %}
+        </article>
+    </main>
+
+    <script src="{% static 'js/publicacao-quiz.js' %}?v=20260603-02" defer></script>
+    {% include "includes/rodape_site.html" with rodape_assets_in_head=True %}
+</body>
+</html>

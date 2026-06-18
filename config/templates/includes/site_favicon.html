@@ -1,0 +1,14 @@
+{% load wagtailimages_tags %}
+{% if config_site and config_site.favicon %}
+    {% image config_site.favicon fill-32x32 format-webp as favicon_32 %}
+    <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
+{% elif config_site and config_site.menu_home_imagem_claro %}
+    {% image config_site.menu_home_imagem_claro fill-32x32 format-webp as favicon_32 %}
+    <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
+{% elif config_site and config_site.menu_home_imagem_escuro %}
+    {% image config_site.menu_home_imagem_escuro fill-32x32 format-webp as favicon_32 %}
+    <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
+{% elif config_site and config_site.menu_home_imagem %}
+    {% image config_site.menu_home_imagem fill-32x32 format-webp as favicon_32 %}
+    <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
+{% endif %}

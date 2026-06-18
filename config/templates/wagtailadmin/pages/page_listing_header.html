@@ -1,0 +1,20 @@
+{% extends 'wagtailadmin/shared/headers/slim_header.html' %}
+{% load wagtailadmin_tags i18n admin_explorer_tags %}
+
+{% block breadcrumbs %}
+    {% ownpaper_explorer_breadcrumbs parent_page as ownpaper_breadcrumbs %}
+    {% if ownpaper_breadcrumbs %}
+        {% breadcrumbs ownpaper_breadcrumbs icon_name=header_icon %}
+    {% else %}
+        {% page_breadcrumbs parent_page 'wagtailadmin_explore' url_root_name='wagtailadmin_explore_root' icon_name=header_icon %}
+    {% endif %}
+{% endblock %}
+
+{% block toggles %}
+    {{ block.super }}
+    {% include "wagtailadmin/shared/page_status_tag_new.html" with page=parent_page %}
+{% endblock %}
+
+{% block side_panels %}
+    {% include "wagtailadmin/shared/side_panels.html" with in_explorer=True %}
+{% endblock side_panels %}

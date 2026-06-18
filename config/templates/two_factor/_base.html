@@ -1,19 +1,47 @@
-{% load static %}
+{% load static wagtailimages_tags %}
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="utf-8">
-    <title>{% block title %}Verificação em duas etapas{% endblock %}</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="{% static 'css/pages/two-factor-base.css' %}">
-
-    {% block extra_media %}{% endblock %}
+  <meta charset="utf-8">
+  <title>{% block title %}{% if config_site and config_site.nome_site %}{{ config_site.nome_site }}{% else %}OwnPaper{% endif %}{% endblock %}</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  {% include "includes/admin_favicon.html" %}
+  <link rel="stylesheet" href="{% static 'css/auth-pages.css' %}?v=20260428-02">
+  <style>
+    .auth-layout {
+      --auth-c1: {{ config_site.paleta_cor_1|default:"#1f3b5c" }};
+      --auth-c2: {{ config_site.paleta_cor_2|default:"#3b82f6" }};
+      --auth-c3: color-mix(in srgb, {{ config_site.paleta_cor_2|default:"#3b82f6" }} 62%, {{ config_site.paleta_cor_1|default:"#1f3b5c" }} 38%);
+    }
+  </style>
+  {% block extra_media %}{% endblock %}
 </head>
-<body>
-    <div class="caixa">
-        {% block content_wrapper %}
-            {% block content %}{% endblock %}
-        {% endblock %}
+<body class="auth-layout {% block auth_body_class %}{% endblock %}">
+  <div class="auth-shell">
+    <div class="auth-card {% block auth_card_class %}{% endblock %}">
+      <div class="auth-brand">
+        {% if config_site and config_site.favicon %}
+          {% image config_site.favicon fill-80x80 format-webp as logo_auth %}
+          <img src="{{ logo_auth.url }}" alt="{% if config_site.nome_site %}{{ config_site.nome_site }}{% else %}OwnPaper{% endif %}">
+        {% elif config_site and config_site.menu_home_imagem_claro %}
+          {% image config_site.menu_home_imagem_claro fill-80x80 format-webp as logo_auth %}
+          <img src="{{ logo_auth.url }}" alt="{% if config_site.nome_site %}{{ config_site.nome_site }}{% else %}OwnPaper{% endif %}">
+        {% elif config_site and config_site.menu_home_imagem_escuro %}
+          {% image config_site.menu_home_imagem_escuro fill-80x80 format-webp as logo_auth %}
+          <img src="{{ logo_auth.url }}" alt="{% if config_site.nome_site %}{{ config_site.nome_site }}{% else %}OwnPaper{% endif %}">
+        {% elif config_site and config_site.menu_home_imagem %}
+          {% image config_site.menu_home_imagem fill-80x80 format-webp as logo_auth %}
+          <img src="{{ logo_auth.url }}" alt="{% if config_site.nome_site %}{{ config_site.nome_site }}{% else %}OwnPaper{% endif %}">
+        {% endif %}
+        <div>
+          <strong>{% if config_site and config_site.nome_site %}{{ config_site.nome_site }}{% else %}OwnPaper{% endif %}</strong>
+          <div class="auth-subtitle">Acesso seguro ao painel</div>
+        </div>
+      </div>
+      {% block content_wrapper %}
+        {% block content %}{% endblock %}
+      {% endblock %}
     </div>
+  </div>
 </body>
 </html>

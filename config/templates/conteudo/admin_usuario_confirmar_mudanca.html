@@ -1,0 +1,30 @@
+{% extends "conteudo/admin_base_custom.html" %}
+
+{% block titletag %}Confirmar mudança sensível{% endblock %}
+
+{% block content %}
+    <div class="nice-padding op-admin-panel">
+        <header class="op-admin-panel__header">
+            <div>
+                <p class="op-admin-panel__eyebrow">Administração</p>
+                <h1>Confirmar mudança sensível</h1>
+                <p class="op-admin-panel__lead">Essa ação exige aprovação de um segundo admin para evitar remoções indevidas de acesso administrativo.</p>
+            </div>
+            <div class="op-admin-panel__actions">
+                <a class="button button-secondary" href="{% url 'admin_usuarios_lista' %}">Voltar para usuários</a>
+            </div>
+        </header>
+
+        <section class="op-admin-card op-admin-card--narrow">
+            <p><strong>Usuário alvo:</strong> {{ solicitacao.usuario_alvo.username }}</p>
+            <p><strong>Tipo:</strong> {{ solicitacao.get_tipo_display }}</p>
+            <p><strong>Solicitado por:</strong> {{ solicitacao.solicitado_por.username }}</p>
+            <p><strong>Quando:</strong> {{ solicitacao.criado_em|date:"d/m/Y H:i" }}</p>
+
+            <form method="post" class="op-admin-form-actions">
+                {% csrf_token %}
+                <button type="submit" class="button">Confirmar mudança</button>
+            </form>
+        </section>
+    </div>
+{% endblock %}

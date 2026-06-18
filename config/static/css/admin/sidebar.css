@@ -1,0 +1,37 @@
+.sidebar-sub-menu-panel>h2,[id^='wagtail-sidebar-submenu'][id$='-title']{display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;text-align:center!important;align-self:stretch!important;inline-size:100%!important;width:100%!important;min-width:100%!important;max-width:100%!important;margin-inline:0!important;padding-inline:1rem!important;box-sizing:border-box!important;color:var(--w-color-text-label-menus-default)!important;font-weight:600!important;gap:.375rem;}.sidebar-sub-menu-panel>[id^='wagtail-sidebar-submenu'][id$='-title'],.sidebar-sub-menu-panel>[id='wagtail-sidebar-submenu-indexador-title'],.sidebar-sub-menu-panel>[id='wagtail-sidebar-submenu-categorias-e-tags-title']{flex:0 0 var(--op-admin-sidebar-width)!important;inline-size:var(--op-admin-sidebar-width)!important;width:var(--op-admin-sidebar-width)!important;min-width:var(--op-admin-sidebar-width)!important;max-width:var(--op-admin-sidebar-width)!important;align-self:stretch!important;padding-inline:1rem!important;margin-inline:0!important;box-sizing:border-box!important;}.sidebar-sub-menu-panel>h2 .icon--submenu-header,[id^='wagtail-sidebar-submenu'][id$='-title'] .icon--submenu-header{color:inherit!important;width:80px!important;height:80px!important;min-width:80px!important;min-height:80px!important;max-width:80px!important;max-height:80px!important;flex:0 0 80px!important;display:block!important;aspect-ratio:1 / 1!important;}.sidebar-sub-menu-panel>h2 .icon--submenu-header *,[id^='wagtail-sidebar-submenu'][id$='-title'] .icon--submenu-header *{fill:currentColor!important;stroke:currentColor!important;}@media screen and (min-width:50em){.sidebar,.sidebar-loading{width:var(--op-admin-sidebar-width)!important;min-width:var(--op-admin-sidebar-width)!important;}.sidebar-panel{--width:var(--op-admin-sidebar-width)!important;}.sidebar-sub-menu-panel{width:var(--op-admin-sidebar-width)!important;}.sidebar-sub-menu-panel>h2,.sidebar-sub-menu-panel__list{width:100%!important;}.sidebar-sub-menu-panel .sidebar-menu-item__link{justify-content:flex-start!important;text-align:start!important;color:var(--w-color-text-label-menus-default)!important;}.sidebar-sub-menu-panel .sidebar-menu-item__link .menuitem,.sidebar-sub-menu-panel .sidebar-menu-item__link .menuitem-label{display:block!important;text-align:start!important;color:inherit!important;text-shadow:none!important;filter:none!important;}.sidebar-sub-menu-panel .icon--menuitem{color:inherit!important;width:1rem!important;height:1rem!important;min-width:1rem!important;min-height:1rem!important;flex:0 0 1rem!important;}.sidebar-sub-menu-panel .sidebar-menu-item__link,.sidebar-sub-menu-panel .sidebar-menu-item__link *{text-shadow:none!important;filter:none!important;}.sidebar-sub-menu-item--open>a,.sidebar-sub-menu-item--open>.sidebar-menu-item__link{text-shadow:none!important;filter:none!important;}.sidebar-panel--open{inset-inline-start:var(--op-admin-sidebar-width)!important;transform:translateX(0)!important;}.sidebar--slim .sidebar-panel .sidebar-panel--open{inset-inline-start:60px!important;transform:translateX(0)!important;}.wrapper{padding-inline-start:var(--op-admin-sidebar-width)!important;}.sidebar--hidden,.sidebar-loading--hidden{inset-inline-start:calc(var(--op-admin-sidebar-width) * -1)!important;}}
+
+#wagtail-sidebar #menu-search-q{
+padding-inline-start:3.4375rem!important;
+}
+
+#wagtail-sidebar button[aria-label="Busca"],
+#wagtail-sidebar button[aria-label="Search"]{
+position:absolute!important;
+top:50%!important;
+left:1.4375rem!important;
+transform:translateY(-50%)!important;
+width:auto!important;
+min-width:0!important;
+height:auto!important;
+padding:0!important;
+margin:0!important;
+display:inline-flex!important;
+align-items:center!important;
+justify-content:center!important;
+background:transparent!important;
+border:0!important;
+border-radius:0!important;
+box-shadow:none!important;
+outline:none!important;
+appearance:none!important;
+z-index:2!important;
+flex:0 0 auto!important;
+}
+
+#wagtail-sidebar button[aria-label="Busca"]::before,
+#wagtail-sidebar button[aria-label="Search"]::before,
+#wagtail-sidebar button[aria-label="Busca"]::after,
+#wagtail-sidebar button[aria-label="Search"]::after{
+content:none!important;
+display:none!important;
+}

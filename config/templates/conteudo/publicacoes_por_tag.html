@@ -1,7 +1,6 @@
-{% load static wagtailcore_tags wagtailimages_tags %}
-
+{% load static wagtailcore_tags wagtailimages_tags conteudo_tags %}
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
     <meta charset="utf-8">
     <title>Tag: {{ tag.name }}</title>
@@ -11,31 +10,62 @@
         {% image config_site.favicon fill-32x32 format-webp as favicon_32 %}
         <link rel="icon" type="image/webp" href="{{ favicon_32.url }}">
     {% endif %}
-    <link rel="stylesheet" href="{% static 'css/pages/publicacoes-por-tag.css' %}">
+    {% include "includes/site_head_assets.html" %}
+    <link rel="stylesheet" href="{% static 'css/pages/publicacoes-por-tag.css' %}?v=20260428-02">
+    <link rel="stylesheet" href="{% static 'css/home-blocos-publicacoes.css' %}?v=20260428-02">
     {% include "includes/rastreamento_head.html" %}
 
 </head>
 <body>
     {% include "includes/rastreamento_body.html" %}
 
-    {% include "includes/menu_principal.html" %}
-    <h1>Tag: {{ tag.name }}</h1>
+    {% include "includes/menu_principal.html" with menu_assets_in_head=True %}
+    <main class="publicacoes-tag-layout container is-max-desktop op-page-shell">
+    <p class="publicacoes-tag-voltar"><a href="/tags/">← Voltar para tags</a></p>
 
-    <p><a href="/">← Voltar para a página inicial</a></p>
+    <header class="op-page-header">
+        <h1 class="title is-2">Tag: {{ tag.name }}</h1>
+    </header>
 
-    <section class="lista">
+    <section class="home-lista-publicacoes lista-relacionadas">
         {% for item in publicacoes %}
-            <article class="card">
-                <h2><a href="{% pageurl item %}">{{ item.title }}</a></h2>
-
-                {% if item.imagem_capa %}
-                    <div class="capa">
-                        {% image item.imagem_capa width-180 %}
+            <article class="home-card-publicacao relacionada-item">
+                <div class="home-card-topo{% if not item.imagem_capa %} sem-miniatura{% endif %}">
+                    {% if item.imagem_capa %}
+                        <a class="home-card-miniatura relacionada-capa-link" href="{% pageurl item %}" aria-label="{{ item.title }}">
+                            {% image item.imagem_capa fill-360x204 %}
+                        </a>
+                    {% endif %}
+                    <div class="home-card-conteudo">
+                        <div class="home-card-titulo-linha">
+                            <h3><a href="{% pageurl item %}">{{ item.title }}</a></h3>
+                            {% if item.total_visualizacoes > 0 %}
+                                <span class="home-card-views-inline" title="Visualizações">
+                                    <span class="home-card-views-inline-icone" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24"><path d="M12 5c5.23 0 9.27 3.37 10.84 6.34a1.24 1.24 0 0 1 0 1.32C21.27 15.63 17.23 19 12 19S2.73 15.63 1.16 12.66a1.24 1.24 0 0 1 0-1.32C2.73 8.37 6.77 5 12 5Zm0 2C7.78 7 4.42 9.63 3.2 12 4.42 14.37 7.78 17 12 17s7.58-2.63 8.8-5C19.58 9.63 16.22 7 12 7Zm0 1.8A3.2 3.2 0 1 1 8.8 12 3.2 3.2 0 0 1 12 8.8Zm0 2A1.2 1.2 0 1 0 13.2 12 1.2 1.2 0 0 0 12 10.8Z"></path></svg>
+                                    </span>
+                                    <span>{{ item.total_visualizacoes }}</span>
+                                </span>
+                            {% endif %}
+                        </div>
+                        <div class="home-meta-publicacao">
+                            {% if item.data_publicacao %}
+                                Publicado em {{ item.data_publicacao|date:"d/m/Y" }}
+                            {% elif item.first_published_at %}
+                                Publicado em {{ item.first_published_at|date:"d/m/Y" }}
+                            {% endif %}
+                            {% with autor=item.autores_ordenados|first %}
+                                {% if autor %}
+                                    <br>Por <a href="/autores/{{ autor.username }}/">{{ autor }}</a>
+                                {% elif item.autoria_publica_fallback_nome %}
+                                    <br>Por {{ item.autoria_publica_fallback_nome }}
+                                {% endif %}
+                            {% endwith %}
+                        </div>
                     </div>
-                {% endif %}
-
+                </div>
                 {% if item.resumo %}
-                    <div>
+                    <div class="home-resumo-publicacao">
                         {{ item.resumo|richtext }}
                     </div>
                 {% endif %}
@@ -44,6 +74,7 @@
             <p>Nenhuma publicação encontrada para esta tag.</p>
         {% endfor %}
     </section>
-{% include "includes/rodape_site.html" %}
+    </main>
+{% include "includes/rodape_site.html" with rodape_assets_in_head=True %}
 </body>
 </html>

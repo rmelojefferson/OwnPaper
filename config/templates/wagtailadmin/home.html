@@ -1,0 +1,254 @@
+{% extends "wagtailadmin/generic/base.html" %}
+{% load static wagtailadmin_tags i18n admin_access %}
+
+{% block extra_css %}
+    {{ block.super }}
+    <link rel="stylesheet" href="{% static 'css/admin/dashboard.css' %}">
+    {{ media.css }}
+{% endblock %}
+
+{% block content %}
+    {% fragment as header_title %}
+        {% block branding_welcome %}{{ site_name }}{% endblock %}
+    {% endfragment %}
+    {% admin_dashboard_context request.user as op_dashboard %}
+    {% admin_site_pages_url request as op_site_pages_url %}
+
+    {% component upgrade_notification %}
+    <div class="w-dashboard nice-padding op-admin-panel op-admin-panel--wide op-admin-dashboard">
+        <header class="op-admin-panel__header op-admin-dashboard__hero">
+            <form
+                class="op-admin-dashboard__search"
+                action="{% url 'admin_busca_global' %}"
+                method="get"
+                novalidate
+                role="search"
+            >
+                <label class="w-sr-only" for="op-admin-dashboard-search">Buscar no painel</label>
+                <div class="op-admin-dashboard__search-field">
+                    <svg class="icon icon-search op-admin-dashboard__search-icon" aria-hidden="true">
+                        <use href="#icon-search"></use>
+                    </svg>
+                    <input
+                        id="op-admin-dashboard-search"
+                        type="text"
+                        name="q"
+                        value="{{ request.GET.q|default_if_none:'' }}"
+                        placeholder="Buscar no painel…"
+                        autocomplete="off"
+                    >
+                </div>
+                <div class="submit w-sr-only"><input type="submit" value="Pesquisar" class="button" /></div>
+            </form>
+
+            <div class="op-admin-dashboard__intro">
+                <h1 class="w-h1 w-mt-0">{{ header_title }}</h1>
+                {% if op_dashboard.resumo %}
+                    <div class="op-admin-dashboard-summary" aria-label="Resumo do site">
+                        <a href="{{ op_site_pages_url }}">
+                            <strong>{{ op_dashboard.resumo.paginas }}</strong>
+                            <span>páginas</span>
+                        </a>
+                        <a href="{% url 'wagtailimages:index' %}">
+                            <strong>{{ op_dashboard.resumo.imagens }}</strong>
+                            <span>imagens</span>
+                        </a>
+                        <a href="{% url 'wagtaildocs:index' %}">
+                            <strong>{{ op_dashboard.resumo.documentos }}</strong>
+                            <span>documentos</span>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+            <aside class="op-admin-dashboard-account" aria-label="Conta">
+                <strong>{{ request.user.get_full_name|default:request.user.get_username }}</strong>
+                <a href="{% url 'wagtailadmin_account' %}">Minha conta</a>
+            </aside>
+        </header>
+
+        <p class="op-admin-dashboard-mobile-note">
+            No celular, a página inicial reúne os principais acessos. Para usar o menu administrativo completo, prefira acessar pelo desktop.
+        </p>
+
+        {% if op_dashboard.estatisticas %}
+            <details class="w-panel op-admin-card op-admin-dashboard-stats op-admin-dashboard-section--collapsible" aria-label="Estatísticas rápidas" open>
+                <summary class="op-admin-dashboard-card__summary op-admin-dashboard-stats__summary">
+                    <div>
+                        <h2>Visão rápida do site</h2>
+                        <p class="op-admin-panel__meta">Resumo agregado do site e operação.</p>
+                    </div>
+                </summary>
+                <div class="op-admin-panel__actions op-admin-dashboard-stats__actions">
+                    <a class="button button-secondary" href="{% url 'admin_estatisticas' %}">Ver estatísticas completas</a>
+                </div>
+                <div class="admin-stats-grid op-admin-dashboard-stats__desktop-grid">
+                    <article class="op-admin-metric-card">
+                        <span>Leituras</span>
+                        <strong>{{ op_dashboard.estatisticas.leituras }}</strong>
+                    </article>
+                    <article class="op-admin-metric-card">
+                        <span>Publicações</span>
+                        <strong>{{ op_dashboard.estatisticas.publicacoes }}</strong>
+                    </article>
+                    <article class="op-admin-metric-card">
+                        <span>Comentários</span>
+                        <strong>{{ op_dashboard.estatisticas.comentarios }}</strong>
+                    </article>
+                    <article class="op-admin-metric-card">
+                        <span>Mensagens</span>
+                        <strong>{{ op_dashboard.estatisticas.mensagens }}</strong>
+                    </article>
+                    <article class="op-admin-metric-card">
+                        <span>Usuários ativos</span>
+                        <strong>{{ op_dashboard.estatisticas.usuarios }}</strong>
+                    </article>
+                    <article class="op-admin-metric-card">
+                        <span>Tempo médio</span>
+                        <strong>{{ op_dashboard.estatisticas.tempo_medio }}</strong>
+                    </article>
+                </div>
+            </details>
+        {% endif %}
+
+        <section class="op-admin-dashboard__quicklinks" aria-label="Acesso rápido">
+            {% if request.user.is_superuser or request.user|user_in_group:"Autores / Escritores" or request.user|user_in_group:"Revisores" %}
+                <details class="w-panel op-admin-card op-admin-dashboard-card op-admin-dashboard-card--collapsible" open>
+                    <summary class="op-admin-dashboard-card__summary">
+                        <h2>Páginas e conteúdo</h2>
+                    </summary>
+                    <p class="op-admin-panel__meta">Acesse a árvore de páginas, publicações e taxonomias editoriais.</p>
+                    {% if op_dashboard.pode_ver_comentarios %}
+                        <div class="op-admin-dashboard-card__notice">
+                            <strong>{{ op_dashboard.comentarios_pendentes }}</strong>
+                            comentário{{ op_dashboard.comentarios_pendentes|pluralize }} {{ op_dashboard.comentarios_pendentes|pluralize:"pendente,pendentes" }} de moderação
+                        </div>
+                    {% endif %}
+                    {% if op_dashboard.publicacoes_ajustes_autor or op_dashboard.comentarios_revisao_abertos %}
+                        <div class="op-admin-dashboard-card__notice">
+                            <strong>{{ op_dashboard.publicacoes_ajustes_autor }}</strong>
+                            publicação{{ op_dashboard.publicacoes_ajustes_autor|pluralize:" em ajuste, em ajustes" }} ·
+                            <strong>{{ op_dashboard.comentarios_revisao_abertos }}</strong>
+                            comentário{{ op_dashboard.comentarios_revisao_abertos|pluralize }} de revisão aberto{{ op_dashboard.comentarios_revisao_abertos|pluralize }}
+                        </div>
+                    {% endif %}
+                    <div class="op-admin-dashboard-card__links">
+                        <a class="button" href="{% url 'admin_publicacoes_lista' %}">Publicações</a>
+                        {% if request.user.is_superuser %}
+                            <a class="button button-secondary" href="{{ op_site_pages_url }}">Páginas</a>
+                            <a class="button button-secondary op-admin-dashboard-card__link--mobile-only" href="{% url 'admin_midias_pendentes' %}">Mídias pendentes</a>
+                            <a class="button button-secondary op-admin-dashboard-card__link--mobile-only" href="{% url 'wagtailimages:index' %}">Imagens</a>
+                            <a class="button button-secondary op-admin-dashboard-card__link--mobile-only" href="{% url 'wagtaildocs:index' %}">Documentos</a>
+                            <a class="button button-secondary op-admin-dashboard-card__link--mobile-only" href="{% url 'admin_submissoes_publicas' %}">Submissões</a>
+                            <a class="button button-secondary" href="{% url 'wagtailsnippets_conteudo_autor:list' %}">Autores</a>
+                        {% endif %}
+                        <a class="button button-secondary" href="{% url 'admin_quiz_catalogo_lista' %}">Perguntas do quiz</a>
+                        <a class="button button-secondary" href="{% url 'admin_categorias_tags' %}">Categorias e tags</a>
+                    </div>
+                </details>
+            {% endif %}
+
+            {% if request.user.is_superuser or request.user|user_in_group:"Operadores / Atendimento" %}
+                <details class="w-panel op-admin-card op-admin-dashboard-card op-admin-dashboard-card--collapsible" open>
+                    <summary class="op-admin-dashboard-card__summary">
+                        <h2>Relacionamento e campanhas</h2>
+                    </summary>
+                    <p class="op-admin-panel__meta">Monitore contato, newsletter, indexador e campanhas de e-mail.</p>
+                    {% if op_dashboard.pode_ver_contato %}
+                        <div class="op-admin-dashboard-card__notice">
+                            <strong>{{ op_dashboard.mensagens_pendentes }}</strong>
+                            mensagem{{ op_dashboard.mensagens_pendentes|pluralize }} {{ op_dashboard.mensagens_pendentes|pluralize:"pendente,pendentes" }} para responder
+                        </div>
+                    {% endif %}
+                    <div class="op-admin-dashboard-card__links">
+                        <a class="button" href="{% url 'admin_contato_inbox' %}">Contato</a>
+                        {% if request.user.is_superuser %}
+                            <a class="button button-secondary" href="{% url 'wagtailsnippets_conteudo_comentariopublicacao:list' %}">Comentários</a>
+                            <a class="button button-secondary" href="{% url 'admin_newsletter' %}">Newsletter</a>
+                            <a class="button button-secondary" href="{% url 'admin_email' %}">E-mails</a>
+                            <a class="button button-secondary" href="{% url 'admin_indexador' %}">Indexador</a>
+                            <a class="button button-secondary op-admin-dashboard-card__link--mobile-only" href="{% url 'wagtailsnippets_conteudo_duvidaquizpublicacao:list' %}">Dúvidas do quiz</a>
+                            <a class="button button-secondary op-admin-dashboard-card__link--mobile-only" href="{% url 'wagtailsnippets_conteudo_linkcurtoshlink:list' %}">Links curtos</a>
+                        {% endif %}
+                    </div>
+                </details>
+            {% endif %}
+
+            {% if request.user.is_superuser %}
+                <details class="w-panel op-admin-card op-admin-dashboard-card op-admin-dashboard-card--collapsible op-admin-dashboard-card--settings" open>
+                    <summary class="op-admin-dashboard-card__summary">
+                        <h2>Configuração e Fluxo editorial</h2>
+                    </summary>
+                    <p class="op-admin-panel__meta">Centralize usuários, backups, navegação e ajustes estruturais do site.</p>
+                    <div class="op-admin-dashboard-card__links">
+                        <a class="button" href="{% url 'admin_configuracoes_site' %}">Configurações do site</a>
+                        <a class="button button-secondary" href="{% url 'admin_configuracoes_home' %}">Configurações da home</a>
+                        <a class="button button-secondary op-admin-dashboard-card__link--mobile-only" href="{% url 'admin_usuarios_lista' %}">Usuários</a>
+                        <a class="button button-secondary op-admin-dashboard-card__link--mobile-only" href="{% url 'admin_navegacao' %}">Menu e rodapé</a>
+                        <a class="button button-secondary" href="{% url 'admin_backups' %}">Backups</a>
+                        <a class="button button-secondary op-admin-dashboard-card__link--mobile-only" href="{% url 'admin_saude_operacional' %}">Saúde do sistema</a>
+                        <a class="button button-secondary" href="{% url 'admin_estatisticas' %}">Estatísticas</a>
+                        <a class="button button-secondary" href="{% url 'admin_logs_atividade' %}">Logs</a>
+                        <a class="button button-secondary op-admin-dashboard-card__link--mobile-only" href="{% url 'wagtailredirects:index' %}">Redirecionamentos</a>
+                    </div>
+                </details>
+            {% endif %}
+        </section>
+
+        <section class="op-admin-dashboard__panels">
+            {% if panels %}
+                {% for panel in panels %}
+                    {% component panel fallback_render_method=True %}
+                {% endfor %}
+            {% else %}
+                <p>{% trans "This is your dashboard on which helpful information about content you've created will be displayed." %}</p>
+            {% endif %}
+        </section>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    {{ block.super }}
+    {{ media.js }}
+    <script src="{% static 'js/admin/zoom.js' %}" defer></script>
+    <script src="{% static 'js/admin/account-label.js' %}" defer></script>
+    <script src="{% static 'js/admin/admin-search.js' %}" defer></script>
+    <script>
+        (function () {
+            var query = "(max-width: 767.98px)";
+            function syncDashboardCards() {
+                var isMobile = window.matchMedia && window.matchMedia(query).matches;
+                document.querySelectorAll(".op-admin-dashboard-card--collapsible, .op-admin-dashboard-section--collapsible").forEach(function (card) {
+                    if (isMobile) {
+                        card.removeAttribute("open");
+                    } else {
+                        card.setAttribute("open", "");
+                    }
+                });
+            }
+            function preventDesktopToggle(event) {
+                var isMobile = window.matchMedia && window.matchMedia(query).matches;
+                if (isMobile) {
+                    return;
+                }
+                var summary = event.target.closest(".op-admin-dashboard-card__summary");
+                if (!summary) {
+                    return;
+                }
+                if (event.type === "keydown" && event.key !== "Enter" && event.key !== " ") {
+                    return;
+                }
+                event.preventDefault();
+            }
+            if (document.readyState === "loading") {
+                document.addEventListener("DOMContentLoaded", syncDashboardCards);
+            } else {
+                syncDashboardCards();
+            }
+            document.addEventListener("click", preventDesktopToggle);
+            document.addEventListener("keydown", preventDesktopToggle);
+            if (window.matchMedia) {
+                window.matchMedia(query).addEventListener("change", syncDashboardCards);
+            }
+        }());
+    </script>
+{% endblock %}
