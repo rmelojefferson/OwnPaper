@@ -52,9 +52,7 @@ SECRET_KEY = os.getenv(
 
 INSTALLED_APPS = [
     "home",
-    "search",
     "conteudo",
-    "wagtail.contrib.forms",
     "wagtail.contrib.redirects",
     "wagtail.contrib.settings",
     "wagtail.embeds",
@@ -85,13 +83,17 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "config.middleware_site_language.PublicSiteLanguageMiddleware",
     "django.middleware.common.CommonMiddleware",
     "config.middleware_maintenance.PublicMaintenanceModeMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "config.middleware_current_user.CurrentUserContextMiddleware",
     "django_otp.middleware.OTPMiddleware",
     "config.middleware_two_factor.PanelTwoFactorMiddleware",
+    "config.middleware_panel_terms.PanelTermsConsentMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
+    "config.middleware_security_headers.OwnPaperSecurityHeadersMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "wagtail.contrib.redirects.middleware.RedirectMiddleware",
 ]
@@ -151,6 +153,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
+    {
+        "NAME": "config.password_validators.StrongPasswordValidator",
+    },
 ]
 
 
@@ -158,6 +163,11 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
 LANGUAGE_CODE = os.getenv("DJANGO_LANGUAGE_CODE", "pt-br")
+LANGUAGES = [
+    ("pt-br", "Português (Brasil)"),
+    ("en", "English"),
+    ("es", "Español"),
+]
 
 TIME_ZONE = os.getenv("DJANGO_TIME_ZONE", "UTC")
 
@@ -229,6 +239,10 @@ WAGTAILADMIN_BASE_URL = os.getenv(
     "DJANGO_WAGTAILADMIN_BASE_URL",
     "http://localhost:8000",
 )
+PUBLIC_BASE_URL = os.getenv(
+    "OWNPAPER_PUBLIC_BASE_URL",
+    WAGTAILADMIN_BASE_URL,
+).rstrip("/")
 
 # Allowed file extensions for documents in the document library.
 # This can be omitted to allow all files, but note that this may present a security risk
@@ -281,8 +295,47 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = env_bool(
     False,
 )
 SECURE_HSTS_PRELOAD = env_bool("DJANGO_SECURE_HSTS_PRELOAD", False)
+SECURE_CONTENT_TYPE_NOSNIFF = env_bool("DJANGO_SECURE_CONTENT_TYPE_NOSNIFF", True)
+SECURE_REFERRER_POLICY = os.getenv(
+    "DJANGO_SECURE_REFERRER_POLICY",
+    "strict-origin-when-cross-origin",
+).strip() or "strict-origin-when-cross-origin"
+X_FRAME_OPTIONS = os.getenv("DJANGO_X_FRAME_OPTIONS", "DENY").strip() or "DENY"
 
 LOGIN_URL = "two_factor:login"
 LOGIN_REDIRECT_URL = "/admin/"
 LOGOUT_REDIRECT_URL = "/account/login/"
 WAGTAILADMIN_LOGIN_URL = "/account/login/"
+OWNPAPER_PANEL_TERMS_REQUIRED = env_bool("OWNPAPER_PANEL_TERMS_REQUIRED", True)
+OWNPAPER_PANEL_TERMS_VERSION = os.getenv("OWNPAPER_PANEL_TERMS_VERSION", "2026-06-02")
+
+# Public form security controls
+FORM_RATE_LIMIT_WINDOW_SECONDS = env_int("OWNPAPER_FORM_RATE_LIMIT_WINDOW_SECONDS", 600)
+FORM_RATE_LIMIT_MAX_ATTEMPTS_IP = env_int("OWNPAPER_FORM_RATE_LIMIT_MAX_ATTEMPTS_IP", 5)
+FORM_RATE_LIMIT_MAX_ATTEMPTS_EMAIL = env_int("OWNPAPER_FORM_RATE_LIMIT_MAX_ATTEMPTS_EMAIL", 3)
+FORM_RATE_LIMIT_BACKOFF_BASE_SECONDS = env_int("OWNPAPER_FORM_RATE_LIMIT_BACKOFF_BASE_SECONDS", 120)
+FORM_RATE_LIMIT_BACKOFF_MAX_SECONDS = env_int("OWNPAPER_FORM_RATE_LIMIT_BACKOFF_MAX_SECONDS", 3600)
+
+CONTACT_MAX_NOME_LENGTH = env_int("OWNPAPER_CONTACT_MAX_NOME_LENGTH", 120)
+CONTACT_MAX_MENSAGEM_LENGTH = env_int("OWNPAPER_CONTACT_MAX_MENSAGEM_LENGTH", 5000)
+NEWSLETTER_MAX_EMAIL_LENGTH = env_int("OWNPAPER_NEWSLETTER_MAX_EMAIL_LENGTH", 254)
+CONTACT_MESSAGES_RETENTION_DAYS = env_int("OWNPAPER_CONTACT_MESSAGES_RETENTION_DAYS", 365)
+NEWSLETTER_EXCLUSAO_GRACE_DAYS = env_int("OWNPAPER_NEWSLETTER_EXCLUSAO_GRACE_DAYS", 3)
+USER_INVITE_EXPIRY_DAYS = env_int("OWNPAPER_USER_INVITE_EXPIRY_DAYS", 7)
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "conteudo.forms_security": {
+            "handlers": ["console"],
+            "level": os.getenv("OWNPAPER_FORMS_SECURITY_LOG_LEVEL", "INFO"),
+            "propagate": False,
+        },
+    },
+}

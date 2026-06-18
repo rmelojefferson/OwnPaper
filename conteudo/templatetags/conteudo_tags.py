@@ -7,6 +7,36 @@ from django.utils.safestring import mark_safe
 
 register = template.Library()
 
+MENU_LABELS = {
+    "home": {"pt-br": "Início"},
+    "categorias": {"pt-br": "Categorias"},
+    "tags": {"pt-br": "Tags"},
+    "autores": {"pt-br": "Autores"},
+    "busca": {"pt-br": "Busca"},
+    "destaques": {"pt-br": "Destaques"},
+    "ultimas": {"pt-br": "Últimas publicações"},
+    "contato": {"pt-br": "Contato"},
+    "newsletter": {"pt-br": "Newsletter"},
+    "indexador": {"pt-br": "Indexador"},
+    "quiz": {"pt-br": "Quiz"},
+}
+
+
+def _normalize_lang(lang):
+    return "pt-br"
+
+def _translate_plain_label(texto, lang):
+    return str(texto or "").strip()
+
+
+def _menu_label_by_shortcut(shortcut, lang, fallback=""):
+    key = (shortcut or "").strip().lower()
+    mapa = MENU_LABELS.get(key)
+    if not mapa:
+        return fallback or ""
+    idioma = _normalize_lang(lang)
+    return mapa.get(idioma) or mapa.get("pt-br") or fallback or ""
+
 
 def _parsed_url(value):
     raw = str(value or "").strip()
@@ -104,6 +134,101 @@ def normalizar_marcador(valor):
 @register.filter
 def id_marcador(valor):
     return normalizar_marcador(valor)
+
+
+@register.filter
+def exibir_documentos_pendentes(html):
+    padrao = re.compile(r"\[\[\s*documento-pendente:\s*(\d+)\s*\]\]", re.IGNORECASE)
+
+    def substituir(match):
+        return (
+            '<span class="documento-pendente">'
+            "Documento aguardando aprovação editorial."
+            "</span>"
+        )
+
+    return mark_safe(padrao.sub(substituir, str(html or "")))
+
+
+@register.filter
+def dict_get(mapping, key):
+    if not isinstance(mapping, dict):
+        return None
+    return mapping.get(key)
+
+
+@register.simple_tag
+def translated(obj, field_name, lang="pt-br"):
+    if obj is None:
+        return ""
+    return getattr(obj, field_name, "")
+
+
+@register.simple_tag
+def menu_item_label(item, lang="pt-br"):
+    if item is None:
+        return ""
+
+    atalho = getattr(item, "atalho", "")
+    titulo = str(getattr(item, "titulo", "") or "").strip()
+
+    if atalho:
+        label_atalho = _menu_label_by_shortcut(atalho, lang, "")
+        if label_atalho:
+            # Se o usuário customizou o título do atalho, prioriza tradução do próprio texto.
+            rotulo_padrao_pt = (
+                (MENU_LABELS.get((atalho or "").strip().lower()) or {}).get("pt-br", "")
+            ).strip()
+            if titulo and titulo != rotulo_padrao_pt:
+                return _translate_plain_label(titulo, lang)
+            return label_atalho
+        return _translate_plain_label(titulo, lang)
+
+    tipo = getattr(item, "tipo", "")
+    pagina = getattr(item, "pagina", None)
+    if tipo == "pagina" and pagina is not None:
+        getter = getattr(pagina, "get_translated_value", None)
+        if callable(getter):
+            traduzido = getter("title", lang)
+            if traduzido:
+                return traduzido
+        return _translate_plain_label(getattr(pagina, "title", "") or titulo, lang)
+
+    return _translate_plain_label(titulo, lang)
+
+
+@register.simple_tag
+def menu_shortcut_label(shortcut, lang="pt-br", fallback=""):
+    idioma = _normalize_lang(lang)
+    fallback_limpo = str(fallback or "").strip()
+    label_atalho = _menu_label_by_shortcut(shortcut, idioma, "")
+    if fallback_limpo:
+        rotulo_padrao_pt = (
+            (MENU_LABELS.get((shortcut or "").strip().lower()) or {}).get("pt-br", "")
+        ).strip()
+        if fallback_limpo != rotulo_padrao_pt:
+            if idioma != "pt-br":
+                return _translate_plain_label(fallback_limpo, idioma)
+            return fallback_limpo
+        if label_atalho:
+            return label_atalho
+        return fallback_limpo
+    return label_atalho
+
+
+@register.simple_tag
+def translate_label(texto, lang="pt-br"):
+    return _translate_plain_label(texto, lang)
+
+
+@register.simple_tag
+def translate_copyright(texto, lang="pt-br"):
+    return str(texto or "").strip()
+
+
+@register.simple_tag
+def translate_text_content(value, lang="pt-br"):
+    return str(value or "")
 
 
 @register.filter
@@ -207,10 +332,31 @@ def linkar_marcadores(html):
 
         return f'<sup><a href="#ref-{marcador}">{marcador_original}</a></sup>'
 
-    html = re.sub(r"\[\[n:([^\]]+)\]\]", substituir_nota, html)
-    html = re.sub(r"\[\[r:([^\]]+)\]\]", substituir_referencia, html)
+    def substituir_ancora(match):
+        marcador_original = match.group(1).strip()
+        marcador = normalizar_marcador(marcador_original)
+        return f'<span id="{marcador}" class="ancora-interna-publicacao" aria-hidden="true"></span>'
+
+    html = re.sub(r"\[\[\s*a:\s*([^\]\|]+?)\s*\]\]", substituir_ancora, html, flags=re.IGNORECASE)
+
+    html = re.sub(r"\[\[\s*n:\s*([^\]]+?)\s*\]\]", substituir_nota, html, flags=re.IGNORECASE)
+    html = re.sub(r"\[\[\s*r:\s*([^\]]+?)\s*\]\]", substituir_referencia, html, flags=re.IGNORECASE)
 
     return mark_safe(html)
+
+
+@register.filter
+def desembrulhar_paragrafo_externo(html):
+    if not html:
+        return ""
+
+    html = str(html)
+    match = re.match(r"^\s*<p\b[^>]*>(?P<conteudo>.*)</p>\s*$", html, flags=re.IGNORECASE | re.DOTALL)
+    if not match:
+        return mark_safe(html)
+
+    conteudo = match.group("conteudo")
+    return mark_safe(conteudo)
 
 
 @register.filter
@@ -221,15 +367,22 @@ def inserir_videos_no_corpo(html, page):
     html = str(html)
 
     for midia in page.midias_embed.all():
-        if not midia.marcador:
+        marcadores = list(getattr(midia, "marcadores_lista", []) or [])
+        if not marcadores:
             continue
-
-        token = f"[[v:{midia.marcador.strip()}]]"
         bloco_video = render_to_string(
             "includes/bloco_video_publicacao.html",
             {"midia": midia},
         )
-        html = html.replace(token, bloco_video)
+        for marcador in marcadores:
+            token = f"[[v:{marcador.strip()}]]"
+            html = re.sub(
+                rf"<p[^>]*>\s*{re.escape(token)}\s*</p>",
+                bloco_video,
+                html,
+                flags=re.IGNORECASE,
+            )
+            html = html.replace(token, bloco_video)
 
     return mark_safe(html)
 
@@ -242,14 +395,21 @@ def inserir_imagens_no_corpo(html, page):
     html = str(html)
 
     for item in page.imagens_publicacao.all():
-        if not item.marcador:
+        marcadores = list(getattr(item, "marcadores_lista", []) or [])
+        if not marcadores:
             continue
-
-        token = f"[[i:{item.marcador.strip()}]]"
         bloco_imagem = render_to_string(
             "includes/bloco_imagem_publicacao.html",
             {"item": item},
         )
-        html = html.replace(token, bloco_imagem)
+        for marcador in marcadores:
+            token = f"[[i:{marcador.strip()}]]"
+            html = re.sub(
+                rf"<p[^>]*>\s*{re.escape(token)}\s*</p>",
+                bloco_imagem,
+                html,
+                flags=re.IGNORECASE,
+            )
+            html = html.replace(token, bloco_imagem)
 
     return mark_safe(html)

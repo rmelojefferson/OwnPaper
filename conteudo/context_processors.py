@@ -22,6 +22,7 @@ def configuracao_site(request):
 
     return {
         "config_site": config_site,
+        "site_lang": getattr(request, "LANGUAGE_CODE", "pt-br"),
         "TURNSTILE_ENABLED": settings.TURNSTILE_ENABLED,
         "TURNSTILE_SITE_KEY": settings.TURNSTILE_SITE_KEY,
     }

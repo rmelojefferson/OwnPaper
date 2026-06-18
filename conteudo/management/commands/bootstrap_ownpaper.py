@@ -13,7 +13,9 @@ from conteudo.models import (
     NewsletterPage,
     PaginaInstitucionalPage,
     PublicacoesIndexPage,
+    QuizEstudoPage,
 )
+from conteudo.roles import ensure_role_groups
 from home.models import HomePage
 
 
@@ -45,7 +47,7 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument(
             "--site-name",
-            default=os.getenv("OWNPAPER_SITE_NAME", settings.WAGTAIL_SITE_NAME),
+            default=os.getenv("OWNPAPER_SITE_NAME", settings.WAGTAIL_SITE_NAME or "OwnPaper"),
             help="Public site name.",
         )
         parser.add_argument(
@@ -61,8 +63,8 @@ class Command(BaseCommand):
         )
         parser.add_argument(
             "--root-title",
-            default=os.getenv("OWNPAPER_HOME_TITLE", "Home"),
-            help="Home page title.",
+            default=os.getenv("OWNPAPER_HOME_TITLE", "Início"),
+            help="Título da página inicial.",
         )
         parser.add_argument(
             "--with-pages",
@@ -81,6 +83,7 @@ class Command(BaseCommand):
         hostname = options["hostname"].strip()
         if not hostname:
             raise CommandError("A hostname is required.")
+        options["site_name"] = (options.get("site_name") or "").strip() or "OwnPaper"
 
         home_page = self.get_or_create_home_page(options["root_title"])
         site = self.configure_site(home_page, hostname, options["port"])
@@ -93,6 +96,7 @@ class Command(BaseCommand):
         if options["with_pages"]:
             self.create_default_pages(home_page, site_settings, force=options["force"])
 
+        self.ensure_default_groups()
         self.create_superuser()
 
         self.stdout.write(
@@ -100,6 +104,9 @@ class Command(BaseCommand):
                 f"OwnPaper bootstrap complete for {site.hostname}:{site.port}."
             )
         )
+
+    def ensure_default_groups(self):
+        ensure_role_groups()
 
     def get_or_create_home_page(self, title):
         home_page = HomePage.objects.first()
@@ -122,7 +129,7 @@ class Command(BaseCommand):
             raise CommandError("Wagtail root page does not exist. Run migrations first.")
 
         home_page = HomePage(
-            title=title or "Home",
+            title=title or "Início",
             slug=slugify(title or "home") or "home",
             live=True,
             show_in_menus=True,
@@ -162,10 +169,23 @@ class Command(BaseCommand):
             ),
             "copyright_texto": env_value(
                 "OWNPAPER_COPYRIGHT_TEXT",
-                f"{site_name}",
+                f"Todos os direitos reservados © 2026 {site_name}",
             ),
             "email_contato": os.getenv("OWNPAPER_CONTACT_EMAIL", ""),
             "rotulo_indexador": env_value("OWNPAPER_INDEXER_LABEL", "Indexador"),
+            "paleta_cor_1": env_value("OWNPAPER_SITE_COLOR_PRIMARY", "#1f3b5c"),
+            "paleta_cor_2": env_value("OWNPAPER_SITE_COLOR_SECONDARY", "#3b82f6"),
+            "doacoes_rotulo": env_value("OWNPAPER_DONATIONS_LABEL", "Apoie"),
+            "doacoes_titulo": env_value("OWNPAPER_DONATIONS_TITLE", "Apoie o projeto"),
+            "doacoes_descricao": env_value(
+                "OWNPAPER_DONATIONS_DESCRIPTION",
+                (
+                    "<p>Se este projeto é útil para você, considere contribuir para manter "
+                    "a publicação independente, a infraestrutura técnica e o desenvolvimento "
+                    "de novos recursos. Todo apoio ajuda a sustentar o trabalho editorial e "
+                    "a continuidade do site.</p>"
+                ),
+            ),
         }
 
         changed = False
@@ -182,6 +202,40 @@ class Command(BaseCommand):
         return site_settings
 
     def create_default_pages(self, home_page, site_settings, force=False):
+        cookies_resumo = (
+            "Esta página descreve os cookies, tecnologias similares e dados básicos "
+            "tratados pela instalação padrão do OwnPaper, incluindo a medição agregada "
+            "de tempo médio no site quando cookies opcionais são aceitos, com retenção "
+            "padrão de eventos brutos por até 3 meses e agregados diários por até 12 meses."
+        )
+        cookies_corpo = (
+            "<h2>1. O que é coletado na estrutura padrão</h2>"
+            "<ul>"
+            "<li><strong>Essenciais:</strong> cookies de sessão e segurança (login/admin, CSRF e autenticação).</li>"
+            "<li><strong>Preferências:</strong> tema (claro/escuro), tamanho de fonte e preferências locais da interface.</li>"
+            "<li><strong>Consentimento:</strong> escolha de cookies (aceitar tudo ou recusar opcionais).</li>"
+            "<li><strong>Formulários:</strong> dados enviados em contato e newsletter conforme os campos preenchidos.</li>"
+            "<li><strong>Estatísticas internas:</strong> quando cookies opcionais são aceitos, página acessada, duração aproximada da visita e sinais periódicos de permanência.</li>"
+            "</ul>"
+            "<h2>2. Cookies opcionais (rastreamento)</h2>"
+            "<p>Google Tag Manager, Google Analytics, Meta Pixel e a estatística interna de tempo médio só são carregados ou registrados após consentimento para opcionais.</p>"
+            "<p>A estatística interna de tempo médio usa um identificador aleatório de sessão armazenado no navegador e convertido em hash no servidor. Ela não grava nome, e-mail, usuário do painel ou endereço IP para essa medição.</p>"
+            "<p>Na configuração padrão, eventos brutos são mantidos por até 3 meses e agregados diários por até 12 meses. O administrador pode desativar as estatísticas internas nas configurações do site.</p>"
+            "<p>Para análises mais profundas, o projeto pode usar ferramentas externas de analytics condicionadas ao consentimento de cookies opcionais. O OwnPaper recomenda integrações por campos estruturados, evitando script livre inserido manualmente.</p>"
+            "<p>Ao recusar opcionais, o site continua funcionando sem carregar scripts opcionais de rastreamento e sem registrar tempo médio de permanência.</p>"
+            "<h2>3. Escolha obrigatória, aceite opcional</h2>"
+            "<p>Quando não houver escolha registrada, o site exibe o aviso de cookies para que você aceite tudo ou recuse os opcionais. A navegação deve continuar possível, mas a decisão fica disponível para ser feita de forma clara.</p>"
+            "<h2>4. Base legal e finalidade</h2>"
+            "<ul>"
+            "<li><strong>Essenciais:</strong> legítimo interesse e execução do serviço.</li>"
+            "<li><strong>Opcionais:</strong> consentimento.</li>"
+            "</ul>"
+            "<h2>5. Como gerenciar sua escolha</h2>"
+            "<p>Você pode alterar sua escolha a qualquer momento clicando no botão <strong>Gerenciar cookies</strong> e escolhendo novamente suas preferências.</p>"
+            "<h2>6. O que pode ser adicionado em projetos derivados</h2>"
+            "<p>Se o projeto instalar novas ferramentas (chat, anúncios, mapas, vídeos externos com rastreamento, A/B test, etc.), esta página deve ser atualizada com as novas coletas e finalidades.</p>"
+        )
+
         default_pages = [
             (
                 "publicacoes",
@@ -207,7 +261,7 @@ class Command(BaseCommand):
                 PaginaInstitucionalPage,
                 {
                     "title": "Privacidade e dados",
-                    "resumo": "Explique como dados pessoais sao tratados nesta instalacao.",
+                    "resumo": "Informe como dados pessoais são tratados nesta instalação, quais solicitações o usuário pode fazer e como a política respeita a LGPD.",
                     "corpo": "",
                 },
                 "pagina_privacidade",
@@ -217,8 +271,8 @@ class Command(BaseCommand):
                 PaginaInstitucionalPage,
                 {
                     "title": "Cookies",
-                    "resumo": "Descreva os cookies e tecnologias equivalentes usados no site.",
-                    "corpo": "",
+                    "resumo": cookies_resumo,
+                    "corpo": cookies_corpo,
                 },
                 "pagina_cookies",
             ),
@@ -249,6 +303,16 @@ class Command(BaseCommand):
                     "introducao": "Pesquise registros catalogados.",
                 },
                 "pagina_indexador",
+            ),
+            (
+                "quiz",
+                QuizEstudoPage,
+                {
+                    "title": "Quiz",
+                    "introducao": "Estude por perguntas e respostas.",
+                    "itens_por_sessao": 20,
+                },
+                "pagina_quiz_estudo",
             ),
         ]
 
@@ -286,6 +350,13 @@ class Command(BaseCommand):
             self.stdout.write(
                 "Admin user skipped. Set OWNPAPER_ADMIN_USERNAME and "
                 "OWNPAPER_ADMIN_PASSWORD to create one automatically."
+            )
+            return
+
+        if username.strip().lower() == "admin":
+            self.stdout.write(
+                "Admin user skipped. Username 'admin' is blocked for security. "
+                "Set OWNPAPER_ADMIN_USERNAME with another value."
             )
             return
 
