@@ -1,0 +1,105 @@
+# Configuração por ambiente
+
+OwnPaper separa configuração operacional sensível do painel administrativo.
+
+## Arquivos de exemplo
+
+- `.env.example`: instalação local ou base genérica;
+- `.env.production.example`: produção HTTPS;
+- `.env`: arquivo real da instalação, nunca deve ser commitado.
+
+## Segredos
+
+Configure no backend, não no painel:
+
+```env
+DJANGO_SECRET_KEY=
+DATABASE_PASSWORD=
+DJANGO_EMAIL_HOST_PASSWORD=
+OWNPAPER_BACKUP_WEBDAV_PASSWORD=
+OWNPAPER_SHLINK_API_KEY=
+OWNPAPER_OAUTH_ORCID_CLIENT_SECRET=
+OWNPAPER_OAUTH_GITHUB_CLIENT_SECRET=
+OWNPAPER_OAUTH_GOOGLE_CLIENT_SECRET=
+OWNPAPER_OAUTH_CODEBERG_CLIENT_SECRET=
+```
+
+## Configurações editáveis pelo painel
+
+O painel concentra configurações editoriais e públicas:
+
+- identidade e SEO;
+- menu e navegação;
+- tema e aparência;
+- integrações e rastreamento;
+- comunicação e comentários;
+- apoio e doações;
+- operação do site;
+- páginas institucionais.
+
+Credenciais sensíveis de backup externo não devem ser configuradas no painel.
+
+## Segurança de uploads
+
+Padrão recomendado:
+
+```env
+OWNPAPER_CLAMAV_ENABLED=true
+OWNPAPER_CLAMAV_HOST=clamav
+OWNPAPER_CLAMAV_PORT=3310
+OWNPAPER_CLAMAV_TIMEOUT=30
+OWNPAPER_VIDEO_MAX_MB=500
+```
+
+SVG não é aceito por padrão.
+
+## Backups
+
+```env
+OWNPAPER_BACKUP_ENABLED=true
+OWNPAPER_BACKUP_INTERVAL_HOURS=168
+OWNPAPER_BACKUP_RETENTION_DAYS=30
+OWNPAPER_BACKUP_INCLUDE_MEDIA=true
+OWNPAPER_BACKUP_INCLUDE_PRIVATE_MEDIA=true
+OWNPAPER_BACKUP_EXTERNAL_BACKEND=local
+```
+
+Para WebDAV externo:
+
+```env
+OWNPAPER_BACKUP_EXTERNAL_BACKEND=webdav
+OWNPAPER_BACKUP_WEBDAV_URL=https://storage.example.com/remote.php/dav/files/usuario/ownpaper/
+OWNPAPER_BACKUP_WEBDAV_USERNAME=usuario-backup
+OWNPAPER_BACKUP_WEBDAV_PASSWORD=token-ou-senha-forte
+```
+
+Use conta exclusiva com permissão apenas na pasta de backups.
+
+## SMTP
+
+```env
+DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+DJANGO_EMAIL_HOST=smtp.example.com
+DJANGO_EMAIL_PORT=587
+DJANGO_EMAIL_HOST_USER=usuario-smtp
+DJANGO_EMAIL_HOST_PASSWORD=senha-ou-token
+DJANGO_EMAIL_USE_TLS=true
+DJANGO_EMAIL_USE_SSL=false
+DJANGO_DEFAULT_FROM_EMAIL=no-reply@example.com
+```
+
+Valide SPF, DKIM e DMARC no domínio de envio.
+
+## HTTPS
+
+Em produção:
+
+```env
+DJANGO_SECURE_PROXY_SSL_HEADER=true
+DJANGO_SECURE_SSL_REDIRECT=true
+DJANGO_SESSION_COOKIE_SECURE=true
+DJANGO_CSRF_COOKIE_SECURE=true
+DJANGO_SECURE_HSTS_SECONDS=31536000
+```
+
+Ative HSTS para subdomínios e preload apenas quando todos os subdomínios estiverem prontos para HTTPS.

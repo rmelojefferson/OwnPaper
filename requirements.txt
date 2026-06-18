@@ -1,5 +1,5 @@
 Django>=5.2,<5.3
-wagtail>=7.0,<7.1
+wagtail>=7.4.2,<7.5
 django-otp>=1.7,<1.8
 django-two-factor-auth>=1.17,<1.18
 gunicorn>=23,<24
@@ -7,3 +7,6 @@ phonenumberslite>=9,<10
 psycopg[binary]>=3.2,<3.3
 whitenoise>=6.11,<6.12
 xhtml2pdf>=0.2.17,<0.3
+pypdf>=6.10,<7
+coloraide>=3.2,<4
+cryptography>=48,<49

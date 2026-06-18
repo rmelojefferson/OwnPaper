@@ -6,11 +6,10 @@ available.
 ## Current Baseline
 
 - Django 5.2 LTS
-- Wagtail 7.0 LTS
+- Wagtail 7.4 LTS, com patch mínimo 7.4.2
 - Python 3.12 in Docker
 
-Do not use Wagtail 7.3 as the default package baseline unless a specific
-feature or security issue requires it, because 7.3 is not an LTS release.
+Use a linha Wagtail 7.4.x como baseline do projeto. Atualizações dentro da linha 7.4 devem ser aplicadas após validação completa, pois tendem a concentrar correções compatíveis com a linha estável/LTS.
 
 ## Local Development
 
@@ -37,6 +36,6 @@ After framework upgrades, validate:
 ## Sources
 
 - https://docs.wagtail.org/en/stable/releases/upgrading.html
-- https://docs.wagtail.org/en/stable/releases/7.0.html
-- https://docs.wagtail.org/en/stable/releases/7.3.html
+- https://docs.wagtail.org/en/stable/releases/7.4.html
+- https://docs.wagtail.org/en/stable/releases/index.html
 - https://docs.djangoproject.com/en/5.2/releases/5.2/

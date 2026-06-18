@@ -2,6 +2,7 @@
 .env
 .env.*
 !.env.example
+!.env.production.example
 
 # Python
 __pycache__/
@@ -13,6 +14,7 @@ env/
 
 # Django/Wagtail generated files
 /media/
+/private_media/
 /static/
 
 # Editors and OS files
@@ -20,4 +22,11 @@ env/
 .idea/
 .vscode/
 *.swp
-
+node_modules/
+.codex
+.codex/
+site/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+backups/

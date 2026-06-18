@@ -13,6 +13,7 @@ WORKDIR /app
 RUN apt-get update --yes --quiet \
     && apt-get install --yes --quiet --no-install-recommends \
         build-essential \
+        ffmpeg \
         libcairo2 \
         libcairo2-dev \
         libjpeg62-turbo-dev \
@@ -34,7 +35,7 @@ RUN chmod +x /entrypoint.sh
 
 COPY --chown=ownpaper:ownpaper . /app
 
-RUN mkdir -p /app/static /app/media \
+RUN mkdir -p /app/static /app/media /app/private_media /app/backups \
     && chown -R ownpaper:ownpaper /app
 
 USER ownpaper

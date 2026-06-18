@@ -1,0 +1,39 @@
+site_name: OwnPaper
+site_description: Documentacao tecnica e operacional do OwnPaper
+repo_name: OwnPaper
+repo_url: https://github.com/ownpaper/ownpaper
+use_directory_urls: true
+
+theme:
+  name: material
+  language: pt-BR
+  features:
+    - navigation.sections
+    - navigation.indexes
+    - content.code.copy
+
+nav:
+  - Início: index.md
+  - Instalação e operação:
+      - Instalação com Docker: deployment/installation.md
+      - Configuração por ambiente: deployment/configuration.md
+      - Backups e restauração: deployment/backup-and-restore.md
+      - Homologação: deployment/homologacao-checklist.md
+      - Hardening de e-mail e formulários: deployment/email-and-forms-hardening.md
+      - Shlink: deployment/shlink.md
+      - HTTPS e reverse proxy: deployment/https-reverse-proxy.md
+      - Fluxo de implementação: deployment/implementation-flow.md
+      - Backlog de features: deployment/feature-backlog.md
+  - Funcionalidades:
+      - Painel administrativo: features-admin.md
+      - Site público: features-public-site.md
+      - Papéis e permissões: features-roles-permissions.md
+      - Fluxo editorial: features-editorial-flow.md
+      - Mídia e quarentena: features-media-quarantine.md
+      - Privacidade e estatísticas: features-privacy-analytics.md
+  - Validação:
+      - Empacotamento e GitHub: packaging-github.md
+      - Smoke tests: smoke-tests.md
+      - Política de upgrade LTS: upgrade-framework-lts.md
+  - Skills:
+      - Rollout OwnPaper: skills/ownpaper-standard-rollout.SKILL.md

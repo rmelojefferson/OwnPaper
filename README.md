@@ -27,7 +27,6 @@ This repository currently contains the working prototype:
 config/      Django project settings, URLs, middleware, templates, static files
 conteudo/    Main editorial/content app
 home/        Wagtail home page app
-search/      Wagtail search view/template
 docs/        Project and deployment notes
 ```
 
@@ -55,6 +54,8 @@ Configuration is driven by environment variables. Use `.env.example` as the
 starting point for database, hosts, static paths, media paths, secrets, email,
 and HTTPS settings.
 
+For production over HTTPS, use `.env.production.example` as the baseline.
+
 ## Docker Compose
 
 OwnPaper is PostgreSQL-first. The Compose setup runs the app and PostgreSQL:
@@ -77,6 +78,14 @@ http://localhost:8000/
 ```
 
 To use another host port, change `OWNPAPER_HTTP_PORT` in `.env`.
+
+Production preset:
+
+```bash
+cp .env.production.example .env
+```
+
+Then update domain, SMTP, Turnstile keys and secrets before deploy.
 
 The container entrypoint waits for PostgreSQL, runs migrations, collects static
 files, and starts Gunicorn. These startup actions can be disabled with:
@@ -132,11 +141,34 @@ The OwnPaper packaging work should follow this order:
 
 ## Deployment Notes
 
-See [HTTPS without interrupting Plausible](docs/deployment/https-with-plausible.md)
-for the current test-server situation.
+See [HTTPS and reverse proxy](docs/deployment/https-reverse-proxy.md)
+for production HTTPS configuration.
+
+See [Email and forms hardening](docs/deployment/email-and-forms-hardening.md)
+for SPF/DKIM/DMARC, Turnstile, rate-limit, and retention recommendations.
+
+See [Backups and restore](docs/deployment/backup-and-restore.md)
+for backend-managed weekly backups, validation and restore procedures.
+
+Use `python manage.py validar_producao_ownpaper --strict` for a production
+readiness pass.
 
 See [Framework LTS upgrade policy](docs/upgrade-framework-lts.md) for the
 current Django/Wagtail baseline.
 
 See [Smoke tests](docs/smoke-tests.md) for the minimum validation flow before
 deployment changes.
+
+## Documentation
+
+The recommended documentation format for OwnPaper is MkDocs, stored in this
+repository under `docs/` and published separately from the application runtime
+for example through GitHub Pages.
+
+The README should stay as the short entry point for installation and project
+orientation. Full usage, administration, backup, security and feature
+documentation should live in the MkDocs documentation tree.
+
+## License
+
+OwnPaper is released under the MIT License. See [LICENSE](LICENSE).

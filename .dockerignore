@@ -23,6 +23,10 @@ node_modules/
 .git/
 .gitignore
 .codex
+site/
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
 coverage
 .python-version
 

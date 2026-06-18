@@ -7,20 +7,163 @@ services:
         required: false
     environment:
       DJANGO_SECRET_KEY: "${DJANGO_SECRET_KEY:-}"
+      DJANGO_WAGTAIL_SITE_NAME: "${DJANGO_WAGTAIL_SITE_NAME:-OwnPaper}"
       DJANGO_SETTINGS_MODULE: "${DJANGO_SETTINGS_MODULE:-config.settings.production}"
       DATABASE_NAME: "${DATABASE_NAME:-ownpaper}"
       DATABASE_USER: "${DATABASE_USER:-ownpaper}"
       DATABASE_PASSWORD: "${DATABASE_PASSWORD:-change-me}"
       DATABASE_HOST: db
       DATABASE_PORT: 5432
+      OWNPAPER_SITE_NAME: "${OWNPAPER_SITE_NAME:-OwnPaper}"
+      OWNPAPER_PRECOMPUTE_SEARCH_CACHE: "${OWNPAPER_PRECOMPUTE_SEARCH_CACHE:-false}"
+      OWNPAPER_PRECOMPUTE_SEARCH_CACHE_LIMIT: "${OWNPAPER_PRECOMPUTE_SEARCH_CACHE_LIMIT:-200}"
+      OWNPAPER_CLAMAV_ENABLED: "${OWNPAPER_CLAMAV_ENABLED:-true}"
+      OWNPAPER_CLAMAV_HOST: "${OWNPAPER_CLAMAV_HOST:-clamav}"
+      OWNPAPER_CLAMAV_PORT: "${OWNPAPER_CLAMAV_PORT:-3310}"
+      OWNPAPER_CLAMAV_TIMEOUT: "${OWNPAPER_CLAMAV_TIMEOUT:-30}"
+      OWNPAPER_VIDEO_MAX_MB: "${OWNPAPER_VIDEO_MAX_MB:-500}"
+      OWNPAPER_BACKUP_ENABLED: "${OWNPAPER_BACKUP_ENABLED:-true}"
+      OWNPAPER_BACKUP_INTERVAL_HOURS: "${OWNPAPER_BACKUP_INTERVAL_HOURS:-168}"
+      OWNPAPER_BACKUP_RETENTION_DAYS: "${OWNPAPER_BACKUP_RETENTION_DAYS:-30}"
+      OWNPAPER_BACKUP_INCLUDE_MEDIA: "${OWNPAPER_BACKUP_INCLUDE_MEDIA:-true}"
+      OWNPAPER_BACKUP_INCLUDE_PRIVATE_MEDIA: "${OWNPAPER_BACKUP_INCLUDE_PRIVATE_MEDIA:-true}"
+      OWNPAPER_BACKUP_EXTERNAL_BACKEND: "${OWNPAPER_BACKUP_EXTERNAL_BACKEND:-local}"
+      OWNPAPER_BACKUP_WEBDAV_URL: "${OWNPAPER_BACKUP_WEBDAV_URL:-}"
+      OWNPAPER_BACKUP_WEBDAV_USERNAME: "${OWNPAPER_BACKUP_WEBDAV_USERNAME:-}"
+      OWNPAPER_BACKUP_WEBDAV_PASSWORD: "${OWNPAPER_BACKUP_WEBDAV_PASSWORD:-}"
     ports:
       - "${OWNPAPER_HTTP_PORT:-8000}:8000"
     volumes:
       - "${OWNPAPER_STATIC_VOLUME:-/var/www/ownpaper/static}:/app/static"
       - "${OWNPAPER_MEDIA_VOLUME:-/var/www/ownpaper/media}:/app/media"
+      - "${OWNPAPER_PRIVATE_MEDIA_VOLUME:-ownpaper_private_media}:/app/private_media"
+      - "${OWNPAPER_BACKUP_VOLUME:-ownpaper_backups}:/app/backups"
     depends_on:
       db:
         condition: service_healthy
+      clamav:
+        condition: service_healthy
+
+  scheduler:
+    build: .
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DJANGO_SECRET_KEY: "${DJANGO_SECRET_KEY:-}"
+      DJANGO_WAGTAIL_SITE_NAME: "${DJANGO_WAGTAIL_SITE_NAME:-OwnPaper}"
+      DJANGO_SETTINGS_MODULE: "${DJANGO_SETTINGS_MODULE:-config.settings.production}"
+      DATABASE_NAME: "${DATABASE_NAME:-ownpaper}"
+      DATABASE_USER: "${DATABASE_USER:-ownpaper}"
+      DATABASE_PASSWORD: "${DATABASE_PASSWORD:-change-me}"
+      DATABASE_HOST: db
+      DATABASE_PORT: 5432
+      OWNPAPER_SITE_NAME: "${OWNPAPER_SITE_NAME:-OwnPaper}"
+      OWNPAPER_RUN_MIGRATIONS: "false"
+      OWNPAPER_COLLECTSTATIC: "false"
+      OWNPAPER_PROCESS_PRIVACY_EXCLUSIONS: "false"
+      OWNPAPER_CLEAN_PRIVACY_EXPORTS: "false"
+      OWNPAPER_CLAMAV_ENABLED: "${OWNPAPER_CLAMAV_ENABLED:-true}"
+      OWNPAPER_CLAMAV_HOST: "${OWNPAPER_CLAMAV_HOST:-clamav}"
+      OWNPAPER_CLAMAV_PORT: "${OWNPAPER_CLAMAV_PORT:-3310}"
+      OWNPAPER_CLAMAV_TIMEOUT: "${OWNPAPER_CLAMAV_TIMEOUT:-30}"
+      OWNPAPER_BACKUP_ENABLED: "${OWNPAPER_BACKUP_ENABLED:-true}"
+      OWNPAPER_BACKUP_INTERVAL_HOURS: "${OWNPAPER_BACKUP_INTERVAL_HOURS:-168}"
+      OWNPAPER_BACKUP_RETENTION_DAYS: "${OWNPAPER_BACKUP_RETENTION_DAYS:-30}"
+      OWNPAPER_BACKUP_INCLUDE_MEDIA: "${OWNPAPER_BACKUP_INCLUDE_MEDIA:-true}"
+      OWNPAPER_BACKUP_INCLUDE_PRIVATE_MEDIA: "${OWNPAPER_BACKUP_INCLUDE_PRIVATE_MEDIA:-true}"
+      OWNPAPER_BACKUP_EXTERNAL_BACKEND: "${OWNPAPER_BACKUP_EXTERNAL_BACKEND:-local}"
+      OWNPAPER_BACKUP_WEBDAV_URL: "${OWNPAPER_BACKUP_WEBDAV_URL:-}"
+      OWNPAPER_BACKUP_WEBDAV_USERNAME: "${OWNPAPER_BACKUP_WEBDAV_USERNAME:-}"
+      OWNPAPER_BACKUP_WEBDAV_PASSWORD: "${OWNPAPER_BACKUP_WEBDAV_PASSWORD:-}"
+      OWNPAPER_SCHEDULER_ENABLED: "${OWNPAPER_SCHEDULER_ENABLED:-true}"
+      OWNPAPER_SCHEDULER_INITIAL_DELAY_SECONDS: "${OWNPAPER_SCHEDULER_INITIAL_DELAY_SECONDS:-120}"
+      OWNPAPER_SCHEDULER_INTERVAL_SECONDS: "${OWNPAPER_SCHEDULER_INTERVAL_SECONDS:-3600}"
+    command:
+      - /bin/sh
+      - -c
+      - |
+        if [ "$${OWNPAPER_SCHEDULER_ENABLED:-true}" != "true" ]; then
+          echo "OwnPaper scheduler disabled."
+          tail -f /dev/null
+        fi
+        echo "OwnPaper scheduler starting after $${OWNPAPER_SCHEDULER_INITIAL_DELAY_SECONDS:-120}s..."
+        sleep "$${OWNPAPER_SCHEDULER_INITIAL_DELAY_SECONDS:-120}"
+        while true; do
+          date
+          python manage.py processar_backups_pendentes || echo "processar_backups_pendentes failed"
+          python manage.py executar_backup_agendado || echo "executar_backup_agendado failed"
+          python manage.py limpar_estatisticas_site || echo "limpar_estatisticas_site failed"
+          python manage.py processar_exclusoes_privacidade_newsletter || echo "processar_exclusoes_privacidade_newsletter failed"
+          python manage.py limpar_exportacoes_privacidade --dias "$${OWNPAPER_PRIVACY_EXPORT_RETENTION_DAYS:-7}" || echo "limpar_exportacoes_privacidade failed"
+          python manage.py validar_saude_operacional || true
+          sleep "$${OWNPAPER_SCHEDULER_INTERVAL_SECONDS:-3600}"
+        done
+    volumes:
+      - "${OWNPAPER_STATIC_VOLUME:-/var/www/ownpaper/static}:/app/static"
+      - "${OWNPAPER_MEDIA_VOLUME:-/var/www/ownpaper/media}:/app/media"
+      - "${OWNPAPER_PRIVATE_MEDIA_VOLUME:-ownpaper_private_media}:/app/private_media"
+      - "${OWNPAPER_BACKUP_VOLUME:-ownpaper_backups}:/app/backups"
+    depends_on:
+      db:
+        condition: service_healthy
+      clamav:
+        condition: service_healthy
+
+  clamav:
+    image: clamav/clamav:stable
+    restart: unless-stopped
+    volumes:
+      - ownpaper_clamav:/var/lib/clamav
+    healthcheck:
+      test: ["CMD-SHELL", "clamdscan --version >/dev/null 2>&1 || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 120s
+
+  shlink:
+    image: shlinkio/shlink:stable
+    restart: unless-stopped
+    profiles:
+      - shlink
+    environment:
+      DEFAULT_DOMAIN: "${SHLINK_DEFAULT_DOMAIN:-s.localhost}"
+      IS_HTTPS_ENABLED: "${SHLINK_IS_HTTPS_ENABLED:-false}"
+      BASE_PATH: "${SHLINK_BASE_PATH:-}"
+      GEOLITE_LICENSE_KEY: "${SHLINK_GEOLITE_LICENSE_KEY:-}"
+      SKIP_INITIAL_GEOLITE_DOWNLOAD: "${SHLINK_SKIP_INITIAL_GEOLITE_DOWNLOAD:-true}"
+      INITIAL_API_KEY: "${SHLINK_INITIAL_API_KEY:-}"
+      DB_DRIVER: postgres
+      DB_NAME: "${SHLINK_DB_NAME:-shlink}"
+      DB_USER: "${SHLINK_DB_USER:-shlink}"
+      DB_PASSWORD: "${SHLINK_DB_PASSWORD:-change-me}"
+      DB_HOST: shlink-db
+      DB_PORT: 5432
+      PORT: 8080
+    ports:
+      - "${SHLINK_HTTP_PORT:-18081}:8080"
+    depends_on:
+      shlink-db:
+        condition: service_healthy
+
+  shlink-db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    profiles:
+      - shlink
+    environment:
+      POSTGRES_DB: "${SHLINK_DB_NAME:-shlink}"
+      POSTGRES_USER: "${SHLINK_DB_USER:-shlink}"
+      POSTGRES_PASSWORD: "${SHLINK_DB_PASSWORD:-change-me}"
+    volumes:
+      - shlink_postgres:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${SHLINK_DB_USER:-shlink} -d ${SHLINK_DB_NAME:-shlink}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   db:
     image: postgres:16-alpine
@@ -39,3 +182,7 @@ services:
 
 volumes:
   ownpaper_postgres:
+  ownpaper_clamav:
+  ownpaper_private_media:
+  ownpaper_backups:
+  shlink_postgres:
