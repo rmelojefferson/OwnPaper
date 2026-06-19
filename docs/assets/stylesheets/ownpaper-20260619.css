@@ -43,7 +43,7 @@
   border: 1px solid #d7e2ee;
   border-radius: 1rem;
   overflow: hidden;
-  background: #f8fbff;
+  background: transparent;
   box-shadow: 0 18px 42px rgba(22, 40, 63, 0.1);
 }
 
@@ -56,15 +56,13 @@
 .md-typeset .ownpaper-screenshot-card figcaption {
   margin: 0;
   padding: 1rem 1.25rem 1.15rem;
-  color: #1b2d3f;
+  background: transparent;
+  color: var(--md-default-fg-color);
   font-size: 0.95rem;
+  line-height: 1.55;
 }
 
 [data-md-color-scheme="slate"] .md-typeset .ownpaper-screenshot-card {
   border-color: #344c66;
-  background: #1b2f45;
-}
-
-[data-md-color-scheme="slate"] .md-typeset .ownpaper-screenshot-card figcaption {
-  color: #f5faff;
+  background: transparent;
 }

@@ -12,10 +12,17 @@ Esta página reúne prints das principais telas e diferenciais do OwnPaper. Ela 
 .md-typeset .ownpaper-screenshot-card {
   display: block !important;
   margin: 0 0 2rem !important;
+  background: transparent !important;
 }
 .md-typeset .ownpaper-screenshot-card img {
   width: 100% !important;
   height: auto !important;
+}
+.md-typeset .ownpaper-screenshot-card figcaption {
+  background: transparent !important;
+  color: var(--md-default-fg-color) !important;
+  max-width: none !important;
+  line-height: 1.55;
 }
 </style>
 
