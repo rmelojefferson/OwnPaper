@@ -1,6 +1,8 @@
 # OwnPaper
 
-![Logo do OwnPaper](docs/assets/brand/ownpaper-logo-wordmark.svg)
+<p align="center">
+  <img src="docs/assets/brand/ownpaper-logo-wordmark.svg" alt="OwnPaper" width="720">
+</p>
 
 OwnPaper é um CMS editorial self-hosted desenvolvido sobre [Django](https://www.djangoproject.com/) e [Wagtail](https://wagtail.org/).
 

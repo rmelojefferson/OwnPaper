@@ -7,7 +7,7 @@ use_directory_urls: true
 theme:
   name: material
   language: pt-BR
-  logo: assets/brand/ownpaper-logo.svg
+  logo: assets/brand/ownpaper-logo-header.svg
   favicon: assets/brand/ownpaper-logo.svg
   palette:
     - scheme: default
