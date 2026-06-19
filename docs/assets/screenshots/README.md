@@ -1,4 +1,4 @@
-# Screenshots do tour visual
+# Prints do tour visual
 
 Substitua estes arquivos por capturas reais antes de republicar a documentação:
 

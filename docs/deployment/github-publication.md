@@ -39,7 +39,7 @@ git push -u origin main
 
 ## Documentação no GitHub Pages
 
-A documentação usa MkDocs. Para build local:
+A documentação usa MkDocs. Para compilação local:
 
 ```bash
 python -m venv .venv-docs
@@ -52,4 +52,4 @@ O diretório `site/` não deve ser commitado.
 
 ## Texto recomendado para descrição pública
 
-OwnPaper é um CMS editorial self-hosted baseado em Django e Wagtail, desenvolvido em conjunto com OpenAI Codex. O projeto é aberto sob licença MIT, mas sua manutenção contínua não é garantida; o mantenedor original prioriza features e correções necessárias para suas próprias instalações. Para continuidade independente, crie um fork.
+OwnPaper é um CMS editorial auto-hospedado baseado em Django e Wagtail, desenvolvido em conjunto com OpenAI Codex. O projeto é aberto sob licença MIT, mas sua manutenção contínua não é garantida; o mantenedor original prioriza recursos e correções necessárias para suas próprias instalações. Para continuidade independente, crie um fork.

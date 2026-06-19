@@ -1,6 +1,6 @@
-# Feature Backlog
+# Lista de recursos planejados
 
-## Branding e experiência no admin (Wagtail)
+## Identidade visual e experiência no admin (Wagtail)
 - Estilizar telas de login e de cadastro/validação de token 2FA.
 - Melhorar visual geral do painel administrativo (layout, tipografia e espaçamentos).
 - Permitir personalização de logo e favicon do ambiente administrativo.
@@ -24,7 +24,7 @@
 - Barra de busca única no site inteiro.
 - Resultados unificados com filtros avançados.
 
-## Inbox de contato no admin (atendimento interno)
+## Caixa de entrada de contato no admin (atendimento interno)
 - Tela de caixa de entrada para mensagens de contato recebidas.
 - Responder e-mails diretamente pelo admin (sem sair para webmail).
 - Atribuir cada solicitação a admin/autor-escritor responsável.
@@ -81,7 +81,7 @@
 - Padronizar formato portável para migração entre ambientes/plataformas.
 - Documentar estratégia de versionamento de schema + dados para migrações seguras.
 
-## Pipeline editorial para livro (exportação e edição)
+## Fluxo editorial para livro (exportação e edição)
 - Exportar publicações selecionadas (ou todas) para formato editável de livro.
 - Suportar saída inicial em Markdown/HTML e opção de conversão para DOCX/EPUB/PDF.
 - Definir metadados editoriais de livro (ordem de capítulos, capa, prefácio, créditos).
@@ -112,26 +112,26 @@
 - Fluxo opcional para não engessar projetos que não usam revisão.
 
 ## Prioridades estratégicas (analisar em breve)
-- Criar ambiente de staging espelhando produção para validar mudanças sem risco no site principal.
+- Criar ambiente de homologação espelhando produção para validar mudanças sem risco no site principal.
 - Implementar monitoramento/alertas (uptime, erros 500, falhas de e-mail e falhas de backup).
 - Definir política LGPD de retenção/anonimização para contatos, newsletter e logs com rotinas automáticas.
 - Formalizar checklist de acessibilidade (WCAG) como critério de entrega.
 - Fortalecer SEO editorial operacional (metadados obrigatórios, schema.org e canonical).
 - Incluir checklist obrigatório no fluxo de publicação antes de liberar conteúdo.
-- Documentar plano de continuidade com restore periódico validado.
+- Documentar plano de continuidade com restauração periódica validado.
 - Definir decisão de produto sobre revisão por pares (agora, módulo opcional futuro, ou fora do escopo).
 
 ## Internacionalização (PT/EN)
 - Permitir idioma independente no painel admin e no site público (ex.: admin em PT, site em EN).
 - Opção de versão em inglês para textos padrão de interface e mensagens transacionais.
 - Base de tradução para menus, rótulos, e-mails e páginas institucionais.
-- Estratégia de fallback por idioma e seleção por site/projeto.
+- Estratégia de alternativa por idioma e seleção por site/projeto.
 
 ## Homologação manual pendente
 - Validar UI em desktop real (Chrome, Firefox e Safari).
 - Validar UI em mobile real (Android e iOS).
 - Validar SMTP real e Turnstile com chaves de produção.
-- Validar disparos reais e restore real de backup em ambiente separado.
+- Validar disparos reais e restauração real de backup em ambiente separado.
 
 ## Novas pendências registradas (rodada atual)
 - Avaliar e escolher encurtador de URL open-source para compartilhamento (comparativo: arquitetura, licença, manutenção e integração).
@@ -140,5 +140,5 @@
 - Busca multilíngue de alta precisão para instalações específicas: avaliar `PostgreSQL FTS` ou `OpenSearch`, com expansão semântica/indexada e menor dependência de tradução on-demand.
 - Agrupar comentários no admin por publicação e facilitar moderação em lote.
 - Quiz: comentários por pergunta com opção de resposta por admin/autor e controle de visibilidade pública/privada.
-- Traduzir também conteúdo editorial livre (notas de rodapé/referências/comentários) com aviso de tradução automática e fallback seguro.
+- Traduzir também conteúdo editorial livre (notas de rodapé/referências/comentários) com aviso de tradução automática e alternativa segura.
 - Revisar política/base de Cookies para refletir todos os dados coletados no fluxo de comentários autenticados.

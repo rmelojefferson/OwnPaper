@@ -1,7 +1,6 @@
-# Smoke Tests
+# Testes rápidos de fumaça
 
-Run these checks after dependency upgrades, Docker changes, or deployment
-configuration changes.
+Execute estas verificações depois de atualizar dependências, alterar Docker ou mudar configurações de implantação.
 
 ```bash
 export DJANGO_SECRET_KEY=ownpaper-local-test-secret-key-with-enough-length
@@ -15,27 +14,27 @@ curl -I http://127.0.0.1:${OWNPAPER_HTTP_PORT:-8000}/
 curl -I http://127.0.0.1:${OWNPAPER_HTTP_PORT:-8000}/account/login/
 ```
 
-Expected results:
+Resultados esperados:
 
-- `manage.py check` reports no issues.
-- `manage.py test conteudo` passes.
+- `manage.py check` não relata problemas.
+- `manage.py test conteudo` passa.
 - `manage.py homologar_ownpaper --keepdb` finaliza sem erro.
-- Bootstrap completes without duplicating records.
-- The home page returns `200 OK`.
-- The two-factor login page returns `200 OK`.
+- O bootstrap conclui sem duplicar registros.
+- A página inicial retorna `200 OK`.
+- A tela de login com dois fatores retorna `200 OK`.
 
-## Optional Shlink smoke test
+## Teste rápido opcional do Shlink
 
-When validating the bundled optional short-link stack:
+Ao validar a pilha opcional de links curtos:
 
 ```bash
 docker compose --profile shlink up -d
 docker compose exec -T web python manage.py check
 ```
 
-Expected results:
+Resultados esperados:
 
-- `web`, `shlink` and `shlink-db` start without blocking each other.
-- The site continues to work even if `shlink_ativo` is disabled.
-- When Shlink is configured and enabled, publication share links can be shortened.
-- When Shlink is unavailable, the site falls back to long URLs without breaking publication pages.
+- `web`, `shlink` e `shlink-db` sobem sem bloquear uns aos outros.
+- O site continua funcionando mesmo com `shlink_ativo` desativado.
+- Quando o Shlink está configurado e habilitado, links de compartilhamento de publicações podem ser encurtados.
+- Quando o Shlink está indisponível, o site usa URLs longas sem quebrar as páginas de publicação.

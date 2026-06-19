@@ -1,6 +1,6 @@
-# HTTPS e reverse proxy
+# HTTPS e proxy reverso
 
-OwnPaper deve rodar atrás de um reverse proxy HTTPS, como Nginx, Caddy, Traefik ou serviço equivalente do provedor.
+OwnPaper deve rodar atrás de um proxy reverso HTTPS, como Nginx, Caddy, Traefik ou serviço equivalente do provedor.
 
 Este documento usa Nginx como exemplo. Ajuste caminhos, portas e domínio conforme sua instalação.
 
@@ -110,7 +110,7 @@ DJANGO_SECURE_HSTS_PRELOAD=false
 
 Não habilite `DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS=true` nem `DJANGO_SECURE_HSTS_PRELOAD=true` até ter certeza de que todos os subdomínios relevantes usam HTTPS corretamente.
 
-## Checklist seguro
+## Checklist de segurança
 
 Antes de alterar o proxy:
 

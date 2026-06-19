@@ -2,7 +2,7 @@
 
 <img class="ownpaper-hero-logo" src="assets/brand/ownpaper-logo-wordmark.svg" alt="OwnPaper">
 
-OwnPaper é um CMS editorial self-hosted baseado em Django e Wagtail, com foco em publicação, fluxo editorial, privacidade, auditoria, quarentena de mídia, newsletter, comentários, quiz, estatísticas internas e operação administrativa em painel.
+OwnPaper é um CMS editorial auto-hospedado baseado em Django e Wagtail, com foco em publicação, fluxo editorial, privacidade, auditoria, quarentena de mídia, newsletter, comentários, quiz, estatísticas internas e operação administrativa em painel.
 
 Esta documentação deve ser usada como fonte operacional do projeto. O `README.md` permanece como entrada curta do repositório; os detalhes de instalação, configuração, segurança, backup, homologação e uso ficam aqui.
 
@@ -15,7 +15,7 @@ A seção **Funcionalidades** detalha os principais fluxos do projeto:
 - fluxo editorial com revisores, decisões, marcações e auditoria;
 - catálogo de perguntas reutilizáveis e quiz;
 - quarentena e sanitização de mídia;
-- contato, inbox, respostas por e-mail, newsletter e disparos;
+- contato, caixa de entrada, respostas por e-mail, newsletter e disparos;
 - indexador CSV e submissões públicas;
 - site público, comentários, RSS, doações e páginas institucionais;
 - configurações do site, integrações, estatísticas, privacidade, papéis e permissões.

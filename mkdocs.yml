@@ -1,5 +1,5 @@
 site_name: OwnPaper
-site_description: Documentacao tecnica e operacional do OwnPaper
+site_description: Documentação técnica e operacional do OwnPaper
 repo_name: rmelojefferson/OwnPaper
 repo_url: https://github.com/rmelojefferson/OwnPaper
 use_directory_urls: true
@@ -33,17 +33,17 @@ extra_css:
 nav:
   - Início: index.md
   - Tour visual: visual-tour.md
-  - Demo local: demo-local.md
+  - Demonstração local: demo-local.md
   - Instalação e operação:
       - Instalação com Docker: deployment/installation.md
       - Configuração por ambiente: deployment/configuration.md
       - Backups e restauração: deployment/backup-and-restore.md
       - Homologação: deployment/homologacao-checklist.md
-      - Hardening de e-mail e formulários: deployment/email-and-forms-hardening.md
+      - Reforço de segurança para e-mails e formulários: deployment/email-and-forms-hardening.md
       - Shlink: deployment/shlink.md
-      - HTTPS e reverse proxy: deployment/https-reverse-proxy.md
+      - HTTPS e proxy reverso: deployment/https-reverse-proxy.md
       - Fluxo de implementação: deployment/implementation-flow.md
-      - Backlog de features: deployment/feature-backlog.md
+      - Lista de recursos planejados: deployment/feature-backlog.md
       - Publicação no GitHub: deployment/github-publication.md
   - Funcionalidades:
       - Painel administrativo: features-admin.md
@@ -59,11 +59,11 @@ nav:
       - Privacidade e estatísticas: features-privacy-analytics.md
   - Validação:
       - Empacotamento e GitHub: packaging-github.md
-      - Smoke tests: smoke-tests.md
-      - Política de upgrade LTS: upgrade-framework-lts.md
+      - Testes rápidos: smoke-tests.md
+      - Política de atualização LTS: upgrade-framework-lts.md
   - Projeto:
       - Governança e manutenção: governance-maintenance.md
       - Licenças e terceiros: licensing-third-party.md
       - Inventário de dependências Python: dependency-inventory.md
   - Skills:
-      - Rollout OwnPaper: skills/ownpaper-standard-rollout.SKILL.md
+      - Padrão de implantação OwnPaper: skills/ownpaper-standard-rollout.SKILL.md

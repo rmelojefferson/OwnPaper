@@ -44,11 +44,11 @@ A quarentena deve cobrir:
 6. PDFs são verificados contra tokens perigosos e regravados quando possível.
 7. Vídeos passam por validação de tipo e tamanho.
 8. Arquivo fica pendente para avaliação humana.
-9. Admin/revisor avalia o preview.
+9. Admin/revisor avalia o  pré-visualização.
 10. Arquivo aprovado entra na biblioteca ou no local planejado da publicação.
 11. Arquivo rejeitado não é disponibilizado publicamente.
 
-## Upload dentro da publicação
+## Envio dentro da publicação
 
 Quando o autor envia uma mídia diretamente no editor, o sistema não deve bloquear a publicação apenas porque a mídia ainda não foi aprovada.
 
@@ -62,14 +62,14 @@ O comportamento correto é:
 
 Isso evita burocracia e preserva segurança.
 
-## Preview de avaliação
+## Pré-visualização de avaliação
 
-A página de mídias pendentes deve mostrar preview.
+A página de mídias pendentes deve mostrar  pré-visualização.
 
 Para imagens:
 
 - miniatura na listagem;
-- preview ampliado em modal.
+-  pré-visualização ampliado em modal.
 
 Para PDF:
 
@@ -78,7 +78,7 @@ Para PDF:
 
 Para vídeo:
 
-- preview ou link controlado quando possível.
+-  pré-visualização ou link controlado quando possível.
 
 A aprovação não deve depender apenas da sanitização técnica, pois o conteúdo visual também pode ser inadequado editorialmente.
 

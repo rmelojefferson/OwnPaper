@@ -15,7 +15,7 @@ O mantenedor original pretende priorizar:
 - ajustes de segurança e privacidade relevantes para o uso atual;
 - documentação e empacotamento que facilitem reinstalação e operação.
 
-Não há compromisso de roadmap público, SLA de resposta, suporte comercial, compatibilidade indefinida ou manutenção contínua de features solicitadas por terceiros.
+Não há compromisso de roteiro público, SLA de resposta, suporte comercial, compatibilidade indefinida ou manutenção contínua de recursos solicitadas por terceiros.
 
 ## Forks
 

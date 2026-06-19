@@ -114,7 +114,7 @@ O sistema deve registrar eventos relevantes para auditoria e privacidade.
 
 ## Contato
 
-A página de contato envia mensagens para o inbox administrativo.
+A página de contato envia mensagens para o caixa de entrada administrativo.
 
 Campos devem ser sanitizados e protegidos contra abuso.
 

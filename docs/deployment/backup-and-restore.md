@@ -33,7 +33,7 @@ O relatório deve conter:
 
 O relatório não deve anexar o backup completo por padrão.
 
-## Download temporário
+## Baixa temporária
 
 Quando a instalação não tiver armazenamento externo, pode haver link temporário protegido para baixar o backup.
 
@@ -54,7 +54,7 @@ WebDAV é um protocolo para enviar arquivos para um armazenamento remoto compat�
 
 No OwnPaper, ele serve para copiar backups para outro local, fora do servidor principal.
 
-Configurações sensíveis devem ficar em variáveis de ambiente/backend, não em campos editáveis por qualquer admin do painel.
+Configurações sensíveis devem ficar em variáveis de ambiente/servidor, não em campos editáveis por qualquer administrador do painel.
 
 Exemplos de variáveis:
 
@@ -77,7 +77,7 @@ Exemplo:
 
 A política depende do espaço disponível e do risco operacional.
 
-## Restore
+## Restauração
 
 A restauração completa deve ser feita no servidor.
 
@@ -94,7 +94,7 @@ Fluxo recomendado:
 9. validar painel e site público;
 10. registrar o procedimento.
 
-## Teste de restore
+## Teste de restauração
 
 Backups sem teste de restauração não devem ser considerados confiáveis.
 
@@ -105,4 +105,4 @@ docker compose exec -T web python manage.py check
 docker compose exec -T web python manage.py verificar_integridade_logs
 ```
 
-Além disso, teste real de restore deve ser feito em ambiente separado.
+Além disso, teste real de restauração deve ser feito em ambiente separado.

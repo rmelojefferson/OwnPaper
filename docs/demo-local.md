@@ -1,8 +1,8 @@
-# Demo local
+# Demonstração local
 
 O GitHub Pages publica apenas documentação estática. Ele não executa Django, Wagtail, PostgreSQL, autenticação, uploads, ClamAV ou rotinas de backend.
 
-Por isso, a demo funcional do OwnPaper deve ser executada localmente ou em um servidor próprio.
+Por isso, a demonstração funcional do OwnPaper deve ser executada localmente ou em um servidor próprio.
 
 ## Subir a demo local
 
@@ -51,4 +51,4 @@ Painel admin: http://localhost:8000/admin/
 
 ## Observação
 
-Uma demo pública hospedada exige servidor Django ativo, banco de dados, domínio, HTTPS e política de credenciais. Não é recomendável expor uma demo admin aberta sem isolamento e resets automáticos.
+Uma demonstração pública hospedada exige servidor Django ativo, banco de dados, domínio, HTTPS e política de credenciais. Não é recomendável expor uma demonstração administrativa aberta sem isolamento e resets automáticos.

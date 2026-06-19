@@ -12,7 +12,7 @@ O painel concentra:
 - catálogo reutilizável de perguntas de quiz;
 - quarentena, sanitização e aprovação de mídia;
 - comentários e mensagens de contato;
-- newsletter, disparos de e-mail e templates;
+- newsletter, disparos de e-mail e modelos;
 - indexador por CSV;
 - estatísticas operacionais;
 - logs, backup, saúde e integridade;
@@ -163,9 +163,9 @@ O desenho recomendado é:
 - relatório enviado por e-mail, sem anexar o backup;
 - armazenamento externo opcional via WebDAV configurado por ambiente;
 - download temporário protegido quando a instalação não tiver armazenamento externo;
-- documentação clara de restore via servidor.
+- documentação clara de restauração via servidor.
 
-## Mobile
+## Dispositivos móveis
 
 O painel possui ajustes para telas pequenas, mas a administração completa continua sendo uma experiência desktop-first.
 

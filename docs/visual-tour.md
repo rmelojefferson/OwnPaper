@@ -86,7 +86,7 @@ Esta página reúne prints das principais telas e diferenciais do OwnPaper. Ela 
   </div>
   <div class="ownpaper-visual-item-v2">
     <img src="../assets/screenshots/admin-e-mails.png" alt="Área de e-mails e newsletter no painel">
-    <p class="ownpaper-visual-caption-v2"><strong>E-mails e newsletter.</strong> Disparos, templates, importação, notificações e operação de comunicação pelo painel.</p>
+    <p class="ownpaper-visual-caption-v2"><strong>E-mails e newsletter.</strong> Disparos, modelos, importação, notificações e operação de comunicação pelo painel.</p>
   </div>
   <div class="ownpaper-visual-item-v2">
     <img src="../assets/screenshots/admin-estatistica.png" alt="Painel de estatísticas OwnPaper">

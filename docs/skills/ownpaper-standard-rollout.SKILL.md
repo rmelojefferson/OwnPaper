@@ -1,9 +1,9 @@
 ---
-name: ownpaper-standard-rollout
-description: Padrão obrigatório de trabalho no OwnPaper para mudanças em páginas públicas, admin, templates, CSS, JS, runtime, Docker e rollout. Substitui processos anteriores e deve ser usado como workflow padrão do projeto daqui para frente.
+name: ownpaper-standard-implantação
+description: Padrão obrigatório de trabalho no OwnPaper para mudanças em páginas públicas, admin, modelos, CSS, JS, runtime, Docker e implantação. Substitui processos anteriores e deve ser usado como fluxo de trabalho padrão do projeto daqui para frente.
 ---
 
-# OwnPaper Standard Rollout
+# Padrão de implantação do OwnPaper
 
 Esta é a skill padrão do projeto.
 
@@ -11,11 +11,11 @@ Use este processo sempre que o trabalho tocar:
 
 - páginas públicas
 - admin
-- templates
+- modelos
 - CSS
 - JS
 - comportamento de runtime
-- Docker, estáticos, manifests ou rollout
+- Docker, estáticos, manifests ou implantação
 
 Esta skill substitui os fluxos anteriores de conflito e debug cirúrgico.
 
@@ -65,7 +65,7 @@ Sempre verificar:
 
 ### Local
 
-É local quando a competição está no mesmo bloco, mesma página ou mesma feature.
+É local quando a competição está no mesmo bloco, mesma página ou mesma recurso.
 
 Nesses casos:
 
@@ -80,7 +80,7 @@ Nesses casos:
 - tema global
 - componente compartilhado
 - hook compartilhado
-- comportamento de build ou Docker
+- comportamento de compilação ou Docker
 - regras que podem afetar outras páginas
 
 Nesses casos:
@@ -107,7 +107,7 @@ Quando o arquivo ativo estiver dentro do container, o fluxo padrão é:
    - cache de processo
 7. validar a URL pública real
 
-### 1.1 Regra rígida de limpeza e rollout
+### 1.1 Regra rígida de limpeza e implantação
 
 Quando o usuário pedir:
 
@@ -121,7 +121,7 @@ isso significa limpar a trilha inteira, não só o repositório local.
 
 Checklist obrigatório:
 
-1. workspace local no estado correto
+1. área de trabalho local no estado correto
 2. source equivalente dentro do container no estado correto
 3. `collectstatic --clear --noinput` executado quando houver estáticos
 4. `web` reiniciado quando houver template, manifest, JS, CSS ou dúvida de cache
@@ -145,7 +145,7 @@ Esse padrão aninha o source dentro do destino e cria resíduos como:
 
 Esses resíduos contaminam:
 - imports Python
-- templates
+- modelos
 - `collectstatic`
 - runtime servido
 
@@ -275,7 +275,7 @@ No OwnPaper, isso é tão importante quanto o código em si.
 
 ## Regra permanente para este projeto
 
-Esta skill deve ser tratada como workflow padrão obrigatório do OwnPaper.
+Esta skill deve ser tratada como fluxo de trabalho padrão obrigatório do OwnPaper.
 
 Sempre que o trabalho tocar:
 
@@ -287,6 +287,6 @@ Sempre que o trabalho tocar:
 - JS
 - estáticos
 - container
-- rollout
+- implantação
 
 use esta skill antes de iterar.

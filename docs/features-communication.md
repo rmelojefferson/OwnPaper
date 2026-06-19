@@ -2,7 +2,7 @@
 
 OwnPaper centraliza comunicação no painel para reduzir dependência de ferramentas externas em fluxos simples.
 
-## Inbox de contato
+## Caixa de entrada de contato
 
 Mensagens enviadas pelo site chegam ao painel de contato.
 
@@ -87,7 +87,7 @@ A newsletter inclui:
 - exportação quando aplicável;
 - eventos e histórico;
 - solicitações de privacidade;
-- templates;
+- modelos;
 - disparos.
 
 ## Importador CSV
@@ -103,9 +103,9 @@ Verificações recomendadas:
 - conteúdo textual sanitizado;
 - isolamento do processamento para evitar quebra do indexador ou banco.
 
-## Templates de e-mail
+## Modelos de e-mail
 
-Templates devem usar editor rich text, não HTML cru.
+Modelos devem usar editor rich text, não HTML cru.
 
 Campos esperados:
 

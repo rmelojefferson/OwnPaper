@@ -1,29 +1,29 @@
-# Email and Forms Hardening
+# Reforço de segurança para e-mails e formulários
 
-This guide covers production hardening for Contact and Newsletter flows.
+Este guia cobre ajustes recomendados para produção nos fluxos de contato, newsletter e formulários públicos.
 
-## 0) Use production environment preset
+## 0. Use o arquivo de ambiente de produção
 
 ```bash
 cp .env.production.example .env
 ```
 
-Then replace placeholders (domain, SMTP credentials, Turnstile keys, secrets).
+Depois substitua os valores de exemplo, como domínio, credenciais SMTP, chaves do Turnstile e segredos.
 
-## 1) Enable Cloudflare Turnstile
+## 1. Ative o Cloudflare Turnstile
 
-Set both variables in `.env`:
+Configure as duas variáveis no `.env`:
 
 ```text
 TURNSTILE_SITE_KEY=...
 TURNSTILE_SECRET_KEY=...
 ```
 
-When both are present, OwnPaper enables Turnstile automatically on public forms.
+Quando as duas variáveis estão presentes, o OwnPaper ativa o Turnstile automaticamente nos formulários públicos compatíveis.
 
-## 2) Configure SMTP and sender identity
+## 2. Configure SMTP e identidade do remetente
 
-Set SMTP credentials:
+Configure as credenciais SMTP:
 
 ```text
 DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
@@ -32,28 +32,28 @@ DJANGO_EMAIL_PORT=587
 DJANGO_EMAIL_HOST_USER=...
 DJANGO_EMAIL_HOST_PASSWORD=...
 DJANGO_EMAIL_USE_TLS=true
-DJANGO_DEFAULT_FROM_EMAIL=no-reply@yourdomain.com
+DJANGO_DEFAULT_FROM_EMAIL=no-reply@seudominio.com
 ```
 
-## 3) Publish SPF, DKIM and DMARC
+## 3. Publique SPF, DKIM e DMARC
 
-For your sender domain (DNS):
+No DNS do domínio remetente:
 
-- SPF: allow your SMTP provider to send on behalf of your domain.
-- DKIM: publish provider DKIM selector key(s).
-- DMARC: start with monitoring mode (`p=none`) and move to enforcement later.
+- SPF: autorize o provedor SMTP a enviar e-mails em nome do domínio.
+- DKIM: publique as chaves dos seletores DKIM fornecidos pelo provedor.
+- DMARC: comece em modo de monitoramento (`p=none`) e avance para política mais restritiva depois de validar os envios.
 
-Example DMARC starter record:
+Exemplo inicial de registro DMARC:
 
 ```text
-Host: _dmarc.yourdomain.com
-Type: TXT
-Value: v=DMARC1; p=none; rua=mailto:dmarc@yourdomain.com; adkim=s; aspf=s
+Host: _dmarc.seudominio.com
+Tipo: TXT
+Valor: v=DMARC1; p=none; rua=mailto:dmarc@seudominio.com; adkim=s; aspf=s
 ```
 
-## 4) Rate limit / backoff tuning
+## 4. Ajuste limites e retentativas
 
-Defaults are safe for most small editorial sites. Tune only if needed:
+Os padrões são adequados para a maioria dos sites editoriais pequenos. Ajuste apenas se houver necessidade operacional:
 
 ```text
 OWNPAPER_FORM_RATE_LIMIT_WINDOW_SECONDS=600
@@ -63,7 +63,7 @@ OWNPAPER_FORM_RATE_LIMIT_BACKOFF_BASE_SECONDS=120
 OWNPAPER_FORM_RATE_LIMIT_BACKOFF_MAX_SECONDS=3600
 ```
 
-## 5) Input limits
+## 5. Limites de entrada
 
 ```text
 OWNPAPER_CONTACT_MAX_NOME_LENGTH=120
@@ -71,61 +71,61 @@ OWNPAPER_CONTACT_MAX_MENSAGEM_LENGTH=5000
 OWNPAPER_NEWSLETTER_MAX_EMAIL_LENGTH=254
 ```
 
-## 6) Retention job for contact messages
+## 6. Rotina de retenção para mensagens de contato
 
-Manual cleanup:
+Limpeza manual:
 
 ```bash
 docker compose exec web python manage.py limpar_mensagens_contato --dias 365
 ```
 
-Recommended cron (example, daily at 03:00):
+Exemplo de cron recomendado, diariamente às 03:00:
 
 ```cron
-0 3 * * * cd /path/to/OwnPaper && docker compose exec -T web python manage.py limpar_mensagens_contato --dias 365
+0 3 * * * cd /caminho/para/OwnPaper && docker compose exec -T web python manage.py limpar_mensagens_contato --dias 365
 ```
 
-## 7) Security event logs
+## 7. Logs de eventos de segurança
 
-Form abuse/failures are logged via logger `conteudo.forms_security`.
+Abusos e falhas em formulários são registrados pelo logger `conteudo.forms_security`.
 
-Control verbosity with:
+Controle o nível de detalhamento com:
 
 ```text
 OWNPAPER_FORMS_SECURITY_LOG_LEVEL=INFO
 ```
 
-## 8) Validation command (guided production readiness)
+## 8. Comando de validação para produção
 
-Run a guided validation pass:
+Execute uma validação guiada:
 
 ```bash
 docker compose exec -T web python manage.py validar_producao_ownpaper
 ```
 
-Strict mode (fails on warnings too):
+Modo estrito, falhando também em avisos:
 
 ```bash
 docker compose exec -T web python manage.py validar_producao_ownpaper --strict
 ```
 
-Useful real checks:
+Verificações reais úteis:
 
 ```bash
-# SMTP real connection
+# conexão SMTP real
 docker compose exec -T web python manage.py validar_producao_ownpaper --smtp-connect
 
-# SMTP real send test
+# teste real de envio SMTP
 docker compose exec -T web python manage.py validar_producao_ownpaper --smtp-send-test-to seu-email@dominio.com
 
-# Turnstile token verification (token generated on frontend)
+# verificação de token Turnstile gerado no frontend
 docker compose exec -T web python manage.py validar_producao_ownpaper --turnstile-token "<token>"
 
-# Backup restore dry-run using latest backup
+# simulação de restauração usando o backup mais recente
 docker compose exec -T web python manage.py validar_producao_ownpaper --backup-latest
 ```
 
-Notes:
+Observações:
 
-- The command reports `OK`, `Aviso` and `Erro`.
-- Use `--strict` to fail on warnings as well.
+- O comando informa `OK`, `Aviso` e `Erro`.
+- Use `--strict` para falhar também quando houver avisos.

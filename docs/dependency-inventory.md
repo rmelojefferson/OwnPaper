@@ -1,9 +1,9 @@
-# Inventario de dependencias Python
+# Inventário de dependências Python
 
-Este inventario foi gerado a partir do ambiente Python instalado no container `web`.
-Ele complementa `THIRD_PARTY_NOTICES.md` e deve ser regenerado apos upgrades de dependencias.
+Este inventário foi gerado a partir do ambiente Python instalado no container `web`.
+Ele complementa `THIRD_PARTY_NOTICES.md` e deve ser regenerado após atualizações de dependências.
 
-| Pacote | Versao | Licenca declarada |
+| Pacote | Versão | Licença declarada |
 | --- | ---: | --- |
 | anyascii | 0.3.3 | OSI Approved :: ISC License (ISCL) |
 | arabic-reshaper | 3.0.1 | MIT |

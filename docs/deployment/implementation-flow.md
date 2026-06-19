@@ -1,15 +1,15 @@
 # Fluxo de Implementação (sem revisão por pares)
 
 ## Escopo desta fase
-- Implementar e estabilizar todas as features combinadas.
+- Implementar e estabilizar todas as recursos combinadas.
 - **Fora de escopo por enquanto:** revisão por pares/auditoria independente editorial.
 
 ## Entregas já implementadas no código
 - Convites de usuário, aceite com definição de senha e reset de senha.
 - Perfis administrativos (`admin`, `autor/escritor`) com ajustes de acesso no painel.
 - Reset administrativo de 2FA e backup codes para recuperação.
-- Inbox de contato no admin com atribuição/encaminhamento/interações.
-- Disparo de e-mail em massa (manual), templates e métricas básicas.
+- Caixa de entrada de contato no admin com atribuição/encaminhamento/interações.
+- Disparo de e-mail em massa (manual), modelos e métricas básicas.
 - Notificações de publicações por e-mail (imediato e periódico).
 - Feed RSS (`/rss.xml` e `/feed/`).
 - Audit log com exportação CSV.
@@ -33,7 +33,7 @@
 3. Comunicação: contato inbox, resposta, atribuição e disparos em massa.
 4. Newsletter: inscrição, cancelamento, privacidade e notificações automáticas de publicações.
 5. Navegação e leitura: menu/rodapé configuráveis, busca global, zoom e guia de leitura.
-6. Continuidade: backup/validação/restore e auditoria de logs.
+6. Continuidade: backup/validação/restauração e auditoria de logs.
 
 ## Pendências restantes (não-código ou validação manual)
 - Revisão visual em desktop real (Chrome/Firefox/Safari).
@@ -58,15 +58,15 @@
   - baseline de segurança (`SECURE_*`, cookies, HSTS, hosts),
   - configuração SMTP (e testes reais opcionais),
   - Turnstile (e validação remota opcional de token),
-  - dry-run de restore de backup (arquivo específico ou último disponível),
+  - simulação de restauração de backup (arquivo específico ou último disponível),
   - consistência de configurações por site.
 
-## Regra operacional obrigatória para rollout, limpeza e reversão
+## Regra operacional obrigatória para implantação, limpeza e reversão
 
 No OwnPaper, **editar o repositório local não basta**.
 
 Qualquer trabalho que toque:
-- templates
+- modelos
 - CSS
 - JS
 - páginas públicas
@@ -74,7 +74,7 @@ Qualquer trabalho que toque:
 - admin
 - estáticos
 - Docker
-- rollout
+- implantação
 
 deve seguir este fluxo mínimo obrigatório:
 
@@ -108,7 +108,7 @@ Esse padrão aninha o source dentro do destino e cria resíduos como:
 
 Esses resíduos contaminam:
 - imports Python
-- templates
+- modelos
 - `collectstatic`
 - runtime servido
 

@@ -6,7 +6,7 @@ Este é o caminho recomendado para instalar o OwnPaper em novas instâncias.
 
 - Docker e Docker Compose;
 - domínio apontando para o servidor;
-- reverse proxy HTTPS, como Nginx, Caddy ou Traefik;
+- proxy reverso HTTPS, como Nginx, Caddy ou Traefik;
 - conta SMTP para envio de e-mails;
 - espaço persistente para banco, mídia, mídia privada e backups;
 - opcionalmente, armazenamento WebDAV externo para cópias de backup fora do servidor.
@@ -59,7 +59,7 @@ Depois suba:
 docker compose up -d --build
 ```
 
-Aplique o reverse proxy conforme [HTTPS e reverse proxy](https-reverse-proxy.md).
+Aplique o proxy reverso conforme [HTTPS e proxy reverso](https-reverse-proxy.md).
 
 ## Bootstrap inicial
 

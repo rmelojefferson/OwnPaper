@@ -2,7 +2,7 @@
 
 Este checklist prepara o OwnPaper para publicação aberta.
 
-## Antes do commit final
+## Antes do registro final no Git
 
 ```bash
 git status --short
@@ -43,7 +43,7 @@ pip install -r docs/requirements.txt
 mkdocs serve
 ```
 
-Build estático:
+Compilação estática:
 
 ```bash
 mkdocs build

@@ -110,13 +110,13 @@ Um revisor pode revisar publicação não atribuída quando a política permitir
 
 Admin também pode revisar conteúdo não atribuído, com alerta informativo, sem bloqueio.
 
-## Preview editorial
+## Pré-visualização editorial
 
 A tela de fluxo editorial deve oferecer preview de leitura da publicação.
 
 Isso evita que o revisor precise abrir o editor de página para ler, reduzindo o risco de alterações indevidas.
 
-O preview deve mostrar:
+A pré-visualização deve mostrar:
 
 - título;
 - autores;
