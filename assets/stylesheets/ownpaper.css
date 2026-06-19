@@ -33,16 +33,18 @@
 
 .md-typeset .ownpaper-screenshot-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1rem;
+  grid-template-columns: 1fr;
+  gap: 1.75rem;
+  max-width: 1120px;
+  margin: 1.25rem auto 2rem;
 }
 
 .md-typeset .ownpaper-screenshot-card {
   border: 1px solid #d7e2ee;
-  border-radius: 0.9rem;
+  border-radius: 1rem;
   overflow: hidden;
   background: #f8fbff;
-  box-shadow: 0 14px 34px rgba(22, 40, 63, 0.08);
+  box-shadow: 0 18px 42px rgba(22, 40, 63, 0.1);
 }
 
 .md-typeset .ownpaper-screenshot-card img {
@@ -53,9 +55,9 @@
 
 .md-typeset .ownpaper-screenshot-card figcaption {
   margin: 0;
-  padding: 0.8rem 1rem 1rem;
+  padding: 1rem 1.25rem 1.15rem;
   color: #1b2d3f;
-  font-size: 0.85rem;
+  font-size: 0.95rem;
 }
 
 [data-md-color-scheme="slate"] .md-typeset .ownpaper-screenshot-card {
