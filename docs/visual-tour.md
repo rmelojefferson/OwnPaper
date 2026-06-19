@@ -2,6 +2,23 @@
 
 Esta página reúne prints das principais telas e diferenciais do OwnPaper. Ela não substitui a documentação funcional: serve como referência visual rápida para entender a experiência do painel e do site público.
 
+
+<style>
+.md-typeset .ownpaper-screenshot-grid {
+  display: block !important;
+  max-width: 1120px;
+  margin: 1.25rem auto 2rem;
+}
+.md-typeset .ownpaper-screenshot-card {
+  display: block !important;
+  margin: 0 0 2rem !important;
+}
+.md-typeset .ownpaper-screenshot-card img {
+  width: 100% !important;
+  height: auto !important;
+}
+</style>
+
 ## Site público
 
 <div class="ownpaper-screenshot-grid">

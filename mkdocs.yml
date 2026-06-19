@@ -28,7 +28,7 @@ theme:
     - content.code.copy
 
 extra_css:
-  - assets/stylesheets/ownpaper.css
+  - assets/stylesheets/ownpaper-20260619.css
 
 nav:
   - Início: index.md
