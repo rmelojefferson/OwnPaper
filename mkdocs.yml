@@ -47,10 +47,15 @@ nav:
       - Publicação no GitHub: deployment/github-publication.md
   - Funcionalidades:
       - Painel administrativo: features-admin.md
-      - Site público: features-public-site.md
-      - Papéis e permissões: features-roles-permissions.md
+      - Publicações, notas e referências: features-publications.md
       - Fluxo editorial: features-editorial-flow.md
+      - Quiz e perguntas reutilizáveis: features-quiz.md
       - Mídia e quarentena: features-media-quarantine.md
+      - Comunicação e e-mails: features-communication.md
+      - Indexador e submissões: features-indexer-submissions.md
+      - Site público: features-public-site.md
+      - Configurações e operação: features-settings-operations.md
+      - Papéis e permissões: features-roles-permissions.md
       - Privacidade e estatísticas: features-privacy-analytics.md
   - Validação:
       - Empacotamento e GitHub: packaging-github.md

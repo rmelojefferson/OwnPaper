@@ -1,175 +1,108 @@
-# Backups e restauração do OwnPaper
+# Backups e restauração
 
-O OwnPaper permite dois níveis de operação:
+Backups são parte crítica da operação do OwnPaper. O projeto separa relatório operacional no painel de restauração real no servidor para reduzir risco de exposição.
 
-- configuração operacional por `.env`, recomendada para responsáveis técnicos;
-- configuração WebDAV exclusivamente no backend/ambiente, sem exposição de credenciais no painel administrativo.
+## O que deve entrar no backup completo
 
-## O que entra no backup
+Um backup completo deve incluir:
 
-Cada backup gera um arquivo `.zip` em `/app/backups` contendo:
+- banco de dados;
+- mídia pública;
+- documentos;
+- vídeos locais, se usados;
+- configurações persistidas;
+- logs relevantes;
+- arquivos necessários para restauração da instalação;
+- checksums;
+- manifesto do backup.
 
-- dump do banco de dados;
-- mídia pública (`/app/media`);
-- mídia privada/quarentena (`/app/private_media`), quando habilitada;
-- manifesto JSON;
-- checksum SHA256 registrado no banco;
-- dry-run automático de restore estrutural.
+Credenciais de ambiente devem ser tratadas com cuidado e não devem ser expostas em relatórios enviados por e-mail.
 
-O backup não inclui segredos de `.env`, certificados TLS ou configuração do servidor/reverse proxy. Esses itens devem ser guardados separadamente pelo responsável pela instalação.
+## Relatório por e-mail
 
-## Configuração por ambiente
+O sistema pode enviar relatório semanal de backup.
 
-Configure no `.env`:
+O relatório deve conter:
+
+- status;
+- data/hora;
+- caminho do arquivo no servidor;
+- tamanho;
+- checksum;
+- erro, se houver.
+
+O relatório não deve anexar o backup completo por padrão.
+
+## Download temporário
+
+Quando a instalação não tiver armazenamento externo, pode haver link temporário protegido para baixar o backup.
+
+Regras recomendadas:
+
+- link com token forte;
+- expiração curta;
+- autenticação reforçada;
+- 2FA quando disponível;
+- download isolado do restante do sistema;
+- auditoria;
+- remoção automática após expiração;
+- não listar diretórios.
+
+## WebDAV externo
+
+WebDAV é um protocolo para enviar arquivos para um armazenamento remoto compatível.
+
+No OwnPaper, ele serve para copiar backups para outro local, fora do servidor principal.
+
+Configurações sensíveis devem ficar em variáveis de ambiente/backend, não em campos editáveis por qualquer admin do painel.
+
+Exemplos de variáveis:
 
 ```env
-OWNPAPER_BACKUP_ENABLED=true
-OWNPAPER_BACKUP_INTERVAL_HOURS=168
-OWNPAPER_BACKUP_RETENTION_DAYS=30
-OWNPAPER_BACKUP_INCLUDE_MEDIA=true
-OWNPAPER_BACKUP_INCLUDE_PRIVATE_MEDIA=true
-OWNPAPER_BACKUP_EXTERNAL_BACKEND=local
-OWNPAPER_BACKUP_WEBDAV_URL=
-OWNPAPER_BACKUP_WEBDAV_USERNAME=
-OWNPAPER_BACKUP_WEBDAV_PASSWORD=
+OWNPAPER_BACKUP_WEBDAV_ENABLED=true
+OWNPAPER_BACKUP_WEBDAV_URL=https://backup.example.com/remote.php/dav/files/usuario/ownpaper/
+OWNPAPER_BACKUP_WEBDAV_USERNAME=usuario-backup
+OWNPAPER_BACKUP_WEBDAV_PASSWORD=senha-forte
 ```
 
-Valores recomendados:
+## Retenção
 
-- `OWNPAPER_BACKUP_INTERVAL_HOURS=168`: semanal.
-- `OWNPAPER_BACKUP_RETENTION_DAYS=30`: mantém backups locais por 30 dias.
-- `OWNPAPER_BACKUP_EXTERNAL_BACKEND=webdav`: envia o ZIP para WebDAV após validação local.
-- WebDAV é configurado exclusivamente por variáveis de ambiente no backend; o painel apenas exibe o status operacional.
+Retenção define por quanto tempo backups antigos são mantidos.
 
-## WebDAV no backend e download protegido pelo painel
+Exemplo:
 
-Acesse:
+- manter backups diários por 7 dias;
+- manter backups semanais por 8 semanas;
+- manter backups mensais por 12 meses.
 
-```text
-Administração > Backups
-```
+A política depende do espaço disponível e do risco operacional.
 
-A tela permite:
+## Restore
 
-- configurar relatório por e-mail;
-- solicitar backups por escopo;
-- visualizar se o destino externo está configurado no backend;
-- solicitar backup total para a fila;
-- gerar link temporário de download local;
-- ver histórico de backups e checksums.
+A restauração completa deve ser feita no servidor.
 
-WebDAV é um protocolo de armazenamento remoto. O OwnPaper não cria um servidor WebDAV automaticamente e não consegue definir uma URL segura por padrão. A URL deve vir de um serviço externo, como Nextcloud, Storage Box, servidor próprio ou provedor compatível, e deve ser configurada no backend por variáveis de ambiente.
+Fluxo recomendado:
 
-As credenciais WebDAV não são as credenciais do usuário do painel e não são salvas no admin. Crie uma conta ou token exclusivo no armazenamento externo, com permissão apenas para a pasta de backups, e configure no ambiente do servidor.
+1. parar a aplicação;
+2. preservar cópia do estado atual;
+3. restaurar banco;
+4. restaurar mídia;
+5. conferir permissões de arquivos;
+6. rodar migrações se necessário;
+7. executar checks de integridade;
+8. subir aplicação;
+9. validar painel e site público;
+10. registrar o procedimento.
 
-Todas as ações sensíveis exigem senha atual e 2FA. Links de download enviados por e-mail expiram em 48 horas; links gerados pelo painel expiram em 1 hora. O link é invalidado após o download e registra auditoria.
+## Teste de restore
 
-## Execução automática
+Backups sem teste de restauração não devem ser considerados confiáveis.
 
-O serviço `scheduler` do Docker roda periodicamente:
+Homologação mínima:
 
 ```bash
-docker compose logs -f scheduler
-```
-
-Ele verifica se o período venceu e executa:
-
-```bash
-python manage.py executar_backup_agendado
-```
-
-## Execução manual no backend
-
-Para criar backup manual:
-
-```bash
-docker compose exec -T web python manage.py executar_backup_site
-```
-
-Para criar backup sem mídia:
-
-```bash
-docker compose exec -T web python manage.py executar_backup_site --sem-midia
-```
-
-## Validação de backup
-
-Validar o backup mais recente pela homologação:
-
-```bash
-docker compose exec -T web python manage.py validar_producao_ownpaper --backup-latest
-```
-
-Validar um arquivo específico:
-
-```bash
-docker compose exec -T web python manage.py validar_arquivo_backup /app/backups/arquivo.zip --checksum CHECKSUM_SHA256
-```
-
-## Preparação de restauração
-
-Primeiro, copie o arquivo `.zip` para o servidor, preferencialmente dentro do volume de backups:
-
-```bash
-docker compose cp ./arquivo.zip web:/app/backups/arquivo.zip
-```
-
-Faça dry-run:
-
-```bash
-docker compose exec -T web python manage.py restaurar_backup_site /app/backups/arquivo.zip --checksum CHECKSUM_SHA256
-```
-
-Extraia os arquivos para um diretório temporário:
-
-```bash
-docker compose exec -T web python manage.py restaurar_backup_site /app/backups/arquivo.zip --checksum CHECKSUM_SHA256 --executar
-```
-
-O comando informa os próximos passos para o tipo de dump encontrado.
-
-## Restauração real
-
-Execute a restauração real apenas em janela de manutenção e com backup atual preservado.
-
-Para dump PostgreSQL (`.dump`), o comando indicará algo como:
-
-```bash
-pg_restore -c -d <database> <arquivo_dump>
-```
-
-Para dump JSON (`.json`), o comando indicará:
-
-```bash
-python manage.py loaddata <arquivo_json>
-```
-
-Para mídia:
-
-```bash
-tar -xzf <arquivo_media> -C <destino_media>
-```
-
-Depois da restauração:
-
-```bash
-docker compose exec -T web python manage.py migrate --noinput
-docker compose exec -T web python manage.py collectstatic --noinput
-docker compose restart web scheduler
-docker compose exec -T web python manage.py validar_saude_operacional
+docker compose exec -T web python manage.py check
 docker compose exec -T web python manage.py verificar_integridade_logs
 ```
 
-## Painel administrativo
-
-O painel mostra:
-
-- status dos backups;
-- histórico;
-- checksum;
-- resultado do dry-run;
-- relatório simples por e-mail;
-- status do destino externo configurado no backend, sem expor credenciais no painel;
-- geração protegida de link temporário para download de backups locais.
-
-O painel não permite restaurar backups nem fazer upload de backup para restaurar o sistema. Restauração continua sendo uma operação de backend, documentada nesta página, para evitar que uma conta administrativa comprometida substitua toda a instalação.
+Além disso, teste real de restore deve ser feito em ambiente separado.
