@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Documentacao tecnica e operacional do OwnPaper">
+        <meta name="description" content="Documentação técnica e operacional do OwnPaper">
       
       
       
@@ -305,7 +305,7 @@
   
   
   <span class="md-ellipsis">
-    Demo local
+    Demonstração local
     
   </span>
   
@@ -503,9 +503,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#download-temporario" class="md-nav__link">
+  <a href="#baixa-temporaria" class="md-nav__link">
     <span class="md-ellipsis">
-      Download temporário
+      Baixa temporária
     </span>
   </a>
   
@@ -530,18 +530,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#restore" class="md-nav__link">
+  <a href="#restauracao" class="md-nav__link">
     <span class="md-ellipsis">
-      Restore
+      Restauração
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#teste-de-restore" class="md-nav__link">
+  <a href="#teste-de-restauracao" class="md-nav__link">
     <span class="md-ellipsis">
-      Teste de restore
+      Teste de restauração
     </span>
   </a>
   
@@ -591,7 +591,7 @@
   
   
   <span class="md-ellipsis">
-    Hardening de e-mail e formulários
+    Reforço de segurança para e-mails e formulários
     
   </span>
   
@@ -637,7 +637,7 @@
   
   
   <span class="md-ellipsis">
-    HTTPS e reverse proxy
+    HTTPS e proxy reverso
     
   </span>
   
@@ -683,7 +683,7 @@
   
   
   <span class="md-ellipsis">
-    Backlog de features
+    Lista de recursos planejados
     
   </span>
   
@@ -1137,7 +1137,7 @@
   
   
   <span class="md-ellipsis">
-    Smoke tests
+    Testes rápidos
     
   </span>
   
@@ -1160,7 +1160,7 @@
   
   
   <span class="md-ellipsis">
-    Política de upgrade LTS
+    Política de atualização LTS
     
   </span>
   
@@ -1364,7 +1364,7 @@
   
   
   <span class="md-ellipsis">
-    Rollout OwnPaper
+    Padrão de implantação OwnPaper
     
   </span>
   
@@ -1427,9 +1427,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#download-temporario" class="md-nav__link">
+  <a href="#baixa-temporaria" class="md-nav__link">
     <span class="md-ellipsis">
-      Download temporário
+      Baixa temporária
     </span>
   </a>
   
@@ -1454,18 +1454,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#restore" class="md-nav__link">
+  <a href="#restauracao" class="md-nav__link">
     <span class="md-ellipsis">
-      Restore
+      Restauração
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#teste-de-restore" class="md-nav__link">
+  <a href="#teste-de-restauracao" class="md-nav__link">
     <span class="md-ellipsis">
-      Teste de restore
+      Teste de restauração
     </span>
   </a>
   
@@ -1518,7 +1518,7 @@
 <li>erro, se houver.</li>
 </ul>
 <p>O relatório não deve anexar o backup completo por padrão.</p>
-<h2 id="download-temporario">Download temporário</h2>
+<h2 id="baixa-temporaria">Baixa temporária</h2>
 <p>Quando a instalação não tiver armazenamento externo, pode haver link temporário protegido para baixar o backup.</p>
 <p>Regras recomendadas:</p>
 <ul>
@@ -1534,7 +1534,7 @@
 <h2 id="webdav-externo">WebDAV externo</h2>
 <p>WebDAV é um protocolo para enviar arquivos para um armazenamento remoto compatível.</p>
 <p>No OwnPaper, ele serve para copiar backups para outro local, fora do servidor principal.</p>
-<p>Configurações sensíveis devem ficar em variáveis de ambiente/backend, não em campos editáveis por qualquer admin do painel.</p>
+<p>Configurações sensíveis devem ficar em variáveis de ambiente/servidor, não em campos editáveis por qualquer administrador do painel.</p>
 <p>Exemplos de variáveis:</p>
 <pre><code class="language-env">OWNPAPER_BACKUP_WEBDAV_ENABLED=true
 OWNPAPER_BACKUP_WEBDAV_URL=https://backup.example.com/remote.php/dav/files/usuario/ownpaper/
@@ -1550,7 +1550,7 @@ OWNPAPER_BACKUP_WEBDAV_PASSWORD=senha-forte
 <li>manter backups mensais por 12 meses.</li>
 </ul>
 <p>A política depende do espaço disponível e do risco operacional.</p>
-<h2 id="restore">Restore</h2>
+<h2 id="restauracao">Restauração</h2>
 <p>A restauração completa deve ser feita no servidor.</p>
 <p>Fluxo recomendado:</p>
 <ol>
@@ -1565,13 +1565,13 @@ OWNPAPER_BACKUP_WEBDAV_PASSWORD=senha-forte
 <li>validar painel e site público;</li>
 <li>registrar o procedimento.</li>
 </ol>
-<h2 id="teste-de-restore">Teste de restore</h2>
+<h2 id="teste-de-restauracao">Teste de restauração</h2>
 <p>Backups sem teste de restauração não devem ser considerados confiáveis.</p>
 <p>Homologação mínima:</p>
 <pre><code class="language-bash">docker compose exec -T web python manage.py check
 docker compose exec -T web python manage.py verificar_integridade_logs
 </code></pre>
-<p>Além disso, teste real de restore deve ser feito em ambiente separado.</p>
+<p>Além disso, teste real de restauração deve ser feito em ambiente separado.</p>
 
 
 

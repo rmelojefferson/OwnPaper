@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Padrão obrigatório de trabalho no OwnPaper para mudanças em páginas públicas, admin, templates, CSS, JS, runtime, Docker e rollout. Substitui processos anteriores e deve ser usado como workflow padrão do projeto daqui para frente.">
+        <meta name="description" content="Padrão obrigatório de trabalho no OwnPaper para mudanças em páginas públicas, admin, modelos, CSS, JS, runtime, Docker e implantação. Substitui processos anteriores e deve ser usado como fluxo de trabalho padrão do projeto daqui para frente.">
       
       
       
@@ -20,7 +20,7 @@
     
     
       
-        <title>Rollout OwnPaper - OwnPaper</title>
+        <title>Padrão de implantação OwnPaper - OwnPaper</title>
       
     
     
@@ -74,7 +74,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#ownpaper-standard-rollout" class="md-skip">
+        <a href="#padrao-de-implantacao-do-ownpaper" class="md-skip">
           Pular para conteúdo
         </a>
       
@@ -109,7 +109,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Rollout OwnPaper
+              Padrão de implantação OwnPaper
             
           </span>
         </div>
@@ -303,7 +303,7 @@
   
   
   <span class="md-ellipsis">
-    Demo local
+    Demonstração local
     
   </span>
   
@@ -482,7 +482,7 @@
   
   
   <span class="md-ellipsis">
-    Hardening de e-mail e formulários
+    Reforço de segurança para e-mails e formulários
     
   </span>
   
@@ -528,7 +528,7 @@
   
   
   <span class="md-ellipsis">
-    HTTPS e reverse proxy
+    HTTPS e proxy reverso
     
   </span>
   
@@ -574,7 +574,7 @@
   
   
   <span class="md-ellipsis">
-    Backlog de features
+    Lista de recursos planejados
     
   </span>
   
@@ -1028,7 +1028,7 @@
   
   
   <span class="md-ellipsis">
-    Smoke tests
+    Testes rápidos
     
   </span>
   
@@ -1051,7 +1051,7 @@
   
   
   <span class="md-ellipsis">
-    Política de upgrade LTS
+    Política de atualização LTS
     
   </span>
   
@@ -1266,7 +1266,7 @@
   
   
   <span class="md-ellipsis">
-    Rollout OwnPaper
+    Padrão de implantação OwnPaper
     
   </span>
   
@@ -1279,7 +1279,7 @@
   
   
   <span class="md-ellipsis">
-    Rollout OwnPaper
+    Padrão de implantação OwnPaper
     
   </span>
   
@@ -1381,9 +1381,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#11-regra-rigida-de-limpeza-e-rollout" class="md-nav__link">
+  <a href="#11-regra-rigida-de-limpeza-e-implantacao" class="md-nav__link">
     <span class="md-ellipsis">
-      1.1 Regra rígida de limpeza e rollout
+      1.1 Regra rígida de limpeza e implantação
     </span>
   </a>
   
@@ -1624,9 +1624,9 @@
 </li>
         
           <li class="md-nav__item">
-  <a href="#11-regra-rigida-de-limpeza-e-rollout" class="md-nav__link">
+  <a href="#11-regra-rigida-de-limpeza-e-implantacao" class="md-nav__link">
     <span class="md-ellipsis">
-      1.1 Regra rígida de limpeza e rollout
+      1.1 Regra rígida de limpeza e implantação
     </span>
   </a>
   
@@ -1764,17 +1764,17 @@
   
 
 
-<h1 id="ownpaper-standard-rollout">OwnPaper Standard Rollout</h1>
+<h1 id="padrao-de-implantacao-do-ownpaper">Padrão de implantação do OwnPaper</h1>
 <p>Esta é a skill padrão do projeto.</p>
 <p>Use este processo sempre que o trabalho tocar:</p>
 <ul>
 <li>páginas públicas</li>
 <li>admin</li>
-<li>templates</li>
+<li>modelos</li>
 <li>CSS</li>
 <li>JS</li>
 <li>comportamento de runtime</li>
-<li>Docker, estáticos, manifests ou rollout</li>
+<li>Docker, estáticos, manifests ou implantação</li>
 </ul>
 <p>Esta skill substitui os fluxos anteriores de conflito e debug cirúrgico.</p>
 <h2 id="regra-central">Regra central</h2>
@@ -1815,7 +1815,7 @@
 </ul>
 <h2 id="como-classificar-o-problema">Como classificar o problema</h2>
 <h3 id="local">Local</h3>
-<p>É local quando a competição está no mesmo bloco, mesma página ou mesma feature.</p>
+<p>É local quando a competição está no mesmo bloco, mesma página ou mesma recurso.</p>
 <p>Nesses casos:</p>
 <ul>
 <li>corrija direto</li>
@@ -1828,7 +1828,7 @@
 <li>tema global</li>
 <li>componente compartilhado</li>
 <li>hook compartilhado</li>
-<li>comportamento de build ou Docker</li>
+<li>comportamento de compilação ou Docker</li>
 <li>regras que podem afetar outras páginas</li>
 </ul>
 <p>Nesses casos:</p>
@@ -1852,7 +1852,7 @@
 <li>cache de processo</li>
 <li>validar a URL pública real</li>
 </ol>
-<h3 id="11-regra-rigida-de-limpeza-e-rollout">1.1 Regra rígida de limpeza e rollout</h3>
+<h3 id="11-regra-rigida-de-limpeza-e-implantacao">1.1 Regra rígida de limpeza e implantação</h3>
 <p>Quando o usuário pedir:</p>
 <ul>
 <li>limpar</li>
@@ -1864,7 +1864,7 @@
 <p>isso significa limpar a trilha inteira, não só o repositório local.</p>
 <p>Checklist obrigatório:</p>
 <ol>
-<li>workspace local no estado correto</li>
+<li>área de trabalho local no estado correto</li>
 <li>source equivalente dentro do container no estado correto</li>
 <li><code>collectstatic --clear --noinput</code> executado quando houver estáticos</li>
 <li><code>web</code> reiniciado quando houver template, manifest, JS, CSS ou dúvida de cache</li>
@@ -1883,7 +1883,7 @@
 - <code>/app/home/home</code></p>
 <p>Esses resíduos contaminam:
 - imports Python
-- templates
+- modelos
 - <code>collectstatic</code>
 - runtime servido</p>
 <p>Fluxo correto:
@@ -1995,7 +1995,7 @@
 </ul>
 <p>No OwnPaper, isso é tão importante quanto o código em si.</p>
 <h2 id="regra-permanente-para-este-projeto">Regra permanente para este projeto</h2>
-<p>Esta skill deve ser tratada como workflow padrão obrigatório do OwnPaper.</p>
+<p>Esta skill deve ser tratada como fluxo de trabalho padrão obrigatório do OwnPaper.</p>
 <p>Sempre que o trabalho tocar:</p>
 <ul>
 <li>página pública</li>
@@ -2006,7 +2006,7 @@
 <li>JS</li>
 <li>estáticos</li>
 <li>container</li>
-<li>rollout</li>
+<li>implantação</li>
 </ul>
 <p>use esta skill antes de iterar.</p>
 

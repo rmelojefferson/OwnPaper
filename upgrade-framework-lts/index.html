@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Documentacao tecnica e operacional do OwnPaper">
+        <meta name="description" content="Documentação técnica e operacional do OwnPaper">
       
       
       
@@ -22,7 +22,7 @@
     
     
       
-        <title>Política de upgrade LTS - OwnPaper</title>
+        <title>Política de atualização LTS - OwnPaper</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#framework-lts-upgrade-policy" class="md-skip">
+        <a href="#politica-de-atualizacao-lts-dos-frameworks" class="md-skip">
           Pular para conteúdo
         </a>
       
@@ -111,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Política de upgrade LTS
+              Política de atualização LTS
             
           </span>
         </div>
@@ -305,7 +305,7 @@
   
   
   <span class="md-ellipsis">
-    Demo local
+    Demonstração local
     
   </span>
   
@@ -484,7 +484,7 @@
   
   
   <span class="md-ellipsis">
-    Hardening de e-mail e formulários
+    Reforço de segurança para e-mails e formulários
     
   </span>
   
@@ -530,7 +530,7 @@
   
   
   <span class="md-ellipsis">
-    HTTPS e reverse proxy
+    HTTPS e proxy reverso
     
   </span>
   
@@ -576,7 +576,7 @@
   
   
   <span class="md-ellipsis">
-    Backlog de features
+    Lista de recursos planejados
     
   </span>
   
@@ -1032,7 +1032,7 @@
   
   
   <span class="md-ellipsis">
-    Smoke tests
+    Testes rápidos
     
   </span>
   
@@ -1064,7 +1064,7 @@
   
   
   <span class="md-ellipsis">
-    Política de upgrade LTS
+    Política de atualização LTS
     
   </span>
   
@@ -1077,7 +1077,7 @@
   
   
   <span class="md-ellipsis">
-    Política de upgrade LTS
+    Política de atualização LTS
     
   </span>
   
@@ -1100,36 +1100,36 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#current-baseline" class="md-nav__link">
+  <a href="#base-atual" class="md-nav__link">
     <span class="md-ellipsis">
-      Current Baseline
+      Base atual
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#local-development" class="md-nav__link">
+  <a href="#desenvolvimento-local" class="md-nav__link">
     <span class="md-ellipsis">
-      Local Development
+      Desenvolvimento local
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation-required" class="md-nav__link">
+  <a href="#validacao-obrigatoria" class="md-nav__link">
     <span class="md-ellipsis">
-      Validation Required
+      Validação obrigatória
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#sources" class="md-nav__link">
+  <a href="#fontes-oficiais" class="md-nav__link">
     <span class="md-ellipsis">
-      Sources
+      Fontes oficiais
     </span>
   </a>
   
@@ -1337,7 +1337,7 @@
   
   
   <span class="md-ellipsis">
-    Rollout OwnPaper
+    Padrão de implantação OwnPaper
     
   </span>
   
@@ -1382,36 +1382,36 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#current-baseline" class="md-nav__link">
+  <a href="#base-atual" class="md-nav__link">
     <span class="md-ellipsis">
-      Current Baseline
+      Base atual
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#local-development" class="md-nav__link">
+  <a href="#desenvolvimento-local" class="md-nav__link">
     <span class="md-ellipsis">
-      Local Development
+      Desenvolvimento local
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#validation-required" class="md-nav__link">
+  <a href="#validacao-obrigatoria" class="md-nav__link">
     <span class="md-ellipsis">
-      Validation Required
+      Validação obrigatória
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#sources" class="md-nav__link">
+  <a href="#fontes-oficiais" class="md-nav__link">
     <span class="md-ellipsis">
-      Sources
+      Fontes oficiais
     </span>
   </a>
   
@@ -1436,35 +1436,33 @@
   
 
 
-<h1 id="framework-lts-upgrade-policy">Framework LTS Upgrade Policy</h1>
-<p>OwnPaper follows a latest-LTS policy for frameworks where an LTS line is
-available.</p>
-<h2 id="current-baseline">Current Baseline</h2>
+<h1 id="politica-de-atualizacao-lts-dos-frameworks">Política de atualização LTS dos frameworks</h1>
+<p>OwnPaper segue uma política de usar a linha LTS mais recente para frameworks quando houver versão LTS disponível.</p>
+<h2 id="base-atual">Base atual</h2>
 <ul>
-<li>Django 5.2 LTS</li>
-<li>Wagtail 7.4 LTS, com patch mínimo 7.4.2</li>
-<li>Python 3.12 in Docker</li>
+<li>Django 5.2 LTS.</li>
+<li>Wagtail 7.4 LTS, com patch mínimo 7.4.2.</li>
+<li>Python 3.12 no Docker.</li>
 </ul>
-<p>Use a linha Wagtail 7.4.x como baseline do projeto. Atualizações dentro da linha 7.4 devem ser aplicadas após validação completa, pois tendem a concentrar correções compatíveis com a linha estável/LTS.</p>
-<h2 id="local-development">Local Development</h2>
-<p>The old local <code>.venv</code> uses Python 3.8 and is no longer compatible with the
-framework baseline. Recreate local development on Python 3.12 before using
-<code>manage.py</code> outside Docker.</p>
-<p>Until then, run checks and migrations through Docker.</p>
-<h2 id="validation-required">Validation Required</h2>
-<p>After framework upgrades, validate:</p>
+<p>Use a linha Wagtail 7.4.x como base do projeto. Atualizações dentro da linha 7.4 devem ser aplicadas após validação completa, pois tendem a concentrar correções compatíveis com a linha estável/LTS.</p>
+<h2 id="desenvolvimento-local">Desenvolvimento local</h2>
+<p>O <code>.venv</code> local antigo usava Python 3.8 e não é mais compatível com a base atual dos frameworks.</p>
+<p>Recrie o ambiente local com Python 3.12 antes de usar <code>manage.py</code> fora do Docker.</p>
+<p>Até lá, execute verificações e migrações pelo Docker.</p>
+<h2 id="validacao-obrigatoria">Validação obrigatória</h2>
+<p>Depois de atualizar frameworks, valide:</p>
 <ol>
-<li>Dependency resolution and image build.</li>
+<li>Resolução de dependências e construção da imagem.</li>
 <li><code>makemigrations --check --dry-run</code>.</li>
-<li><code>manage.py check</code> with warnings enabled.</li>
-<li>Database migrations.</li>
+<li><code>manage.py check</code> com avisos habilitados.</li>
+<li>Migrações de banco de dados.</li>
 <li><code>collectstatic</code>.</li>
-<li>Public home page.</li>
-<li>Admin redirect and two-factor login screen.</li>
-<li>Bootstrap command.</li>
-<li>Wagtail settings, snippets, images, admin CSV import, and newsletter flows.</li>
+<li>Página inicial pública.</li>
+<li>Redirecionamento do admin e tela de login com dois fatores.</li>
+<li>Comando de bootstrap.</li>
+<li>Configurações do Wagtail, snippets, imagens, importação CSV administrativa e fluxos de newsletter.</li>
 </ol>
-<h2 id="sources">Sources</h2>
+<h2 id="fontes-oficiais">Fontes oficiais</h2>
 <ul>
 <li>https://docs.wagtail.org/en/stable/releases/upgrading.html</li>
 <li>https://docs.wagtail.org/en/stable/releases/7.4.html</li>

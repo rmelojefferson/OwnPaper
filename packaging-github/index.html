@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Documentacao tecnica e operacional do OwnPaper">
+        <meta name="description" content="Documentação técnica e operacional do OwnPaper">
       
       
       
@@ -305,7 +305,7 @@
   
   
   <span class="md-ellipsis">
-    Demo local
+    Demonstração local
     
   </span>
   
@@ -484,7 +484,7 @@
   
   
   <span class="md-ellipsis">
-    Hardening de e-mail e formulários
+    Reforço de segurança para e-mails e formulários
     
   </span>
   
@@ -530,7 +530,7 @@
   
   
   <span class="md-ellipsis">
-    HTTPS e reverse proxy
+    HTTPS e proxy reverso
     
   </span>
   
@@ -576,7 +576,7 @@
   
   
   <span class="md-ellipsis">
-    Backlog de features
+    Lista de recursos planejados
     
   </span>
   
@@ -1054,9 +1054,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#antes-do-commit-final" class="md-nav__link">
+  <a href="#antes-do-registro-final-no-git" class="md-nav__link">
     <span class="md-ellipsis">
-      Antes do commit final
+      Antes do registro final no Git
     </span>
   </a>
   
@@ -1128,7 +1128,7 @@
   
   
   <span class="md-ellipsis">
-    Smoke tests
+    Testes rápidos
     
   </span>
   
@@ -1151,7 +1151,7 @@
   
   
   <span class="md-ellipsis">
-    Política de upgrade LTS
+    Política de atualização LTS
     
   </span>
   
@@ -1355,7 +1355,7 @@
   
   
   <span class="md-ellipsis">
-    Rollout OwnPaper
+    Padrão de implantação OwnPaper
     
   </span>
   
@@ -1400,9 +1400,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#antes-do-commit-final" class="md-nav__link">
+  <a href="#antes-do-registro-final-no-git" class="md-nav__link">
     <span class="md-ellipsis">
-      Antes do commit final
+      Antes do registro final no Git
     </span>
   </a>
   
@@ -1474,7 +1474,7 @@
 
 <h1 id="empacotamento-e-publicacao-no-github">Empacotamento e publicação no GitHub</h1>
 <p>Este checklist prepara o OwnPaper para publicação aberta.</p>
-<h2 id="antes-do-commit-final">Antes do commit final</h2>
+<h2 id="antes-do-registro-final-no-git">Antes do registro final no Git</h2>
 <pre><code class="language-bash">git status --short
 </code></pre>
 <p>Confirme que não aparecem:</p>
@@ -1505,7 +1505,7 @@ docker compose exec -T web python manage.py verificar_integridade_logs
 pip install -r docs/requirements.txt
 mkdocs serve
 </code></pre>
-<p>Build estático:</p>
+<p>Compilação estática:</p>
 <pre><code class="language-bash">mkdocs build
 </code></pre>
 <p>O diretório <code>site/</code> é gerado e não deve ser commitado.</p>

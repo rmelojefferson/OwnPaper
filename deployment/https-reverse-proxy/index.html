@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Documentacao tecnica e operacional do OwnPaper">
+        <meta name="description" content="Documentação técnica e operacional do OwnPaper">
       
       
       
@@ -22,7 +22,7 @@
     
     
       
-        <title>HTTPS e reverse proxy - OwnPaper</title>
+        <title>HTTPS e proxy reverso - OwnPaper</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#https-e-reverse-proxy" class="md-skip">
+        <a href="#https-e-proxy-reverso" class="md-skip">
           Pular para conteúdo
         </a>
       
@@ -111,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              HTTPS e reverse proxy
+              HTTPS e proxy reverso
             
           </span>
         </div>
@@ -305,7 +305,7 @@
   
   
   <span class="md-ellipsis">
-    Demo local
+    Demonstração local
     
   </span>
   
@@ -486,7 +486,7 @@
   
   
   <span class="md-ellipsis">
-    Hardening de e-mail e formulários
+    Reforço de segurança para e-mails e formulários
     
   </span>
   
@@ -541,7 +541,7 @@
   
   
   <span class="md-ellipsis">
-    HTTPS e reverse proxy
+    HTTPS e proxy reverso
     
   </span>
   
@@ -554,7 +554,7 @@
   
   
   <span class="md-ellipsis">
-    HTTPS e reverse proxy
+    HTTPS e proxy reverso
     
   </span>
   
@@ -613,9 +613,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#checklist-seguro" class="md-nav__link">
+  <a href="#checklist-de-seguranca" class="md-nav__link">
     <span class="md-ellipsis">
-      Checklist seguro
+      Checklist de segurança
     </span>
   </a>
   
@@ -665,7 +665,7 @@
   
   
   <span class="md-ellipsis">
-    Backlog de features
+    Lista de recursos planejados
     
   </span>
   
@@ -1119,7 +1119,7 @@
   
   
   <span class="md-ellipsis">
-    Smoke tests
+    Testes rápidos
     
   </span>
   
@@ -1142,7 +1142,7 @@
   
   
   <span class="md-ellipsis">
-    Política de upgrade LTS
+    Política de atualização LTS
     
   </span>
   
@@ -1346,7 +1346,7 @@
   
   
   <span class="md-ellipsis">
-    Rollout OwnPaper
+    Padrão de implantação OwnPaper
     
   </span>
   
@@ -1427,9 +1427,9 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#checklist-seguro" class="md-nav__link">
+  <a href="#checklist-de-seguranca" class="md-nav__link">
     <span class="md-ellipsis">
-      Checklist seguro
+      Checklist de segurança
     </span>
   </a>
   
@@ -1454,8 +1454,8 @@
   
 
 
-<h1 id="https-e-reverse-proxy">HTTPS e reverse proxy</h1>
-<p>OwnPaper deve rodar atrás de um reverse proxy HTTPS, como Nginx, Caddy, Traefik ou serviço equivalente do provedor.</p>
+<h1 id="https-e-proxy-reverso">HTTPS e proxy reverso</h1>
+<p>OwnPaper deve rodar atrás de um proxy reverso HTTPS, como Nginx, Caddy, Traefik ou serviço equivalente do provedor.</p>
 <p>Este documento usa Nginx como exemplo. Ajuste caminhos, portas e domínio conforme sua instalação.</p>
 <h2 id="principios">Princípios</h2>
 <ul>
@@ -1545,7 +1545,7 @@ DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS=false
 DJANGO_SECURE_HSTS_PRELOAD=false
 </code></pre>
 <p>Não habilite <code>DJANGO_SECURE_HSTS_INCLUDE_SUBDOMAINS=true</code> nem <code>DJANGO_SECURE_HSTS_PRELOAD=true</code> até ter certeza de que todos os subdomínios relevantes usam HTTPS corretamente.</p>
-<h2 id="checklist-seguro">Checklist seguro</h2>
+<h2 id="checklist-de-seguranca">Checklist de segurança</h2>
 <p>Antes de alterar o proxy:</p>
 <pre><code class="language-bash">sudo nginx -T &gt; /root/nginx-before-ownpaper.txt
 </code></pre>

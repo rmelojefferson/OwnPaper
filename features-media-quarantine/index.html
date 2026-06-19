@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Documentacao tecnica e operacional do OwnPaper">
+        <meta name="description" content="Documentação técnica e operacional do OwnPaper">
       
       
       
@@ -305,7 +305,7 @@
   
   
   <span class="md-ellipsis">
-    Demo local
+    Demonstração local
     
   </span>
   
@@ -484,7 +484,7 @@
   
   
   <span class="md-ellipsis">
-    Hardening de e-mail e formulários
+    Reforço de segurança para e-mails e formulários
     
   </span>
   
@@ -530,7 +530,7 @@
   
   
   <span class="md-ellipsis">
-    HTTPS e reverse proxy
+    HTTPS e proxy reverso
     
   </span>
   
@@ -576,7 +576,7 @@
   
   
   <span class="md-ellipsis">
-    Backlog de features
+    Lista de recursos planejados
     
   </span>
   
@@ -862,18 +862,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#upload-dentro-da-publicacao" class="md-nav__link">
+  <a href="#envio-dentro-da-publicacao" class="md-nav__link">
     <span class="md-ellipsis">
-      Upload dentro da publicação
+      Envio dentro da publicação
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#preview-de-avaliacao" class="md-nav__link">
+  <a href="#pre-visualizacao-de-avaliacao" class="md-nav__link">
     <span class="md-ellipsis">
-      Preview de avaliação
+      Pré-visualização de avaliação
     </span>
   </a>
   
@@ -1164,7 +1164,7 @@
   
   
   <span class="md-ellipsis">
-    Smoke tests
+    Testes rápidos
     
   </span>
   
@@ -1187,7 +1187,7 @@
   
   
   <span class="md-ellipsis">
-    Política de upgrade LTS
+    Política de atualização LTS
     
   </span>
   
@@ -1391,7 +1391,7 @@
   
   
   <span class="md-ellipsis">
-    Rollout OwnPaper
+    Padrão de implantação OwnPaper
     
   </span>
   
@@ -1463,18 +1463,18 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#upload-dentro-da-publicacao" class="md-nav__link">
+  <a href="#envio-dentro-da-publicacao" class="md-nav__link">
     <span class="md-ellipsis">
-      Upload dentro da publicação
+      Envio dentro da publicação
     </span>
   </a>
   
 </li>
       
         <li class="md-nav__item">
-  <a href="#preview-de-avaliacao" class="md-nav__link">
+  <a href="#pre-visualizacao-de-avaliacao" class="md-nav__link">
     <span class="md-ellipsis">
-      Preview de avaliação
+      Pré-visualização de avaliação
     </span>
   </a>
   
@@ -1585,11 +1585,11 @@
 <li>PDFs são verificados contra tokens perigosos e regravados quando possível.</li>
 <li>Vídeos passam por validação de tipo e tamanho.</li>
 <li>Arquivo fica pendente para avaliação humana.</li>
-<li>Admin/revisor avalia o preview.</li>
+<li>Admin/revisor avalia o  pré-visualização.</li>
 <li>Arquivo aprovado entra na biblioteca ou no local planejado da publicação.</li>
 <li>Arquivo rejeitado não é disponibilizado publicamente.</li>
 </ol>
-<h2 id="upload-dentro-da-publicacao">Upload dentro da publicação</h2>
+<h2 id="envio-dentro-da-publicacao">Envio dentro da publicação</h2>
 <p>Quando o autor envia uma mídia diretamente no editor, o sistema não deve bloquear a publicação apenas porque a mídia ainda não foi aprovada.</p>
 <p>O comportamento correto é:</p>
 <ul>
@@ -1600,12 +1600,12 @@
 <li>efetivar a mídia automaticamente após aprovação.</li>
 </ul>
 <p>Isso evita burocracia e preserva segurança.</p>
-<h2 id="preview-de-avaliacao">Preview de avaliação</h2>
-<p>A página de mídias pendentes deve mostrar preview.</p>
+<h2 id="pre-visualizacao-de-avaliacao">Pré-visualização de avaliação</h2>
+<p>A página de mídias pendentes deve mostrar  pré-visualização.</p>
 <p>Para imagens:</p>
 <ul>
 <li>miniatura na listagem;</li>
-<li>preview ampliado em modal.</li>
+<li>pré-visualização ampliado em modal.</li>
 </ul>
 <p>Para PDF:</p>
 <ul>
@@ -1614,7 +1614,7 @@
 </ul>
 <p>Para vídeo:</p>
 <ul>
-<li>preview ou link controlado quando possível.</li>
+<li>pré-visualização ou link controlado quando possível.</li>
 </ul>
 <p>A aprovação não deve depender apenas da sanitização técnica, pois o conteúdo visual também pode ser inadequado editorialmente.</p>
 <h2 id="clamav">ClamAV</h2>

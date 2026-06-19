@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Documentacao tecnica e operacional do OwnPaper">
+        <meta name="description" content="Documentação técnica e operacional do OwnPaper">
       
       
       
@@ -305,7 +305,7 @@
   
   
   <span class="md-ellipsis">
-    Demo local
+    Demonstração local
     
   </span>
   
@@ -486,7 +486,7 @@
   
   
   <span class="md-ellipsis">
-    Hardening de e-mail e formulários
+    Reforço de segurança para e-mails e formulários
     
   </span>
   
@@ -532,7 +532,7 @@
   
   
   <span class="md-ellipsis">
-    HTTPS e reverse proxy
+    HTTPS e proxy reverso
     
   </span>
   
@@ -663,13 +663,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#regra-operacional-obrigatoria-para-rollout-limpeza-e-reversao" class="md-nav__link">
+  <a href="#regra-operacional-obrigatoria-para-implantacao-limpeza-e-reversao" class="md-nav__link">
     <span class="md-ellipsis">
-      Regra operacional obrigatória para rollout, limpeza e reversão
+      Regra operacional obrigatória para implantação, limpeza e reversão
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Regra operacional obrigatória para rollout, limpeza e reversão">
+    <nav class="md-nav" aria-label="Regra operacional obrigatória para implantação, limpeza e reversão">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -752,7 +752,7 @@
   
   
   <span class="md-ellipsis">
-    Backlog de features
+    Lista de recursos planejados
     
   </span>
   
@@ -1206,7 +1206,7 @@
   
   
   <span class="md-ellipsis">
-    Smoke tests
+    Testes rápidos
     
   </span>
   
@@ -1229,7 +1229,7 @@
   
   
   <span class="md-ellipsis">
-    Política de upgrade LTS
+    Política de atualização LTS
     
   </span>
   
@@ -1433,7 +1433,7 @@
   
   
   <span class="md-ellipsis">
-    Rollout OwnPaper
+    Padrão de implantação OwnPaper
     
   </span>
   
@@ -1541,13 +1541,13 @@
 </li>
       
         <li class="md-nav__item">
-  <a href="#regra-operacional-obrigatoria-para-rollout-limpeza-e-reversao" class="md-nav__link">
+  <a href="#regra-operacional-obrigatoria-para-implantacao-limpeza-e-reversao" class="md-nav__link">
     <span class="md-ellipsis">
-      Regra operacional obrigatória para rollout, limpeza e reversão
+      Regra operacional obrigatória para implantação, limpeza e reversão
     </span>
   </a>
   
-    <nav class="md-nav" aria-label="Regra operacional obrigatória para rollout, limpeza e reversão">
+    <nav class="md-nav" aria-label="Regra operacional obrigatória para implantação, limpeza e reversão">
       <ul class="md-nav__list">
         
           <li class="md-nav__item">
@@ -1631,7 +1631,7 @@
 <h1 id="fluxo-de-implementacao-sem-revisao-por-pares">Fluxo de Implementação (sem revisão por pares)</h1>
 <h2 id="escopo-desta-fase">Escopo desta fase</h2>
 <ul>
-<li>Implementar e estabilizar todas as features combinadas.</li>
+<li>Implementar e estabilizar todas as recursos combinadas.</li>
 <li><strong>Fora de escopo por enquanto:</strong> revisão por pares/auditoria independente editorial.</li>
 </ul>
 <h2 id="entregas-ja-implementadas-no-codigo">Entregas já implementadas no código</h2>
@@ -1639,8 +1639,8 @@
 <li>Convites de usuário, aceite com definição de senha e reset de senha.</li>
 <li>Perfis administrativos (<code>admin</code>, <code>autor/escritor</code>) com ajustes de acesso no painel.</li>
 <li>Reset administrativo de 2FA e backup codes para recuperação.</li>
-<li>Inbox de contato no admin com atribuição/encaminhamento/interações.</li>
-<li>Disparo de e-mail em massa (manual), templates e métricas básicas.</li>
+<li>Caixa de entrada de contato no admin com atribuição/encaminhamento/interações.</li>
+<li>Disparo de e-mail em massa (manual), modelos e métricas básicas.</li>
 <li>Notificações de publicações por e-mail (imediato e periódico).</li>
 <li>Feed RSS (<code>/rss.xml</code> e <code>/feed/</code>).</li>
 <li>Audit log com exportação CSV.</li>
@@ -1666,7 +1666,7 @@
 <li>Comunicação: contato inbox, resposta, atribuição e disparos em massa.</li>
 <li>Newsletter: inscrição, cancelamento, privacidade e notificações automáticas de publicações.</li>
 <li>Navegação e leitura: menu/rodapé configuráveis, busca global, zoom e guia de leitura.</li>
-<li>Continuidade: backup/validação/restore e auditoria de logs.</li>
+<li>Continuidade: backup/validação/restauração e auditoria de logs.</li>
 </ol>
 <h2 id="pendencias-restantes-nao-codigo-ou-validacao-manual">Pendências restantes (não-código ou validação manual)</h2>
 <ul>
@@ -1694,13 +1694,13 @@
 <li>baseline de segurança (<code>SECURE_*</code>, cookies, HSTS, hosts),</li>
 <li>configuração SMTP (e testes reais opcionais),</li>
 <li>Turnstile (e validação remota opcional de token),</li>
-<li>dry-run de restore de backup (arquivo específico ou último disponível),</li>
+<li>simulação de restauração de backup (arquivo específico ou último disponível),</li>
 <li>consistência de configurações por site.</li>
 </ul>
-<h2 id="regra-operacional-obrigatoria-para-rollout-limpeza-e-reversao">Regra operacional obrigatória para rollout, limpeza e reversão</h2>
+<h2 id="regra-operacional-obrigatoria-para-implantacao-limpeza-e-reversao">Regra operacional obrigatória para implantação, limpeza e reversão</h2>
 <p>No OwnPaper, <strong>editar o repositório local não basta</strong>.</p>
 <p>Qualquer trabalho que toque:
-- templates
+- modelos
 - CSS
 - JS
 - páginas públicas
@@ -1708,7 +1708,7 @@
 - admin
 - estáticos
 - Docker
-- rollout</p>
+- implantação</p>
 <p>deve seguir este fluxo mínimo obrigatório:</p>
 <ol>
 <li>ajustar os arquivos no workspace local</li>
@@ -1737,7 +1737,7 @@ existente com o mesmo nome.</p>
 - <code>/app/home/home</code></p>
 <p>Esses resíduos contaminam:
 - imports Python
-- templates
+- modelos
 - <code>collectstatic</code>
 - runtime servido</p>
 <p>Fluxo correto:

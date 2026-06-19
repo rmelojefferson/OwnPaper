@@ -6,7 +6,7 @@
       <meta charset="utf-8">
       <meta name="viewport" content="width=device-width,initial-scale=1">
       
-        <meta name="description" content="Documentacao tecnica e operacional do OwnPaper">
+        <meta name="description" content="Documentação técnica e operacional do OwnPaper">
       
       
       
@@ -22,7 +22,7 @@
     
     
       
-        <title>Smoke tests - OwnPaper</title>
+        <title>Testes rápidos - OwnPaper</title>
       
     
     
@@ -76,7 +76,7 @@
     <div data-md-component="skip">
       
         
-        <a href="#smoke-tests" class="md-skip">
+        <a href="#testes-rapidos-de-fumaca" class="md-skip">
           Pular para conteúdo
         </a>
       
@@ -111,7 +111,7 @@
         <div class="md-header__topic" data-md-component="header-topic">
           <span class="md-ellipsis">
             
-              Smoke tests
+              Testes rápidos
             
           </span>
         </div>
@@ -305,7 +305,7 @@
   
   
   <span class="md-ellipsis">
-    Demo local
+    Demonstração local
     
   </span>
   
@@ -484,7 +484,7 @@
   
   
   <span class="md-ellipsis">
-    Hardening de e-mail e formulários
+    Reforço de segurança para e-mails e formulários
     
   </span>
   
@@ -530,7 +530,7 @@
   
   
   <span class="md-ellipsis">
-    HTTPS e reverse proxy
+    HTTPS e proxy reverso
     
   </span>
   
@@ -576,7 +576,7 @@
   
   
   <span class="md-ellipsis">
-    Backlog de features
+    Lista de recursos planejados
     
   </span>
   
@@ -1041,7 +1041,7 @@
   
   
   <span class="md-ellipsis">
-    Smoke tests
+    Testes rápidos
     
   </span>
   
@@ -1054,7 +1054,7 @@
   
   
   <span class="md-ellipsis">
-    Smoke tests
+    Testes rápidos
     
   </span>
   
@@ -1077,9 +1077,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#optional-shlink-smoke-test" class="md-nav__link">
+  <a href="#teste-rapido-opcional-do-shlink" class="md-nav__link">
     <span class="md-ellipsis">
-      Optional Shlink smoke test
+      Teste rápido opcional do Shlink
     </span>
   </a>
   
@@ -1106,7 +1106,7 @@
   
   
   <span class="md-ellipsis">
-    Política de upgrade LTS
+    Política de atualização LTS
     
   </span>
   
@@ -1310,7 +1310,7 @@
   
   
   <span class="md-ellipsis">
-    Rollout OwnPaper
+    Padrão de implantação OwnPaper
     
   </span>
   
@@ -1355,9 +1355,9 @@
     <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
       
         <li class="md-nav__item">
-  <a href="#optional-shlink-smoke-test" class="md-nav__link">
+  <a href="#teste-rapido-opcional-do-shlink" class="md-nav__link">
     <span class="md-ellipsis">
-      Optional Shlink smoke test
+      Teste rápido opcional do Shlink
     </span>
   </a>
   
@@ -1382,9 +1382,8 @@
   
 
 
-<h1 id="smoke-tests">Smoke Tests</h1>
-<p>Run these checks after dependency upgrades, Docker changes, or deployment
-configuration changes.</p>
+<h1 id="testes-rapidos-de-fumaca">Testes rápidos de fumaça</h1>
+<p>Execute estas verificações depois de atualizar dependências, alterar Docker ou mudar configurações de implantação.</p>
 <pre><code class="language-bash">export DJANGO_SECRET_KEY=ownpaper-local-test-secret-key-with-enough-length
 
 docker compose build web
@@ -1395,26 +1394,26 @@ docker compose exec -T web python manage.py homologar_ownpaper --keepdb
 curl -I http://127.0.0.1:${OWNPAPER_HTTP_PORT:-8000}/
 curl -I http://127.0.0.1:${OWNPAPER_HTTP_PORT:-8000}/account/login/
 </code></pre>
-<p>Expected results:</p>
+<p>Resultados esperados:</p>
 <ul>
-<li><code>manage.py check</code> reports no issues.</li>
-<li><code>manage.py test conteudo</code> passes.</li>
+<li><code>manage.py check</code> não relata problemas.</li>
+<li><code>manage.py test conteudo</code> passa.</li>
 <li><code>manage.py homologar_ownpaper --keepdb</code> finaliza sem erro.</li>
-<li>Bootstrap completes without duplicating records.</li>
-<li>The home page returns <code>200 OK</code>.</li>
-<li>The two-factor login page returns <code>200 OK</code>.</li>
+<li>O bootstrap conclui sem duplicar registros.</li>
+<li>A página inicial retorna <code>200 OK</code>.</li>
+<li>A tela de login com dois fatores retorna <code>200 OK</code>.</li>
 </ul>
-<h2 id="optional-shlink-smoke-test">Optional Shlink smoke test</h2>
-<p>When validating the bundled optional short-link stack:</p>
+<h2 id="teste-rapido-opcional-do-shlink">Teste rápido opcional do Shlink</h2>
+<p>Ao validar a pilha opcional de links curtos:</p>
 <pre><code class="language-bash">docker compose --profile shlink up -d
 docker compose exec -T web python manage.py check
 </code></pre>
-<p>Expected results:</p>
+<p>Resultados esperados:</p>
 <ul>
-<li><code>web</code>, <code>shlink</code> and <code>shlink-db</code> start without blocking each other.</li>
-<li>The site continues to work even if <code>shlink_ativo</code> is disabled.</li>
-<li>When Shlink is configured and enabled, publication share links can be shortened.</li>
-<li>When Shlink is unavailable, the site falls back to long URLs without breaking publication pages.</li>
+<li><code>web</code>, <code>shlink</code> e <code>shlink-db</code> sobem sem bloquear uns aos outros.</li>
+<li>O site continua funcionando mesmo com <code>shlink_ativo</code> desativado.</li>
+<li>Quando o Shlink está configurado e habilitado, links de compartilhamento de publicações podem ser encurtados.</li>
+<li>Quando o Shlink está indisponível, o site usa URLs longas sem quebrar as páginas de publicação.</li>
 </ul>
 
 
