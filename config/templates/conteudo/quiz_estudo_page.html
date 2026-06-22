@@ -200,9 +200,9 @@
                                         Responder
                                     </button>
                                 </div>
-                                <p class="quiz-feedback" data-quiz-feedback hidden></p>
+                                <p class="quiz-feedback" data-quiz-feedback hidden="hidden"></p>
                                 {% if translated_quiz_explicacao %}
-                                    <p class="quiz-explicacao" data-quiz-explicacao hidden>{{ translated_quiz_explicacao }}</p>
+                                    <p class="quiz-explicacao" data-quiz-explicacao hidden="hidden">{{ translated_quiz_explicacao }}</p>
                                 {% endif %}
                             </article>
                         {% endfor %}
@@ -212,7 +212,7 @@
                         <button type="button" class="quiz-btn" data-quiz-pular>Pular</button>
                         <button type="button" class="quiz-btn" data-quiz-proximo>Próxima</button>
                         <button type="button" class="quiz-btn" data-quiz-finalizar>Finalizar</button>
-                        <button type="button" class="quiz-btn" data-quiz-refazer hidden>Refazer erradas</button>
+                        <button type="button" class="quiz-btn" data-quiz-refazer hidden="hidden">Refazer erradas</button>
                     </div>
                     {% if not quiz_usuario %}
                         <div class="quiz-estudo-login-cta">
@@ -273,26 +273,26 @@
                 </section>
                 {% endwith %}
 
-                <section class="quiz-estudo-revisao" data-quiz-estudo-revisao hidden>
+                <section class="quiz-estudo-revisao" data-quiz-estudo-revisao hidden="hidden">
                     <h2>Sugestões de estudo</h2>
-                    <p class="quiz-estudo-revisao-vazio" data-quiz-estudo-revisao-vazio hidden>
+                    <p class="quiz-estudo-revisao-vazio" data-quiz-estudo-revisao-vazio hidden="hidden">
                         As perguntas erradas ou puladas desta sessão ainda não têm categorias, tags ou publicações vinculadas para sugestões de estudo.
                     </p>
-                    <div class="quiz-estudo-revisao-temas" data-quiz-estudo-revisao-temas hidden>
+                    <div class="quiz-estudo-revisao-temas" data-quiz-estudo-revisao-temas hidden="hidden">
                         <h3>Categorias para revisar</h3>
                         <ul class="quiz-estudo-revisao-temas-lista" data-quiz-estudo-revisao-temas-lista></ul>
                     </div>
-                    <div class="quiz-estudo-revisao-tags" data-quiz-estudo-revisao-tags hidden>
+                    <div class="quiz-estudo-revisao-tags" data-quiz-estudo-revisao-tags hidden="hidden">
                         <h3>Tags para revisar</h3>
                         <ul class="quiz-estudo-revisao-tags-lista" data-quiz-estudo-revisao-tags-lista></ul>
                     </div>
-                    <div class="quiz-estudo-revisao-publicacoes publicacoes-relacionadas" data-quiz-estudo-revisao-publicacoes hidden>
+                    <div class="quiz-estudo-revisao-publicacoes publicacoes-relacionadas" data-quiz-estudo-revisao-publicacoes hidden="hidden">
                         <h3>Publicações recomendadas</h3>
                         <div class="quiz-estudo-revisao-publicacoes-lista" data-quiz-estudo-revisao-publicacoes-lista></div>
                     </div>
                 </section>
 
-                    <div class="quiz-score-modal op-score-dialog" data-quiz-score-modal hidden>
+                    <div class="quiz-score-modal op-score-dialog" data-quiz-score-modal hidden="hidden">
                         <div class="quiz-score-modal-backdrop" data-quiz-score-close></div>
                         <div class="quiz-score-modal-card op-score-dialog-card" role="dialog" aria-modal="true" aria-labelledby="quiz-score-modal-title">
                             <button type="button" class="quiz-score-modal-fechar" data-quiz-score-close aria-label="Fechar">×</button>
@@ -310,7 +310,7 @@
                 </section>
 
                 {% if not quiz_usuario %}
-                    <div class="comentario-popup op-dialog" data-quiz-login-popup data-state="{{ quiz_popup_active_state|default:'login' }}" {% if quiz_popup_open %}data-open="1"{% endif %} hidden>
+                    <div class="comentario-popup op-dialog" data-quiz-login-popup data-state="{{ quiz_popup_active_state|default:'login' }}" {% if quiz_popup_open %}data-open="1"{% endif %} hidden="hidden">
                         <div class="comentario-popup-card op-dialog-card" role="dialog" aria-modal="true" aria-labelledby="quiz-login-popup-titulo">
                             <button type="button" class="comentario-popup-fechar" data-quiz-login-close aria-label="Fechar">×</button>
                             <h3 id="quiz-login-popup-titulo">Acesso ao quiz</h3>
@@ -426,7 +426,7 @@
                         </div>
                     </div>
                 {% endif %}
-                <section class="quiz-estudo-mapa" hidden aria-hidden="true">
+                <section class="quiz-estudo-mapa" hidden="hidden" aria-hidden="true">
                     <ol class="quiz-estudo-mapa-lista" data-quiz-estudo-origens-fonte>
                         {% for pergunta in quiz_perguntas %}
                             <li data-quiz-question-key="{{ pergunta.quiz_dom_id }}">

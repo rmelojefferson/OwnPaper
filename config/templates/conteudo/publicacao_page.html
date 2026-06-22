@@ -283,7 +283,7 @@
                                 <button type="button" class="quiz-btn quiz-btn-ajuda" data-quiz-ajuda-toggle>
                                     Preciso de ajuda
                                 </button>
-                                <div class="quiz-ajuda-painel" data-quiz-ajuda-painel hidden>
+                                <div class="quiz-ajuda-painel" data-quiz-ajuda-painel hidden="hidden">
                                     {% if comentario_usuario_logado %}
                                         <form class="comentario-form quiz-ajuda-form" method="post" action="{% url 'duvida_quiz_enviar' page.id %}">
                                             {% csrf_token %}
@@ -308,9 +308,9 @@
                                     {% endif %}
                                 </div>
                             </div>
-                            <p class="quiz-feedback" data-quiz-feedback hidden></p>
+                            <p class="quiz-feedback" data-quiz-feedback hidden="hidden"></p>
                             {% if translated_quiz_explicacao %}
-                                <p class="quiz-explicacao" data-quiz-explicacao hidden>{{ translated_quiz_explicacao }}</p>
+                                <p class="quiz-explicacao" data-quiz-explicacao hidden="hidden">{{ translated_quiz_explicacao }}</p>
                             {% endif %}
                         </article>
                         {% endwith %}
@@ -320,11 +320,11 @@
                     <button type="button" class="quiz-btn" data-quiz-anterior disabled>Anterior</button>
                     <button type="button" class="quiz-btn" data-quiz-pular>Pular</button>
                     <button type="button" class="quiz-btn" data-quiz-proximo>Próxima</button>
-                    <button type="button" class="quiz-btn" data-quiz-finalizar hidden>Finalizar</button>
-                    <button type="button" class="quiz-btn" data-quiz-refazer hidden>Refazer erradas</button>
+                    <button type="button" class="quiz-btn" data-quiz-finalizar hidden="hidden">Finalizar</button>
+                    <button type="button" class="quiz-btn" data-quiz-refazer hidden="hidden">Refazer erradas</button>
                 </div>
-                <p class="quiz-resultado" data-quiz-resultado hidden></p>
-                <div class="quiz-score-modal op-score-dialog" data-quiz-score-modal hidden>
+                <p class="quiz-resultado" data-quiz-resultado hidden="hidden"></p>
+                <div class="quiz-score-modal op-score-dialog" data-quiz-score-modal hidden="hidden">
                     <div class="quiz-score-modal-backdrop" data-quiz-score-close></div>
                     <div class="quiz-score-modal-card op-score-dialog-card" role="dialog" aria-modal="true" aria-labelledby="quiz-score-modal-title">
                         <button type="button" class="quiz-score-modal-fechar" data-quiz-score-close aria-label="Fechar">×</button>
@@ -532,14 +532,14 @@
                         <div>
                             <label for="comentario-texto">Deixe sua mensagem:</label>
                             <input type="hidden" name="comentario_pai" value="" data-comentario-pai>
-                            <div class="comentario-reply-contexto" data-comentario-reply-contexto hidden>
+                            <div class="comentario-reply-contexto" data-comentario-reply-contexto hidden="hidden">
                                 <span data-comentario-reply-texto></span>
                             </div>
                             <textarea id="comentario-texto" name="texto" rows="5" required></textarea>
                         </div>
                         <div class="comentario-acoes">
                             <button type="submit" class="acao-publicacao">Enviar</button>
-                            <button type="button" class="acao-publicacao comentario-reply-botao comentario-reply-cancel-botao" data-comentario-reply-cancel-action hidden>Cancelar resposta</button>
+                            <button type="button" class="acao-publicacao comentario-reply-botao comentario-reply-cancel-botao" data-comentario-reply-cancel-action hidden="hidden">Cancelar resposta</button>
                             <a class="comentario-link-sair" href="{% url 'comentario_logout' page.id %}">Trocar conta</a>
                         </div>
                     </form>
@@ -549,7 +549,7 @@
                         <div>
                             <label for="comentario-texto-publico">Deixe sua mensagem:</label>
                             <input type="hidden" name="comentario_pai" value="" data-comentario-pai>
-                            <div class="comentario-reply-contexto" data-comentario-reply-contexto hidden>
+                            <div class="comentario-reply-contexto" data-comentario-reply-contexto hidden="hidden">
                                 <span data-comentario-reply-texto></span>
                             </div>
                             <textarea id="comentario-texto-publico" name="texto_publico" rows="5" data-comentario-rascunho></textarea>
@@ -562,7 +562,7 @@
                 {% endif %}
 
                 {% endif %}
-                <div class="comentario-popup op-dialog" data-comentario-popup data-state="{{ comentario_popup_active_state|default:'login' }}" {% if comentario_popup_open %}data-open="1"{% endif %} hidden>
+                <div class="comentario-popup op-dialog" data-comentario-popup data-state="{{ comentario_popup_active_state|default:'login' }}" {% if comentario_popup_open %}data-open="1"{% endif %} hidden="hidden">
                     <div class="comentario-popup-card op-dialog-card" role="dialog" aria-modal="true" aria-labelledby="comentario-popup-titulo">
                         <button type="button" class="comentario-popup-fechar" data-comentario-popup-close aria-label="Fechar">×</button>
                         <h3 id="comentario-popup-titulo">Acesso para comentários</h3>
