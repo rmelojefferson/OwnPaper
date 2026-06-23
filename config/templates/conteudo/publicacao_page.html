@@ -418,21 +418,25 @@
                                 {% if item.credito_texto %}
                                     {% if item.credito_texto|is_url %}
                                         <a class="credito-rede-link" href="{{ item.credito_texto }}" target="_blank" rel="noopener noreferrer">
-                                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                                <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5a4.25 4.25 0 0 0 4.25 4.25h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5a4.25 4.25 0 0 0-4.25-4.25h-8.5zm8.94 1.75a1.06 1.06 0 1 1 0 2.12 1.06 1.06 0 0 1 0-2.12zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.5a3.5 3.5 0 1 0 0 7.001A3.5 3.5 0 0 0 12 8.5z"></path>
-                                            </svg>
-                                            {{ item.credito_texto|instagram_handle }}
-                                        </a>
-                                    {% elif item.credito_url %}
-                                        <a class="credito-rede-link" href="{{ item.credito_url }}" target="_blank" rel="noopener noreferrer">
-                                            <svg viewBox="0 0 24 24" aria-hidden="true">
-                                                <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5a4.25 4.25 0 0 0 4.25 4.25h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5a4.25 4.25 0 0 0-4.25-4.25h-8.5zm8.94 1.75a1.06 1.06 0 1 1 0 2.12 1.06 1.06 0 0 1 0-2.12zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.5a3.5 3.5 0 1 0 0 7.001A3.5 3.5 0 0 0 12 8.5z"></path>
-                                            </svg>
-                                            {{ item.credito_url|instagram_handle }}
+                                            {% if item.credito_texto|is_instagram_url %}
+                                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                                    <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5a4.25 4.25 0 0 0 4.25 4.25h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5a4.25 4.25 0 0 0-4.25-4.25h-8.5zm8.94 1.75a1.06 1.06 0 1 1 0 2.12 1.06 1.06 0 0 1 0-2.12zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.5a3.5 3.5 0 1 0 0 7.001A3.5 3.5 0 0 0 12 8.5z"></path>
+                                                </svg>
+                                            {% endif %}
+                                            {{ item.credito_texto|credit_link_label }}
                                         </a>
                                     {% else %}
                                         {{ item.credito_texto|credit_text_display }}
                                     {% endif %}
+                                {% elif item.credito_url %}
+                                        <a class="credito-rede-link" href="{{ item.credito_url }}" target="_blank" rel="noopener noreferrer">
+                                            {% if item.credito_url|is_instagram_url %}
+                                                <svg viewBox="0 0 24 24" aria-hidden="true">
+                                                    <path d="M7.75 2h8.5A5.75 5.75 0 0 1 22 7.75v8.5A5.75 5.75 0 0 1 16.25 22h-8.5A5.75 5.75 0 0 1 2 16.25v-8.5A5.75 5.75 0 0 1 7.75 2zm0 1.5A4.25 4.25 0 0 0 3.5 7.75v8.5a4.25 4.25 0 0 0 4.25 4.25h8.5a4.25 4.25 0 0 0 4.25-4.25v-8.5a4.25 4.25 0 0 0-4.25-4.25h-8.5zm8.94 1.75a1.06 1.06 0 1 1 0 2.12 1.06 1.06 0 0 1 0-2.12zM12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10zm0 1.5a3.5 3.5 0 1 0 0 7.001A3.5 3.5 0 0 0 12 8.5z"></path>
+                                                </svg>
+                                            {% endif %}
+                                            {{ item.credito_url|credit_link_label }}
+                                        </a>
                                 {% endif %}
 
                                 {% if item.fonte_url %}

@@ -270,8 +270,21 @@ def is_url(value):
 
 
 @register.filter
+def is_instagram_url(url):
+    return bool(_extract_instagram_handle(url))
+
+
+@register.filter
+def credit_link_label(url):
+    handle = _extract_instagram_handle(url) or _extract_youtube_handle(url)
+    if handle:
+        return handle
+    return url_display(url, 42)
+
+
+@register.filter
 def instagram_handle(url):
-    return _extract_profile_handle(url) or "Instagram"
+    return credit_link_label(url) or "Fonte"
 
 
 @register.simple_tag
