@@ -40,6 +40,7 @@ from wagtail.snippets.models import register_snippet
 from wagtail.snippets.views.chooser import ChooseResultsView, ChooseView, SnippetChooserViewSet
 from wagtail.snippets.views.snippets import SnippetViewSet
 from wagtail.contrib.settings.models import BaseSiteSetting, register_setting
+from .analytics import requisicao_ignorada_para_estatisticas
 from .color_palette import derive_palette, suggest_secondary
 from .current_user import get_current_user
 from .storage import PrivatePendingMediaStorage, PrivateSubmissionStorage
@@ -3929,7 +3930,10 @@ class PublicacaoPage(TraducaoConteudoMixin, Page):
         visualizacoes_sessao = request.session.get("ownpaper_publicacao_views") or {}
         agora_ts = int(timezone.now().timestamp())
         ultima_visualizacao_ts = int(visualizacoes_sessao.get(str(self.id), 0) or 0)
-        if agora_ts - ultima_visualizacao_ts > 60 * 60 * 6:
+        if (
+            not requisicao_ignorada_para_estatisticas(request)
+            and agora_ts - ultima_visualizacao_ts > 60 * 60 * 6
+        ):
             type(self).objects.filter(pk=self.pk).update(
                 total_visualizacoes=F("total_visualizacoes") + 1
             )

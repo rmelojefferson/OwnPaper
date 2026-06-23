@@ -75,12 +75,21 @@
             {% endif %}
             <div class="publicacao-estatisticas" aria-label="Estatísticas da publicação">
                 {% with primeiro_comentario=comentarios_aprovados|first %}
-                <a class="publicacao-balao-metrica" href="#comentarios-titulo" style="align-items:flex-start; position:relative; left:5px;">
+                {% if comentarios_habilitados_publico or comentario_acesso_disponivel %}
+                <a class="publicacao-balao-metrica" href="#comentarios" style="align-items:flex-start; position:relative; left:5px;">
                     <span class="publicacao-balao-icone" aria-hidden="true" style="position:relative; top:4px;">
                         <svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2h9A3.5 3.5 0 0 1 20 5.5v6A3.5 3.5 0 0 1 16.5 15H9l-4.2 3.5c-.32.27-.8.04-.8-.38V15.1A3.49 3.49 0 0 1 4 11.5v-6Z"></path></svg>
                     </span>
                     <span style="display:inline-block; position:relative; top:-2px; margin-left:-0.05rem; font-size:0.88em; line-height:1;">{{ page.comentarios_aprovados_count }}</span>
                 </a>
+                {% else %}
+                <span class="publicacao-balao-metrica" title="Comentários" style="align-items:flex-start; position:relative; left:5px;">
+                    <span class="publicacao-balao-icone" aria-hidden="true" style="position:relative; top:4px;">
+                        <svg viewBox="0 0 24 24"><path d="M4 5.5A3.5 3.5 0 0 1 7.5 2h9A3.5 3.5 0 0 1 20 5.5v6A3.5 3.5 0 0 1 16.5 15H9l-4.2 3.5c-.32.27-.8.04-.8-.38V15.1A3.49 3.49 0 0 1 4 11.5v-6Z"></path></svg>
+                    </span>
+                    <span style="display:inline-block; position:relative; top:-2px; margin-left:-0.05rem; font-size:0.88em; line-height:1;">{{ page.comentarios_aprovados_count }}</span>
+                </span>
+                {% endif %}
                 {% endwith %}
                 <span class="publicacao-balao-metrica" title="Visualizações" style="align-items:flex-start;">
                     <span class="publicacao-balao-icone" aria-hidden="true">

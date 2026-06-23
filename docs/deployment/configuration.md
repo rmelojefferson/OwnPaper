@@ -53,6 +53,17 @@ OWNPAPER_VIDEO_MAX_MB=500
 
 SVG não é aceito por padrão.
 
+
+### Exclusão de IPs das estatísticas
+
+Para evitar contaminação por acessos internos, defina no `.env` os IPs públicos ou redes CIDR que não devem contar em visualizações e estatísticas internas:
+
+```env
+OWNPAPER_ANALYTICS_EXCLUDED_IPS=203.0.113.10,198.51.100.0/24
+```
+
+A lista aceita IPv4, IPv6 e CIDR. O OwnPaper usa o primeiro IP de `X-Forwarded-For` quando há proxy reverso, ou `REMOTE_ADDR` quando não houver.
+
 ## Backups
 
 ```env

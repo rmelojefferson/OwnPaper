@@ -54,6 +54,7 @@ from django.utils.html import escape, strip_tags
 from django.utils.text import slugify
 from django.views.decorators.csrf import csrf_exempt
 
+from .analytics import ip_da_requisicao, requisicao_ignorada_para_estatisticas
 from .roles import (
     AUTHOR_GROUP_NAME,
 )
@@ -134,10 +135,7 @@ _TEXTO_TOKENS_BLOQUEADOS = (
 
 
 def _ip_da_requisicao_view(request):
-    forwarded = (request.META.get("HTTP_X_FORWARDED_FOR") or "").strip()
-    if forwarded:
-        return forwarded.split(",")[0].strip()
-    return (request.META.get("REMOTE_ADDR") or "").strip()
+    return ip_da_requisicao(request)
 
 
 def admin_aceite_termos_painel_view(request):
@@ -300,6 +298,8 @@ def estatistica_tempo_site(request):
     if request.method != "POST":
         return JsonResponse({"ok": False, "error": "Método inválido."}, status=405)
     if request.COOKIES.get("ownpaper_cookie_consent") != "all":
+        return HttpResponse(status=204)
+    if requisicao_ignorada_para_estatisticas(request):
         return HttpResponse(status=204)
 
     site = Site.find_for_request(request) or Site.objects.filter(is_default_site=True).first() or Site.objects.first()
