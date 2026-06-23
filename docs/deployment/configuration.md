@@ -64,6 +64,12 @@ OWNPAPER_ANALYTICS_EXCLUDED_IPS=203.0.113.10,198.51.100.0/24
 
 A lista aceita IPv4, IPv6 e CIDR. O OwnPaper usa o primeiro IP de `X-Forwarded-For` quando há proxy reverso, ou `REMOTE_ADDR` quando não houver.
 
+Depois de alterar essa variável no `.env`, recrie o serviço web para o Docker reler o ambiente:
+
+```bash
+docker compose up -d web
+```
+
 ## Backups
 
 ```env
