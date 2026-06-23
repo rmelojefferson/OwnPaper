@@ -173,7 +173,7 @@
 
         var destino = document.getElementById(href.slice(1));
 
-        if (!destino || !destino.classList || !destino.classList.contains("ancora-interna-publicacao")) {
+        if (!destino) {
             return null;
         }
 
@@ -204,7 +204,7 @@
 
         var destino = document.getElementById(hash.slice(1));
 
-        if (!destino || !destino.classList || !destino.classList.contains("ancora-interna-publicacao")) {
+        if (!destino) {
             return;
         }
 

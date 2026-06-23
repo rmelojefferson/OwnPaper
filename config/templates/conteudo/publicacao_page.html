@@ -162,7 +162,7 @@
         {% endif %}
 
 	<div class="corpo">
-	    {{ content_corpo|richtext|exibir_documentos_pendentes|linkar_marcadores|inserir_videos_no_corpo:page|inserir_imagens_no_corpo:page }}
+	    {{ content_corpo|richtext|exibir_documentos_pendentes|linkar_marcadores|inserir_videos_no_corpo:page|inserir_imagens_no_corpo:page|links_externos_nova_aba }}
 	</div>
 	{% include "includes/publicacao_acoes.html" %}
 

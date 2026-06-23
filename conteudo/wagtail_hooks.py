@@ -1937,6 +1937,20 @@ def _midia_wagtail_foi_enviada_pelo_usuario(objeto, user):
     return bool(uploaded_by and uploaded_by == user.id)
 
 
+def _midia_wagtail_parece_upload_recente(objeto, minutos=15):
+    criado_em = getattr(objeto, "created_at", None)
+    if not criado_em:
+        return True
+    return criado_em >= timezone.now() - timedelta(minutes=minutos)
+
+
+def _midia_wagtail_deve_ir_para_quarentena(objeto, user):
+    return (
+        _midia_wagtail_foi_enviada_pelo_usuario(objeto, user)
+        and _midia_wagtail_parece_upload_recente(objeto)
+    )
+
+
 def _imagem_aprovada_por_quarentena(imagem):
     return bool(
         imagem
@@ -2020,7 +2034,7 @@ def _quarentenar_imagem_publicacao_item(item, user):
     imagem = item.imagem
     if not imagem or _imagem_aprovada_por_quarentena(imagem):
         return False
-    if not _midia_wagtail_foi_enviada_pelo_usuario(imagem, user):
+    if not _midia_wagtail_deve_ir_para_quarentena(imagem, user):
         return False
 
     try:
@@ -2046,7 +2060,7 @@ def _quarentenar_capa_publicacao(publicacao, user):
     imagem = publicacao.imagem_capa
     if not imagem or _imagem_aprovada_por_quarentena(imagem):
         return False
-    if not _midia_wagtail_foi_enviada_pelo_usuario(imagem, user):
+    if not _midia_wagtail_deve_ir_para_quarentena(imagem, user):
         return False
 
     try:
@@ -2086,7 +2100,7 @@ def _quarentenar_richtext_publicacao(publicacao, campo, user):
         imagem = ImageModel.objects.filter(id=imagem_id).first()
         if not imagem or _imagem_aprovada_por_quarentena(imagem):
             return match.group(0)
-        if not _midia_wagtail_foi_enviada_pelo_usuario(imagem, user):
+        if not _midia_wagtail_deve_ir_para_quarentena(imagem, user):
             return match.group(0)
 
         try:
@@ -2118,7 +2132,7 @@ def _quarentenar_richtext_publicacao(publicacao, campo, user):
         documento = DocumentModel.objects.filter(id=documento_id).first()
         if not documento or _documento_aprovado_por_quarentena(documento):
             return match.group(0)
-        if not _midia_wagtail_foi_enviada_pelo_usuario(documento, user):
+        if not _midia_wagtail_deve_ir_para_quarentena(documento, user):
             return match.group(0)
 
         texto_link = strip_tags(match.group(2) or "").strip() or documento.title
@@ -2168,6 +2182,33 @@ def _reintegrar_documento_pendente_em_publicacoes(midia, documento, usuario):
             publicacao.save(update_fields=campos)
             publicacao.save_revision(user=usuario)
             atualizadas += 1
+    return atualizadas
+
+
+def _salvar_revisao_midia_reintegrada(publicacao, usuario):
+    revisao = publicacao.save_revision(user=usuario)
+    if publicacao.live:
+        revisao.publish(user=usuario)
+
+
+def _reintegrar_imagem_pendente_em_publicacoes(midia, imagem, usuario):
+    atualizadas = 0
+    ids_publicacoes = set()
+
+    for item in ImagemPublicacao.objects.filter(midia_pendente=midia, imagem__isnull=True):
+        item.imagem = imagem
+        item.save(update_fields=["imagem"])
+        ids_publicacoes.add(item.publicacao_id)
+
+    for publicacao in PublicacaoPage.objects.filter(imagem_capa_pendente=midia, imagem_capa__isnull=True):
+        publicacao.imagem_capa = imagem
+        publicacao.save(update_fields=["imagem_capa"])
+        ids_publicacoes.add(publicacao.id)
+
+    for publicacao in PublicacaoPage.objects.filter(id__in=ids_publicacoes):
+        _salvar_revisao_midia_reintegrada(publicacao, usuario)
+        atualizadas += 1
+
     return atualizadas
 
 
@@ -2226,6 +2267,56 @@ def midias_pendentes_admin_view(request):
         )
 
     form = MidiaPendenteUploadForm()
+    if request.method == "POST" and request.POST.get("acao") in {"bulk_aprovar", "bulk_rejeitar"}:
+        if not _pode_aprovar_midia(request.user):
+            return _negar_acesso_admin(
+                request,
+                "Apenas administradores e revisores podem revisar mídias pendentes.",
+            )
+        ids = [
+            int(valor)
+            for valor in request.POST.getlist("midia_ids")
+            if str(valor).isdigit()
+        ]
+        if not ids:
+            messages.warning(request, "Selecione ao menos uma mídia pendente.")
+            return redirect("admin_midias_pendentes")
+
+        midias_selecionadas = MidiaPendente.objects.filter(
+            id__in=ids,
+            status=MidiaPendente.STATUS_PENDENTE,
+        )
+        processadas = 0
+        falhas = 0
+        acao_bulk = request.POST.get("acao")
+        for midia in midias_selecionadas:
+            try:
+                if acao_bulk == "bulk_aprovar":
+                    _aprovar_midia_pendente(midia, request.user)
+                    acao_auditoria = "midia_pendente_aprovada_massa"
+                    detalhe = f"Mídia pendente #{midia.id} aprovada em massa."
+                else:
+                    _rejeitar_midia_pendente(midia, request.user)
+                    acao_auditoria = "midia_pendente_rejeitada_massa"
+                    detalhe = f"Mídia pendente #{midia.id} rejeitada em massa."
+                registrar_auditoria(
+                    request=request,
+                    acao=acao_auditoria,
+                    alvo=midia,
+                    detalhes=detalhe,
+                )
+                processadas += 1
+            except Exception:
+                logger.exception("Falha ao processar mídia pendente %s em massa.", midia.id)
+                falhas += 1
+
+        if processadas:
+            verbo = "aprovada(s)" if acao_bulk == "bulk_aprovar" else "rejeitada(s)"
+            messages.success(request, f"{processadas} mídia(s) {verbo} em massa.")
+        if falhas:
+            messages.error(request, f"{falhas} mídia(s) não puderam ser processadas.")
+        return redirect("admin_midias_pendentes")
+
     if request.method == "POST" and request.POST.get("acao") == "upload":
         form = MidiaPendenteUploadForm(request.POST, request.FILES)
         if form.is_valid():
@@ -2331,6 +2422,41 @@ def midia_pendente_preview_admin_view(request, midia_id):
     return response
 
 
+def _aprovar_midia_pendente(midia, usuario):
+    objeto = _criar_midia_wagtail_aprovada(midia, usuario)
+    midia.status = MidiaPendente.STATUS_APROVADO
+    midia.revisado_por = usuario
+    midia.revisado_em = timezone.now()
+    if midia.tipo == MidiaPendente.TIPO_IMAGEM:
+        midia.imagem_aprovada = objeto
+    elif midia.tipo == MidiaPendente.TIPO_DOCUMENTO:
+        midia.documento_aprovado = objeto
+    midia.save(
+        update_fields=[
+            "status",
+            "revisado_por",
+            "revisado_em",
+            "imagem_aprovada",
+            "documento_aprovado",
+            "video_aprovado",
+            "observacao",
+        ]
+    )
+    if midia.tipo == MidiaPendente.TIPO_IMAGEM:
+        _reintegrar_imagem_pendente_em_publicacoes(midia, objeto, usuario)
+    elif midia.tipo == MidiaPendente.TIPO_DOCUMENTO:
+        _reintegrar_documento_pendente_em_publicacoes(midia, objeto, usuario)
+    return objeto
+
+
+def _rejeitar_midia_pendente(midia, usuario, observacao=""):
+    midia.status = MidiaPendente.STATUS_REJEITADO
+    midia.revisado_por = usuario
+    midia.revisado_em = timezone.now()
+    midia.observacao = observacao.strip()
+    midia.save(update_fields=["status", "revisado_por", "revisado_em", "observacao"])
+
+
 def midia_pendente_acao_admin_view(request, midia_id, acao):
     if not _pode_aprovar_midia(request.user):
         return _negar_acesso_admin(
@@ -2347,37 +2473,8 @@ def midia_pendente_acao_admin_view(request, midia_id, acao):
 
     if acao == "aprovar":
         try:
-            objeto = _criar_midia_wagtail_aprovada(midia, request.user)
-            midia.status = MidiaPendente.STATUS_APROVADO
-            midia.revisado_por = request.user
-            midia.revisado_em = timezone.now()
-            if midia.tipo == MidiaPendente.TIPO_IMAGEM:
-                midia.imagem_aprovada = objeto
-                ImagemPublicacao.objects.filter(
-                    midia_pendente=midia,
-                    imagem__isnull=True,
-                ).update(imagem=objeto)
-                PublicacaoPage.objects.filter(
-                    imagem_capa_pendente=midia,
-                    imagem_capa__isnull=True,
-                ).update(imagem_capa=objeto)
-            elif midia.tipo == MidiaPendente.TIPO_DOCUMENTO:
-                midia.documento_aprovado = objeto
-                _reintegrar_documento_pendente_em_publicacoes(midia, objeto, request.user)
-            elif midia.tipo == MidiaPendente.TIPO_VIDEO:
-                pass
             midia.observacao = (request.POST.get("observacao") or "").strip()
-            midia.save(
-                update_fields=[
-                    "status",
-                    "revisado_por",
-                    "revisado_em",
-                    "imagem_aprovada",
-                    "documento_aprovado",
-                    "video_aprovado",
-                    "observacao",
-                ]
-            )
+            _aprovar_midia_pendente(midia, request.user)
             registrar_auditoria(
                 request=request,
                 acao="midia_pendente_aprovada",
@@ -2391,11 +2488,11 @@ def midia_pendente_acao_admin_view(request, midia_id, acao):
         return redirect("admin_midias_pendentes")
 
     if acao == "rejeitar":
-        midia.status = MidiaPendente.STATUS_REJEITADO
-        midia.revisado_por = request.user
-        midia.revisado_em = timezone.now()
-        midia.observacao = (request.POST.get("observacao") or "").strip()
-        midia.save(update_fields=["status", "revisado_por", "revisado_em", "observacao"])
+        _rejeitar_midia_pendente(
+            midia,
+            request.user,
+            observacao=(request.POST.get("observacao") or ""),
+        )
         registrar_auditoria(
             request=request,
             acao="midia_pendente_rejeitada",
@@ -5765,7 +5862,13 @@ def restringir_publicacao_para_autor_vinculado(request, page):
         return _bloquear_com_mensagem(request, motivo_pendencia)
 
     if is_admin(request.user):
-        if publicacao.status_editorial == PublicacaoPage.STATUS_EDITORIAL_EM_REVISAO and not _revisao_atribuida_para_usuario(publicacao, request.user):
+        autor_vinculado = _autor_vinculado_do_usuario_incluindo_admin(request.user)
+        pertence_ao_autor = _publicacao_pertence_ao_autor(publicacao, autor_vinculado)
+        if (
+            publicacao.status_editorial == PublicacaoPage.STATUS_EDITORIAL_EM_REVISAO
+            and not _revisao_atribuida_para_usuario(publicacao, request.user)
+            and not pertence_ao_autor
+        ):
             messages.warning(request, "Você está publicando uma publicação não atribuída ao seu usuário.")
         if _publicacao_tem_autoria_pendente(publicacao):
             messages.warning(

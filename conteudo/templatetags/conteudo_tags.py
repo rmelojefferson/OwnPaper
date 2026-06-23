@@ -346,6 +346,33 @@ def linkar_marcadores(html):
 
 
 @register.filter
+def links_externos_nova_aba(html):
+    if not html:
+        return ""
+
+    html = str(html)
+
+    def substituir(match):
+        tag = match.group(0)
+        if re.search(r"\btarget\s*=", tag, flags=re.IGNORECASE):
+            return tag
+
+        tag = tag[:-1] + ' target="_blank">'
+        if re.search(r"\brel\s*=", tag, flags=re.IGNORECASE):
+            return tag
+        return tag[:-1] + ' rel="noopener noreferrer">'
+
+    return mark_safe(
+        re.sub(
+            r"<a\b(?=[^>]*\bhref=[\"']https?://)[^>]*>",
+            substituir,
+            html,
+            flags=re.IGNORECASE,
+        )
+    )
+
+
+@register.filter
 def desembrulhar_paragrafo_externo(html):
     if not html:
         return ""

@@ -165,7 +165,51 @@
 
 .op-publication-shell .resumo > p:empty,
 .op-publication-shell .corpo > p:empty {
+    display: block;
+    min-height: calc(1.35rem * var(--publicacao-fonte-escala, 1));
+    margin: 1rem 0;
     text-indent: 0;
+}
+
+.op-publication-shell .corpo h1,
+.op-publication-shell .corpo h2,
+.op-publication-shell .corpo h3,
+.op-publication-shell .corpo h4,
+.op-publication-shell .corpo h5,
+.op-publication-shell .corpo h6 {
+    margin: 2.2rem 0 1rem;
+    font-family: var(--op-font-ui);
+    font-weight: 800;
+    line-height: 1.22;
+    text-align: left;
+    color: var(--op-text, #111827);
+}
+
+.op-publication-shell .corpo h1 {
+    font-size: calc(1.85rem * var(--publicacao-fonte-escala, 1));
+}
+
+.op-publication-shell .corpo h2 {
+    font-size: calc(1.58rem * var(--publicacao-fonte-escala, 1));
+}
+
+.op-publication-shell .corpo h3 {
+    font-size: calc(1.32rem * var(--publicacao-fonte-escala, 1));
+}
+
+.op-publication-shell .corpo h4,
+.op-publication-shell .corpo h5,
+.op-publication-shell .corpo h6 {
+    font-size: calc(1.12rem * var(--publicacao-fonte-escala, 1));
+}
+
+.op-publication-shell .corpo h1:first-child,
+.op-publication-shell .corpo h2:first-child,
+.op-publication-shell .corpo h3:first-child,
+.op-publication-shell .corpo h4:first-child,
+.op-publication-shell .corpo h5:first-child,
+.op-publication-shell .corpo h6:first-child {
+    margin-top: 0;
 }
 
 .op-publication-shell .palavras-chave-publicacao {

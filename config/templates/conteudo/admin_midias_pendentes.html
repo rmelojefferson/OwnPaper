@@ -80,10 +80,18 @@
 
     <section class="op-admin-card">
         <h2>Fila</h2>
+        {% if pode_aprovar %}
+            <form id="op-admin-media-bulk-form" method="post" class="op-admin-media-bulk-actions">
+                {% csrf_token %}
+                <button type="submit" name="acao" value="bulk_aprovar" class="button op-admin-filter-button">Aprovar selecionadas</button>
+                <button type="submit" name="acao" value="bulk_rejeitar" class="button button-secondary op-admin-filter-button">Rejeitar selecionadas</button>
+            </form>
+        {% endif %}
         <div class="op-admin-media-list">
             <table class="listing op-admin-listing-table op-admin-media-table">
                 <thead>
                     <tr>
+                        {% if pode_aprovar %}<th>Selecionar</th>{% endif %}
                         <th>ID</th>
                         <th>Preview</th>
                         <th>Mídia</th>
@@ -97,6 +105,15 @@
                 <tbody>
                     {% for midia in midias %}
                         <tr>
+                            {% if pode_aprovar %}
+                                <td>
+                                    {% if midia.status == "pendente" %}
+                                        <input form="op-admin-media-bulk-form" type="checkbox" name="midia_ids" value="{{ midia.id }}" aria-label="Selecionar mídia #{{ midia.id }}">
+                                    {% else %}
+                                        -
+                                    {% endif %}
+                                </td>
+                            {% endif %}
                             <td>#{{ midia.id }}</td>
                             <td class="op-admin-media-preview-cell">
                                 {% if not midia.arquivo_disponivel %}
@@ -184,7 +201,7 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="8">Nenhuma mídia encontrada.</td>
+                            <td colspan="{% if pode_aprovar %}9{% else %}8{% endif %}">Nenhuma mídia encontrada.</td>
                         </tr>
                     {% endfor %}
                 </tbody>

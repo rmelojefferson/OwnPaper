@@ -1809,6 +1809,19 @@
     overflow-x: auto;
 }
 
+.op-admin-media-bulk-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin: 0 0 1rem;
+}
+
+.op-admin-media-table input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+}
+
 .op-admin-media-table th,
 .op-admin-media-table td {
     vertical-align: top;
