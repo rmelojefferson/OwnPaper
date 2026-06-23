@@ -55,7 +55,7 @@ A página pública de publicação mostra:
 
 ## Notas e referências em pop-up
 
-Notas, créditos e referências são abertas em modal/pop-up para evitar que o leitor perca o ponto de leitura.
+Notas, créditos e referências são abertas em modal/pop-up para evitar que o leitor perca o ponto de leitura. Quando o usuário navega entre marcador e complemento, o destino recebe destaque temporário e o retorno `↩` leva de volta ao ponto de origem.
 
 Esse é um diferencial central do projeto.
 
@@ -65,6 +65,10 @@ A experiência deve funcionar em:
 - mobile;
 - navegação por teclado;
 - tema claro e escuro.
+
+## Âncoras internas
+
+Âncoras internas podem ser usadas para sumários e navegação objetiva dentro da publicação. Ao clicar em um link de âncora, o destino é destacado e uma seta `↩` aparece apenas naquele uso, permitindo voltar ao link original sem deixar setas permanentes espalhadas pelo texto.
 
 ## Busca pública
 

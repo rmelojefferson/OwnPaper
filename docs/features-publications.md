@@ -118,11 +118,19 @@ O comportamento esperado é:
 
 - o marcador aparece no corpo do texto;
 - ao clicar ou tocar, o conteúdo complementar abre em pop-up/modal;
+- quando a navegação levar o leitor ao trecho ou ao complemento, o destino deve receber destaque visual temporário;
+- o retorno `↩` de notas e referências deve levar de volta ao trecho de origem;
 - o leitor não precisa sair do ponto de leitura;
 - no fim da publicação, os complementos aparecem organizados em seus campos próprios;
 - um mesmo complemento pode ser referenciado por mais de um marcador quando necessário.
 
 A ordenação padrão recomendada é a ordem de aparição no texto. O sistema pode oferecer ordenação alternativa por alfabeto ou marcador, desde que preserve corretamente a sequência dos marcadores usados.
+
+## Âncoras internas
+
+Publicações podem usar âncoras internas para criar sumários ou links de navegação dentro do próprio texto.
+
+O marcador editorial é `[[a:marcador]]`. Links para `#marcador` devem rolar até o destino, destacar temporariamente o trecho encontrado e exibir uma seta `↩` apenas depois do uso da âncora. Essa seta não fica visível por padrão; ela aparece dinamicamente para permitir retorno ao link que levou o leitor até aquele ponto.
 
 ## Pop-ups de notas e referências
 
@@ -149,7 +157,8 @@ O comportamento esperado é:
 - o sistema cria uma mídia pendente;
 - a publicação pode ser salva sem bloquear o fluxo;
 - o local fica marcado como pendente;
-- após aprovação, a mídia entra automaticamente no ponto planejado.
+- após aprovação, a mídia entra automaticamente no ponto planejado;
+- quando a mídia tiver URL de fonte, imagens inseridas no corpo podem abrir essa fonte em nova aba.
 
 ## Quiz em publicação
 
