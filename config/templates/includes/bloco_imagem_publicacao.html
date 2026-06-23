@@ -3,7 +3,13 @@
 <div class="imagem-no-corpo">
     <figure class="imagem-item">
         {% if item.imagem %}
-            {% image item.imagem max-900x1600 %}
+            {% if item.fonte_url %}
+                <a class="imagem-link-fonte" href="{{ item.fonte_url }}" target="_blank" rel="noopener noreferrer" aria-label="Abrir fonte da imagem {{ item.titulo|default:'publicada' }}">
+                    {% image item.imagem max-900x1600 %}
+                </a>
+            {% else %}
+                {% image item.imagem max-900x1600 %}
+            {% endif %}
         {% else %}
             <div class="imagem-pendente-aprovacao">
                 Imagem aguardando aprovação editorial.

@@ -622,3 +622,19 @@
         text-align: left;
     }
 }
+
+.op-publication-shell .imagem-link-fonte {
+    display: inline-block;
+    max-width: 100%;
+    color: inherit;
+    text-decoration: none;
+}
+
+.op-publication-shell .imagem-link-fonte img {
+    transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.op-publication-shell .imagem-link-fonte:hover img {
+    transform: translateY(-1px);
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--op-text, #111827) 14%, transparent);
+}

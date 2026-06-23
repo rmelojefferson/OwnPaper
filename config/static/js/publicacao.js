@@ -60,22 +60,43 @@
             destino.__highlightTimer = null;
         }
 
-        destino.style.transition = "none";
-        destino.style.background = document.documentElement.getAttribute("data-theme") === "escuro"
-            ? "color-mix(in srgb, var(--op-accent, #93c5fd) 46%, transparent)"
-            : "color-mix(in srgb, var(--op-accent, #1d4ed8) 28%, transparent)";
+        destino.classList.remove("op-publication-highlight");
+        void destino.offsetWidth;
+        destino.classList.add("op-publication-highlight");
+        destino.__highlightTimer = window.setTimeout(function () {
+            destino.classList.remove("op-publication-highlight");
+            destino.__highlightTimer = null;
+        }, 1800);
+    }
 
-        window.requestAnimationFrame(function () {
-            window.requestAnimationFrame(function () {
-                destino.style.transition = "background 1.5s ease";
-                destino.style.background = "transparent";
-                destino.__highlightTimer = window.setTimeout(function () {
-                    destino.style.transition = "";
-                    destino.style.background = "";
-                    destino.__highlightTimer = null;
-                }, 1500);
-            });
+    var retornoAncoraAtual = null;
+
+    function removerRetornoAncora() {
+        if (retornoAncoraAtual && retornoAncoraAtual.parentNode) {
+            retornoAncoraAtual.parentNode.removeChild(retornoAncoraAtual);
+        }
+        retornoAncoraAtual = null;
+    }
+
+    function inserirRetornoAncora(bloco, linkOrigem) {
+        if (!bloco || !linkOrigem) {
+            return;
+        }
+        removerRetornoAncora();
+        var retorno = document.createElement("a");
+        retorno.href = "#";
+        retorno.className = "ancora-retorno-publicacao";
+        retorno.setAttribute("aria-label", "Voltar ao link da âncora");
+        retorno.textContent = "↩";
+        retorno.addEventListener("click", function (event) {
+            event.preventDefault();
+            rolarEDestacar(linkOrigem, linkOrigem, "center");
+            limparHashDaUrl();
+            removerRetornoAncora();
         });
+        bloco.appendChild(document.createTextNode(" "));
+        bloco.appendChild(retorno);
+        retornoAncoraAtual = retorno;
     }
 
     function rolarEDestacar(destinoRolagem, destinoDestaque, bloco) {
@@ -191,6 +212,7 @@
             event.preventDefault();
             var bloco = blocoVisualDoMarcador(destino);
             rolarEDestacar(bloco, bloco, "center");
+            inserirRetornoAncora(bloco, link);
             limparHashDaUrl();
         });
     });
