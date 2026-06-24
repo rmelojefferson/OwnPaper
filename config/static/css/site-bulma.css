@@ -25,7 +25,7 @@ html[data-theme="escuro"] ::selection {
 
 :root {
     --op-font-ui: "Avenir Next", "Segoe UI Variable", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-    --op-font-editorial: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", "URW Palladio L", Georgia, serif;
+    --op-font-editorial: "Libre Baskerville", "Lora", "Source Serif 4", Georgia, serif;
     --bulma-family-primary: var(--op-font-ui);
     --bulma-body-background-color: var(--op-bg, #f8fafc);
     --bulma-body-family: var(--op-font-ui);

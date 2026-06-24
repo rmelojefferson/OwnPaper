@@ -40,7 +40,7 @@
     <link rel="stylesheet" href="{% static 'css/components/op-dialogs.css' %}?v=20260501-01">
     <link rel="stylesheet" href="{% static 'css/components/op-publication-quiz.css' %}?v=20260501-01">
     <link rel="stylesheet" href="{% static 'css/components/op-publication-components.css' %}?v=20260501-01">
-    <link rel="stylesheet" href="{% static 'css/components/op-publication-content.css' %}?v=20260501-01">
+    <link rel="stylesheet" href="{% static 'css/components/op-publication-content.css' %}?v=20260624-02">
 
     {% include "includes/rastreamento_head.html" %}
 
@@ -259,9 +259,9 @@
                         {% translated pergunta "pergunta" "pt-br" as translated_quiz_pergunta %}
                         {% translated pergunta "explicacao" "pt-br" as translated_quiz_explicacao %}
                         {% with resposta=quiz_respostas_usuario|dict_get:pergunta.quiz_dom_id %}
-                        <article class="quiz-pergunta" data-quiz-pergunta data-quiz-question-key="{{ pergunta.quiz_dom_id }}" data-quiz-question-id="{{ pergunta.id }}" data-quiz-question-kind="{{ pergunta.quiz_kind }}" data-quiz-last-status="{% if resposta %}{% if resposta.correta %}correct{% else %}wrong{% endif %}{% endif %}" data-quiz-multi="{% if pergunta.possui_multiplas_corretas %}1{% else %}0{% endif %}" data-quiz-require-all="{% if pergunta.exigir_todas_corretas %}1{% else %}0{% endif %}" {% if not forloop.first %}hidden{% endif %}>
+                        <article class="quiz-pergunta" data-quiz-pergunta data-quiz-question-key="{{ pergunta.quiz_dom_id }}" data-quiz-question-id="{{ pergunta.id }}" data-quiz-question-kind="{{ pergunta.quiz_kind }}" data-quiz-last-status="{% if resposta %}{% if resposta.correta %}correct{% else %}wrong{% endif %}{% endif %}" data-quiz-multi="{% if pergunta.possui_multiplas_corretas %}1{% else %}0{% endif %}" data-quiz-require-all="{% if pergunta.exigir_todas_corretas %}1{% else %}0{% endif %}" {% if not forloop.first %}hidden="hidden"{% endif %}>
                             <h3>Pergunta {{ forloop.counter }}</h3>
-                            <p class="quiz-status-anterior{% if resposta and resposta.correta %} is-correct{% elif resposta %} is-wrong{% endif %}" data-quiz-status-indicator {% if not resposta %}hidden{% endif %}>
+                            <p class="quiz-status-anterior{% if resposta and resposta.correta %} is-correct{% elif resposta %} is-wrong{% endif %}" data-quiz-status-indicator {% if not resposta %}hidden="hidden"{% endif %}>
                                 {% if resposta %}
                                     {% if resposta.correta %}
                                         Última resposta: correta
@@ -580,7 +580,7 @@
                         <button type="button" class="comentario-popup-fechar" data-comentario-popup-close aria-label="Fechar">×</button>
                         <h3 id="comentario-popup-titulo">Acesso para comentários</h3>
 
-                        <div class="op-dialog-panel" data-comentario-painel="login" {% if comentario_popup_active_state != "login" %}hidden{% endif %}>
+                        <div class="op-dialog-panel" data-comentario-painel="login" {% if comentario_popup_active_state != "login" %}hidden="hidden"{% endif %}>
                             <form class="comentario-form op-dialog-form" method="post" action="{% url 'comentario_login_solicitar_codigo' page.id %}">
                                 {% csrf_token %}
                                 <div>
@@ -612,7 +612,7 @@
                             </form>
                         </div>
 
-                        <div class="op-dialog-panel" data-comentario-painel="cadastro" {% if comentario_popup_active_state != "cadastro" %}hidden{% endif %}>
+                        <div class="op-dialog-panel" data-comentario-painel="cadastro" {% if comentario_popup_active_state != "cadastro" %}hidden="hidden"{% endif %}>
                             <form class="comentario-form op-dialog-form" method="post" action="{% url 'comentario_cadastro_solicitar_codigo' page.id %}">
                                 {% csrf_token %}
                                 <div class="comentario-grid">
@@ -684,7 +684,7 @@
                         </div>
 
                         {% if comentario_auth_pending %}
-                            <div class="comentario-codigo-box op-dialog-panel" data-comentario-painel="codigo" {% if comentario_popup_active_state != "codigo" %}hidden{% endif %}>
+                            <div class="comentario-codigo-box op-dialog-panel" data-comentario-painel="codigo" {% if comentario_popup_active_state != "codigo" %}hidden="hidden"{% endif %}>
                                 <p>Digite o código enviado para {{ comentario_auth_pending.masked_email }}.</p>
                                 {% if comentario_popup_error == "codigo_enviado" or comentario_popup_error == "cadastro_codigo_enviado" %}
                                     <p class="mensagem-sucesso comentario-popup-mensagem">Código enviado. Confira seu e-mail para continuar.</p>

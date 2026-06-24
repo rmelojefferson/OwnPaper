@@ -178,7 +178,7 @@
                         {% for pergunta in quiz_perguntas %}
                             {% translated pergunta "pergunta" "pt-br" as translated_quiz_pergunta %}
                             {% translated pergunta "explicacao" "pt-br" as translated_quiz_explicacao %}
-                            <article class="quiz-pergunta" data-quiz-pergunta data-quiz-question-key="{{ pergunta.quiz_dom_id }}" data-quiz-multi="{% if pergunta.possui_multiplas_corretas %}1{% else %}0{% endif %}" data-quiz-require-all="{% if pergunta.exigir_todas_corretas %}1{% else %}0{% endif %}" {% if not forloop.first %}hidden{% endif %}>
+                            <article class="quiz-pergunta" data-quiz-pergunta data-quiz-question-key="{{ pergunta.quiz_dom_id }}" data-quiz-multi="{% if pergunta.possui_multiplas_corretas %}1{% else %}0{% endif %}" data-quiz-require-all="{% if pergunta.exigir_todas_corretas %}1{% else %}0{% endif %}" {% if not forloop.first %}hidden="hidden"{% endif %}>
                                 <h3>Pergunta {{ forloop.counter }}</h3>
                                 <p class="quiz-pergunta-texto">{{ translated_quiz_pergunta }}</p>
                                 <div class="quiz-opcoes">
@@ -227,7 +227,7 @@
                 </section>
 
                 {% with publicacoes_atuais=quiz_perguntas.0.quiz_publicacoes_vinculadas %}
-                <section class="quiz-estudo-publicacoes-atual publicacoes-relacionadas" data-quiz-estudo-publicacoes-atual {% if not publicacoes_atuais %}hidden{% endif %}>
+                <section class="quiz-estudo-publicacoes-atual publicacoes-relacionadas" data-quiz-estudo-publicacoes-atual {% if not publicacoes_atuais %}hidden="hidden"{% endif %}>
                     <h2>Publicações desta pergunta</h2>
                     <div class="home-lista-publicacoes lista-relacionadas" data-quiz-estudo-publicacoes-atual-lista>
                         {% for origem in publicacoes_atuais %}
@@ -314,7 +314,7 @@
                         <div class="comentario-popup-card op-dialog-card" role="dialog" aria-modal="true" aria-labelledby="quiz-login-popup-titulo">
                             <button type="button" class="comentario-popup-fechar" data-quiz-login-close aria-label="Fechar">×</button>
                             <h3 id="quiz-login-popup-titulo">Acesso ao quiz</h3>
-                            <div class="op-dialog-panel" data-quiz-login-painel="login" {% if quiz_popup_active_state != "login" %}hidden{% endif %}>
+                            <div class="op-dialog-panel" data-quiz-login-painel="login" {% if quiz_popup_active_state != "login" %}hidden="hidden"{% endif %}>
                                 <form method="post" action="{% url 'quiz_login_solicitar_codigo' page.id %}" class="quiz-estudo-login-form op-dialog-form">
                                     {% csrf_token %}
                                     <label for="quiz-login-email">E-mail</label>
@@ -336,7 +336,7 @@
                                     </div>
                                 {% endif %}
                             </div>
-                            <div class="op-dialog-panel" data-quiz-login-painel="cadastro" {% if quiz_popup_active_state != "cadastro" %}hidden{% endif %}>
+                            <div class="op-dialog-panel" data-quiz-login-painel="cadastro" {% if quiz_popup_active_state != "cadastro" %}hidden="hidden"{% endif %}>
                                 <form method="post" action="{% url 'quiz_cadastro_solicitar_codigo' page.id %}" class="quiz-estudo-login-form op-dialog-form">
                                     {% csrf_token %}
                                     <div class="comentario-grid">
@@ -406,7 +406,7 @@
                                 </form>
                                 <button type="button" class="comentario-cadastro-link" data-quiz-login-step="login">Já tenho cadastro</button>
                             </div>
-                            <div class="op-dialog-panel" data-quiz-login-painel="codigo" {% if quiz_popup_active_state != "codigo" %}hidden{% endif %}>
+                            <div class="op-dialog-panel" data-quiz-login-painel="codigo" {% if quiz_popup_active_state != "codigo" %}hidden="hidden"{% endif %}>
                                 {% if quiz_auth_pending %}
                                     <form method="post" action="{% url 'quiz_confirmar_codigo' page.id %}" class="quiz-estudo-login-form quiz-estudo-login-form--codigo op-dialog-form">
                                         {% csrf_token %}
