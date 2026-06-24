@@ -78,6 +78,22 @@ urlpatterns = [
     path("sitemap.xml", sitemap, {"sitemaps": sitemaps}, name="sitemap"),
     path("",include(tf_urls)),
     path("", include("conteudo.urls")),
+]
+
+if getattr(settings, "OWNPAPER_SERVE_PUBLIC_MEDIA", False):
+    from django.urls import re_path
+    from django.views.static import serve
+
+    media_prefix = settings.MEDIA_URL.lstrip("/")
+    urlpatterns += [
+        re_path(
+            rf"^{media_prefix}(?P<path>.*)$",
+            serve,
+            {"document_root": settings.MEDIA_ROOT},
+        ),
+    ]
+
+urlpatterns += [
     path("", include(wagtail_urls)),
 ]
 

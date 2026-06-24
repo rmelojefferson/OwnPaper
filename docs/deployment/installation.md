@@ -112,3 +112,7 @@ docker compose exec -T web python manage.py homologar_ownpaper
 - PostgreSQL: volume `ownpaper_postgres`.
 
 Não apague volumes sem backup validado.
+
+Se a instalação for acessada diretamente pela porta do container, sem proxy reverso servindo `/media/`, mantenha `OWNPAPER_SERVE_PUBLIC_MEDIA=true` no `.env`.
+
+Se Nginx/Apache/CDN servir `/media/`, use `OWNPAPER_SERVE_PUBLIC_MEDIA=false` e configure o proxy para apontar `DJANGO_MEDIA_URL` para `OWNPAPER_MEDIA_VOLUME`.

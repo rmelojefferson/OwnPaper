@@ -53,6 +53,24 @@ OWNPAPER_VIDEO_MAX_MB=500
 
 SVG não é aceito por padrão.
 
+## Mídia pública
+
+Arquivos enviados para imagens, documentos públicos e logos usam `DJANGO_MEDIA_URL` e `DJANGO_MEDIA_ROOT`.
+
+Em instalação Docker direta, sem Nginx/Apache servindo `/media/`, ative:
+
+```env
+OWNPAPER_SERVE_PUBLIC_MEDIA=true
+```
+
+Em produção com proxy reverso servindo arquivos estáticos e mídia diretamente, mantenha:
+
+```env
+OWNPAPER_SERVE_PUBLIC_MEDIA=false
+```
+
+Essa opção serve apenas `MEDIA_ROOT`. A mídia privada/quarentena continua separada em `OWNPAPER_PRIVATE_MEDIA_VOLUME`.
+
 
 ### Exclusão de IPs das estatísticas
 

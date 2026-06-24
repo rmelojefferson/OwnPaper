@@ -204,6 +204,7 @@ MEDIA_ROOT = os.getenv(
     "DJANGO_MEDIA_ROOT",
     os.path.join(BASE_DIR, "media"),
 )
+OWNPAPER_SERVE_PUBLIC_MEDIA = env_bool("OWNPAPER_SERVE_PUBLIC_MEDIA", False)
 
 # Default storage settings, with the staticfiles storage updated.
 # See https://docs.djangoproject.com/en/4.2/ref/settings/#std-setting-STORAGES
