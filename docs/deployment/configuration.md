@@ -120,13 +120,7 @@ OWNPAPER_PLAUSIBLE_SYNC_ADDED_BY=OwnPaper
 
 O container do OwnPaper precisa alcançar o banco do Plausible por rede Docker. Em instalações separadas por `docker compose`, conecte os serviços a uma rede compartilhada ou configure um hostname acessível. O OwnPaper mantém no Plausible uma regra identificada como `OwnPaper dynamic exclude: nome-da-rede`, removendo a regra antiga dessa automação quando o IP mudar.
 
-No Windows, use o modelo:
-
-```text
-scripts/windows/atualizar-ip-ownpaper.bat
-```
-
-Edite `OWNPAPER_URL`, `OWNPAPER_TOKEN` e `OWNPAPER_NOME`. Para executar ao ligar a máquina, coloque o `.bat` no Agendador de Tarefas do Windows com o gatilho “Ao fazer logon”.
+No Windows, gere o script localmente na máquina que ficará dentro da rede ignorada. Não versionar nem publicar esse arquivo, pois ele contém o token da instalação. Para executar ao ligar a máquina, coloque o `.bat` no Agendador de Tarefas do Windows com o gatilho “Ao fazer logon”.
 
 ## Backups
 
