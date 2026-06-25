@@ -145,7 +145,7 @@
 .op-publication-shell .corpo,
 .op-publication-shell .corpo p,
 .op-publication-shell .corpo li {
-    font-family: var(--op-font-editorial);
+    font-family: var(--op-font-ui);
     text-align: justify;
     text-justify: inter-word;
     hyphens: auto;
@@ -179,22 +179,22 @@
 .op-publication-shell .corpo h6 {
     margin: 2.2rem 0 1rem;
     font-family: var(--op-font-ui);
-    font-weight: 800;
+    font-weight: 850;
     line-height: 1.22;
     text-align: left;
     color: var(--op-text, #111827);
 }
 
 .op-publication-shell .corpo h1 {
-    font-size: calc(1.85rem * var(--publicacao-fonte-escala, 1));
+    font-size: calc(1.95rem * var(--publicacao-fonte-escala, 1));
 }
 
 .op-publication-shell .corpo h2 {
-    font-size: calc(1.58rem * var(--publicacao-fonte-escala, 1));
+    font-size: calc(1.68rem * var(--publicacao-fonte-escala, 1));
 }
 
 .op-publication-shell .corpo h3 {
-    font-size: calc(1.32rem * var(--publicacao-fonte-escala, 1));
+    font-size: calc(1.38rem * var(--publicacao-fonte-escala, 1));
 }
 
 .op-publication-shell .corpo h4,
@@ -411,13 +411,13 @@
 .op-publication-shell .referencias ol {
     margin: 0;
     padding-inline-start: 1.75rem;
-    font-family: var(--op-font-editorial);
+    font-family: var(--op-font-ui);
 }
 
 .op-publication-shell .notas-rodape li,
 .op-publication-shell .referencias li {
     padding-inline-start: 0.35rem;
-    font-family: var(--op-font-editorial);
+    font-family: var(--op-font-ui);
 }
 
 .op-publication-shell .creditos-videos ul,

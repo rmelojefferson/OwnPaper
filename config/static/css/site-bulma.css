@@ -25,7 +25,7 @@ html[data-theme="escuro"] ::selection {
 
 :root {
     --op-font-ui: "Avenir Next", "Segoe UI Variable", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
-    --op-font-editorial: "Libre Baskerville", "Lora", "Source Serif 4", Georgia, serif;
+    --op-font-editorial: var(--op-font-ui);
     --bulma-family-primary: var(--op-font-ui);
     --bulma-body-background-color: var(--op-bg, #f8fafc);
     --bulma-body-family: var(--op-font-ui);
@@ -152,6 +152,65 @@ html[data-theme="escuro"] ::selection {
 .op-content a {
     text-decoration: underline;
     text-underline-offset: 0.14em;
+}
+
+.op-content h1,
+.op-content h2,
+.op-content h3,
+.op-content h4,
+.op-content h5,
+.op-content h6,
+.rich-text h1,
+.rich-text h2,
+.rich-text h3,
+.rich-text h4,
+.rich-text h5,
+.rich-text h6 {
+    margin: 2rem 0 0.75rem;
+    font-family: var(--op-font-ui);
+    font-weight: 800;
+    line-height: 1.18;
+    text-align: left;
+    color: var(--op-text, #0f172a);
+}
+
+.op-content h1:first-child,
+.op-content h2:first-child,
+.op-content h3:first-child,
+.op-content h4:first-child,
+.op-content h5:first-child,
+.op-content h6:first-child,
+.rich-text h1:first-child,
+.rich-text h2:first-child,
+.rich-text h3:first-child,
+.rich-text h4:first-child,
+.rich-text h5:first-child,
+.rich-text h6:first-child {
+    margin-top: 0;
+}
+
+.op-content h1,
+.rich-text h1 {
+    font-size: clamp(1.85rem, 2.8vw, 2.35rem);
+}
+
+.op-content h2,
+.rich-text h2 {
+    font-size: clamp(1.5rem, 2.2vw, 1.9rem);
+}
+
+.op-content h3,
+.rich-text h3 {
+    font-size: clamp(1.25rem, 1.8vw, 1.55rem);
+}
+
+.op-content h4,
+.op-content h5,
+.op-content h6,
+.rich-text h4,
+.rich-text h5,
+.rich-text h6 {
+    font-size: clamp(1.08rem, 1.4vw, 1.22rem);
 }
 
 .op-content p:last-child,

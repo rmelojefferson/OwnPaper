@@ -54,6 +54,47 @@ body.pagina-cookies .controles-leitura-flutuante {
     hyphens: auto;
 }
 
+.pagina-institucional-artigo .corpo h1,
+.pagina-institucional-artigo .corpo h2,
+.pagina-institucional-artigo .corpo h3,
+.pagina-institucional-artigo .corpo h4,
+.pagina-institucional-artigo .corpo h5,
+.pagina-institucional-artigo .corpo h6 {
+    margin: 2rem 0 0.75rem;
+    font-family: var(--op-font-ui);
+    font-weight: 800;
+    line-height: 1.18;
+    text-align: left;
+    color: var(--op-text, #111827);
+}
+
+.pagina-institucional-artigo .corpo h1:first-child,
+.pagina-institucional-artigo .corpo h2:first-child,
+.pagina-institucional-artigo .corpo h3:first-child,
+.pagina-institucional-artigo .corpo h4:first-child,
+.pagina-institucional-artigo .corpo h5:first-child,
+.pagina-institucional-artigo .corpo h6:first-child {
+    margin-top: 0;
+}
+
+.pagina-institucional-artigo .corpo h1 {
+    font-size: 1.95rem;
+}
+
+.pagina-institucional-artigo .corpo h2 {
+    font-size: 1.68rem;
+}
+
+.pagina-institucional-artigo .corpo h3 {
+    font-size: 1.38rem;
+}
+
+.pagina-institucional-artigo .corpo h4,
+.pagina-institucional-artigo .corpo h5,
+.pagina-institucional-artigo .corpo h6 {
+    font-size: 1.15rem;
+}
+
 body.pagina-cookies .pagina-institucional-artigo {
     display: grid;
     gap: 1rem;
