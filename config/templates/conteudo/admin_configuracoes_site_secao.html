@@ -1022,7 +1022,7 @@
         </aside>
     </section>
     {% elif secao.slug == "integracoes-rastreamento" %}
-    <section class="op-admin-two-column op-admin-settings-layout op-admin-settings-layout--integrations">
+    <section class="op-admin-two-column op-admin-settings-layout op-admin-settings-layout--integrations op-admin-config-integrations">
         <article class="w-panel op-admin-card">
             <section class="op-admin-inline-card op-admin-custom-code-warning">
                 <h3>Códigos personalizados</h3>
@@ -1036,12 +1036,14 @@
                     <div class="op-admin-custom-code-list">
                         {% for codigo in codigos_personalizados %}
                             <article class="op-admin-custom-code-item{% if not codigo.ativo %} is-disabled{% endif %}">
-                                <div>
+                                <div class="op-admin-custom-code-item__content">
                                     <strong>{{ codigo.titulo }}</strong>
                                     <span>{{ codigo.get_tipo_display }} · {{ codigo.get_posicao_display }} · {% if codigo.ativo %}Ativo{% else %}Inativo{% endif %}</span>
                                     {% if codigo.descricao %}<small>{{ codigo.descricao }}</small>{% endif %}
                                 </div>
-                                <a class="button button-secondary" href="?editar_codigo={{ codigo.id }}">Editar</a>
+                                <div class="op-admin-custom-code-item__actions">
+                                    <a class="button button-secondary" href="?editar_codigo={{ codigo.id }}">Editar</a>
+                                </div>
                             </article>
                         {% endfor %}
                     </div>

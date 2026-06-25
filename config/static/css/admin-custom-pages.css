@@ -706,7 +706,7 @@
     min-height: 44px;
 }
 
-.op-admin-config-integrations .op-admin-integrations-checkbox input[type="checkbox"] {
+.op-admin-config-integrations .op-admin-field--checkbox input[type="checkbox"] {
     position: absolute !important;
     inline-size: 1px !important;
     block-size: 1px !important;
@@ -811,6 +811,27 @@
     padding-top: 0;
 }
 
+.op-admin-settings-layout--integrations {
+    gap: 1.25rem;
+}
+
+.op-admin-settings-layout--integrations .op-admin-card,
+.op-admin-settings-layout--integrations article.op-admin-card,
+.op-admin-settings-layout--integrations aside.op-admin-stack {
+    display: grid;
+    gap: 1rem;
+}
+
+.op-admin-settings-layout--integrations .op-admin-inline-card {
+    display: grid;
+    gap: 0.8rem;
+}
+
+.op-admin-settings-layout--integrations .op-admin-inline-card h3,
+.op-admin-settings-layout--integrations .op-admin-inline-card p {
+    margin-block: 0;
+}
+
 .op-admin-custom-code-warning {
     border-color: color-mix(in srgb, var(--op-admin-warning, #b45309) 35%, var(--op-admin-border)) !important;
 }
@@ -821,13 +842,12 @@
 }
 
 .op-admin-custom-code-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    padding: 0.9rem;
+    display: grid;
+    gap: 0.75rem;
+    align-content: start;
+    padding: 1rem;
     border: 1px solid var(--op-admin-border);
-    border-radius: 0.75rem;
+    border-radius: 12px;
     background: var(--op-admin-surface-subtle);
 }
 
@@ -835,10 +855,25 @@
     opacity: 0.62;
 }
 
+.op-admin-custom-code-item__content {
+    display: grid;
+    gap: 0.25rem;
+}
+
 .op-admin-custom-code-item strong,
 .op-admin-custom-code-item span,
 .op-admin-custom-code-item small {
     display: block;
+}
+
+.op-admin-custom-code-item__actions {
+    display: flex;
+    align-items: center;
+}
+
+.op-admin-custom-code-item .button {
+    width: auto;
+    margin-top: 0;
 }
 
 .op-admin-form-grid--custom-code,
@@ -863,7 +898,7 @@
     border-top: 1px solid var(--op-admin-border);
 }
 
-.op-admin-config-integrations .op-admin-integrations-checkbox .op-admin-menu-checkbox-line {
+.op-admin-config-integrations .op-admin-field--checkbox .op-admin-menu-checkbox-line {
     display: inline-flex !important;
     align-items: center;
     gap: 0.5rem;
@@ -874,7 +909,7 @@
     position: relative;
 }
 
-.op-admin-config-integrations .op-admin-integrations-checkbox .op-admin-menu-checkbox {
+.op-admin-config-integrations .op-admin-field--checkbox .op-admin-menu-checkbox {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -887,7 +922,7 @@
     background: var(--w-color-surface-field, #fff);
 }
 
-.op-admin-config-integrations .op-admin-integrations-checkbox input[type="checkbox"]:checked + .op-admin-menu-checkbox::before {
+.op-admin-config-integrations .op-admin-field--checkbox input[type="checkbox"]:checked + .op-admin-menu-checkbox::before {
     content: "✓";
     color: var(--w-color-text-context, #1f3b5c);
     font-size: 13px;
@@ -895,12 +930,12 @@
     line-height: 1;
 }
 
-.op-admin-config-integrations .op-admin-integrations-checkbox input[type="checkbox"]:focus-visible + .op-admin-menu-checkbox {
+.op-admin-config-integrations .op-admin-field--checkbox input[type="checkbox"]:focus-visible + .op-admin-menu-checkbox {
     outline: 2px solid var(--w-color-border-focus, #3b82f6);
     outline-offset: 2px;
 }
 
-.op-admin-config-integrations .op-admin-integrations-checkbox .op-admin-menu-checkbox-help {
+.op-admin-config-integrations .op-admin-field--checkbox .op-admin-menu-checkbox-help {
     display: block;
     margin-top: 0.375rem;
     margin-left: 1.5rem;
