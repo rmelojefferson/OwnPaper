@@ -1029,10 +1029,10 @@
 
                 <section class="op-admin-inline-card">
                     <h3>Verificações de domínio</h3>
-                    <p class="op-admin-panel__meta">Informe somente os valores de verificação, não a tag HTML completa.</p>
+                    <p class="op-admin-panel__meta">Use os campos simples quando o serviço fornecer apenas o valor. Para tags completas ou arquivo HTML/TXT, use os campos avançados abaixo.</p>
                     <div class="op-admin-form-grid op-admin-form-grid--integrations-verification">
                         {% for field in form.visible_fields %}
-                            {% if field.name == "google_search_console_verification" or field.name == "meta_domain_verification" %}
+                            {% if field.name == "google_search_console_verification" or field.name == "meta_domain_verification" or field.name == "verificacao_arquivo_nome" or field.name == "verificacao_arquivo_conteudo" or field.name == "verificacao_head_html" %}
                                 <label class="op-admin-field" for="{{ field.id_for_label }}">
                                     <span>{{ field.label }}</span>
                                     {{ field }}
@@ -1063,10 +1063,10 @@
 
                 <section class="op-admin-inline-card">
                     <h3>Analytics externos</h3>
-                    <p class="op-admin-panel__meta">Use apenas URLs das ferramentas configuradas. Não há campo de script livre nesta instalação.</p>
+                    <p class="op-admin-panel__meta">Plausible pode ser carregado sem cookies opcionais quando configurado sem cookies. As demais ferramentas continuam condicionadas ao consentimento.</p>
                     <div class="op-admin-form-grid op-admin-form-grid--integrations-analytics">
                         {% for field in form.visible_fields %}
-                            {% if field.name == "plausible_script_direto_ativo" %}
+                            {% if field.name == "plausible_script_direto_ativo" or field.name == "plausible_sem_consentimento_ativo" %}
                                 <div class="op-admin-field op-admin-field--checkbox op-admin-integrations-checkbox">
                                     <label class="op-admin-checkbox-line op-admin-menu-checkbox-line" for="{{ field.id_for_label }}">
                                         {{ field }}

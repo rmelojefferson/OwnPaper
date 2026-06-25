@@ -8,6 +8,23 @@
     <meta name="facebook-domain-verification" content="{{ config_site.meta_domain_verification }}">
 {% endif %}
 
+{% if config_site.verificacao_head_html %}
+    {{ config_site.verificacao_head_html|safe }}
+{% endif %}
+
+{% if config_site.plausible_sem_consentimento_ativo %}
+    {% if config_site.plausible_script_direto_ativo and config_site.plausible_script_url %}
+        <script async src="{{ config_site.plausible_script_url|escape }}"></script>
+        <script>
+            window.plausible = window.plausible || function(){(plausible.q = plausible.q || []).push(arguments);};
+            plausible.init = plausible.init || function(i){plausible.o = i || {};};
+            plausible.init();
+        </script>
+    {% elif config_site.plausible_domain and config_site.plausible_script_url %}
+        <script defer data-domain="{{ config_site.plausible_domain|escape }}" src="{{ config_site.plausible_script_url|escape }}"></script>
+    {% endif %}
+{% endif %}
+
 {% with consent=request.COOKIES.ownpaper_cookie_consent|default:'' %}
     {% if consent == "all" %}
         {% if config_site.google_tag_manager_id %}
@@ -43,14 +60,14 @@
             </script>
         {% endif %}
 
-        {% if config_site.plausible_script_direto_ativo and config_site.plausible_script_url %}
+        {% if not config_site.plausible_sem_consentimento_ativo and config_site.plausible_script_direto_ativo and config_site.plausible_script_url %}
             <script async src="{{ config_site.plausible_script_url|escape }}"></script>
             <script>
                 window.plausible = window.plausible || function(){(plausible.q = plausible.q || []).push(arguments);};
                 plausible.init = plausible.init || function(i){plausible.o = i || {};};
                 plausible.init();
             </script>
-        {% elif config_site.plausible_domain and config_site.plausible_script_url %}
+        {% elif not config_site.plausible_sem_consentimento_ativo and config_site.plausible_domain and config_site.plausible_script_url %}
             <script defer data-domain="{{ config_site.plausible_domain|escape }}" src="{{ config_site.plausible_script_url|escape }}"></script>
         {% endif %}
 

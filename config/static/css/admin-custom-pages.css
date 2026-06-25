@@ -731,6 +731,16 @@
     gap: 0.75rem;
 }
 
+.op-admin-form-grid--integrations-verification .op-admin-field:has(textarea) {
+    grid-column: 1 / -1;
+    grid-template-rows: auto auto auto;
+}
+
+.op-admin-form-grid--integrations-verification textarea {
+    min-height: 8rem;
+    resize: vertical;
+}
+
 .op-admin-form-grid--integrations-analytics {
     grid-template-columns: repeat(2, minmax(260px, 1fr));
     gap: 0.75rem;

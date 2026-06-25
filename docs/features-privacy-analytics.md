@@ -121,6 +121,14 @@ OwnPaper suporta configuração estruturada para ferramentas como:
 
 Plausible, Umami e Matomo podem ser configurados por domínio/ID/URL, evitando campo livre de script sempre que possível. Para o Plausible, o OwnPaper também suporta o snippet novo em que a ferramenta fornece apenas uma URL de script própria; nesse caso, o painel ativa um modo estruturado que renderiza somente o script predefinido e `plausible.init()`, sem permitir JavaScript arbitrário.
 
+O Plausible pode ser configurado para carregar sem aceite de cookies opcionais quando a instalação estiver usando Plausible sem cookies e a política de privacidade do projeto refletir isso. Google Analytics, Google Tag Manager, Meta Pixel, Umami e Matomo continuam condicionados ao consentimento de cookies opcionais.
+
+Para validações de domínio, o painel permite:
+
+- campos simples para valores de meta tags;
+- HTML avançado de verificação no `head`;
+- arquivo `.html` ou `.txt` servido na raiz do domínio.
+
 ## Risco de JavaScript livre
 
 Permitir que admins colem scripts arbitrários cria risco:

@@ -105,6 +105,14 @@ curl -fsS "https://seu-dominio.com/estatisticas/registrar-ip-ignorado/?token=ger
 
 O servidor identifica o IP público pela própria requisição e passa a ignorá-lo nas visualizações e estatísticas internas até a expiração configurada. Não envie o IP como parâmetro.
 
+No Windows, use o modelo:
+
+```text
+scripts/windows/atualizar-ip-ownpaper.bat
+```
+
+Edite `OWNPAPER_URL`, `OWNPAPER_TOKEN` e `OWNPAPER_NOME`. Para executar ao ligar a máquina, coloque o `.bat` no Agendador de Tarefas do Windows com o gatilho “Ao fazer logon”.
+
 ## Backups
 
 ```env

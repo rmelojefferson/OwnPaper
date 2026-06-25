@@ -729,6 +729,25 @@ class ConfiguracaoSite(BaseSiteSetting):
         blank=True,
         help_text="Conteúdo do meta tag `facebook-domain-verification` (somente o valor).",
     )
+    verificacao_head_html = models.TextField(
+        "HTML avançado de verificação no head",
+        blank=True,
+        help_text=(
+            "Use apenas códigos de verificação fornecidos por serviços confiáveis. "
+            "Este conteúdo é inserido no head do site público sem depender de cookies."
+        ),
+    )
+    verificacao_arquivo_nome = models.CharField(
+        "Nome do arquivo de verificação",
+        max_length=120,
+        blank=True,
+        help_text="Exemplo: google1234567890abcdef.html ou verificacao.txt.",
+    )
+    verificacao_arquivo_conteudo = models.TextField(
+        "Conteúdo do arquivo de verificação",
+        blank=True,
+        help_text="Cole aqui o conteúdo integral do arquivo solicitado pelo provedor.",
+    )
     google_analytics_id = models.CharField(
         "Google Analytics ID",
         max_length=32,
@@ -765,6 +784,14 @@ class ConfiguracaoSite(BaseSiteSetting):
         help_text=(
             "Ative quando o Plausible fornecer apenas um script próprio, sem data-domain. "
             "O OwnPaper renderiza apenas o snippet seguro predefinido."
+        ),
+    )
+    plausible_sem_consentimento_ativo = models.BooleanField(
+        "Carregar Plausible sem aceite de cookies opcionais",
+        default=False,
+        help_text=(
+            "Use somente quando a configuração do Plausible estiver sem cookies e adequada "
+            "à política de privacidade do projeto."
         ),
     )
     umami_website_id = models.CharField(
@@ -1091,11 +1118,16 @@ class ConfiguracaoSite(BaseSiteSetting):
             [
                 FieldPanel("google_search_console_verification"),
                 FieldPanel("meta_domain_verification"),
+                FieldPanel("verificacao_head_html"),
+                FieldPanel("verificacao_arquivo_nome"),
+                FieldPanel("verificacao_arquivo_conteudo"),
                 FieldPanel("google_analytics_id"),
                 FieldPanel("google_tag_manager_id"),
                 FieldPanel("meta_pixel_id"),
                 FieldPanel("plausible_domain"),
                 FieldPanel("plausible_script_url"),
+                FieldPanel("plausible_script_direto_ativo"),
+                FieldPanel("plausible_sem_consentimento_ativo"),
                 FieldPanel("umami_website_id"),
                 FieldPanel("umami_script_url"),
                 FieldPanel("matomo_site_id"),
