@@ -1188,6 +1188,18 @@ class RodapeConfiguravelTests(TestCase):
         self.assertContains(response, "Contato")
         self.assertContains(response, "Newsletter")
 
+    def test_rodape_padrao_permite_ocultar_item_sem_links_manuais(self):
+        self.config.rodape_padrao_newsletter_ativo = False
+        self.config.save(update_fields=["rodape_padrao_newsletter_ativo"])
+
+        response = self.client.get("/")
+        self.assertEqual(response.status_code, 200)
+        html = response.content.decode("utf-8")
+        footer = html[html.find("<footer") : html.find("</footer>")]
+
+        self.assertIn(">Contato<", footer)
+        self.assertNotIn(">Newsletter<", footer)
+
 
 @PUBLIC_TEST_SETTINGS
 class MenuPadraoConfiguravelTests(TestCase):

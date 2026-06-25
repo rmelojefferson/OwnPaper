@@ -915,6 +915,20 @@ class ConfiguracaoSite(BaseSiteSetting):
     menu_padrao_cookies_rotulo = models.CharField("Rótulo de Cookies", max_length=120, default="Cookies", blank=True)
     menu_padrao_rss_ativo = models.BooleanField("Exibir RSS no menu padrão", default=False)
     menu_padrao_rss_rotulo = models.CharField("Rótulo de RSS", max_length=120, default="RSS", blank=True)
+    rodape_padrao_contato_ativo = models.BooleanField("Exibir Contato no rodapé padrão", default=True)
+    rodape_padrao_contato_rotulo = models.CharField("Rótulo de Contato no rodapé", max_length=120, default="Contato", blank=True)
+    rodape_padrao_sobre_ativo = models.BooleanField("Exibir Sobre no rodapé padrão", default=True)
+    rodape_padrao_sobre_rotulo = models.CharField("Rótulo de Sobre no rodapé", max_length=120, default="Sobre", blank=True)
+    rodape_padrao_privacidade_ativo = models.BooleanField("Exibir Privacidade no rodapé padrão", default=True)
+    rodape_padrao_privacidade_rotulo = models.CharField("Rótulo de Privacidade no rodapé", max_length=120, default="Privacidade e dados", blank=True)
+    rodape_padrao_cookies_ativo = models.BooleanField("Exibir Cookies no rodapé padrão", default=True)
+    rodape_padrao_cookies_rotulo = models.CharField("Rótulo de Cookies no rodapé", max_length=120, default="Cookies", blank=True)
+    rodape_padrao_newsletter_ativo = models.BooleanField("Exibir Newsletter no rodapé padrão", default=True)
+    rodape_padrao_newsletter_rotulo = models.CharField("Rótulo de Newsletter no rodapé", max_length=120, default="Newsletter", blank=True)
+    rodape_padrao_indexador_ativo = models.BooleanField("Exibir Indexador no rodapé padrão", default=True)
+    rodape_padrao_indexador_rotulo = models.CharField("Rótulo de Indexador no rodapé", max_length=120, default="Indexador", blank=True)
+    rodape_padrao_quiz_ativo = models.BooleanField("Exibir Quiz no rodapé padrão", default=True)
+    rodape_padrao_quiz_rotulo = models.CharField("Rótulo de Quiz no rodapé", max_length=120, default="Quiz", blank=True)
     tema_padrao_site = models.CharField(
         "Tema padrão do site",
         max_length=20,

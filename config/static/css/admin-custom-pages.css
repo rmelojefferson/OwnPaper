@@ -1327,6 +1327,43 @@
     gap: 0.75rem;
 }
 
+.op-admin-form-grid--menu-standard,
+.op-admin-form-grid--footer-standard {
+    grid-template-columns: minmax(260px, 0.9fr) minmax(260px, 1.1fr);
+    gap: 0.65rem 0.85rem;
+    align-items: start;
+}
+
+.op-admin-form-grid--menu-standard .op-admin-field--checkbox,
+.op-admin-form-grid--footer-standard .op-admin-field--checkbox {
+    display: block;
+    min-height: 44px;
+    padding: 1.35rem 0 0;
+    align-content: center;
+}
+
+.op-admin-form-grid--menu-standard label.op-admin-field,
+.op-admin-form-grid--footer-standard label.op-admin-field {
+    display: grid !important;
+    grid-template-rows: minmax(1.35rem, auto) 44px auto;
+    align-content: start;
+    margin-top: 0 !important;
+    font-weight: 600;
+}
+
+.op-admin-form-grid--menu-standard label.op-admin-field > span:first-child,
+.op-admin-form-grid--footer-standard label.op-admin-field > span:first-child {
+    min-height: 1.35rem;
+    display: flex;
+    align-items: flex-end;
+}
+
+.op-admin-form-grid--menu-standard label.op-admin-field input:not([type="checkbox"]):not([type="radio"]),
+.op-admin-form-grid--footer-standard label.op-admin-field input:not([type="checkbox"]):not([type="radio"]) {
+    height: 44px;
+    min-height: 44px;
+}
+
 .op-admin-form-grid--menu-dimensions .op-admin-field {
     grid-template-rows: minmax(2.7rem, auto) 44px auto;
     align-content: start;
@@ -1359,6 +1396,8 @@
     .op-admin-form-grid--institutional-tools,
     .op-admin-menu-top-grid,
     .op-admin-form-grid--menu-toggles,
+    .op-admin-form-grid--menu-standard,
+    .op-admin-form-grid--footer-standard,
     .op-admin-form-grid--menu-primary,
     .op-admin-form-grid--menu-logos,
     .op-admin-form-grid--menu-dimensions,
@@ -1411,6 +1450,19 @@
     line-height: 1.25;
 }
 
+.op-admin-config-menu .op-admin-form-grid--menu-standard .op-admin-menu-checkbox-line,
+.op-admin-config-menu .op-admin-form-grid--footer-standard .op-admin-menu-checkbox-line {
+    display: inline-flex !important;
+    flex-direction: row;
+    align-items: center;
+    width: auto !important;
+    margin-top: 0 !important;
+    font-weight: 600;
+    position: relative;
+    gap: 0.5rem;
+    line-height: 1.25;
+}
+
 .op-admin-config-menu .op-admin-form-grid--menu-toggles .op-admin-menu-checkbox-help {
     display: block;
     margin-top: 0.25rem;
@@ -1418,7 +1470,17 @@
     line-height: 1.35;
 }
 
-.op-admin-config-menu .op-admin-form-grid--menu-toggles input[type="checkbox"].op-admin-menu-toggle-input {
+.op-admin-config-menu .op-admin-form-grid--menu-standard .op-admin-menu-checkbox-help,
+.op-admin-config-menu .op-admin-form-grid--footer-standard .op-admin-menu-checkbox-help {
+    display: block;
+    margin-top: 0.25rem;
+    margin-left: 1.5rem;
+    line-height: 1.35;
+}
+
+.op-admin-config-menu .op-admin-form-grid--menu-toggles input[type="checkbox"].op-admin-menu-toggle-input,
+.op-admin-config-menu .op-admin-form-grid--menu-standard input[type="checkbox"],
+.op-admin-config-menu .op-admin-form-grid--footer-standard input[type="checkbox"] {
     position: absolute !important;
     inline-size: 1px !important;
     block-size: 1px !important;
@@ -1436,7 +1498,9 @@
     clip-path: inset(50%) !important;
 }
 
-.op-admin-config-menu .op-admin-form-grid--menu-toggles .op-admin-menu-checkbox {
+.op-admin-config-menu .op-admin-form-grid--menu-toggles .op-admin-menu-checkbox,
+.op-admin-config-menu .op-admin-form-grid--menu-standard .op-admin-menu-checkbox,
+.op-admin-config-menu .op-admin-form-grid--footer-standard .op-admin-menu-checkbox {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -1449,7 +1513,9 @@
     background: var(--w-color-surface-field, #fff);
 }
 
-.op-admin-config-menu .op-admin-form-grid--menu-toggles input[type="checkbox"].op-admin-menu-toggle-input:checked + .op-admin-menu-checkbox::before {
+.op-admin-config-menu .op-admin-form-grid--menu-toggles input[type="checkbox"].op-admin-menu-toggle-input:checked + .op-admin-menu-checkbox::before,
+.op-admin-config-menu .op-admin-form-grid--menu-standard input[type="checkbox"]:checked + .op-admin-menu-checkbox::before,
+.op-admin-config-menu .op-admin-form-grid--footer-standard input[type="checkbox"]:checked + .op-admin-menu-checkbox::before {
     content: "✓";
     color: var(--w-color-text-context, #1f3b5c);
     font-size: 13px;
@@ -1457,7 +1523,9 @@
     line-height: 1;
 }
 
-.op-admin-config-menu .op-admin-form-grid--menu-toggles input[type="checkbox"].op-admin-menu-toggle-input:focus-visible + .op-admin-menu-checkbox {
+.op-admin-config-menu .op-admin-form-grid--menu-toggles input[type="checkbox"].op-admin-menu-toggle-input:focus-visible + .op-admin-menu-checkbox,
+.op-admin-config-menu .op-admin-form-grid--menu-standard input[type="checkbox"]:focus-visible + .op-admin-menu-checkbox,
+.op-admin-config-menu .op-admin-form-grid--footer-standard input[type="checkbox"]:focus-visible + .op-admin-menu-checkbox {
     outline: 2px solid var(--w-color-border-focus, #3b82f6);
     outline-offset: 2px;
 }
