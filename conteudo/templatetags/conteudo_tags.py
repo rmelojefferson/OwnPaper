@@ -34,8 +34,30 @@ def render_codigos_personalizados(context, config_site, posicao):
         elif item.tipo == "js":
             partes.append(f"<script>\n{codigo}\n</script>")
         else:
+            codigo = _normalizar_html_personalizado(codigo, posicao)
             partes.append(codigo)
     return mark_safe("\n".join(partes))
+
+
+def _normalizar_html_personalizado(codigo, posicao):
+    if posicao != "head":
+        return codigo
+
+    google_file_match = re.search(
+        r"^\s*google-site-verification:\s*([A-Za-z0-9_.-]+)\s*$",
+        codigo,
+        flags=re.IGNORECASE,
+    )
+    if google_file_match:
+        token = html_escape(google_file_match.group(1), quote=True)
+        return f'<meta name="google-site-verification" content="{token}">'
+
+    if "<" not in codigo and ">" not in codigo:
+        texto = html_escape(codigo, quote=False).replace("--", "—")
+        return f"<!-- OwnPaper ignored head text: {texto} -->"
+
+    return codigo
+
 
 MENU_LABELS = {
     "home": {"pt-br": "Início"},

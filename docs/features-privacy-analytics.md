@@ -120,6 +120,8 @@ Cada bloco pode exigir aceite de cookies opcionais. Use essa opção para analyt
 
 Criar, editar ou excluir blocos exige senha atual, 2FA e confirmação explícita de responsabilidade. A ação é registrada em log de auditoria.
 
+Arquivos simples de verificação do Google no formato `google-site-verification: arquivo.html`, quando usados no `head`, são convertidos automaticamente para uma meta tag de verificação. Isso evita que o conteúdo do arquivo apareça como texto visível na página pública.
+
 ## Risco de JavaScript livre
 
 Permitir que admins colem scripts arbitrários cria risco:

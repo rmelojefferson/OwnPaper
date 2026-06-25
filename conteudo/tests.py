@@ -224,10 +224,19 @@ class SmokeRouteTests(TestCase):
             codigo="window.__op_consent_test = true;",
             exigir_consentimento=True,
         )
+        CodigoPersonalizadoSite.objects.create(
+            configuracao_site=config_site,
+            titulo="Arquivo Google",
+            tipo=CodigoPersonalizadoSite.TIPO_HTML,
+            posicao=CodigoPersonalizadoSite.POSICAO_HEAD,
+            codigo="google-site-verification: googleabc123.html",
+        )
 
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '<meta name="custom-verify" content="abc123">', html=False)
+        self.assertContains(response, '<meta name="google-site-verification" content="googleabc123.html">', html=False)
+        self.assertNotContains(response, "google-site-verification: googleabc123.html")
         self.assertNotContains(response, "window.__op_consent_test")
 
         response = self.client.get("/", HTTP_COOKIE="ownpaper_cookie_consent=all")
