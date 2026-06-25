@@ -79,6 +79,7 @@ from .models import (
     DuvidaQuizPublicacao,
     EstatisticaDiariaSite,
     EstatisticaTempoSite,
+    IpDinamicoIgnoradoEstatisticas,
     IdentidadeExternaComentario,
     InscritoNewsletter,
     MensagemContato,
@@ -372,6 +373,48 @@ def estatistica_tempo_site(request):
         },
     )
     return HttpResponse(status=204)
+
+
+@csrf_exempt
+def registrar_ip_ignorado_estatisticas(request):
+    if request.method not in {"GET", "POST"}:
+        return JsonResponse({"ok": False, "error": "Método inválido."}, status=405)
+
+    token_configurado = getattr(settings, "OWNPAPER_ANALYTICS_DYNAMIC_EXCLUDE_TOKEN", "")
+    token_recebido = request.POST.get("token") or request.GET.get("token") or ""
+    if not token_configurado or not secrets.compare_digest(token_configurado, token_recebido):
+        return JsonResponse({"ok": False, "error": "Não autorizado."}, status=403)
+
+    ip = ip_da_requisicao(request)
+    try:
+        socket.inet_pton(socket.AF_INET, ip)
+    except OSError:
+        try:
+            socket.inet_pton(socket.AF_INET6, ip)
+        except OSError:
+            return JsonResponse({"ok": False, "error": "IP inválido."}, status=400)
+
+    nome_raw = request.POST.get("nome") or request.GET.get("nome") or "rede-local"
+    nome = slugify(str(nome_raw))[:80] or "rede-local"
+    ttl_horas = max(1, int(getattr(settings, "OWNPAPER_ANALYTICS_DYNAMIC_EXCLUDE_TTL_HOURS", 72)))
+    expira_em = timezone.now() + timedelta(hours=ttl_horas)
+    registro, criado = IpDinamicoIgnoradoEstatisticas.objects.update_or_create(
+        nome=nome,
+        defaults={
+            "ip": ip,
+            "expira_em": expira_em,
+        },
+    )
+
+    return JsonResponse(
+        {
+            "ok": True,
+            "created": criado,
+            "nome": registro.nome,
+            "ip": registro.ip,
+            "expira_em": registro.expira_em.isoformat(),
+        }
+    )
 
 
 def _gerar_codigo_6():

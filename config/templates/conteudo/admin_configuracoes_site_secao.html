@@ -1066,7 +1066,17 @@
                     <p class="op-admin-panel__meta">Use apenas URLs das ferramentas configuradas. Não há campo de script livre nesta instalação.</p>
                     <div class="op-admin-form-grid op-admin-form-grid--integrations-analytics">
                         {% for field in form.visible_fields %}
-                            {% if field.name == "plausible_domain" or field.name == "plausible_script_url" or field.name == "umami_website_id" or field.name == "umami_script_url" or field.name == "matomo_site_id" or field.name == "matomo_url" %}
+                            {% if field.name == "plausible_script_direto_ativo" %}
+                                <div class="op-admin-field op-admin-field--checkbox op-admin-integrations-checkbox">
+                                    <label class="op-admin-checkbox-line op-admin-menu-checkbox-line" for="{{ field.id_for_label }}">
+                                        {{ field }}
+                                        <span class="op-admin-menu-checkbox" aria-hidden="true"></span>
+                                        <span>{{ field.label }}</span>
+                                    </label>
+                                    {% if field.help_text %}<span class="op-admin-muted op-admin-menu-checkbox-help">{{ field.help_text }}</span>{% endif %}
+                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                </div>
+                            {% elif field.name == "plausible_domain" or field.name == "plausible_script_url" or field.name == "umami_website_id" or field.name == "umami_script_url" or field.name == "matomo_site_id" or field.name == "matomo_url" %}
                                 <label class="op-admin-field" for="{{ field.id_for_label }}">
                                     <span>{{ field.label }}</span>
                                     {{ field }}

@@ -293,6 +293,7 @@ CONFIG_SITE_SECTION_DEFS = [
             "meta_pixel_id",
             "plausible_domain",
             "plausible_script_url",
+            "plausible_script_direto_ativo",
             "umami_website_id",
             "umami_script_url",
             "matomo_site_id",

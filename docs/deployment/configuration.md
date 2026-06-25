@@ -88,6 +88,23 @@ Depois de alterar essa variável no `.env`, recrie o serviço web para o Docker 
 docker compose up -d web
 ```
 
+### Exclusão automática de IP dinâmico
+
+Quando a rede administrativa usa IP público dinâmico, configure um token no servidor:
+
+```env
+OWNPAPER_ANALYTICS_DYNAMIC_EXCLUDE_TOKEN=gere-um-token-longo
+OWNPAPER_ANALYTICS_DYNAMIC_EXCLUDE_TTL_HOURS=72
+```
+
+Depois, em uma máquina dentro da rede que deve ser ignorada, agende uma chamada diária:
+
+```bash
+curl -fsS "https://seu-dominio.com/estatisticas/registrar-ip-ignorado/?token=gere-um-token-longo&nome=rede-local"
+```
+
+O servidor identifica o IP público pela própria requisição e passa a ignorá-lo nas visualizações e estatísticas internas até a expiração configurada. Não envie o IP como parâmetro.
+
 ## Backups
 
 ```env

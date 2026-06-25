@@ -119,7 +119,7 @@ OwnPaper suporta configuração estruturada para ferramentas como:
 - Google Tag Manager;
 - Meta Pixel.
 
-Plausible, Umami e Matomo podem ser configurados por domínio/ID/URL, evitando campo livre de script sempre que possível.
+Plausible, Umami e Matomo podem ser configurados por domínio/ID/URL, evitando campo livre de script sempre que possível. Para o Plausible, o OwnPaper também suporta o snippet novo em que a ferramenta fornece apenas uma URL de script própria; nesse caso, o painel ativa um modo estruturado que renderiza somente o script predefinido e `plausible.init()`, sem permitir JavaScript arbitrário.
 
 ## Risco de JavaScript livre
 

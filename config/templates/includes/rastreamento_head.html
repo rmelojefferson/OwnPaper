@@ -43,7 +43,14 @@
             </script>
         {% endif %}
 
-        {% if config_site.plausible_domain and config_site.plausible_script_url %}
+        {% if config_site.plausible_script_direto_ativo and config_site.plausible_script_url %}
+            <script async src="{{ config_site.plausible_script_url|escape }}"></script>
+            <script>
+                window.plausible = window.plausible || function(){(plausible.q = plausible.q || []).push(arguments);};
+                plausible.init = plausible.init || function(i){plausible.o = i || {};};
+                plausible.init();
+            </script>
+        {% elif config_site.plausible_domain and config_site.plausible_script_url %}
             <script defer data-domain="{{ config_site.plausible_domain|escape }}" src="{{ config_site.plausible_script_url|escape }}"></script>
         {% endif %}
 

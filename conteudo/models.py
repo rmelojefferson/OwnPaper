@@ -759,6 +759,14 @@ class ConfiguracaoSite(BaseSiteSetting):
         blank=True,
         help_text="Use a URL oficial ou da sua instância Plausible self-hosted.",
     )
+    plausible_script_direto_ativo = models.BooleanField(
+        "Usar snippet novo do Plausible sem domínio",
+        default=False,
+        help_text=(
+            "Ative quando o Plausible fornecer apenas um script próprio, sem data-domain. "
+            "O OwnPaper renderiza apenas o snippet seguro predefinido."
+        ),
+    )
     umami_website_id = models.CharField(
         "Umami - Website ID",
         max_length=120,
@@ -6379,6 +6387,21 @@ class EstatisticaDiariaSite(models.Model):
 
     def __str__(self):
         return f"{self.data} - {self.path}"
+
+
+class IpDinamicoIgnoradoEstatisticas(models.Model):
+    nome = models.SlugField("Nome", max_length=80, default="rede-local", db_index=True)
+    ip = models.GenericIPAddressField("IP público", db_index=True)
+    atualizado_em = models.DateTimeField("Atualizado em", auto_now=True)
+    expira_em = models.DateTimeField("Expira em", db_index=True)
+
+    class Meta:
+        verbose_name = "IP dinâmico ignorado nas estatísticas"
+        verbose_name_plural = "IPs dinâmicos ignorados nas estatísticas"
+        ordering = ["nome"]
+
+    def __str__(self):
+        return f"{self.nome}: {self.ip}"
 
 
 class InscritoNewsletter(models.Model):

@@ -11,6 +11,7 @@ from .views import (
     email_click_track,
     email_open_track,
     estatistica_tempo_site,
+    registrar_ip_ignorado_estatisticas,
     contato_form,
     newsletter_cancelar,
     newsletter_confirmar,
@@ -57,6 +58,11 @@ from .views import (
 urlpatterns = [
     path("robots.txt", robots_txt, name="robots_txt"),
     path("estatisticas/tempo/", estatistica_tempo_site, name="estatistica_tempo_site"),
+    path(
+        "estatisticas/registrar-ip-ignorado/",
+        registrar_ip_ignorado_estatisticas,
+        name="registrar_ip_ignorado_estatisticas",
+    ),
     path("acesso/username-disponivel/", username_disponivel, name="username_disponivel"),
     path("submissoes/", submissao_publica, name="submissao_publica"),
     path(

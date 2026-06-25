@@ -752,6 +752,7 @@
 }
 
 .op-admin-form-grid--integrations-stats .op-admin-integrations-checkbox,
+.op-admin-form-grid--integrations-analytics .op-admin-integrations-checkbox,
 .op-admin-form-grid--integrations-shlink .op-admin-integrations-checkbox {
     grid-column: 1 / -1;
 }

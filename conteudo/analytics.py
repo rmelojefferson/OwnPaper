@@ -1,6 +1,8 @@
 import ipaddress
 
 from django.conf import settings
+from django.apps import apps
+from django.utils import timezone
 
 
 def ip_da_requisicao(request):
@@ -32,6 +34,12 @@ def ip_ignorado_para_estatisticas(ip):
                 return True
         except ValueError:
             continue
+    try:
+        modelo = apps.get_model("conteudo", "IpDinamicoIgnoradoEstatisticas")
+        if modelo.objects.filter(ip=str(endereco), expira_em__gt=timezone.now()).exists():
+            return True
+    except Exception:
+        return False
     return False
 
 

@@ -48,6 +48,7 @@ from conteudo.models import (
     DisparoEmailClique,
     DisparoEmailDestino,
     EstatisticaTempoSite,
+    IpDinamicoIgnoradoEstatisticas,
     InscritoNewsletter,
     MenuPrincipalGrupo,
     MensagemContato,
@@ -204,6 +205,41 @@ class SmokeRouteTests(TestCase):
         self.assertContains(response, "<rss")
         self.assertContains(response, "<item>")
         self.assertContains(response, "Publicacao RSS Teste")
+
+    def test_plausible_script_direto_renderiza_snippet_seguro_com_consentimento(self):
+        config_site = ConfiguracaoSite.for_site(Site.objects.get(is_default_site=True))
+        config_site.plausible_script_url = "https://analytics.example.org/js/site.js"
+        config_site.plausible_script_direto_ativo = True
+        config_site.save(update_fields=["plausible_script_url", "plausible_script_direto_ativo"])
+
+        response = self.client.get("/", HTTP_COOKIE="ownpaper_cookie_consent=all")
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, 'src="https://analytics.example.org/js/site.js"', html=False)
+        self.assertContains(response, "plausible.init()", html=False)
+        self.assertNotContains(response, "data-domain")
+
+    @override_settings(OWNPAPER_ANALYTICS_DYNAMIC_EXCLUDE_TOKEN="token-teste")
+    def test_endpoint_ip_dinamico_exige_token_e_registra_ip_da_requisicao(self):
+        bloqueado = self.client.get("/estatisticas/registrar-ip-ignorado/")
+        self.assertEqual(bloqueado.status_code, 403)
+
+        response = self.client.get(
+            "/estatisticas/registrar-ip-ignorado/",
+            {"token": "token-teste", "nome": "Rede Local"},
+            REMOTE_ADDR="203.0.113.44",
+        )
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertTrue(payload["ok"])
+        self.assertEqual(payload["nome"], "rede-local")
+        self.assertEqual(payload["ip"], "203.0.113.44")
+        self.assertTrue(
+            IpDinamicoIgnoradoEstatisticas.objects.filter(
+                nome="rede-local",
+                ip="203.0.113.44",
+                expira_em__gt=timezone.now(),
+            ).exists()
+        )
 
     def test_menu_social_links_usam_ordem_alfabetica(self):
         config_site = ConfiguracaoSite.for_site(Site.objects.get(is_default_site=True))
