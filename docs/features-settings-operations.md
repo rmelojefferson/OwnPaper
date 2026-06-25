@@ -48,11 +48,25 @@ Controla a navegação pública.
 Recursos esperados:
 
 - ativar ou não menu customizado;
+- ativar/desativar itens do menu padrão sem precisar montar um menu customizado completo;
+- alterar o rótulo dos itens do menu padrão;
 - configurar item Início;
 - fixar Início como primeiro item;
 - configurar grupos e subitens;
 - controlar comportamento de submenus;
 - ajustar logos/imagens de navegação quando aplicável.
+
+Quando o menu customizado está desativado, o OwnPaper usa o menu padrão. Esse menu pode exibir ou ocultar itens como Categorias, Autores, Tags, Busca, Destaques, Últimas publicações, Contato, Sobre, Newsletter, Indexador, Quiz, Apoie, Privacidade, Cookies e RSS.
+
+Quando o menu customizado está ativado, o admin pode montar grupos e subitens manualmente.
+
+Tipos de item:
+
+- `Página interna`: aponta para qualquer página publicada no Wagtail.
+- `URL externa`: aponta para um link fora do site ou caminho manual.
+- `Atalho do site`: aponta para destinos conhecidos do OwnPaper, como Início, Busca, Destaques, Últimas publicações, Contato, Newsletter, Indexador, Quiz, Sobre, Apoie, Privacidade, Cookies e RSS.
+
+Use `Página interna` quando o destino for uma página editorial/institucional específica. Use `Atalho do site` quando o destino for uma rota funcional do OwnPaper ou quando o link precisar acompanhar automaticamente a página configurada nas `Configurações do site`.
 
 O checkbox `Para menus de site` do Wagtail não deve ser apresentado como se controlasse o menu próprio do OwnPaper quando não estiver ligado a essa lógica.
 

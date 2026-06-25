@@ -1190,6 +1190,57 @@ class RodapeConfiguravelTests(TestCase):
 
 
 @PUBLIC_TEST_SETTINGS
+class MenuPadraoConfiguravelTests(TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        run_bootstrap()
+        cls.site = Site.objects.get(is_default_site=True)
+        cls.config = ConfiguracaoSite.for_site(cls.site)
+
+    def test_menu_padrao_permite_ocultar_item_e_alterar_rotulo(self):
+        self.config.usar_menu_customizado = False
+        self.config.menu_padrao_autores_rotulo = "Equipe"
+        self.config.menu_padrao_tags_ativo = False
+        self.config.save(
+            update_fields=[
+                "usar_menu_customizado",
+                "menu_padrao_autores_rotulo",
+                "menu_padrao_tags_ativo",
+            ]
+        )
+
+        response = self.client.get("/")
+        self.assertEqual(response.status_code, 200)
+        html = response.content.decode("utf-8")
+        self.assertIn(">Equipe<", html)
+        self.assertNotIn(">Tags<", html)
+        self.assertIn(">Categorias<", html)
+
+    def test_atalhos_novos_resolvem_destinos_publicos(self):
+        self.config.doacoes_ativas = True
+        self.config.save(update_fields=["doacoes_ativas"])
+
+        self.assertEqual(MenuPrincipalGrupo.ATALHO_SOBRE, "sobre")
+        self.assertEqual(MenuPrincipalGrupo.ATALHO_APOIO, "apoio")
+
+        grupo_sobre = MenuPrincipalGrupo.objects.create(
+            configuracao_site=self.config,
+            titulo="Sobre",
+            tipo=MenuPrincipalGrupo.TIPO_ATALHO,
+            atalho=MenuPrincipalGrupo.ATALHO_SOBRE,
+        )
+        grupo_apoio = MenuPrincipalGrupo.objects.create(
+            configuracao_site=self.config,
+            titulo="Apoie",
+            tipo=MenuPrincipalGrupo.TIPO_ATALHO,
+            atalho=MenuPrincipalGrupo.ATALHO_APOIO,
+        )
+
+        self.assertTrue(grupo_sobre.url_resolvida.endswith("/sobre/"))
+        self.assertEqual(grupo_apoio.url_resolvida, "/apoio/")
+
+
+@PUBLIC_TEST_SETTINGS
 class MenuTraducaoDinamicaTests(TestCase):
     @classmethod
     def setUpTestData(cls):

@@ -399,6 +399,35 @@
                     </section>
 
                     <section class="op-admin-inline-card">
+                        <h3>Itens do menu padrão</h3>
+                        <p class="op-admin-panel__meta">Use estes campos quando o menu padrão atender ao site, mas você quiser ocultar itens ou trocar rótulos sem montar um menu totalmente customizado.</p>
+                        <div class="op-admin-form-grid op-admin-form-grid--settings">
+                            {% for field in form.visible_fields %}
+                                {% if "menu_padrao_" in field.name %}
+                                    {% if "_ativo" in field.name %}
+                                        <div class="op-admin-field op-admin-field--checkbox">
+                                            <label class="op-admin-checkbox-line op-admin-menu-checkbox-line" for="{{ field.id_for_label }}">
+                                                {{ field }}
+                                                <span class="op-admin-menu-checkbox" aria-hidden="true"></span>
+                                                <span>{{ field.label }}</span>
+                                            </label>
+                                            {% if field.help_text %}<span class="op-admin-muted op-admin-menu-checkbox-help">{{ field.help_text }}</span>{% endif %}
+                                            {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                        </div>
+                                    {% else %}
+                                        <label class="op-admin-field" for="{{ field.id_for_label }}">
+                                            <span>{{ field.label }}</span>
+                                            {{ field }}
+                                            {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
+                                            {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
+                                        </label>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </section>
+
+                    <section class="op-admin-inline-card">
                         <h3>Dimensões e ajuste</h3>
                         <p class="op-admin-panel__meta">Defina a proporção e as alturas máximas usadas para renderizar o botão/logo do Início.</p>
                         <div class="op-admin-form-grid op-admin-form-grid--menu-dimensions">

@@ -13,6 +13,11 @@
 {% menu_shortcut_label "ultimas" idioma_menu "Últimas publicações" as ultimas_label %}
 {% menu_shortcut_label "contato" idioma_menu "Contato" as contato_label %}
 {% menu_shortcut_label "newsletter" idioma_menu "Newsletter" as newsletter_label %}
+{% menu_shortcut_label "sobre" idioma_menu "Sobre" as sobre_label %}
+{% menu_shortcut_label "apoio" idioma_menu "Apoie" as apoio_label %}
+{% menu_shortcut_label "privacidade" idioma_menu "Privacidade" as privacidade_label %}
+{% menu_shortcut_label "cookies" idioma_menu "Cookies" as cookies_label %}
+{% menu_shortcut_label "rss" idioma_menu "RSS" as rss_label %}
 {% translate_label "Página principal" idioma_menu as pagina_principal_label %}
 {% translate_label "Todas as categorias" idioma_menu as todas_categorias_label %}
 {% translate_label "Nenhuma categoria cadastrada." idioma_menu as nenhuma_categoria_label %}
@@ -251,8 +256,10 @@
                     {% endif %}
                 {% endfor %}
             {% else %}
+                {% if config_site.menu_padrao_categorias_ativo %}
+                {% menu_shortcut_label "categorias" idioma_menu config_site.menu_padrao_categorias_rotulo|default:"Categorias" as categorias_label_menu %}
                 <details>
-                    <summary>{{ categorias_label }}</summary>
+                    <summary>{{ categorias_label_menu }}</summary>
                     <div class="menu-principal-submenu">
                         <div class="menu-principal-submenu-item">
                             <a href="/categorias/">{{ todas_categorias_label }}</a>
@@ -267,27 +274,64 @@
                         {% endfor %}
                     </div>
                 </details>
-
-                <a href="/autores/">{{ autores_label }}</a>
-                <a href="/tags/">{{ tags_label }}</a>
-                <a href="/busca/">{{ busca_label }}</a>
-                <a href="/#destaques">{{ destaques_label }}</a>
-                <a href="/#ultimas-publicacoes">{{ ultimas_label }}</a>
-
-                {% if config_site.pagina_contato %}
-                    <a href="{{ config_site.pagina_contato.url }}">{{ contato_label }}</a>
-                {% endif %}
-                {% if config_site.pagina_newsletter %}
-                    <a href="{{ config_site.pagina_newsletter.url }}">{{ newsletter_label }}</a>
                 {% endif %}
 
-                {% if config_site.pagina_indexador %}
-                    {% menu_shortcut_label "indexador" idioma_menu config_site.rotulo_indexador|default:"Indexador" as rotulo_indexador_menu %}
+                {% if config_site.menu_padrao_autores_ativo %}
+                    {% menu_shortcut_label "autores" idioma_menu config_site.menu_padrao_autores_rotulo|default:"Autores" as autores_label_menu %}
+                    <a href="/autores/">{{ autores_label_menu }}</a>
+                {% endif %}
+                {% if config_site.menu_padrao_tags_ativo %}
+                    {% menu_shortcut_label "tags" idioma_menu config_site.menu_padrao_tags_rotulo|default:"Tags" as tags_label_menu %}
+                    <a href="/tags/">{{ tags_label_menu }}</a>
+                {% endif %}
+                {% if config_site.menu_padrao_busca_ativo %}
+                    {% menu_shortcut_label "busca" idioma_menu config_site.menu_padrao_busca_rotulo|default:"Busca" as busca_label_menu %}
+                    <a href="/busca/">{{ busca_label_menu }}</a>
+                {% endif %}
+                {% if config_site.menu_padrao_destaques_ativo %}
+                    {% menu_shortcut_label "destaques" idioma_menu config_site.menu_padrao_destaques_rotulo|default:"Destaques" as destaques_label_menu %}
+                    <a href="/#destaques">{{ destaques_label_menu }}</a>
+                {% endif %}
+                {% if config_site.menu_padrao_ultimas_ativo %}
+                    {% menu_shortcut_label "ultimas" idioma_menu config_site.menu_padrao_ultimas_rotulo|default:"Últimas publicações" as ultimas_label_menu %}
+                    <a href="/#ultimas-publicacoes">{{ ultimas_label_menu }}</a>
+                {% endif %}
+
+                {% if config_site.menu_padrao_contato_ativo and config_site.pagina_contato %}
+                    {% menu_shortcut_label "contato" idioma_menu config_site.menu_padrao_contato_rotulo|default:"Contato" as contato_label_menu %}
+                    <a href="{{ config_site.pagina_contato.url }}">{{ contato_label_menu }}</a>
+                {% endif %}
+                {% if config_site.menu_padrao_sobre_ativo and config_site.pagina_sobre %}
+                    {% menu_shortcut_label "sobre" idioma_menu config_site.menu_padrao_sobre_rotulo|default:"Sobre" as sobre_label_menu %}
+                    <a href="{{ config_site.pagina_sobre.url }}">{{ sobre_label_menu }}</a>
+                {% endif %}
+                {% if config_site.menu_padrao_newsletter_ativo and config_site.pagina_newsletter %}
+                    {% menu_shortcut_label "newsletter" idioma_menu config_site.menu_padrao_newsletter_rotulo|default:"Newsletter" as newsletter_label_menu %}
+                    <a href="{{ config_site.pagina_newsletter.url }}">{{ newsletter_label_menu }}</a>
+                {% endif %}
+                {% if config_site.menu_padrao_indexador_ativo and config_site.pagina_indexador %}
+                    {% menu_shortcut_label "indexador" idioma_menu config_site.menu_padrao_indexador_rotulo|default:"Indexador" as rotulo_indexador_menu %}
                     <a href="{{ config_site.pagina_indexador.url }}">{{ rotulo_indexador_menu }}</a>
                 {% endif %}
-                {% if config_site.pagina_quiz_estudo %}
-                    {% menu_shortcut_label "quiz" idioma_menu config_site.rotulo_quiz_estudo|default:"Quiz" as rotulo_quiz_menu %}
+                {% if config_site.menu_padrao_quiz_ativo and config_site.pagina_quiz_estudo %}
+                    {% menu_shortcut_label "quiz" idioma_menu config_site.menu_padrao_quiz_rotulo|default:"Quiz" as rotulo_quiz_menu %}
                     <a href="{{ config_site.pagina_quiz_estudo.url }}">{{ rotulo_quiz_menu }}</a>
+                {% endif %}
+                {% if config_site.menu_padrao_privacidade_ativo and config_site.pagina_privacidade %}
+                    {% menu_shortcut_label "privacidade" idioma_menu config_site.menu_padrao_privacidade_rotulo|default:"Privacidade" as privacidade_label_menu %}
+                    <a href="{{ config_site.pagina_privacidade.url }}">{{ privacidade_label_menu }}</a>
+                {% endif %}
+                {% if config_site.menu_padrao_cookies_ativo and config_site.pagina_cookies %}
+                    {% menu_shortcut_label "cookies" idioma_menu config_site.menu_padrao_cookies_rotulo|default:"Cookies" as cookies_label_menu %}
+                    <a href="{{ config_site.pagina_cookies.url }}">{{ cookies_label_menu }}</a>
+                {% endif %}
+                {% if config_site.menu_padrao_apoio_ativo and config_site.doacoes_ativas %}
+                    {% menu_shortcut_label "apoio" idioma_menu config_site.menu_padrao_apoio_rotulo|default:"Apoie" as apoio_label_menu %}
+                    <a href="{% url 'pagina_apoio' %}">{{ apoio_label_menu }}</a>
+                {% endif %}
+                {% if config_site.menu_padrao_rss_ativo %}
+                    {% menu_shortcut_label "rss" idioma_menu config_site.menu_padrao_rss_rotulo|default:"RSS" as rss_label_menu %}
+                    <a href="/rss.xml" target="_blank" rel="noopener noreferrer">{{ rss_label_menu }}</a>
                 {% endif %}
             {% endif %}
 

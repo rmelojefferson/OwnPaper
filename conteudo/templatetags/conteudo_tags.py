@@ -19,6 +19,11 @@ MENU_LABELS = {
     "newsletter": {"pt-br": "Newsletter"},
     "indexador": {"pt-br": "Indexador"},
     "quiz": {"pt-br": "Quiz"},
+    "sobre": {"pt-br": "Sobre"},
+    "apoio": {"pt-br": "Apoie"},
+    "privacidade": {"pt-br": "Privacidade"},
+    "cookies": {"pt-br": "Cookies"},
+    "rss": {"pt-br": "RSS"},
 }
 
 

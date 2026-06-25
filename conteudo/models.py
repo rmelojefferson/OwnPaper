@@ -885,6 +885,36 @@ class ConfiguracaoSite(BaseSiteSetting):
         validators=[MinValueValidator(24), MaxValueValidator(80)],
         help_text="Altura máxima em pixels para mobile. Intervalo: 24 a 80.",
     )
+    menu_padrao_categorias_ativo = models.BooleanField("Exibir Categorias no menu padrão", default=True)
+    menu_padrao_categorias_rotulo = models.CharField("Rótulo de Categorias", max_length=120, default="Categorias", blank=True)
+    menu_padrao_autores_ativo = models.BooleanField("Exibir Autores no menu padrão", default=True)
+    menu_padrao_autores_rotulo = models.CharField("Rótulo de Autores", max_length=120, default="Autores", blank=True)
+    menu_padrao_tags_ativo = models.BooleanField("Exibir Tags no menu padrão", default=True)
+    menu_padrao_tags_rotulo = models.CharField("Rótulo de Tags", max_length=120, default="Tags", blank=True)
+    menu_padrao_busca_ativo = models.BooleanField("Exibir Busca no menu padrão", default=True)
+    menu_padrao_busca_rotulo = models.CharField("Rótulo de Busca", max_length=120, default="Busca", blank=True)
+    menu_padrao_destaques_ativo = models.BooleanField("Exibir Destaques no menu padrão", default=True)
+    menu_padrao_destaques_rotulo = models.CharField("Rótulo de Destaques", max_length=120, default="Destaques", blank=True)
+    menu_padrao_ultimas_ativo = models.BooleanField("Exibir Últimas publicações no menu padrão", default=True)
+    menu_padrao_ultimas_rotulo = models.CharField("Rótulo de Últimas publicações", max_length=120, default="Últimas publicações", blank=True)
+    menu_padrao_contato_ativo = models.BooleanField("Exibir Contato no menu padrão", default=True)
+    menu_padrao_contato_rotulo = models.CharField("Rótulo de Contato", max_length=120, default="Contato", blank=True)
+    menu_padrao_sobre_ativo = models.BooleanField("Exibir Sobre no menu padrão", default=True)
+    menu_padrao_sobre_rotulo = models.CharField("Rótulo de Sobre", max_length=120, default="Sobre", blank=True)
+    menu_padrao_newsletter_ativo = models.BooleanField("Exibir Newsletter no menu padrão", default=True)
+    menu_padrao_newsletter_rotulo = models.CharField("Rótulo de Newsletter", max_length=120, default="Newsletter", blank=True)
+    menu_padrao_indexador_ativo = models.BooleanField("Exibir Indexador no menu padrão", default=True)
+    menu_padrao_indexador_rotulo = models.CharField("Rótulo de Indexador", max_length=120, default="Indexador", blank=True)
+    menu_padrao_quiz_ativo = models.BooleanField("Exibir Quiz no menu padrão", default=True)
+    menu_padrao_quiz_rotulo = models.CharField("Rótulo de Quiz", max_length=120, default="Quiz", blank=True)
+    menu_padrao_apoio_ativo = models.BooleanField("Exibir Apoie no menu padrão", default=True)
+    menu_padrao_apoio_rotulo = models.CharField("Rótulo de Apoie", max_length=120, default="Apoie", blank=True)
+    menu_padrao_privacidade_ativo = models.BooleanField("Exibir Privacidade no menu padrão", default=False)
+    menu_padrao_privacidade_rotulo = models.CharField("Rótulo de Privacidade", max_length=120, default="Privacidade", blank=True)
+    menu_padrao_cookies_ativo = models.BooleanField("Exibir Cookies no menu padrão", default=False)
+    menu_padrao_cookies_rotulo = models.CharField("Rótulo de Cookies", max_length=120, default="Cookies", blank=True)
+    menu_padrao_rss_ativo = models.BooleanField("Exibir RSS no menu padrão", default=False)
+    menu_padrao_rss_rotulo = models.CharField("Rótulo de RSS", max_length=120, default="RSS", blank=True)
     tema_padrao_site = models.CharField(
         "Tema padrão do site",
         max_length=20,
@@ -1070,6 +1100,36 @@ class ConfiguracaoSite(BaseSiteSetting):
                 FieldPanel("menu_home_logo_ajuste"),
                 FieldPanel("menu_home_logo_altura_desktop_px"),
                 FieldPanel("menu_home_logo_altura_mobile_px"),
+                FieldPanel("menu_padrao_categorias_ativo"),
+                FieldPanel("menu_padrao_categorias_rotulo"),
+                FieldPanel("menu_padrao_autores_ativo"),
+                FieldPanel("menu_padrao_autores_rotulo"),
+                FieldPanel("menu_padrao_tags_ativo"),
+                FieldPanel("menu_padrao_tags_rotulo"),
+                FieldPanel("menu_padrao_busca_ativo"),
+                FieldPanel("menu_padrao_busca_rotulo"),
+                FieldPanel("menu_padrao_destaques_ativo"),
+                FieldPanel("menu_padrao_destaques_rotulo"),
+                FieldPanel("menu_padrao_ultimas_ativo"),
+                FieldPanel("menu_padrao_ultimas_rotulo"),
+                FieldPanel("menu_padrao_contato_ativo"),
+                FieldPanel("menu_padrao_contato_rotulo"),
+                FieldPanel("menu_padrao_sobre_ativo"),
+                FieldPanel("menu_padrao_sobre_rotulo"),
+                FieldPanel("menu_padrao_newsletter_ativo"),
+                FieldPanel("menu_padrao_newsletter_rotulo"),
+                FieldPanel("menu_padrao_indexador_ativo"),
+                FieldPanel("menu_padrao_indexador_rotulo"),
+                FieldPanel("menu_padrao_quiz_ativo"),
+                FieldPanel("menu_padrao_quiz_rotulo"),
+                FieldPanel("menu_padrao_apoio_ativo"),
+                FieldPanel("menu_padrao_apoio_rotulo"),
+                FieldPanel("menu_padrao_privacidade_ativo"),
+                FieldPanel("menu_padrao_privacidade_rotulo"),
+                FieldPanel("menu_padrao_cookies_ativo"),
+                FieldPanel("menu_padrao_cookies_rotulo"),
+                FieldPanel("menu_padrao_rss_ativo"),
+                FieldPanel("menu_padrao_rss_rotulo"),
                 HelpPanel(
                     content=(
                         "Para o botão da home, prefira imagem horizontal com fundo transparente. "
@@ -1347,6 +1407,12 @@ class MenuPrincipalGrupo(ClusterableModel):
     ATALHO_CONTATO = "contato"
     ATALHO_NEWSLETTER = "newsletter"
     ATALHO_INDEXADOR = "indexador"
+    ATALHO_QUIZ = "quiz"
+    ATALHO_SOBRE = "sobre"
+    ATALHO_APOIO = "apoio"
+    ATALHO_PRIVACIDADE = "privacidade"
+    ATALHO_COOKIES = "cookies"
+    ATALHO_RSS = "rss"
     ATALHO_CHOICES = [
         (ATALHO_HOME, "Início"),
         (ATALHO_CATEGORIAS, "Categorias"),
@@ -1358,6 +1424,12 @@ class MenuPrincipalGrupo(ClusterableModel):
         (ATALHO_CONTATO, "Contato"),
         (ATALHO_NEWSLETTER, "Newsletter"),
         (ATALHO_INDEXADOR, "Indexador"),
+        (ATALHO_QUIZ, "Quiz"),
+        (ATALHO_SOBRE, "Sobre"),
+        (ATALHO_APOIO, "Apoie"),
+        (ATALHO_PRIVACIDADE, "Privacidade"),
+        (ATALHO_COOKIES, "Cookies"),
+        (ATALHO_RSS, "RSS"),
     ]
 
     configuracao_site = models.ForeignKey(
@@ -2235,6 +2307,18 @@ def resolver_atalho_menu(config_site, atalho):
         return config_site.pagina_newsletter.url
     if atalho == MenuPrincipalGrupo.ATALHO_INDEXADOR and config_site and config_site.pagina_indexador:
         return config_site.pagina_indexador.url
+    if atalho == MenuPrincipalGrupo.ATALHO_QUIZ and config_site and config_site.pagina_quiz_estudo:
+        return config_site.pagina_quiz_estudo.url
+    if atalho == MenuPrincipalGrupo.ATALHO_SOBRE and config_site and config_site.pagina_sobre:
+        return config_site.pagina_sobre.url
+    if atalho == MenuPrincipalGrupo.ATALHO_APOIO and config_site and config_site.doacoes_ativas:
+        return "/apoio/"
+    if atalho == MenuPrincipalGrupo.ATALHO_PRIVACIDADE and config_site and config_site.pagina_privacidade:
+        return config_site.pagina_privacidade.url
+    if atalho == MenuPrincipalGrupo.ATALHO_COOKIES and config_site and config_site.pagina_cookies:
+        return config_site.pagina_cookies.url
+    if atalho == MenuPrincipalGrupo.ATALHO_RSS:
+        return "/rss.xml"
     return ""
 
 
