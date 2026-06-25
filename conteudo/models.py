@@ -717,105 +717,6 @@ class ConfiguracaoSite(BaseSiteSetting):
             return ""
         return f"ethereum:{endereco}"
 
-    google_search_console_verification = models.CharField(
-        "Verificação do Google Search Console",
-        max_length=255,
-        blank=True,
-        help_text="Conteúdo do meta tag `google-site-verification` (somente o valor).",
-    )
-    meta_domain_verification = models.CharField(
-        "Meta domain verification",
-        max_length=255,
-        blank=True,
-        help_text="Conteúdo do meta tag `facebook-domain-verification` (somente o valor).",
-    )
-    verificacao_head_html = models.TextField(
-        "HTML avançado de verificação no head",
-        blank=True,
-        help_text=(
-            "Use apenas códigos de verificação fornecidos por serviços confiáveis. "
-            "Este conteúdo é inserido no head do site público sem depender de cookies."
-        ),
-    )
-    verificacao_arquivo_nome = models.CharField(
-        "Nome do arquivo de verificação",
-        max_length=120,
-        blank=True,
-        help_text="Exemplo: google1234567890abcdef.html ou verificacao.txt.",
-    )
-    verificacao_arquivo_conteudo = models.TextField(
-        "Conteúdo do arquivo de verificação",
-        blank=True,
-        help_text="Cole aqui o conteúdo integral do arquivo solicitado pelo provedor.",
-    )
-    google_analytics_id = models.CharField(
-        "Google Analytics ID",
-        max_length=32,
-        blank=True,
-        help_text="Exemplo: G-XXXXXXXXXX.",
-    )
-    google_tag_manager_id = models.CharField(
-        "Google Tag Manager ID",
-        max_length=32,
-        blank=True,
-        help_text="Exemplo: GTM-XXXXXXX.",
-    )
-    meta_pixel_id = models.CharField(
-        "Meta Pixel ID",
-        max_length=32,
-        blank=True,
-        help_text="Exemplo: 1234567890.",
-    )
-    plausible_domain = models.CharField(
-        "Plausible - domínio do site",
-        max_length=255,
-        blank=True,
-        help_text="Exemplo: exemplo.com. Deixe vazio para desativar.",
-    )
-    plausible_script_url = models.URLField(
-        "Plausible - URL do script",
-        default="https://plausible.io/js/script.js",
-        blank=True,
-        help_text="Use a URL oficial ou da sua instância Plausible self-hosted.",
-    )
-    plausible_script_direto_ativo = models.BooleanField(
-        "Usar snippet novo do Plausible sem domínio",
-        default=False,
-        help_text=(
-            "Ative quando o Plausible fornecer apenas um script próprio, sem data-domain. "
-            "O OwnPaper renderiza apenas o snippet seguro predefinido."
-        ),
-    )
-    plausible_sem_consentimento_ativo = models.BooleanField(
-        "Carregar Plausible sem aceite de cookies opcionais",
-        default=False,
-        help_text=(
-            "Use somente quando a configuração do Plausible estiver sem cookies e adequada "
-            "à política de privacidade do projeto."
-        ),
-    )
-    umami_website_id = models.CharField(
-        "Umami - Website ID",
-        max_length=120,
-        blank=True,
-        help_text="ID do site no Umami. Deixe vazio para desativar.",
-    )
-    umami_script_url = models.URLField(
-        "Umami - URL do script",
-        blank=True,
-        help_text="Exemplo: https://analytics.example.com/script.js.",
-    )
-    matomo_site_id = models.CharField(
-        "Matomo - Site ID",
-        max_length=40,
-        blank=True,
-        help_text="ID numérico do site no Matomo. Deixe vazio para desativar.",
-    )
-    matomo_url = models.URLField(
-        "Matomo - URL base",
-        blank=True,
-        help_text="Exemplo: https://matomo.example.com/.",
-    )
     estatisticas_internas_ativas = models.BooleanField(
         "Ativar estatísticas internas",
         default=True,
@@ -1116,27 +1017,11 @@ class ConfiguracaoSite(BaseSiteSetting):
         FieldPanel("travar_publicacao_por_orcid"),
         MultiFieldPanel(
             [
-                FieldPanel("google_search_console_verification"),
-                FieldPanel("meta_domain_verification"),
-                FieldPanel("verificacao_head_html"),
-                FieldPanel("verificacao_arquivo_nome"),
-                FieldPanel("verificacao_arquivo_conteudo"),
-                FieldPanel("google_analytics_id"),
-                FieldPanel("google_tag_manager_id"),
-                FieldPanel("meta_pixel_id"),
-                FieldPanel("plausible_domain"),
-                FieldPanel("plausible_script_url"),
-                FieldPanel("plausible_script_direto_ativo"),
-                FieldPanel("plausible_sem_consentimento_ativo"),
-                FieldPanel("umami_website_id"),
-                FieldPanel("umami_script_url"),
-                FieldPanel("matomo_site_id"),
-                FieldPanel("matomo_url"),
                 FieldPanel("estatisticas_internas_ativas"),
                 FieldPanel("estatisticas_reter_agregados_dias"),
                 FieldPanel("estatisticas_reter_eventos_brutos_dias"),
             ],
-            heading="Rastreamento e verificação",
+            heading="Estatísticas internas",
             classname="collapsed",
         ),
         MultiFieldPanel(
@@ -1415,6 +1300,12 @@ class ConfiguracaoSite(BaseSiteSetting):
                 return env_value.strip() if isinstance(env_value, str) else env_value
         value = getattr(self, field_name, default)
         return value.strip() if isinstance(value, str) else value
+
+    def codigos_personalizados_ativos(self, posicao):
+        return self.codigos_personalizados.filter(
+            ativo=True,
+            posicao=posicao,
+        ).order_by("sort_order", "titulo", "id")
 
     def save(self, *args, **kwargs):
         if self.pk:
@@ -6434,6 +6325,76 @@ class IpDinamicoIgnoradoEstatisticas(models.Model):
 
     def __str__(self):
         return f"{self.nome}: {self.ip}"
+
+
+class CodigoPersonalizadoSite(models.Model):
+    TIPO_HTML = "html"
+    TIPO_JS = "js"
+    TIPO_CSS = "css"
+    TIPO_CHOICES = [
+        (TIPO_HTML, "HTML"),
+        (TIPO_JS, "JavaScript"),
+        (TIPO_CSS, "CSS"),
+    ]
+
+    POSICAO_HEAD = "head"
+    POSICAO_BODY_INICIO = "body_inicio"
+    POSICAO_BODY_FIM = "body_fim"
+    POSICAO_CHOICES = [
+        (POSICAO_HEAD, "Cabeçalho/head"),
+        (POSICAO_BODY_INICIO, "Início do body"),
+        (POSICAO_BODY_FIM, "Final do body/rodapé"),
+    ]
+
+    configuracao_site = models.ForeignKey(
+        ConfiguracaoSite,
+        verbose_name="Configuração do site",
+        related_name="codigos_personalizados",
+        on_delete=models.CASCADE,
+    )
+    titulo = models.CharField("Nome do bloco", max_length=120)
+    descricao = models.CharField("Descrição/observação", max_length=255, blank=True)
+    tipo = models.CharField("Tipo", max_length=10, choices=TIPO_CHOICES, default=TIPO_HTML)
+    posicao = models.CharField(
+        "Local de inserção",
+        max_length=20,
+        choices=POSICAO_CHOICES,
+        default=POSICAO_HEAD,
+    )
+    codigo = models.TextField("Código")
+    ativo = models.BooleanField("Ativo", default=True)
+    exigir_consentimento = models.BooleanField(
+        "Exigir aceite de cookies opcionais",
+        default=False,
+        help_text="Quando ativo, o bloco só é renderizado após o visitante aceitar cookies opcionais.",
+    )
+    sort_order = models.PositiveIntegerField("Ordem", default=0)
+    criado_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name="Criado por",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+    atualizado_por = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        verbose_name="Atualizado por",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="+",
+    )
+    criado_em = models.DateTimeField("Criado em", auto_now_add=True)
+    atualizado_em = models.DateTimeField("Atualizado em", auto_now=True)
+
+    class Meta:
+        verbose_name = "Código personalizado"
+        verbose_name_plural = "Códigos personalizados"
+        ordering = ["sort_order", "titulo", "id"]
+
+    def __str__(self):
+        return self.titulo
 
 
 class InscritoNewsletter(models.Model):

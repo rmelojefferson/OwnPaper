@@ -1,11 +1,41 @@
 import re
 import urllib.parse
+from html import escape as html_escape
 
 from django import template
 from django.template.loader import render_to_string
 from django.utils.safestring import mark_safe
 
 register = template.Library()
+
+
+@register.simple_tag(takes_context=True)
+def render_codigos_personalizados(context, config_site, posicao):
+    if not config_site:
+        return ""
+    request = context.get("request")
+    consent = getattr(request, "COOKIES", {}).get("ownpaper_cookie_consent") if request else ""
+    try:
+        codigos = config_site.codigos_personalizados_ativos(posicao)
+    except Exception:
+        return ""
+
+    partes = []
+    for item in codigos:
+        codigo = str(item.codigo or "").strip()
+        if not codigo:
+            continue
+        if item.exigir_consentimento and consent != "all":
+            continue
+        titulo = html_escape(str(item.titulo or ""), quote=False).replace("--", "—")
+        partes.append(f"<!-- OwnPaper custom code: {titulo} -->")
+        if item.tipo == "css":
+            partes.append(f"<style>\n{codigo}\n</style>")
+        elif item.tipo == "js":
+            partes.append(f"<script>\n{codigo}\n</script>")
+        else:
+            partes.append(codigo)
+    return mark_safe("\n".join(partes))
 
 MENU_LABELS = {
     "home": {"pt-br": "Início"},

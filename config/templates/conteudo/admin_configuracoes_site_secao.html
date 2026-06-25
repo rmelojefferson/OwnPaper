@@ -1024,50 +1024,42 @@
     {% elif secao.slug == "integracoes-rastreamento" %}
     <section class="op-admin-two-column op-admin-settings-layout op-admin-settings-layout--integrations">
         <article class="w-panel op-admin-card">
-            <form method="post" enctype="multipart/form-data" class="op-admin-form-card op-admin-config-identity op-admin-config-integrations">
-                {% csrf_token %}
+            <section class="op-admin-inline-card op-admin-custom-code-warning">
+                <h3>Códigos personalizados</h3>
+                <p class="op-admin-panel__meta">Use esta área para inserir snippets de serviços externos, validações, CSS pontual ou JavaScript necessário ao site público. Cada bloco fica separado para facilitar ativação, edição e auditoria.</p>
+                <p class="op-admin-panel__meta"><strong>Atenção:</strong> estes códigos são executados no site público. Salvar, alterar ou excluir exige senha atual, 2FA e confirmação explícita de responsabilidade.</p>
+            </section>
 
-                <section class="op-admin-inline-card">
-                    <h3>Verificações de domínio</h3>
-                    <p class="op-admin-panel__meta">Use os campos simples quando o serviço fornecer apenas o valor. Para tags completas ou arquivo HTML/TXT, use os campos avançados abaixo.</p>
-                    <div class="op-admin-form-grid op-admin-form-grid--integrations-verification">
-                        {% for field in form.visible_fields %}
-                            {% if field.name == "google_search_console_verification" or field.name == "meta_domain_verification" or field.name == "verificacao_arquivo_nome" or field.name == "verificacao_arquivo_conteudo" or field.name == "verificacao_head_html" %}
-                                <label class="op-admin-field" for="{{ field.id_for_label }}">
-                                    <span>{{ field.label }}</span>
-                                    {{ field }}
-                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
-                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
-                                </label>
-                            {% endif %}
+            <section class="op-admin-inline-card">
+                <h3>Blocos cadastrados</h3>
+                {% if codigos_personalizados %}
+                    <div class="op-admin-custom-code-list">
+                        {% for codigo in codigos_personalizados %}
+                            <article class="op-admin-custom-code-item{% if not codigo.ativo %} is-disabled{% endif %}">
+                                <div>
+                                    <strong>{{ codigo.titulo }}</strong>
+                                    <span>{{ codigo.get_tipo_display }} · {{ codigo.get_posicao_display }} · {% if codigo.ativo %}Ativo{% else %}Inativo{% endif %}</span>
+                                    {% if codigo.descricao %}<small>{{ codigo.descricao }}</small>{% endif %}
+                                </div>
+                                <a class="button button-secondary" href="?editar_codigo={{ codigo.id }}">Editar</a>
+                            </article>
                         {% endfor %}
                     </div>
-                </section>
+                {% else %}
+                    <p class="op-admin-panel__meta">Nenhum código personalizado cadastrado.</p>
+                {% endif %}
+            </section>
 
-                <section class="op-admin-inline-card">
-                    <h3>Google e Meta</h3>
-                    <p class="op-admin-panel__meta">Essas integrações só são carregadas no site público após consentimento de cookies opcionais.</p>
-                    <div class="op-admin-form-grid op-admin-form-grid--integrations-provider">
-                        {% for field in form.visible_fields %}
-                            {% if field.name == "google_analytics_id" or field.name == "google_tag_manager_id" or field.name == "meta_pixel_id" %}
-                                <label class="op-admin-field" for="{{ field.id_for_label }}">
-                                    <span>{{ field.label }}</span>
-                                    {{ field }}
-                                    {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
-                                    {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
-                                </label>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                </section>
-
-                <section class="op-admin-inline-card">
-                    <h3>Analytics externos</h3>
-                    <p class="op-admin-panel__meta">Plausible pode ser carregado sem cookies opcionais quando configurado sem cookies. As demais ferramentas continuam condicionadas ao consentimento.</p>
-                    <div class="op-admin-form-grid op-admin-form-grid--integrations-analytics">
-                        {% for field in form.visible_fields %}
-                            {% if field.name == "plausible_script_direto_ativo" or field.name == "plausible_sem_consentimento_ativo" %}
-                                <div class="op-admin-field op-admin-field--checkbox op-admin-integrations-checkbox">
+            <section class="op-admin-inline-card">
+                <h3>{% if codigo_editando %}Editar código{% else %}Criar novo código{% endif %}</h3>
+                <form method="post" enctype="multipart/form-data" class="op-admin-form-card op-admin-custom-code-form">
+                    {% csrf_token %}
+                    <input type="hidden" name="acao" value="salvar_codigo">
+                    {% if codigo_editando %}<input type="hidden" name="codigo_id" value="{{ codigo_editando.id }}">{% endif %}
+                    <div class="op-admin-form-grid op-admin-form-grid--custom-code">
+                        {% for field in codigo_form.visible_fields %}
+                            {% if field.field.widget.input_type == "checkbox" %}
+                                <div class="op-admin-field op-admin-field--checkbox">
                                     <label class="op-admin-checkbox-line op-admin-menu-checkbox-line" for="{{ field.id_for_label }}">
                                         {{ field }}
                                         <span class="op-admin-menu-checkbox" aria-hidden="true"></span>
@@ -1076,8 +1068,8 @@
                                     {% if field.help_text %}<span class="op-admin-muted op-admin-menu-checkbox-help">{{ field.help_text }}</span>{% endif %}
                                     {% if field.errors %}<span class="op-admin-error">{{ field.errors|join:", " }}</span>{% endif %}
                                 </div>
-                            {% elif field.name == "plausible_domain" or field.name == "plausible_script_url" or field.name == "umami_website_id" or field.name == "umami_script_url" or field.name == "matomo_site_id" or field.name == "matomo_url" %}
-                                <label class="op-admin-field" for="{{ field.id_for_label }}">
+                            {% else %}
+                                <label class="op-admin-field{% if field.name == 'codigo' or field.name == 'arquivo_html' %} op-admin-field--wide{% endif %}" for="{{ field.id_for_label }}">
                                     <span>{{ field.label }}</span>
                                     {{ field }}
                                     {% if field.help_text %}<span class="op-admin-muted">{{ field.help_text }}</span>{% endif %}
@@ -1086,8 +1078,44 @@
                             {% endif %}
                         {% endfor %}
                     </div>
-                </section>
+                    <div class="op-admin-panel__actions">
+                        <button type="submit" class="button">{% if codigo_editando %}Salvar código{% else %}Criar código{% endif %}</button>
+                        {% if codigo_editando %}<a class="button button-secondary" href="{% url 'admin_configuracoes_site_secao' secao.slug %}">Cancelar edição</a>{% endif %}
+                    </div>
+                </form>
 
+                {% if codigo_editando %}
+                    <form method="post" class="op-admin-delete-form">
+                        {% csrf_token %}
+                        <input type="hidden" name="acao" value="excluir_codigo">
+                        <input type="hidden" name="codigo_id" value="{{ codigo_editando.id }}">
+                        <div class="op-admin-form-grid op-admin-form-grid--custom-code-delete">
+                            <label class="op-admin-field">
+                                <span>Senha atual</span>
+                                <input class="op-admin-input" type="password" name="senha_atual_exclusao" required>
+                            </label>
+                            <label class="op-admin-field">
+                                <span>Código do autenticador (2FA)</span>
+                                <input class="op-admin-input" type="text" name="token_2fa_exclusao" inputmode="numeric" autocomplete="one-time-code" required>
+                            </label>
+                            <div class="op-admin-field op-admin-field--checkbox op-admin-field--wide">
+                                <label class="op-admin-checkbox-line op-admin-menu-checkbox-line">
+                                    <input class="op-admin-checkbox op-admin-menu-toggle-input" type="checkbox" name="confirmar_exclusao" required>
+                                    <span class="op-admin-menu-checkbox" aria-hidden="true"></span>
+                                    <span>Entendo que este código será removido do site público.</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="op-admin-panel__actions">
+                            <button type="submit" class="button no">Excluir código</button>
+                        </div>
+                    </form>
+                {% endif %}
+            </section>
+
+            <form method="post" enctype="multipart/form-data" class="op-admin-form-card op-admin-config-identity op-admin-config-integrations">
+                {% csrf_token %}
+                <input type="hidden" name="acao" value="salvar_recursos_internos">
                 <section class="op-admin-inline-card">
                     <h3>Estatísticas internas</h3>
                     <p class="op-admin-panel__meta">Controle a coleta interna simplificada e o período de retenção dos dados.</p>
@@ -1143,7 +1171,7 @@
                 </section>
 
                 <div class="op-admin-panel__actions">
-                    <button type="submit" class="button">Salvar seção</button>
+                    <button type="submit" class="button">Salvar recursos internos</button>
                 </div>
             </form>
         </article>

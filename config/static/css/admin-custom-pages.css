@@ -811,6 +811,58 @@
     padding-top: 0;
 }
 
+.op-admin-custom-code-warning {
+    border-color: color-mix(in srgb, var(--op-admin-warning, #b45309) 35%, var(--op-admin-border)) !important;
+}
+
+.op-admin-custom-code-list {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.op-admin-custom-code-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.9rem;
+    border: 1px solid var(--op-admin-border);
+    border-radius: 0.75rem;
+    background: var(--op-admin-surface-subtle);
+}
+
+.op-admin-custom-code-item.is-disabled {
+    opacity: 0.62;
+}
+
+.op-admin-custom-code-item strong,
+.op-admin-custom-code-item span,
+.op-admin-custom-code-item small {
+    display: block;
+}
+
+.op-admin-form-grid--custom-code,
+.op-admin-form-grid--custom-code-delete {
+    grid-template-columns: repeat(2, minmax(240px, 1fr));
+    gap: 0.75rem;
+}
+
+.op-admin-form-grid--custom-code .op-admin-field--wide,
+.op-admin-form-grid--custom-code-delete .op-admin-field--wide {
+    grid-column: 1 / -1;
+}
+
+.op-admin-custom-code-form textarea {
+    min-height: 14rem;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+}
+
+.op-admin-delete-form {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--op-admin-border);
+}
+
 .op-admin-config-integrations .op-admin-integrations-checkbox .op-admin-menu-checkbox-line {
     display: inline-flex !important;
     align-items: center;

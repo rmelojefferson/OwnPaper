@@ -97,24 +97,20 @@ As cores públicas padrão podem derivar das duas cores principais do painel/adm
 
 ## Integrações e rastreamento
 
-Controla analytics e integrações externas.
+Controla códigos personalizados, estatísticas internas e links curtos.
 
-Campos estruturados são preferíveis a JavaScript livre.
+Os códigos personalizados permitem criar blocos nomeados de HTML, JavaScript ou CSS para inserir no `head`, no início do `body` ou no final do `body`/rodapé. Cada bloco pode exigir aceite de cookies opcionais.
 
-Integrações suportadas/recomendadas:
+Por segurança, criar, editar ou excluir blocos exige:
 
-- Google Search Console verification;
-- Meta domain verification;
-- Google Analytics ID;
-- Google Tag Manager ID;
-- Meta Pixel ID;
-- Plausible;
-- Umami;
-- Matomo;
-- estatísticas internas;
-- Shlink/links curtos.
+- usuário admin;
+- painel protegido por 2FA;
+- senha atual;
+- código do autenticador;
+- confirmação explícita de responsabilidade;
+- registro em log de auditoria.
 
-Scripts externos devem respeitar consentimento de cookies quando aplicável.
+Estatísticas internas e Shlink/links curtos continuam como recursos próprios do OwnPaper.
 
 ## Comunicação e comentários
 

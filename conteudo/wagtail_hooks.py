@@ -98,6 +98,7 @@ from conteudo.models import (
     Categoria,
     ComentarioPublicacao,
     ConfiguracaoSite,
+    CodigoPersonalizadoSite,
     ConviteUsuario,
     DisparoEmailClique,
     DisparoEmail,
@@ -277,31 +278,15 @@ CONFIG_SITE_SECTION_DEFS = [
     },
     {
         "slug": "integracoes-rastreamento",
-        "titulo": "Integrações e rastreamento",
-        "eyebrow": "Integrações",
-        "descricao": "Verificações externas, analytics, pixel e parâmetros locais de links curtos.",
+        "titulo": "Códigos personalizados",
+        "eyebrow": "Códigos",
+        "descricao": "Blocos controlados de HTML, JavaScript ou CSS para serviços externos e ajustes pontuais.",
         "topicos": [
-            "Configura verificações de domínio e ferramentas de analytics permitidas.",
-            "Controla estatísticas internas, retenção de agregados e eventos brutos.",
-            "Habilita parâmetros públicos de links curtos sem expor chaves sensíveis no painel.",
+            "Crie blocos separados por serviço para inserir no head, início do body ou final do body.",
+            "Cada alteração exige senha atual, 2FA e confirmação explícita de risco.",
+            "Estatísticas internas e links curtos continuam abaixo, como recursos próprios do OwnPaper.",
         ],
         "campos": [
-            "google_search_console_verification",
-            "meta_domain_verification",
-            "verificacao_head_html",
-            "verificacao_arquivo_nome",
-            "verificacao_arquivo_conteudo",
-            "google_analytics_id",
-            "google_tag_manager_id",
-            "meta_pixel_id",
-            "plausible_domain",
-            "plausible_script_url",
-            "plausible_script_direto_ativo",
-            "plausible_sem_consentimento_ativo",
-            "umami_website_id",
-            "umami_script_url",
-            "matomo_site_id",
-            "matomo_url",
             "estatisticas_internas_ativas",
             "estatisticas_reter_agregados_dias",
             "estatisticas_reter_eventos_brutos_dias",
@@ -309,9 +294,9 @@ CONFIG_SITE_SECTION_DEFS = [
             "shlink_default_domain",
         ],
         "observacoes": [
-            "As integrações de analytics usam campos estruturados; não há campo de script livre para reduzir risco de script malicioso.",
-            "As credenciais de Shlink e OAuth permanecem no ambiente do servidor, não neste formulário.",
-            "Recomendação padrão: agregados internos por 12 meses e eventos brutos por até 3 meses.",
+            "Códigos personalizados executam no site público. Use somente snippets de fontes confiáveis.",
+            "As credenciais de Shlink e OAuth permanecem no ambiente do servidor.",
+            "Recomendação padrão das estatísticas internas: agregados por 12 meses e eventos brutos por até 3 meses.",
         ],
     },
     {
@@ -513,6 +498,118 @@ def _criar_form_configuracao_site(section_def):
                     campo.widget.attrs["class"] = f"{classes} op-admin-menu-toggle-input".strip()
 
     return ConfiguracaoSiteSectionForm
+
+
+class CodigoPersonalizadoSiteForm(forms.Form):
+    titulo = forms.CharField(label="Nome do bloco", max_length=120)
+    descricao = forms.CharField(label="Descrição/observação", max_length=255, required=False)
+    tipo = forms.ChoiceField(label="Tipo", choices=CodigoPersonalizadoSite.TIPO_CHOICES)
+    posicao = forms.ChoiceField(label="Local de inserção", choices=CodigoPersonalizadoSite.POSICAO_CHOICES)
+    codigo = forms.CharField(
+        label="Código",
+        required=False,
+        widget=forms.Textarea(attrs={"rows": 10}),
+    )
+    arquivo_html = forms.FileField(
+        label="Carregar arquivo HTML/TXT",
+        required=False,
+        help_text="Opcional. O conteúdo do arquivo será usado como código do bloco.",
+    )
+    ativo = forms.BooleanField(label="Ativo", required=False, initial=True)
+    exigir_consentimento = forms.BooleanField(
+        label="Exigir aceite de cookies opcionais",
+        required=False,
+        help_text="Use para analytics, pixels e scripts de rastreamento.",
+    )
+    sort_order = forms.IntegerField(label="Ordem", min_value=0, required=False, initial=0)
+    senha_atual = forms.CharField(
+        label="Senha atual",
+        widget=forms.PasswordInput,
+        required=True,
+    )
+    token_2fa = forms.CharField(
+        label="Código do autenticador (2FA)",
+        required=True,
+        widget=forms.TextInput(attrs={"inputmode": "numeric", "autocomplete": "one-time-code"}),
+    )
+    confirmar_risco = forms.BooleanField(
+        label="Entendo que este código será executado no site público por minha responsabilidade.",
+        required=True,
+    )
+
+    def __init__(self, user, *args, instance=None, **kwargs):
+        self.user = user
+        self.instance = instance
+        initial = kwargs.pop("initial", {}) or {}
+        if instance:
+            initial.update(
+                {
+                    "titulo": instance.titulo,
+                    "descricao": instance.descricao,
+                    "tipo": instance.tipo,
+                    "posicao": instance.posicao,
+                    "codigo": instance.codigo,
+                    "ativo": instance.ativo,
+                    "exigir_consentimento": instance.exigir_consentimento,
+                    "sort_order": instance.sort_order,
+                }
+            )
+        super().__init__(*args, initial=initial, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs["class"] = "op-admin-input"
+        self.fields["codigo"].widget.attrs["class"] = "op-admin-input op-admin-textarea"
+        self.fields["ativo"].widget.attrs["class"] = "op-admin-checkbox op-admin-menu-toggle-input"
+        self.fields["exigir_consentimento"].widget.attrs["class"] = "op-admin-checkbox op-admin-menu-toggle-input"
+        self.fields["confirmar_risco"].widget.attrs["class"] = "op-admin-checkbox op-admin-menu-toggle-input"
+
+    def clean_arquivo_html(self):
+        arquivo = self.cleaned_data.get("arquivo_html")
+        if not arquivo:
+            return arquivo
+        nome = (arquivo.name or "").lower()
+        if not nome.endswith((".html", ".htm", ".txt")):
+            raise forms.ValidationError("Envie apenas arquivos .html, .htm ou .txt.")
+        if arquivo.size > 512 * 1024:
+            raise forms.ValidationError("O arquivo deve ter no máximo 512 KB.")
+        return arquivo
+
+    def clean(self):
+        cleaned = super().clean()
+        if not self.user.check_password(cleaned.get("senha_atual") or ""):
+            self.add_error("senha_atual", "A senha atual informada está incorreta.")
+        if not usuario_tem_totp(self.user):
+            self.add_error("token_2fa", "Configure o autenticador em duas etapas antes de alterar códigos personalizados.")
+        else:
+            token_valido, mensagem = validar_token_2fa_conta(self.user, cleaned.get("token_2fa") or "")
+            if not token_valido:
+                self.add_error("token_2fa", mensagem or "Código do autenticador inválido.")
+
+        arquivo = cleaned.get("arquivo_html")
+        if arquivo:
+            try:
+                cleaned["codigo"] = arquivo.read().decode("utf-8")
+            except UnicodeDecodeError:
+                self.add_error("arquivo_html", "O arquivo precisa estar codificado em UTF-8.")
+
+        if not (cleaned.get("codigo") or "").strip():
+            self.add_error("codigo", "Informe o código ou carregue um arquivo.")
+        return cleaned
+
+    def save(self, config, user):
+        instance = self.instance or CodigoPersonalizadoSite(configuracao_site=config)
+        instance.titulo = self.cleaned_data["titulo"].strip()
+        instance.descricao = (self.cleaned_data.get("descricao") or "").strip()
+        instance.tipo = self.cleaned_data["tipo"]
+        instance.posicao = self.cleaned_data["posicao"]
+        instance.codigo = self.cleaned_data["codigo"]
+        instance.ativo = bool(self.cleaned_data.get("ativo"))
+        instance.exigir_consentimento = bool(self.cleaned_data.get("exigir_consentimento"))
+        instance.sort_order = int(self.cleaned_data.get("sort_order") or 0)
+        if not instance.pk:
+            instance.criado_por = user
+        instance.atualizado_por = user
+        instance.save()
+        return instance
 
 
 def _configuracao_site_admin(request):
@@ -4003,9 +4100,82 @@ def configuracoes_site_secao_admin_view(request, secao_slug):
     config = ConfiguracaoSite.for_site(site)
     form_class = _criar_form_configuracao_site(section_def)
     form = form_class(request.POST or None, request.FILES or None, instance=config)
+    codigo_editando = None
+    codigo_form = None
+
+    if secao_slug == "integracoes-rastreamento":
+        codigo_id_get = request.GET.get("editar_codigo")
+        if codigo_id_get:
+            codigo_editando = CodigoPersonalizadoSite.objects.filter(
+                configuracao_site=config,
+                id=codigo_id_get,
+            ).first()
+        codigo_form = CodigoPersonalizadoSiteForm(request.user, instance=codigo_editando)
 
     if request.method == "POST":
-        if form.is_valid():
+        acao = (request.POST.get("acao") or "").strip()
+        if secao_slug == "integracoes-rastreamento" and acao in {"salvar_codigo", "excluir_codigo"}:
+            codigo_id = request.POST.get("codigo_id")
+            codigo = CodigoPersonalizadoSite.objects.filter(
+                configuracao_site=config,
+                id=codigo_id,
+            ).first() if codigo_id else None
+
+            if acao == "excluir_codigo":
+                senha_atual = request.POST.get("senha_atual_exclusao") or ""
+                token_2fa = request.POST.get("token_2fa_exclusao") or ""
+                confirmar = request.POST.get("confirmar_exclusao") == "on"
+                erros = []
+                if not codigo:
+                    erros.append("Código personalizado não encontrado.")
+                if not request.user.check_password(senha_atual):
+                    erros.append("A senha atual informada está incorreta.")
+                if not usuario_tem_totp(request.user):
+                    erros.append("Configure o autenticador em duas etapas antes de excluir códigos personalizados.")
+                else:
+                    token_valido, mensagem_token = validar_token_2fa_conta(request.user, token_2fa)
+                    if not token_valido:
+                        erros.append(mensagem_token or "Código do autenticador inválido.")
+                if not confirmar:
+                    erros.append("Confirme que entende que o código será removido do site público.")
+                if erros:
+                    for erro in erros:
+                        messages.error(request, erro)
+                    return redirect("admin_configuracoes_site_secao", secao_slug=secao_slug)
+
+                titulo = codigo.titulo
+                codigo.delete()
+                registrar_auditoria(
+                    request=request,
+                    acao="codigo_personalizado_excluido",
+                    alvo=config,
+                    detalhes=f"Código excluído: {titulo}.",
+                )
+                messages.success(request, "Código personalizado excluído.")
+                return redirect("admin_configuracoes_site_secao", secao_slug=secao_slug)
+
+            codigo_form = CodigoPersonalizadoSiteForm(
+                request.user,
+                request.POST,
+                request.FILES,
+                instance=codigo,
+            )
+            if codigo_form.is_valid():
+                codigo_salvo = codigo_form.save(config, request.user)
+                registrar_auditoria(
+                    request=request,
+                    acao="codigo_personalizado_salvo",
+                    alvo=codigo_salvo,
+                    detalhes=(
+                        f"Tipo={codigo_salvo.tipo}; posição={codigo_salvo.posicao}; "
+                        f"ativo={codigo_salvo.ativo}; título={codigo_salvo.titulo}."
+                    ),
+                )
+                messages.success(request, "Código personalizado salvo.")
+                return redirect("admin_configuracoes_site_secao", secao_slug=secao_slug)
+            messages.error(request, "Corrija os campos do código personalizado.")
+            form = form_class(instance=config)
+        elif form.is_valid():
             form.save()
             registrar_auditoria(
                 request=request,
@@ -4015,7 +4185,8 @@ def configuracoes_site_secao_admin_view(request, secao_slug):
             )
             messages.success(request, "Seção atualizada com sucesso.")
             return redirect("admin_configuracoes_site_secao", secao_slug=secao_slug)
-        messages.error(request, "Corrija os campos destacados.")
+        elif acao not in {"salvar_codigo", "excluir_codigo"}:
+            messages.error(request, "Corrija os campos destacados.")
 
     secoes = []
     for item in CONFIG_SITE_SECTION_DEFS:
@@ -4055,6 +4226,12 @@ def configuracoes_site_secao_admin_view(request, secao_slug):
             "secoes": secoes,
             "campos_readonly": campos_readonly,
             "links_extras": links_extras,
+            "codigos_personalizados": (
+                CodigoPersonalizadoSite.objects.filter(configuracao_site=config)
+                if secao_slug == "integracoes-rastreamento" else []
+            ),
+            "codigo_form": codigo_form,
+            "codigo_editando": codigo_editando,
         },
     )
 

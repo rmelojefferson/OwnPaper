@@ -108,26 +108,17 @@ Exemplos:
 
 Agregados reduzem volume e risco, sendo melhores para histórico de médio prazo.
 
-## Integrações externas
+## Códigos personalizados
 
-OwnPaper suporta configuração estruturada para ferramentas como:
+Integrações externas são feitas por blocos nomeados de HTML, JavaScript ou CSS. O admin escolhe onde cada bloco será inserido:
 
-- Plausible;
-- Umami;
-- Matomo;
-- Google Analytics;
-- Google Tag Manager;
-- Meta Pixel.
+- cabeçalho/head;
+- início do body;
+- final do body/rodapé.
 
-Plausible, Umami e Matomo podem ser configurados por domínio/ID/URL, evitando campo livre de script sempre que possível. Para o Plausible, o OwnPaper também suporta o snippet novo em que a ferramenta fornece apenas uma URL de script própria; nesse caso, o painel ativa um modo estruturado que renderiza somente o script predefinido e `plausible.init()`, sem permitir JavaScript arbitrário.
+Cada bloco pode exigir aceite de cookies opcionais. Use essa opção para analytics, pixels e ferramentas de rastreamento.
 
-O Plausible pode ser configurado para carregar sem aceite de cookies opcionais quando a instalação estiver usando Plausible sem cookies e a política de privacidade do projeto refletir isso. Google Analytics, Google Tag Manager, Meta Pixel, Umami e Matomo continuam condicionados ao consentimento de cookies opcionais.
-
-Para validações de domínio, o painel permite:
-
-- campos simples para valores de meta tags;
-- HTML avançado de verificação no `head`;
-- arquivo `.html` ou `.txt` servido na raiz do domínio.
+Criar, editar ou excluir blocos exige senha atual, 2FA e confirmação explícita de responsabilidade. A ação é registrada em log de auditoria.
 
 ## Risco de JavaScript livre
 

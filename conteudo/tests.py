@@ -42,6 +42,7 @@ from conteudo.models import (
     AuditLog,
     BackupExecucao,
     ConfiguracaoSite,
+    CodigoPersonalizadoSite,
     ContatoPage,
     ConviteUsuario,
     DisparoEmail,
@@ -206,45 +207,31 @@ class SmokeRouteTests(TestCase):
         self.assertContains(response, "<item>")
         self.assertContains(response, "Publicacao RSS Teste")
 
-    def test_plausible_script_direto_renderiza_snippet_seguro_com_consentimento(self):
+    def test_codigos_personalizados_renderizam_por_posicao_e_consentimento(self):
         config_site = ConfiguracaoSite.for_site(Site.objects.get(is_default_site=True))
-        config_site.plausible_script_url = "https://analytics.example.org/js/site.js"
-        config_site.plausible_script_direto_ativo = True
-        config_site.plausible_sem_consentimento_ativo = True
-        config_site.save(
-            update_fields=[
-                "plausible_script_url",
-                "plausible_script_direto_ativo",
-                "plausible_sem_consentimento_ativo",
-            ]
+        CodigoPersonalizadoSite.objects.create(
+            configuracao_site=config_site,
+            titulo="Meta teste",
+            tipo=CodigoPersonalizadoSite.TIPO_HTML,
+            posicao=CodigoPersonalizadoSite.POSICAO_HEAD,
+            codigo='<meta name="custom-verify" content="abc123">',
         )
-
-        response = self.client.get("/")
-        self.assertEqual(response.status_code, 200)
-        self.assertContains(response, 'src="https://analytics.example.org/js/site.js"', html=False)
-        self.assertContains(response, "plausible.init()", html=False)
-        self.assertNotContains(response, "data-domain")
-
-    def test_verificacao_head_e_arquivo_sao_renderizados(self):
-        config_site = ConfiguracaoSite.for_site(Site.objects.get(is_default_site=True))
-        config_site.verificacao_head_html = '<meta name="custom-verify" content="abc123">'
-        config_site.verificacao_arquivo_nome = "googleabc123.html"
-        config_site.verificacao_arquivo_conteudo = "google-site-verification: googleabc123.html"
-        config_site.save(
-            update_fields=[
-                "verificacao_head_html",
-                "verificacao_arquivo_nome",
-                "verificacao_arquivo_conteudo",
-            ]
+        CodigoPersonalizadoSite.objects.create(
+            configuracao_site=config_site,
+            titulo="Script com consentimento",
+            tipo=CodigoPersonalizadoSite.TIPO_JS,
+            posicao=CodigoPersonalizadoSite.POSICAO_HEAD,
+            codigo="window.__op_consent_test = true;",
+            exigir_consentimento=True,
         )
 
         response = self.client.get("/")
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, '<meta name="custom-verify" content="abc123">', html=False)
+        self.assertNotContains(response, "window.__op_consent_test")
 
-        arquivo = self.client.get("/googleabc123.html")
-        self.assertEqual(arquivo.status_code, 200)
-        self.assertEqual(arquivo.content.decode("utf-8"), "google-site-verification: googleabc123.html")
+        response = self.client.get("/", HTTP_COOKIE="ownpaper_cookie_consent=all")
+        self.assertContains(response, "window.__op_consent_test", html=False)
 
     @override_settings(OWNPAPER_ANALYTICS_DYNAMIC_EXCLUDE_TOKEN="token-teste")
     def test_endpoint_ip_dinamico_exige_token_e_registra_ip_da_requisicao(self):
@@ -812,15 +799,13 @@ class AdminExplorerHomeTests(TestCase):
         self.client.force_login(self.admin)
         response = self.client.get(reverse("admin_configuracoes_site_secao", args=["integracoes-rastreamento"]))
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Integrações e rastreamento")
-        self.assertContains(response, "Verificações de domínio")
-        self.assertContains(response, "Google e Meta")
-        self.assertContains(response, "Analytics externos")
+        self.assertContains(response, "Códigos personalizados")
+        self.assertContains(response, "Blocos cadastrados")
+        self.assertContains(response, "Criar novo código")
         self.assertContains(response, "Estatísticas internas")
         self.assertContains(response, "Links curtos")
         self.assertContains(response, "op-admin-config-integrations")
-        self.assertContains(response, 'name="google_search_console_verification"', html=False)
-        self.assertContains(response, 'name="plausible_script_url"', html=False)
+        self.assertContains(response, 'name="confirmar_risco"', html=False)
         self.assertContains(response, 'name="estatisticas_internas_ativas"', html=False)
 
     def test_admin_configuracoes_comunicacao_usa_layout_proprio(self):

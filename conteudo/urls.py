@@ -1,4 +1,4 @@
-from django.urls import path, re_path
+from django.urls import path
 from .feeds import PublicacoesRSSFeed
 
 from .views import (
@@ -50,7 +50,6 @@ from .views import (
     quiz_tag_detalhe,
     quiz_tema_detalhe,
     avaliacao_publicacao_enviar,
-    arquivo_verificacao_site,
     username_disponivel,
     submissao_publica,
     submissao_publica_completar,
@@ -58,11 +57,6 @@ from .views import (
 
 urlpatterns = [
     path("robots.txt", robots_txt, name="robots_txt"),
-    re_path(
-        r"^(?P<filename>[A-Za-z0-9._-]+\.(?:html|txt))$",
-        arquivo_verificacao_site,
-        name="arquivo_verificacao_site",
-    ),
     path("estatisticas/tempo/", estatistica_tempo_site, name="estatistica_tempo_site"),
     path(
         "estatisticas/registrar-ip-ignorado/",

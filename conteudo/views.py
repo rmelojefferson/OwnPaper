@@ -45,7 +45,7 @@ from django.db.models import F
 from django.contrib.auth.password_validation import validate_password
 from django.core.validators import validate_email
 from django.core.exceptions import ValidationError
-from django.http import Http404, HttpResponse, HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
+from django.http import HttpResponse, HttpResponseBadRequest, HttpResponseRedirect, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils.http import url_has_allowed_host_and_scheme
@@ -288,25 +288,6 @@ def _payload_username_disponivel(valor):
             else "Este nome de usuário já está em uso."
         ),
     }
-
-
-def arquivo_verificacao_site(request, filename):
-    nome = sanitizar_texto(filename or "", multiline=False).strip()
-    if not re.fullmatch(r"[A-Za-z0-9._-]+\.(?:html|txt)", nome):
-        raise Http404
-
-    site = Site.find_for_request(request) or Site.objects.filter(is_default_site=True).first()
-    config_site = ConfiguracaoSite.for_site(site) if site else None
-    if not config_site:
-        raise Http404
-
-    nome_configurado = (config_site.verificacao_arquivo_nome or "").strip()
-    conteudo = config_site.verificacao_arquivo_conteudo or ""
-    if not nome_configurado or not conteudo or nome != nome_configurado:
-        raise Http404
-
-    content_type = "text/html; charset=utf-8" if nome.endswith(".html") else "text/plain; charset=utf-8"
-    return HttpResponse(conteudo, content_type=content_type)
 
 
 def username_disponivel(request):
