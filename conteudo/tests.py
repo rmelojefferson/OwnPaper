@@ -257,7 +257,6 @@ class SmokeRouteTests(TestCase):
         self.assertTrue(payload["ok"])
         self.assertEqual(payload["nome"], "rede-local")
         self.assertEqual(payload["ip"], "203.0.113.44")
-        self.assertEqual(payload["plausible"]["enabled"], False)
         self.assertTrue(
             IpDinamicoIgnoradoEstatisticas.objects.filter(
                 nome="rede-local",

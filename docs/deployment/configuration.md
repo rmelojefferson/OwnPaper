@@ -105,23 +105,6 @@ curl -fsS "https://seu-dominio.com/estatisticas/registrar-ip-ignorado/?token=ger
 
 O servidor identifica o IP público pela própria requisição e passa a ignorá-lo nas visualizações e estatísticas internas até a expiração configurada. Não envie o IP como parâmetro.
 
-Se o Plausible Community Edition estiver no mesmo servidor, a mesma chamada pode sincronizar a exclusão nos sites do Plausible. Configure o acesso ao Postgres do Plausible no `.env` do OwnPaper:
-
-```env
-OWNPAPER_PLAUSIBLE_IP_SYNC_ENABLED=true
-OWNPAPER_PLAUSIBLE_DB_HOST=plausible_db
-OWNPAPER_PLAUSIBLE_DB_PORT=5432
-OWNPAPER_PLAUSIBLE_DB_NAME=plausible_db
-OWNPAPER_PLAUSIBLE_DB_USER=postgres
-OWNPAPER_PLAUSIBLE_DB_PASSWORD=troque-a-senha
-OWNPAPER_PLAUSIBLE_SYNC_DOMAINS=site.com.br,blog.site.com.br
-OWNPAPER_PLAUSIBLE_SYNC_ADDED_BY=OwnPaper
-```
-
-O container do OwnPaper precisa alcançar o banco do Plausible por rede Docker. Em instalações separadas por `docker compose`, conecte os serviços a uma rede compartilhada ou configure um hostname acessível. O OwnPaper mantém no Plausible uma regra identificada como `OwnPaper dynamic exclude: nome-da-rede`, removendo a regra antiga dessa automação quando o IP mudar.
-
-No Windows, gere o script localmente na máquina que ficará dentro da rede ignorada. Não versionar nem publicar esse arquivo, pois ele contém o token da instalação. Para executar ao ligar a máquina, coloque o `.bat` no Agendador de Tarefas do Windows com o gatilho “Ao fazer logon”.
-
 ## Backups
 
 ```env
