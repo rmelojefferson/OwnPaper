@@ -54,7 +54,11 @@ from django.utils.html import escape, strip_tags
 from django.utils.text import slugify
 from django.views.decorators.csrf import csrf_exempt
 
-from .analytics import ip_da_requisicao, requisicao_ignorada_para_estatisticas
+from .analytics import (
+    ip_da_requisicao,
+    requisicao_ignorada_para_estatisticas,
+    sincronizar_ip_ignorado_plausible,
+)
 from .roles import (
     AUTHOR_GROUP_NAME,
 )
@@ -405,6 +409,7 @@ def registrar_ip_ignorado_estatisticas(request):
             "expira_em": expira_em,
         },
     )
+    plausible_sync = sincronizar_ip_ignorado_plausible(ip, nome=nome)
 
     return JsonResponse(
         {
@@ -413,6 +418,7 @@ def registrar_ip_ignorado_estatisticas(request):
             "nome": registro.nome,
             "ip": registro.ip,
             "expira_em": registro.expira_em.isoformat(),
+            "plausible": plausible_sync,
         }
     )
 
