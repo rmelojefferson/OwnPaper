@@ -105,6 +105,20 @@ curl -fsS "https://seu-dominio.com/estatisticas/registrar-ip-ignorado/?token=ger
 
 O servidor identifica o IP público pela própria requisição e passa a ignorá-lo nas visualizações e estatísticas internas até a expiração configurada. Não envie o IP como parâmetro.
 
+### Filtro de bots e acessos repetidos
+
+As visualizações de publicações e as estatísticas internas ignoram, por padrão, user-agents de bots/crawlers/headless e limitam acessos repetidos do mesmo fingerprint `IP + User-Agent + caminho`.
+
+```env
+OWNPAPER_ANALYTICS_BLOCK_BOTS=true
+OWNPAPER_ANALYTICS_BLOCKED_USER_AGENT_PATTERNS=
+OWNPAPER_ANALYTICS_FINGERPRINT_THROTTLE_ENABLED=true
+OWNPAPER_ANALYTICS_FINGERPRINT_THROTTLE_SECONDS=21600
+OWNPAPER_ANALYTICS_FINGERPRINT_THROTTLE_MAX_HITS=5
+```
+
+O throttle padrão permite até 5 contagens do mesmo fingerprint no intervalo de 6 horas. Reduza esse número se o site receber muito tráfego automatizado; aumente se houver muitos usuários reais atrás do mesmo IP corporativo.
+
 ## Backups
 
 ```env

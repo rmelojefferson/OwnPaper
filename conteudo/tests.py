@@ -26,6 +26,7 @@ from wagtail.models import Site
 from conteudo.email_ops import destinatarios_por_segmento, executar_disparo
 from conteudo.html_safety import sanitize_email_html
 from conteudo.access import eligible_contact_assignees
+from conteudo.analytics import requisicao_ignorada_para_estatisticas, user_agent_ignorado_para_estatisticas
 from conteudo.backup_ops import executar_backup_site, simular_restore_backup
 from conteudo.wagtail_hooks import (
     _anexar_assinatura_email_html,
@@ -264,6 +265,35 @@ class SmokeRouteTests(TestCase):
                 expira_em__gt=timezone.now(),
             ).exists()
         )
+
+    def test_estatisticas_ignoram_bots_e_user_agents_suspeitos(self):
+        self.assertTrue(user_agent_ignorado_para_estatisticas("Googlebot/2.1"))
+        self.assertTrue(
+            user_agent_ignorado_para_estatisticas(
+                "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:47.0) Gecko/20100101 Firefox/47.0"
+            )
+        )
+        self.assertFalse(
+            user_agent_ignorado_para_estatisticas(
+                "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/126.0 Safari/537.36"
+            )
+        )
+
+    @override_settings(
+        OWNPAPER_ANALYTICS_FINGERPRINT_THROTTLE_ENABLED=True,
+        OWNPAPER_ANALYTICS_FINGERPRINT_THROTTLE_SECONDS=60,
+        OWNPAPER_ANALYTICS_FINGERPRINT_THROTTLE_MAX_HITS=2,
+        OWNPAPER_ANALYTICS_EXCLUDED_IPS=[],
+    )
+    def test_estatisticas_limitam_fingerprint_repetido(self):
+        request = RequestFactory().get(
+            "/publicacoes/teste/",
+            REMOTE_ADDR="198.51.100.10",
+            HTTP_USER_AGENT="Mozilla/5.0 OwnPaperBrowser/1.0",
+        )
+        self.assertFalse(requisicao_ignorada_para_estatisticas(request))
+        self.assertFalse(requisicao_ignorada_para_estatisticas(request))
+        self.assertTrue(requisicao_ignorada_para_estatisticas(request))
 
     def test_menu_social_links_usam_ordem_alfabetica(self):
         config_site = ConfiguracaoSite.for_site(Site.objects.get(is_default_site=True))
